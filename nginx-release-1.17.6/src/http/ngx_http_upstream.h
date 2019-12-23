@@ -149,8 +149,11 @@ typedef struct {
 typedef struct {
     ngx_http_upstream_srv_conf_t    *upstream;
 
+    /* 连接上游服务器的超时时间，单位为毫秒 */
     ngx_msec_t                       connect_timeout;
+    /* 发送 TCP 包到上游游服务器的超时时间，单位为毫秒 */
     ngx_msec_t                       send_timeout;
+    /* 接收 TCP 包到上游游服务器的超时时间，单位为毫秒 */
     ngx_msec_t                       read_timeout;
     ngx_msec_t                       next_upstream_timeout;
 
@@ -301,9 +304,11 @@ typedef struct {
     in_port_t                        port;
     ngx_uint_t                       no_port; /* unsigned no_port:1 */
 
+    /* 地址个数 */
     ngx_uint_t                       naddrs;
     ngx_resolver_addr_t             *addrs;
 
+    /* 上游服务器的地址 */
     struct sockaddr                 *sockaddr;
     socklen_t                        socklen;
     ngx_str_t                        name;
@@ -320,6 +325,7 @@ struct ngx_http_upstream_s {
     ngx_http_upstream_handler_pt     read_event_handler;
     ngx_http_upstream_handler_pt     write_event_handler;
 
+    /* 设置好的上游服务器的地址 */
     ngx_peer_connection_t            peer;
 
     ngx_event_pipe_t                *pipe;
@@ -363,6 +369,8 @@ struct ngx_http_upstream_s {
     ngx_chain_t                     *busy_bufs;
     ngx_chain_t                     *free_bufs;
 
+	/* 5个可选的回调方法，返回值 ngx_init_t */
+    /* input_filter 和 input_filter_init 都是用来处理上游的响应包体 */
     ngx_int_t                      (*input_filter_init)(void *data);
     ngx_int_t                      (*input_filter)(void *data, ssize_t bytes);
     void                            *input_filter_ctx;
@@ -372,13 +380,16 @@ struct ngx_http_upstream_s {
 #endif
 	/* 构造发往上游服务器的请求内容 */
     ngx_int_t                      (*create_request)(ngx_http_request_t *r);
+    /* 在第一次试图向上游服务器建立连接时，如果连接由于多种异常原因失败，那个会根据 conf
+       中的参数策略要求重连上游服务器，而这时就会调用该方法了 */
     ngx_int_t                      (*reinit_request)(ngx_http_request_t *r);
     /* 未收到完整的响应包头时(NGX_AGAIN)，可重入 */
     ngx_int_t                      (*process_header)(ngx_http_request_t *r);
     void                           (*abort_request)(ngx_http_request_t *r);
-    /* 销毁 upstream 请求时调用 */
+    /* 销毁 upstream 请求时调用。可以不做任何事情，但是必须实现 finalize_request 方法 */
     void                           (*finalize_request)(ngx_http_request_t *r,
                                          ngx_int_t rc);
+    /* 在 Location 的头部被设置为 headers_in 成员时，会调用该方法 */
     ngx_int_t                      (*rewrite_redirect)(ngx_http_request_t *r,
                                          ngx_table_elt_t *h, size_t prefix);
     ngx_int_t                      (*rewrite_cookie)(ngx_http_request_t *r,
