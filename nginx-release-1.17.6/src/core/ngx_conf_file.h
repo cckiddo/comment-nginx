@@ -81,7 +81,8 @@ struct ngx_command_s {
     ngx_uint_t            type;
     /** 出现了 name 中指定的配置项后，将会调用 set 方法处理配置项的参数 */
     char               *(*set)(ngx_conf_t *cf, ngx_command_t *cmd, void *conf);
-    ngx_uint_t            conf; /** 在配置文件中的偏移量 */
+    /** 在配置文件中的偏移量 */
+    ngx_uint_t            conf;
     /** 通常用于使用预设的解析方法解析配置项，这是配置模块的一个优秀设计。它需要与 conf 配合使用 */
     ngx_uint_t            offset;
     void                 *post; /** 配置项读取后的处理方法，必须是 ngx_conf_post_t 结构的指针 */

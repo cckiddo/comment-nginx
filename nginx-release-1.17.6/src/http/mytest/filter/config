@@ -1,0 +1,7 @@
+ngx_addon_name=ngx_http_myfilter_module
+
+# 把 HTTP＿MODULES 修改成 HTTP_FILTER_MODULES 变量
+HTTP_FILTER_MODULES="$HTTP_FILTER_MODULES ngx_http_myfilter_module"
+
+NGX_ADDON_SRCS="$NGX_ADDON_SRCS $ngx_addon_dir/ngx_http_myfilter_module.c"
+
