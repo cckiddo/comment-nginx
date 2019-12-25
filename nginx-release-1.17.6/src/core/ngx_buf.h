@@ -18,39 +18,49 @@ typedef void *            ngx_buf_tag_t;
 typedef struct ngx_buf_s  ngx_buf_t;
 
 struct ngx_buf_s {
+    /* 通常是用来告诉使用者本次应该从 pos 这个位置开始处理内存中的数据，这样设置是因为
+       同一个 ngx_buf_t 可能被多次反复处理。当然， pos 的含义是由使用它的模块定义 */
     u_char          *pos;
-    u_char          *last;
-    off_t            file_pos;
-    off_t            file_last;
+    u_char          *last; /* 通常表示有效的内容到此为止，注意 pos 与 last 之间的内存是希望 nginx 处理的内容 */
+    off_t            file_pos; /* 处理文件时使用，与 pos 含义相同 */
+    off_t            file_last; /* 处理文件时使用，与 last 含义相同 */
 
     u_char          *start;         /* start of buffer */
     u_char          *end;           /* end of buffer */
-    ngx_buf_tag_t    tag;
-    ngx_file_t      *file;
-    ngx_buf_t       *shadow;
+    ngx_buf_tag_t    tag; /* 表示当前缓冲区的类型，例如由哪个模块使用就指向这个模块 ngx_module_t 变量的地址*/
+    ngx_file_t      *file; /* 引用的文件 */
+    ngx_buf_t       *shadow; /* 不建议使用。当前缓冲区的影子缓冲区，P76 */
 
 
     /* the buf's content could be changed */
-    unsigned         temporary:1;
+    unsigned         temporary:1; /* 临时内存标志位，为1时表示数据在内存中且这段内存可以修改 */
 
     /*
      * the buf's content is in a memory cache or in a read only memory
      * and must not be changed
      */
-    unsigned         memory:1;
+    unsigned         memory:1; /* 标志位，为1时表示数据在内存中且这段内存不可以被修改 */
 
     /* the buf's content is mmap()ed and must not be changed */
-    unsigned         mmap:1;
+    unsigned         mmap:1; /* 标志位，为1时表示这段内存是 mmap 系统调用映射过来的，不可以被修改 */
 
-    unsigned         recycled:1;
-    unsigned         in_file:1;
-    unsigned         flush:1;
+    unsigned         recycled:1; /* 为1时表示可回收 */
+    unsigned         in_file:1; /* 为1时表示这段缓冲区处理的是文件而不是内存 */
+    unsigned         flush:1; /* 为1时表示需要执行 flush 操作 */
+
+     /* 对于操作这块缓冲区时是否使用同步方式，需谨慎考虑，这可能会阻塞 Nginx 进程， Nginx
+        中所有操作几乎都是异步的，这是它支持高并发的关键。有些框架代码在 sync 为1时可能会有
+        阻塞的方式进行 I/O 操作，它的意义视使用它的 Nginx 模块而定 */
     unsigned         sync:1;
+
+    /* 表示是否是最后一块缓冲区，因为 ngx_buf_t 可以是由 ngx_chain_t 链表串联起来，因为，
+       当 last_buf = 1 时，表示当前是最后一块待处理的缓冲区 */
     unsigned         last_buf:1;
+    /* 表示是否是 ngx_chain_t 中的最后一块缓冲区 */
     unsigned         last_in_chain:1;
 
-    unsigned         last_shadow:1;
-    unsigned         temp_file:1;
+    unsigned         last_shadow:1; /* 跟 shadow 配合使用，是否是最后一个影子缓冲区 */
+    unsigned         temp_file:1; /* 表示当前缓冲区是否属于临时文件 */
 
     /* STUB */ int   num;
 };

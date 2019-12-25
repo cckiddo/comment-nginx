@@ -420,7 +420,7 @@ ngx_http_mytest(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
     //http{}和server{}内也都有一个ngx_http_core_loc_conf_t结构体
     clcf = ngx_http_conf_get_module_loc_conf(cf, ngx_http_core_module);
 
-    //http框架在处理用户请求进行到NGX_HTTP_CONTENT_PHASE阶段时，如果
+    //http框架在处理用户请求进行到 NGX_HTTP_CONTENT_PHASE 阶段时，如果
     //请求的主机域名、URI与mytest配置项所在的配置块相匹配，就将调用我们
     //实现的ngx_http_mytest_handler方法处理这个请求
     clcf->handler = ngx_http_mytest_handler;

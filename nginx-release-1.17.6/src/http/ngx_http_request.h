@@ -179,8 +179,10 @@ typedef struct {
 
 
 typedef struct {
+    /** 所有解析近的 HTTP 头部都在 headers 链表中 */
     ngx_list_t                        headers;
 
+    /** headers 的成员实际上可以通过下面的指针取出，当它们为 NULL 时，表示没有解析到相应的头部 */
     ngx_table_elt_t                  *host;
     ngx_table_elt_t                  *connection;
     ngx_table_elt_t                  *if_modified_since;
@@ -230,17 +232,24 @@ typedef struct {
     ngx_table_elt_t                  *date;
 #endif
 
+    /** uesr 和 passwd 是只有 ngx_http_auth_basic_module 才会乃至的成员，这里可以忽略 */
     ngx_str_t                         user;
     ngx_str_t                         passwd;
 
+    /** cookies 是以 ngx_array_t 数组存储的 */
     ngx_array_t                       cookies;
 
     ngx_str_t                         server;
+
+    /** 根据 ngx_table_elt_t *content_length 计算出的 HTTP 包体大小 */
     off_t                             content_length_n;
     time_t                            keep_alive_n;
 
+    /** HTTP 连接类型，它的聚会范围是 0, NGX_HTTP_CONNECTION_CLOSE 或者
+     * NGX_HTTP_CONNECTION_KEEP_ALIVE */
     unsigned                          connection_type:2;
     unsigned                          chunked:1;
+    /** 浏览器的 useragent 标识，用来判断浏览器类型 */
     unsigned                          msie:1;
     unsigned                          msie6:1;
     unsigned                          opera:1;
@@ -256,7 +265,7 @@ typedef struct {
     ngx_list_t                        trailers;
 
     ngx_uint_t                        status;
-    ngx_str_t                         status_line;
+    ngx_str_t                         status_line;  /** 响应的状态行，如 "HTTP/1.1 201 CREATED" */
 
     ngx_table_elt_t                  *server;
     ngx_table_elt_t                  *date;
@@ -273,6 +282,8 @@ typedef struct {
 
     ngx_str_t                        *override_charset;
 
+    /** 可以调用 ngx_http_set_content_type(r) 方法来设置 Content-Type 头部，根据 URI
+     * 中的文件扩展名并对应着 mime_type 来设置 */
     size_t                            content_type_len;
     ngx_str_t                         content_type;
     ngx_str_t                         charset;
@@ -282,6 +293,7 @@ typedef struct {
     ngx_array_t                       cache_control;
     ngx_array_t                       link;
 
+    /** 这里指定过 content_length_n 后，不用再次到 ngx_table_elt_t *content_length 中设置响应长度 */
     off_t                             content_length_n;
     off_t                             content_offset;
     time_t                            date_time;
@@ -390,9 +402,9 @@ struct ngx_http_request_s {
                                          /* of ngx_http_upstream_state_t */
 
     ngx_pool_t                       *pool;
-    ngx_buf_t                        *header_in;
+    ngx_buf_t                        *header_in; /** Nginx 收到未经解析的 HTTP 头部 */
 
-    ngx_http_headers_in_t             headers_in;
+    ngx_http_headers_in_t             headers_in; /** Nginx 已经解析过的 HTTP 头部 */
     ngx_http_headers_out_t            headers_out;
 
     ngx_http_request_body_t          *request_body;

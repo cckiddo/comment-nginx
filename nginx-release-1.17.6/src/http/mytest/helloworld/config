@@ -1,0 +1,9 @@
+# 模块名称
+ngx_addon_name=ngx_http_mytest_module
+
+# 模块类型，此处是指 HTTP_MODULES ，即 HTTP 模块
+HTTP_MODULES="$HTTP_MODULES ngx_http_mytest_module"
+
+# 指定新增模块的源代码，多个待编译的源代码间以空格符相连。注意在设置 NGX_ADDON_SRCS 时也
+# 可以使用 $ngx_addon_dir 变量，它等价于 configure 执行时 --add_module=PATH 的 PATH
+NGX_ADDON_SRCS="$NGX_ADDON_SRCS $ngx_addon_dir/ngx_http_mytest_module.c"

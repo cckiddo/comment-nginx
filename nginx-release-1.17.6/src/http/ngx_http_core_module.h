@@ -104,24 +104,61 @@ typedef struct {
 } ngx_http_listen_opt_t;
 
 
+/** HTTP 的11个阶段
+ * 官方不建议重新定义的模块： NGX_HTTP_FIND_CONFIG_PHASE, NGX_HTTP_REWRITE_PHASE,
+ * NGX_HTTP_POST_ACCESS_PHASE, NGX_HTTP_PRECONTENT_PHASE
+ * 改造之后，可以重新定义上述的模块，如 NGX_HTTP_PRECONTENT_PHASE ，但是仍然不建议重新
+ * 定义上述几个 HTTP 阶段的行为。
+ *
+ * 用户可以在以上11个阶段中任意选择一个阶段让 mytest 模块介入，但是这个需要在完全熟悉 HTTP
+ * 框架的处理流程后才可以做到。
+ */
 typedef enum {
+    /** 接收完完整的 HTTP 头部后处理的 HTTP 阶段 */
     NGX_HTTP_POST_READ_PHASE = 0,
 
+    /** 在还没有查询到 URI 匹配的 location 前，这里 rewrite 重写 URL 也作为一个独立的 HTTP 阶段 */
     NGX_HTTP_SERVER_REWRITE_PHASE,
 
-    NGX_HTTP_FIND_CONFIG_PHASE,
-    NGX_HTTP_REWRITE_PHASE,
-    NGX_HTTP_POST_REWRITE_PHASE,
+    /** 根据 URI 寻找匹配的 location ，这个阶段通常由 ngx_http_core_module 模块实现，
+     * 不建议其他 HTTP 模块重新定义这一阶段的行为 */
+    NGX_HTTP_FIND_CONFIG_PHASE, /** 不建议重新定义 */
 
+    /** 在 NGX_HTTP_FIND_CONFIG_PHASE 阶段之后重写 URL 的意义与
+     * NGX_HTTP_SERVER_REWRITE_PHASE 阶段显然是不同的，因为这两者会导致查找到不同的
+     * location 块（ location 是与 URI 进行匹配的） */
+    NGX_HTTP_REWRITE_PHASE,
+
+    /** 这一阶段是用于在 rewrite 重写 URL 后重新跳到 NGX_HTTP_FIND_CONFIG_PHASE 阶段，
+     * 找到与新的 URI 匹配的 location 。所以，这一阶段是无法由第三方模块处理的，而仅由
+     * ngx_http_core_module 模块使用
+     */
+    NGX_HTTP_POST_REWRITE_PHASE, /** 不建议重新定义 */
+
+    /** 处理 NGX_HTTP_ACCESS_PHASE 阶段前， HTTP 模块可以介入的处理阶段 */
     NGX_HTTP_PREACCESS_PHASE,
 
+    /** 这个阶段用于让模块判断是否允许这个请求访问 Nginx 服务器 */
     NGX_HTTP_ACCESS_PHASE,
-    NGX_HTTP_POST_ACCESS_PHASE,
 
+    /** 当 NGX_HTTP_ACCESS_PHASE 阶段中 HTTP 模块的 handler 处理方法返回不允许访问的错误
+     * 码时（实际是 NGX_HTTP_FORBIDDEN 或者 NGX_HTTP_UNAUTHORIZED ），这个阶段将负责
+     * 构造拒绝服务的用户响应
+     */
+    NGX_HTTP_POST_ACCESS_PHASE, /** 不建议重新定义 */
+
+    /** 这个阶段完全是为了 try_files 配置项而设立的。当 HTTP 请求访问静态文件资源时，
+     * try_files 配置项可以使这个请求顺序地访问多个静态文件资源，如果某一次访问失败，则继续
+     * 访问 try_files 中指定的下一个静态资源。另外，这个功能完全是在
+     * NGX_HTTP_PRECONTENT_PHASE 阶段中实现的 */
     NGX_HTTP_PRECONTENT_PHASE,
 
+    /** 用于处理 HTTP 请求内容的阶段，这是大部分 HTTP 模块最喜欢介入的阶段 */
     NGX_HTTP_CONTENT_PHASE,
 
+    /** 处理完请求后记录日志的阶段。例如， ngx_http_log_module 模块就是在这个阶段中加入了
+     * handler 处理方法，使得每个 HTTP 请求处理完毕后会记录 access_log 日志
+     */
     NGX_HTTP_LOG_PHASE
 } ngx_http_phases;
 

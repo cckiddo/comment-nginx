@@ -34,6 +34,13 @@ typedef void (*ngx_event_handler_pt)(ngx_event_t *ev);
 typedef void (*ngx_connection_handler_pt)(ngx_connection_t *c);
 
 
+/** NGX_OK ，表示成功。 Nginx 将会继续执行该请求的后续动作（如执行 subrequest 或撤销这个请求） */
+/** NGX_DECLINED ，继续在 NGX_HTTP_CONTENT_PHASE 阶段寻找下一个对于该请求感兴趣的 HTTP
+ * 模块来再次处理这个请求。 */
+/** NGX_DONE ，表示到此为止，同时 HTTP 框架将暂时不再继续执行这个请求的后续部分。这时会检查
+ * 连接的类型，如果 keepalive 类型的用户请求，就会保持住 HTTP 连接，然后把控制权交还给 Nginx */
+/** NGX_ERROR ，表示错误。这里会调用 ngx_http_terminate_request 终止请求。如果还有 POST
+ * 子请求，那么将会在执行完 POST 请求后再终止本次请求 */
 #define  NGX_OK          0
 #define  NGX_ERROR      -1
 #define  NGX_AGAIN      -2

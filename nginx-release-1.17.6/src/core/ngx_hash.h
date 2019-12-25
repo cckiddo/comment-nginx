@@ -90,10 +90,11 @@ typedef struct {
 
 
 typedef struct {
-    ngx_uint_t        hash;
+    /* hash 成员表明本结构也可能是某个散列表数据结构（ ngx_hash_t ）中的成员 */
+    ngx_uint_t        hash; /* 用于快速检索头部 */
     ngx_str_t         key;
     ngx_str_t         value;
-    u_char           *lowcase_key;
+    u_char           *lowcase_key; /* 指向的是全小写的 key 字符串 */
 } ngx_table_elt_t;
 
 

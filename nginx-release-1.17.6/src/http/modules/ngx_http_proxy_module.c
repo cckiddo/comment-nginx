@@ -3589,6 +3589,7 @@ ngx_http_proxy_pass(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
 
     clcf = ngx_http_conf_get_module_loc_conf(cf, ngx_http_core_module);
 
+    /** upstream -> proxy */
     clcf->handler = ngx_http_proxy_handler;
 
     if (clcf->name.len && clcf->name.data[clcf->name.len - 1] == '/') {

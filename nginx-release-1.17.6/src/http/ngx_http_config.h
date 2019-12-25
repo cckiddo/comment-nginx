@@ -20,18 +20,36 @@ typedef struct {
     void        **loc_conf;
 } ngx_http_conf_ctx_t;
 
-
+/** 定义了8个阶段 HTTP 框架在启动过程中会在每个阶段中调用 ngx_http_module_t 中相应的方法
+ * 定义的顺序和调用的顺序是不同的，调用顺序：
+ * create_main_conf -> create_srv_conf -> create_loc_conf ->
+ * preconfiguration -> init_main_conf ->
+ * merge_srv_conf -> create_loc_conf -> postconfiguration
+ */
 typedef struct {
+    /** 解析配置文件前调用 */
     ngx_int_t   (*preconfiguration)(ngx_conf_t *cf);
+    /** 完成配置文件的解析后调用 */
     ngx_int_t   (*postconfiguration)(ngx_conf_t *cf);
 
+    /** 当需要创建数据结构用于存储 main 级别（直属于 http{...}块的配置项）的全局配置时，
+     * 可以通过 create_main_conf 回调方法创建存储全局配置项的结构体 */
     void       *(*create_main_conf)(ngx_conf_t *cf);
+
+    /** 常用于初始化 main 级别配置项 */
     char       *(*init_main_conf)(ngx_conf_t *cf, void *conf);
 
+    /** 当需要创建数据结构用于存储 srv 级别（直属于 server{...}块的配置项）的全局配置时，
+     * 可以通过 create_srv_conf 回调方法创建存储全局配置项的结构体 */
     void       *(*create_srv_conf)(ngx_conf_t *cf);
+
+    /** 主要用于合并 main 级别和 srv 级别下的同名配置项 */
     char       *(*merge_srv_conf)(ngx_conf_t *cf, void *prev, void *conf);
 
+    /** 当需要创建数据结构用于存储 loc 级别（直属于 location{...}块的配置项）的全局配置时，
+     * 可以通过 create_loc_conf 回调方法创建存储全局配置项的结构体 */
     void       *(*create_loc_conf)(ngx_conf_t *cf);
+    /** 主要用于合并 srv 级别和 loc 级别下的同名配置项 */
     char       *(*merge_loc_conf)(ngx_conf_t *cf, void *prev, void *conf);
 } ngx_http_module_t;
 
