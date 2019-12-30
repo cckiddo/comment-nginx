@@ -187,6 +187,8 @@ typedef struct {
 
 
 typedef struct {
+    /** 存储指针的动态数组，每个指针指向 ngx_http_core_srv_conf_t 结构体的地址，
+     * 也就是其成员类型为 ngx_http_core_srv_conf_t */
     ngx_array_t                servers;         /* ngx_http_core_srv_conf_t */
 
     ngx_http_phase_engine_t    phase_engine;
@@ -217,9 +219,11 @@ typedef struct {
     /* array of the ngx_http_server_name_t, "server_name" directive */
     ngx_array_t                 server_names;
 
-    /* server ctx */
+    /** server ctx 。指向当前 server 块所属的 ngx_http_conf_ctx_t 结构体 */
     ngx_http_conf_ctx_t        *ctx;
 
+    /** 当前 server 块的虚拟主机名，如果存在的话，则会与 HTTP 请求中的 Host 头部做匹配
+     * ，匹配上后再由当前 ngx_http_core_srv_conf_t 处理请求 */
     u_char                     *file_name;
     ngx_uint_t                  line;
 

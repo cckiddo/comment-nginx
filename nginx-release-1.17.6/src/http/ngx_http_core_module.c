@@ -2707,7 +2707,8 @@ ngx_http_get_forwarded_addr_internal(ngx_http_request_t *r, ngx_addr_t *addr,
     return NGX_OK;
 }
 
-
+/** 在解析 main 级别配置项时，如果发现了 server{} 配置项，就会调用该方法，
+ * 并开始解析 srv 级别的配置项 */
 static char *
 ngx_http_core_server(ngx_conf_t *cf, ngx_command_t *cmd, void *dummy)
 {
