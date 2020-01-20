@@ -14,3 +14,7 @@
 > 12.25
 
 1. 添加了 mytest 上 helloworld 和 sendfile 模块的注释信息
+
+> 2020.01.15
+
+增加 nginx 的中文注释仓库里面的内容，[reading-code-of-nginx-1.9.2](https://github.com/y123456yz/reading-code-of-nginx-1.9.2)
