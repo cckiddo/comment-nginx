@@ -10,10 +10,10 @@
 #include <ngx_http.h>
 #include <ngx_log.h>
 
-//(proxy_cache_path)µÈÅäÖÃ×ßµ½ÕâÀï
-typedef struct { //¸³Öµ¼ûngx_http_file_cache_set_slot
+//(proxy_cache_path)ç­‰é…ç½®èµ°åˆ°è¿™é‡Œ
+typedef struct { //èµ‹å€¼è§ngx_http_file_cache_set_slot
     //u->caches = &ngx_http_proxy_main_conf_t->caches;
-    ngx_array_t                    caches;  /* ngx_http_file_cache_t * */ //ngx_http_file_cache_t³ÉÔ±£¬×îÖÕ±»¸³Öµ¸øu->caches
+    ngx_array_t                    caches;  /* ngx_http_file_cache_t * */ //ngx_http_file_cache_tæˆå‘˜ï¼Œæœ€ç»ˆè¢«èµ‹å€¼ç»™u->caches
 } ngx_http_proxy_main_conf_t;
 
 
@@ -24,54 +24,54 @@ typedef ngx_int_t (*ngx_http_proxy_rewrite_pt)(ngx_http_request_t *r,
     ngx_http_proxy_rewrite_t *pr);
 
 /*
-//Èç¹ûÃ»ÓĞÅäÖÃproxy_redirect»òÕßÅäÖÃÎªproxy_redirect default,Ôòpattern=plcf->url replacement=location(location /xxxx {}ÖĞµÄ/xxx),
-¼ûngx_http_proxy_redirectºÍngx_http_proxy_merge_loc_conf
+//å¦‚æœæ²¡æœ‰é…ç½®proxy_redirectæˆ–è€…é…ç½®ä¸ºproxy_redirect default,åˆ™pattern=plcf->url replacement=location(location /xxxx {}ä¸­çš„/xxx),
+è§ngx_http_proxy_redirectå’Œngx_http_proxy_merge_loc_conf
 */
-struct ngx_http_proxy_rewrite_s { //ngx_http_proxy_redirectÖĞ´´½¨¸Ã½á¹¹¿Õ¼ä
+struct ngx_http_proxy_rewrite_s { //ngx_http_proxy_redirectä¸­åˆ›å»ºè¯¥ç»“æ„ç©ºé—´
     ngx_http_proxy_rewrite_pt      handler; //ngx_http_proxy_rewrite_complex_handler
 
-    //½âÎöproxy_redirect   http://localhost:8000/    http://$host:$server_port/;ÖĞµÄhttp://localhost:8000/
+    //è§£æproxy_redirect   http://localhost:8000/    http://$host:$server_port/;ä¸­çš„http://localhost:8000/
     union {
-        ngx_http_complex_value_t   complex; 
+        ngx_http_complex_value_t   complex;
 #if (NGX_PCRE)
         ngx_http_regex_t          *regex;
 #endif
-    } pattern; 
-    
-    //½âÎöproxy_redirect   http://localhost:8000/    http://$host:$server_port/;ÖĞµÄ http://$host:$server_port/
+    } pattern;
+
+    //è§£æproxy_redirect   http://localhost:8000/    http://$host:$server_port/;ä¸­çš„ http://$host:$server_port/
     ngx_http_complex_value_t       replacement;
 };
 
 /*
-  proxy_pass  http://10.10.0.103:8080/tttxxsss; 
-  ä¯ÀÀÆ÷ÊäÈë:http://10.2.13.167/proxy1111/yangtest
-  Êµ¼ÊÉÏµ½ºó¶ËµÄuri»á±äÎª/tttxxsss/yangtest
+  proxy_pass  http://10.10.0.103:8080/tttxxsss;
+  æµè§ˆå™¨è¾“å…¥:http://10.2.13.167/proxy1111/yangtest
+  å®é™…ä¸Šåˆ°åç«¯çš„uriä¼šå˜ä¸º/tttxxsss/yangtest
   plcf->location:/proxy1111, ctx->vars.uri:/tttxxsss,  r->uri:/proxy1111/yangtest, r->args:, urilen:19
  */
 typedef struct {
-    //proxy_pass  http://10.10.0.103:8080/tttxx;ÖĞµÄhttp://10.10.0.103:8080
-    ngx_str_t                      key_start; // ³õÊ¼×´Ì¬plcf->vars.key_start = plcf->vars.schema;
-    /*  "http://" »òÕß "https://"  */ //Ö¸ÏòµÄÊÇuri£¬µ±Ê±schema->len="http://" »òÕß "https://"×Ö·û´®³¤¶È7»òÕß8£¬²Î¿¼ngx_http_proxy_pass
-    ngx_str_t                      schema; ////proxy_pass  http://10.10.0.103:8080/tttxx;ÖĞµÄhttp://
-    
-    ngx_str_t                      host_header;//proxy_pass  http://10.10.0.103:8080/tttxx; ÖĞµÄ10.10.0.103:8080
-    ngx_str_t                      port; //"80"»òÕß"443"£¬¼ûngx_http_proxy_set_vars
-    //proxy_pass  http://10.10.0.103:8080/tttxx; ÖĞµÄ/tttxx         uri²»´øhttp://http://10.10.0.103:8080 url´øÓĞhttp://10.10.0.103:8080
-    ngx_str_t                      uri; //ngx_http_proxy_set_varsÀïÃæ¸³Öµ   uriÊÇproxy_pass  http://10.10.0.103:8080/xxxÖĞµÄ/xxx£¬Èç¹û
-    //proxy_pass  http://10.10.0.103:8080Ôòuri³¤¶ÈÎª0£¬Ã»ÓĞuri
+    //proxy_pass  http://10.10.0.103:8080/tttxx;ä¸­çš„http://10.10.0.103:8080
+    ngx_str_t                      key_start; // åˆå§‹çŠ¶æ€plcf->vars.key_start = plcf->vars.schema;
+    /*  "http://" æˆ–è€… "https://"  */ //æŒ‡å‘çš„æ˜¯uriï¼Œå½“æ—¶schema->len="http://" æˆ–è€… "https://"å­—ç¬¦ä¸²é•¿åº¦7æˆ–è€…8ï¼Œå‚è€ƒngx_http_proxy_pass
+    ngx_str_t                      schema; ////proxy_pass  http://10.10.0.103:8080/tttxx;ä¸­çš„http://
+
+    ngx_str_t                      host_header;//proxy_pass  http://10.10.0.103:8080/tttxx; ä¸­çš„10.10.0.103:8080
+    ngx_str_t                      port; //"80"æˆ–è€…"443"ï¼Œè§ngx_http_proxy_set_vars
+    //proxy_pass  http://10.10.0.103:8080/tttxx; ä¸­çš„/tttxx         uriä¸å¸¦http://http://10.10.0.103:8080 urlå¸¦æœ‰http://10.10.0.103:8080
+    ngx_str_t                      uri; //ngx_http_proxy_set_varsé‡Œé¢èµ‹å€¼   uriæ˜¯proxy_pass  http://10.10.0.103:8080/xxxä¸­çš„/xxxï¼Œå¦‚æœ
+    //proxy_pass  http://10.10.0.103:8080åˆ™urié•¿åº¦ä¸º0ï¼Œæ²¡æœ‰uri
 } ngx_http_proxy_vars_t;
 
 
 typedef struct {
     ngx_array_t                   *flushes;
-     /* 
-    °Ñproxy_set_headerÓëngx_http_proxy_headersºÏÔÚÒ»Æğ£¬È»ºó°ÑÆäÖĞµÄkey:value×Ö·û´®ºÍ³¤¶ÈĞÅÏ¢Ìí¼Óµ½headers->lengthsºÍheaders->valuesÖĞ
-    °Ñngx_http_proxy_cache_headersºÏÔÚÒ»Æğ£¬È»ºó°ÑÆäÖĞµÄkey:value×Ö·û´®ºÍ³¤¶ÈĞÅÏ¢Ìí¼Óµ½headers->lengthsºÍheaders->valuesÖĞ
+     /*
+    æŠŠproxy_set_headerä¸ngx_http_proxy_headersåˆåœ¨ä¸€èµ·ï¼Œç„¶åæŠŠå…¶ä¸­çš„key:valueå­—ç¬¦ä¸²å’Œé•¿åº¦ä¿¡æ¯æ·»åŠ åˆ°headers->lengthså’Œheaders->valuesä¸­
+    æŠŠngx_http_proxy_cache_headersåˆåœ¨ä¸€èµ·ï¼Œç„¶åæŠŠå…¶ä¸­çš„key:valueå­—ç¬¦ä¸²å’Œé•¿åº¦ä¿¡æ¯æ·»åŠ åˆ°headers->lengthså’Œheaders->valuesä¸­
      */
-    //1. ÀïÃæ´æ´¢µÄÊÇngx_http_proxy_headersºÍproxy_set_headerÉèÖÃµÄÍ·²¿ĞÅÏ¢Í·Ìí¼Óµ½¸ÃlengthsºÍvalues ´æÈëngx_http_proxy_loc_conf_t->headers
-    //2. ÀïÃæ´æ´¢µÄÊÇngx_http_proxy_cache_headersÉèÖÃµÄÍ·²¿ĞÅÏ¢Í·Ìí¼Óµ½¸ÃlengthsºÍvalues  ´æÈëngx_http_proxy_loc_conf_t->headers_cache
-    ngx_array_t                   *lengths; //´´½¨¿Õ¼äºÍ¸³Öµ¼ûngx_http_proxy_init_headers
-    ngx_array_t                   *values;  //´´½¨¿Õ¼äºÍ¸³Öµ¼ûngx_http_proxy_init_headers
+    //1. é‡Œé¢å­˜å‚¨çš„æ˜¯ngx_http_proxy_headerså’Œproxy_set_headerè®¾ç½®çš„å¤´éƒ¨ä¿¡æ¯å¤´æ·»åŠ åˆ°è¯¥lengthså’Œvalues å­˜å…¥ngx_http_proxy_loc_conf_t->headers
+    //2. é‡Œé¢å­˜å‚¨çš„æ˜¯ngx_http_proxy_cache_headersè®¾ç½®çš„å¤´éƒ¨ä¿¡æ¯å¤´æ·»åŠ åˆ°è¯¥lengthså’Œvalues  å­˜å…¥ngx_http_proxy_loc_conf_t->headers_cache
+    ngx_array_t                   *lengths; //åˆ›å»ºç©ºé—´å’Œèµ‹å€¼è§ngx_http_proxy_init_headers
+    ngx_array_t                   *values;  //åˆ›å»ºç©ºé—´å’Œèµ‹å€¼è§ngx_http_proxy_init_headers
     ngx_hash_t                     hash;
 } ngx_http_proxy_headers_t;
 
@@ -79,47 +79,47 @@ typedef struct {
 typedef struct {
     ngx_http_upstream_conf_t       upstream;
 
-    /* ÏÂÃæÕâ¼¸¸öºÍproxy_set_body XXXÅäÖÃÏà¹Ø proxy_set_bodyÉèÖÃ°üÌåºó£¬¾Í²»»á´«ËÍ¿Í»§¶Ë·¢ËÍÀ´µÄÊı¾İµ½ºó¶Ë·şÎñÆ÷(Ö»´«ËÍproxy_set_bodyÉèÖÃµÄ°üÌå)£¬
-    Èç¹ûÃ»ÓĞÉèÖÃ£¬Ôò»á·¢ËÍ¿Í»§¶Ë°üÌåÊı¾İµ½ºó¶Ë£¬ ²Î¿¼ngx_http_proxy_create_request */
-    ngx_array_t                   *body_flushes; //´Óproxy_set_body XXXÅäÖÃÖĞ»ñÈ¡£¬¼ûngx_http_proxy_merge_loc_conf
-    ngx_array_t                   *body_lengths; //´Óproxy_set_body XXXÅäÖÃÖĞ»ñÈ¡£¬¼ûngx_http_proxy_merge_loc_conf
-    ngx_array_t                   *body_values;  //´Óproxy_set_body XXXÅäÖÃÖĞ»ñÈ¡£¬¼ûngx_http_proxy_merge_loc_conf
-    ngx_str_t                      body_source; //proxy_set_body XXXÅäÖÃÖĞµÄxxx
+    /* ä¸‹é¢è¿™å‡ ä¸ªå’Œproxy_set_body XXXé…ç½®ç›¸å…³ proxy_set_bodyè®¾ç½®åŒ…ä½“åï¼Œå°±ä¸ä¼šä¼ é€å®¢æˆ·ç«¯å‘é€æ¥çš„æ•°æ®åˆ°åç«¯æœåŠ¡å™¨(åªä¼ é€proxy_set_bodyè®¾ç½®çš„åŒ…ä½“)ï¼Œ
+    å¦‚æœæ²¡æœ‰è®¾ç½®ï¼Œåˆ™ä¼šå‘é€å®¢æˆ·ç«¯åŒ…ä½“æ•°æ®åˆ°åç«¯ï¼Œ å‚è€ƒngx_http_proxy_create_request */
+    ngx_array_t                   *body_flushes; //ä»proxy_set_body XXXé…ç½®ä¸­è·å–ï¼Œè§ngx_http_proxy_merge_loc_conf
+    ngx_array_t                   *body_lengths; //ä»proxy_set_body XXXé…ç½®ä¸­è·å–ï¼Œè§ngx_http_proxy_merge_loc_conf
+    ngx_array_t                   *body_values;  //ä»proxy_set_body XXXé…ç½®ä¸­è·å–ï¼Œè§ngx_http_proxy_merge_loc_conf
+    ngx_str_t                      body_source; //proxy_set_body XXXé…ç½®ä¸­çš„xxx
 
-    //Êı¾İÀ´Ô´ÊÇngx_http_proxy_headers  proxy_set_header£¬¼ûngx_http_proxy_init_headers
-    ngx_http_proxy_headers_t       headers;//´´½¨¿Õ¼äºÍ¸³Öµ¼ûngx_http_proxy_merge_loc_conf
+    //æ•°æ®æ¥æºæ˜¯ngx_http_proxy_headers  proxy_set_headerï¼Œè§ngx_http_proxy_init_headers
+    ngx_http_proxy_headers_t       headers;//åˆ›å»ºç©ºé—´å’Œèµ‹å€¼è§ngx_http_proxy_merge_loc_conf
 #if (NGX_HTTP_CACHE)
-    //Êı¾İÀ´Ô´ÊÇngx_http_proxy_cache_headers£¬¼ûngx_http_proxy_init_headers
-    ngx_http_proxy_headers_t       headers_cache;//´´½¨¿Õ¼äºÍ¸³Öµ¼ûngx_http_proxy_merge_loc_conf
+    //æ•°æ®æ¥æºæ˜¯ngx_http_proxy_cache_headersï¼Œè§ngx_http_proxy_init_headers
+    ngx_http_proxy_headers_t       headers_cache;//åˆ›å»ºç©ºé—´å’Œèµ‹å€¼è§ngx_http_proxy_merge_loc_conf
 #endif
-    //Í¨¹ıproxy_set_header Host $proxy_host;ÉèÖÃ²¢Ìí¼Óµ½¸ÃÊı×éÖĞ
-    ngx_array_t                   *headers_source; //´´½¨¿Õ¼äºÍ¸³Öµ¼ûngx_http_proxy_init_headers
+    //é€šè¿‡proxy_set_header Host $proxy_host;è®¾ç½®å¹¶æ·»åŠ åˆ°è¯¥æ•°ç»„ä¸­
+    ngx_array_t                   *headers_source; //åˆ›å»ºç©ºé—´å’Œèµ‹å€¼è§ngx_http_proxy_init_headers
 
-    //½âÎöuriÖĞµÄ±äÁ¿µÄÊ±ºò»áÓÃµ½ÏÂÃæÁ½¸ö£¬¼ûngx_http_proxy_pass  proxy_pass xxxÖĞÈç¹ûÓĞ±äÁ¿£¬ÏÂÃæÁ½¸ö¾Í²»Îª¿Õ
+    //è§£æuriä¸­çš„å˜é‡çš„æ—¶å€™ä¼šç”¨åˆ°ä¸‹é¢ä¸¤ä¸ªï¼Œè§ngx_http_proxy_pass  proxy_pass xxxä¸­å¦‚æœæœ‰å˜é‡ï¼Œä¸‹é¢ä¸¤ä¸ªå°±ä¸ä¸ºç©º
     ngx_array_t                   *proxy_lengths;
     ngx_array_t                   *proxy_values;
-    //proxy_redirect [ default|off|redirect replacement ]; 
-    //³ÉÔ±ÀàĞÍngx_http_proxy_rewrite_t
-    ngx_array_t                   *redirects; //ºÍÅäÖÃproxy_redirectÏà¹Ø£¬¼ûngx_http_proxy_redirect´´½¨¿Õ¼ä
+    //proxy_redirect [ default|off|redirect replacement ];
+    //æˆå‘˜ç±»å‹ngx_http_proxy_rewrite_t
+    ngx_array_t                   *redirects; //å’Œé…ç½®proxy_redirectç›¸å…³ï¼Œè§ngx_http_proxy_redirectåˆ›å»ºç©ºé—´
     ngx_array_t                   *cookie_domains;
     ngx_array_t                   *cookie_paths;
 
-    /* ´ËÅäÖÃÏî±íÊ¾×ª·¢Ê±µÄĞ­Òé·½·¨Ãû¡£ÀıÈçÉèÖÃÎª£ºproxy_method POST;ÄÇÃ´¿Í»§¶Ë·¢À´µÄGETÇëÇóÔÚ×ª·¢Ê±·½·¨ÃûÒ²»á¸ÄÎªPOST */
+    /* æ­¤é…ç½®é¡¹è¡¨ç¤ºè½¬å‘æ—¶çš„åè®®æ–¹æ³•åã€‚ä¾‹å¦‚è®¾ç½®ä¸ºï¼šproxy_method POST;é‚£ä¹ˆå®¢æˆ·ç«¯å‘æ¥çš„GETè¯·æ±‚åœ¨è½¬å‘æ—¶æ–¹æ³•åä¹Ÿä¼šæ”¹ä¸ºPOST */
     ngx_str_t                      method;
-    ngx_str_t                      location; //µ±Ç°locationµÄÃû×Ö location xxx {} ÖĞµÄxxx
+    ngx_str_t                      location; //å½“å‰locationçš„åå­— location xxx {} ä¸­çš„xxx
 
-    //proxy_pass  http://10.10.0.103:8080/tttxx; ÖĞµÄhttp://10.10.0.103:8080/tttxx
-    ngx_str_t                      url; //proxy_pass urlÃû×Ö£¬¼ûngx_http_proxy_pass
+    //proxy_pass  http://10.10.0.103:8080/tttxx; ä¸­çš„http://10.10.0.103:8080/tttxx
+    ngx_str_t                      url; //proxy_pass urlåå­—ï¼Œè§ngx_http_proxy_pass
 
 #if (NGX_HTTP_CACHE)
-    ngx_http_complex_value_t       cache_key;//proxy_cache_keyÎª»º´æ½¨Á¢Ë÷ÒıÊ±Ê¹ÓÃµÄ¹Ø¼ü×Ö£»¼ûngx_http_proxy_cache_key
+    ngx_http_complex_value_t       cache_key;//proxy_cache_keyä¸ºç¼“å­˜å»ºç«‹ç´¢å¼•æ—¶ä½¿ç”¨çš„å…³é”®å­—ï¼›è§ngx_http_proxy_cache_key
 #endif
 
-    ngx_http_proxy_vars_t          vars;//ÀïÃæ±£´æproxy_pass uriÖĞµÄuriĞÅÏ¢
-    //Ä¬ÈÏ1
-    ngx_flag_t                     redirect;//ºÍÅäÖÃproxy_redirectÏà¹Ø£¬¼ûngx_http_proxy_redirect
-    //proxy_http_versionÉèÖÃ£¬
-    ngx_uint_t                     http_version; //µ½ºó¶Ë·şÎñÆ÷²ÉÓÃµÄhttpĞ­Òé°æ±¾£¬Ä¬ÈÏNGX_HTTP_VERSION_10
+    ngx_http_proxy_vars_t          vars;//é‡Œé¢ä¿å­˜proxy_pass uriä¸­çš„uriä¿¡æ¯
+    //é»˜è®¤1
+    ngx_flag_t                     redirect;//å’Œé…ç½®proxy_redirectç›¸å…³ï¼Œè§ngx_http_proxy_redirect
+    //proxy_http_versionè®¾ç½®ï¼Œ
+    ngx_uint_t                     http_version; //åˆ°åç«¯æœåŠ¡å™¨é‡‡ç”¨çš„httpåè®®ç‰ˆæœ¬ï¼Œé»˜è®¤NGX_HTTP_VERSION_10
 
     ngx_uint_t                     headers_hash_max_size;
     ngx_uint_t                     headers_hash_bucket_size;
@@ -138,19 +138,19 @@ typedef struct {
 } ngx_http_proxy_loc_conf_t;
 
 
-typedef struct { //ngx_http_proxy_handlerÖĞ´´½¨¿Õ¼ä
-    ngx_http_status_t              status; //HTTP/1.1 200 OK ¸³Öµ¼ûngx_http_proxy_process_status_line
+typedef struct { //ngx_http_proxy_handlerä¸­åˆ›å»ºç©ºé—´
+    ngx_http_status_t              status; //HTTP/1.1 200 OK èµ‹å€¼è§ngx_http_proxy_process_status_line
     ngx_http_chunked_t             chunked;
     ngx_http_proxy_vars_t          vars;
-    off_t                          internal_body_length; //³¤¶ÈÎª¿Í»§¶Ë·¢ËÍ¹ıÀ´µÄ°üÌå³¤¶È+proxy_set_bodyÉèÖÃµÄ×Ö·û°üÌå³¤¶ÈºÍ
+    off_t                          internal_body_length; //é•¿åº¦ä¸ºå®¢æˆ·ç«¯å‘é€è¿‡æ¥çš„åŒ…ä½“é•¿åº¦+proxy_set_bodyè®¾ç½®çš„å­—ç¬¦åŒ…ä½“é•¿åº¦å’Œ
 
     ngx_chain_t                   *free;
     ngx_chain_t                   *busy;
 
-    unsigned                       head:1; //µ½ºó¶ËµÄÇëÇóĞĞÇëÇóÊ±"HEAD"
+    unsigned                       head:1; //åˆ°åç«¯çš„è¯·æ±‚è¡Œè¯·æ±‚æ—¶"HEAD"
     unsigned                       internal_chunked:1;
     unsigned                       header_sent:1;
-} ngx_http_proxy_ctx_t; //proxyÄ£¿éµÄ¸÷ÖÖÉÏÏÂÎÄĞÅÏ¢£¬ÀıÈç¶ÁÈ¡ºó¶ËÊı¾İµÄÊ±ºò»áÓĞ¶à´Î½»»»£¬ÕâÀïÃæ»á¼ÇÂ¼×´Ì¬ĞÅÏ¢ctx = ngx_http_get_module_ctx(r, ngx_http_proxy_module);
+} ngx_http_proxy_ctx_t; //proxyæ¨¡å—çš„å„ç§ä¸Šä¸‹æ–‡ä¿¡æ¯ï¼Œä¾‹å¦‚è¯»å–åç«¯æ•°æ®çš„æ—¶å€™ä¼šæœ‰å¤šæ¬¡äº¤æ¢ï¼Œè¿™é‡Œé¢ä¼šè®°å½•çŠ¶æ€ä¿¡æ¯ctx = ngx_http_get_module_ctx(r, ngx_http_proxy_module);
 
 
 static ngx_int_t ngx_http_proxy_eval(ngx_http_request_t *r,
@@ -242,7 +242,7 @@ static void ngx_http_proxy_set_vars(ngx_url_t *u, ngx_http_proxy_vars_t *v);
 static ngx_conf_post_t  ngx_http_proxy_lowat_post =
     { ngx_http_proxy_lowat_check };
 
-//Õâ¸ö¾ö¶¨ºó¶Ë·µ»ØµÄstatusÀ´¾ö¶¨ÊÇ·ñÑ°ÕÒÏÂÒ»¸ö·şÎñÆ÷½øĞĞÁ¬½Ó
+//è¿™ä¸ªå†³å®šåç«¯è¿”å›çš„statusæ¥å†³å®šæ˜¯å¦å¯»æ‰¾ä¸‹ä¸€ä¸ªæœåŠ¡å™¨è¿›è¡Œè¿æ¥
 static ngx_conf_bitmask_t  ngx_http_proxy_next_upstream_masks[] = {
     { ngx_string("error"), NGX_HTTP_UPSTREAM_FT_ERROR },
     { ngx_string("timeout"), NGX_HTTP_UPSTREAM_FT_TIMEOUT },
@@ -282,16 +282,16 @@ static ngx_conf_enum_t  ngx_http_proxy_http_version[] = {
 ngx_module_t  ngx_http_proxy_module;
 
 /*
-NginxµÄ·´Ïò´úÀíÄ£¿é»¹Ìá¹©ÁËºÜ¶àÖÖÅäÖÃ£¬ÈçÉèÖÃÁ¬½ÓµÄ³¬Ê±Ê±¼ä¡¢ÁÙÊ±ÎÄ¼şÈçºÎ´æ´¢£¬ÒÔ¼°×îÖØÒªµÄÈçºÎ»º´æÉÏÓÎ·şÎñÆ÷ÏìÓ¦µÈ¹¦ÄÜ¡£ÕâĞ©ÅäÖÃ¿ÉÒÔÍ¨¹ıÔÄ¶Á
-ngx_http_proxy_moduleÄ£¿éµÄËµÃ÷ÁË½â£¬Ö»ÓĞÉîÈëµØÀí½â£¬²ÅÄÜÊµÏÖÒ»¸ö¸ßĞÔÄÜµÄ·´Ïò´úÀí·şÎñÆ÷¡£±¾½ÚÖ»ÊÇ½éÉÜ·´Ïò´úÀí·şÎñÆ÷µÄ»ù±¾¹¦ÄÜ£¬ÔÚµÚ12ÕÂÖĞÎÒÃÇ
-½«»áÉîÈëµØÌ½Ë÷upstream»úÖÆ£¬µ½ÄÇÊ±£¬¶ÁÕßÒ²Ğí»á·¢ÏÖngx_http_proxy_moduleÄ£¿éÖ»ÊÇÊ¹ÓÃupstream»úÖÆÊµÏÖÁË·´Ïò´úÀí¹¦ÄÜ¶øÒÑ¡£
+Nginxçš„åå‘ä»£ç†æ¨¡å—è¿˜æä¾›äº†å¾ˆå¤šç§é…ç½®ï¼Œå¦‚è®¾ç½®è¿æ¥çš„è¶…æ—¶æ—¶é—´ã€ä¸´æ—¶æ–‡ä»¶å¦‚ä½•å­˜å‚¨ï¼Œä»¥åŠæœ€é‡è¦çš„å¦‚ä½•ç¼“å­˜ä¸Šæ¸¸æœåŠ¡å™¨å“åº”ç­‰åŠŸèƒ½ã€‚è¿™äº›é…ç½®å¯ä»¥é€šè¿‡é˜…è¯»
+ngx_http_proxy_moduleæ¨¡å—çš„è¯´æ˜äº†è§£ï¼Œåªæœ‰æ·±å…¥åœ°ç†è§£ï¼Œæ‰èƒ½å®ç°ä¸€ä¸ªé«˜æ€§èƒ½çš„åå‘ä»£ç†æœåŠ¡å™¨ã€‚æœ¬èŠ‚åªæ˜¯ä»‹ç»åå‘ä»£ç†æœåŠ¡å™¨çš„åŸºæœ¬åŠŸèƒ½ï¼Œåœ¨ç¬¬12ç« ä¸­æˆ‘ä»¬
+å°†ä¼šæ·±å…¥åœ°æ¢ç´¢upstreamæœºåˆ¶ï¼Œåˆ°é‚£æ—¶ï¼Œè¯»è€…ä¹Ÿè®¸ä¼šå‘ç°ngx_http_proxy_moduleæ¨¡å—åªæ˜¯ä½¿ç”¨upstreamæœºåˆ¶å®ç°äº†åå‘ä»£ç†åŠŸèƒ½è€Œå·²ã€‚
 */
 static ngx_command_t  ngx_http_proxy_commands[] = {
 /*
-upstream¿é
-Óï·¨£ºupstream name {...}
-ÅäÖÃ¿é£ºhttp
-upstream¿é¶¨ÒåÁËÒ»¸öÉÏÓÎ·şÎñÆ÷µÄ¼¯Èº£¬±ãÓÚ·´Ïò´úÀíÖĞµÄproxy_passÊ¹ÓÃ¡£ÀıÈç£º
+upstreamå—
+è¯­æ³•ï¼šupstream name {...}
+é…ç½®å—ï¼šhttp
+upstreamå—å®šä¹‰äº†ä¸€ä¸ªä¸Šæ¸¸æœåŠ¡å™¨çš„é›†ç¾¤ï¼Œä¾¿äºåå‘ä»£ç†ä¸­çš„proxy_passä½¿ç”¨ã€‚ä¾‹å¦‚ï¼š
 upstream backend {
   server backend1.example.com;
   server backend2.example.com;
@@ -304,60 +304,60 @@ server {
   }
 }
 
-Óï·¨£ºproxy_pass URL 
-Ä¬ÈÏÖµ£ºno 
-Ê¹ÓÃ×Ö¶Î£ºlocation, locationÖĞµÄif×Ö¶Î 
-Õâ¸öÖ¸ÁîÉèÖÃ±»´úÀí·şÎñÆ÷µÄµØÖ·ºÍ±»Ó³ÉäµÄURI£¬µØÖ·¿ÉÒÔÊ¹ÓÃÖ÷»úÃû»òIP¼Ó¶Ë¿ÚºÅµÄĞÎÊ½£¬ÀıÈç£º
+è¯­æ³•ï¼šproxy_pass URL
+é»˜è®¤å€¼ï¼šno
+ä½¿ç”¨å­—æ®µï¼šlocation, locationä¸­çš„ifå­—æ®µ
+è¿™ä¸ªæŒ‡ä»¤è®¾ç½®è¢«ä»£ç†æœåŠ¡å™¨çš„åœ°å€å’Œè¢«æ˜ å°„çš„URIï¼Œåœ°å€å¯ä»¥ä½¿ç”¨ä¸»æœºåæˆ–IPåŠ ç«¯å£å·çš„å½¢å¼ï¼Œä¾‹å¦‚ï¼š
 
 
-proxy_pass http://localhost:8000/uri/;»òÕßÒ»¸öunix socket£º
+proxy_pass http://localhost:8000/uri/;æˆ–è€…ä¸€ä¸ªunix socketï¼š
 
 
-proxy_pass http://unix:/path/to/backend.socket:/uri/;Â·¾¶ÔÚunix¹Ø¼ü×ÖµÄºóÃæÖ¸¶¨£¬Î»ÓÚÁ½¸öÃ°ºÅÖ®¼ä¡£
-×¢Òâ£ºHTTP HostÍ·Ã»ÓĞ×ª·¢£¬Ëü½«ÉèÖÃÎª»ùÓÚproxy_passÉùÃ÷£¬ÀıÈç£¬Èç¹ûÄãÒÆ¶¯ĞéÄâÖ÷»úexample.comµ½ÁíÍâÒ»Ì¨»úÆ÷£¬È»ºóÖØĞÂÅäÖÃÕı³££¨¼àÌıexample.comµ½Ò»¸öĞÂµÄIP£©£¬Í¬Ê±ÔÚ¾É»úÆ÷ÉÏÊÖ¶¯½«ĞÂµÄexample.comIPĞ´Èë/etc/hosts£¬Í¬Ê±Ê¹ÓÃproxy_passÖØ¶¨Ïòµ½http://example.com, È»ºóĞŞ¸ÄDNSµ½ĞÂµÄIP¡£
-µ±´«µİÇëÇóÊ±£¬Nginx½«location¶ÔÓ¦µÄURI²¿·ÖÌæ»»³Éproxy_passÖ¸ÁîÖĞËùÖ¸¶¨µÄ²¿·Ö£¬µ«ÊÇÓĞÁ½¸öÀıÍâ»áÊ¹ÆäÎŞ·¨È·¶¨ÈçºÎÈ¥Ìæ»»£º
+proxy_pass http://unix:/path/to/backend.socket:/uri/;è·¯å¾„åœ¨unixå…³é”®å­—çš„åé¢æŒ‡å®šï¼Œä½äºä¸¤ä¸ªå†’å·ä¹‹é—´ã€‚
+æ³¨æ„ï¼šHTTP Hostå¤´æ²¡æœ‰è½¬å‘ï¼Œå®ƒå°†è®¾ç½®ä¸ºåŸºäºproxy_passå£°æ˜ï¼Œä¾‹å¦‚ï¼Œå¦‚æœä½ ç§»åŠ¨è™šæ‹Ÿä¸»æœºexample.comåˆ°å¦å¤–ä¸€å°æœºå™¨ï¼Œç„¶åé‡æ–°é…ç½®æ­£å¸¸ï¼ˆç›‘å¬example.comåˆ°ä¸€ä¸ªæ–°çš„IPï¼‰ï¼ŒåŒæ—¶åœ¨æ—§æœºå™¨ä¸Šæ‰‹åŠ¨å°†æ–°çš„example.comIPå†™å…¥/etc/hostsï¼ŒåŒæ—¶ä½¿ç”¨proxy_passé‡å®šå‘åˆ°http://example.com, ç„¶åä¿®æ”¹DNSåˆ°æ–°çš„IPã€‚
+å½“ä¼ é€’è¯·æ±‚æ—¶ï¼ŒNginxå°†locationå¯¹åº”çš„URIéƒ¨åˆ†æ›¿æ¢æˆproxy_passæŒ‡ä»¤ä¸­æ‰€æŒ‡å®šçš„éƒ¨åˆ†ï¼Œä½†æ˜¯æœ‰ä¸¤ä¸ªä¾‹å¤–ä¼šä½¿å…¶æ— æ³•ç¡®å®šå¦‚ä½•å»æ›¿æ¢ï¼š
 
 
-¡ölocationÍ¨¹ıÕıÔò±í´ïÊ½Ö¸¶¨£»
+â– locationé€šè¿‡æ­£åˆ™è¡¨è¾¾å¼æŒ‡å®šï¼›
 
-¡öÔÚÊ¹ÓÃ´úÀíµÄlocationÖĞÀûÓÃrewriteÖ¸Áî¸Ä±äURI£¬Ê¹ÓÃÕâ¸öÅäÖÃ¿ÉÒÔ¸ü¼Ó¾«È·µÄ´¦ÀíÇëÇó£¨break£©£º
+â– åœ¨ä½¿ç”¨ä»£ç†çš„locationä¸­åˆ©ç”¨rewriteæŒ‡ä»¤æ”¹å˜URIï¼Œä½¿ç”¨è¿™ä¸ªé…ç½®å¯ä»¥æ›´åŠ ç²¾ç¡®çš„å¤„ç†è¯·æ±‚ï¼ˆbreakï¼‰ï¼š
 
 location  /name/ {
   rewrite      /name/([^/] +)  /users?name=$1  break;
   proxy_pass   http://127.0.0.1;
-}ÕâĞ©Çé¿öÏÂURI²¢Ã»ÓĞ±»Ó³Éä´«µİ¡£
-´ËÍâ£¬ĞèÒª±êÃ÷Ò»Ğ©±ê¼ÇÒÔ±ãURI½«ÒÔºÍ¿Í»§¶ËÏàÍ¬µÄ·¢ËÍĞÎÊ½×ª·¢£¬¶ø²»ÊÇ´¦Àí¹ıµÄĞÎÊ½£¬ÔÚÆä´¦ÀíÆÚ¼ä£º
+}è¿™äº›æƒ…å†µä¸‹URIå¹¶æ²¡æœ‰è¢«æ˜ å°„ä¼ é€’ã€‚
+æ­¤å¤–ï¼Œéœ€è¦æ ‡æ˜ä¸€äº›æ ‡è®°ä»¥ä¾¿URIå°†ä»¥å’Œå®¢æˆ·ç«¯ç›¸åŒçš„å‘é€å½¢å¼è½¬å‘ï¼Œè€Œä¸æ˜¯å¤„ç†è¿‡çš„å½¢å¼ï¼Œåœ¨å…¶å¤„ç†æœŸé—´ï¼š
 
 
-¡öÁ½¸öÒÔÉÏµÄĞ±¸Ü½«±»Ìæ»»ÎªÒ»¸ö£º ¡±//¡± ¨C ¡±/¡±; 
+â– ä¸¤ä¸ªä»¥ä¸Šçš„æ–œæ å°†è¢«æ›¿æ¢ä¸ºä¸€ä¸ªï¼š â€//â€ â€“ â€/â€;
 
-¡öÉ¾³ıÒıÓÃµÄµ±Ç°Ä¿Â¼£º¡±/./¡± ¨C ¡±/¡±; 
+â– åˆ é™¤å¼•ç”¨çš„å½“å‰ç›®å½•ï¼šâ€/./â€ â€“ â€/â€;
 
-¡öÉ¾³ıÒıÓÃµÄÏÈÇ°Ä¿Â¼£º¡±/dir /../¡± ¨C ¡±/¡°¡£
-Èç¹ûÔÚ·şÎñÆ÷ÉÏ±ØĞëÒÔÎ´¾­ÈÎºÎ´¦ÀíµÄĞÎÊ½·¢ËÍURI£¬ÄÇÃ´ÔÚproxy_passÖ¸ÁîÖĞ±ØĞëÊ¹ÓÃÎ´Ö¸¶¨URIµÄ²¿·Ö£º
+â– åˆ é™¤å¼•ç”¨çš„å…ˆå‰ç›®å½•ï¼šâ€/dir /../â€ â€“ â€/â€œã€‚
+å¦‚æœåœ¨æœåŠ¡å™¨ä¸Šå¿…é¡»ä»¥æœªç»ä»»ä½•å¤„ç†çš„å½¢å¼å‘é€URIï¼Œé‚£ä¹ˆåœ¨proxy_passæŒ‡ä»¤ä¸­å¿…é¡»ä½¿ç”¨æœªæŒ‡å®šURIçš„éƒ¨åˆ†ï¼š
 
 location  /some/path/ {
   proxy_pass   http://127.0.0.1;
-}ÔÚÖ¸ÁîÖĞÊ¹ÓÃ±äÁ¿ÊÇÒ»ÖÖ±È½ÏÌØÊâµÄÇé¿ö£º±»ÇëÇóµÄURL²»»áÊ¹ÓÃ²¢ÇÒÄã±ØĞëÍêÈ«ÊÖ¹¤±ê¼ÇURL¡£
-ÕâÒâÎ¶×ÅÏÂÁĞµÄÅäÖÃ²¢²»ÄÜÈÃÄã·½±ãµÄ½øÈëÄ³¸öÄãÏëÒªµÄĞéÄâÖ÷»úÄ¿Â¼£¬´úÀí×ÜÊÇ½«Ëü×ª·¢µ½ÏàÍ¬µÄURL£¨ÔÚÒ»¸öserver×Ö¶ÎµÄÅäÖÃ£©£º
+}åœ¨æŒ‡ä»¤ä¸­ä½¿ç”¨å˜é‡æ˜¯ä¸€ç§æ¯”è¾ƒç‰¹æ®Šçš„æƒ…å†µï¼šè¢«è¯·æ±‚çš„URLä¸ä¼šä½¿ç”¨å¹¶ä¸”ä½ å¿…é¡»å®Œå…¨æ‰‹å·¥æ ‡è®°URLã€‚
+è¿™æ„å‘³ç€ä¸‹åˆ—çš„é…ç½®å¹¶ä¸èƒ½è®©ä½ æ–¹ä¾¿çš„è¿›å…¥æŸä¸ªä½ æƒ³è¦çš„è™šæ‹Ÿä¸»æœºç›®å½•ï¼Œä»£ç†æ€»æ˜¯å°†å®ƒè½¬å‘åˆ°ç›¸åŒçš„URLï¼ˆåœ¨ä¸€ä¸ªserverå­—æ®µçš„é…ç½®ï¼‰ï¼š
 
 
 location / {
   proxy_pass   http://127.0.0.1:8080/VirtualHostBase/https/$server_name:443/some/path/VirtualHostRoot;
-}½â¾ö·½·¨ÊÇÊ¹ÓÃrewriteºÍproxy_passµÄ×éºÏ£º
+}è§£å†³æ–¹æ³•æ˜¯ä½¿ç”¨rewriteå’Œproxy_passçš„ç»„åˆï¼š
 
 
 location / {
   rewrite ^(.*)$ /VirtualHostBase/https/$server_name:443/some/path/VirtualHostRoot$1 break;
   proxy_pass   http://127.0.0.1:8080;
-}ÕâÖÖÇé¿öÏÂÇëÇóµÄURL½«±»ÖØĞ´£¬ proxy_passÖĞµÄÍÏÎ²Ğ±¸Ü²¢Ã»ÓĞÊµ¼ÊÒâÒå¡£
-Èç¹ûĞèÒªÍ¨¹ısslĞÅÈÎÁ¬½Óµ½Ò»¸öÉÏÓÎ·şÎñÆ÷×é£¬proxy_passÇ°×ºÎª https://£¬²¢ÇÒÍ¬Ê±Ö¸¶¨sslµÄ¶Ë¿Ú£¬Èç£º
+}è¿™ç§æƒ…å†µä¸‹è¯·æ±‚çš„URLå°†è¢«é‡å†™ï¼Œ proxy_passä¸­çš„æ‹–å°¾æ–œæ å¹¶æ²¡æœ‰å®é™…æ„ä¹‰ã€‚
+å¦‚æœéœ€è¦é€šè¿‡sslä¿¡ä»»è¿æ¥åˆ°ä¸€ä¸ªä¸Šæ¸¸æœåŠ¡å™¨ç»„ï¼Œproxy_passå‰ç¼€ä¸º https://ï¼Œå¹¶ä¸”åŒæ—¶æŒ‡å®šsslçš„ç«¯å£ï¼Œå¦‚ï¼š
 
 
 upstream backend-secure {
   server 10.0.0.20:443;
 }
- 
+
 server {
   listen 10.0.0.1:443;
   location / {
@@ -373,71 +373,71 @@ server {
       NULL },
 
 /*
-Óï·¨£ºproxy_redirect [ default|off|redirect replacement ];
-Ä¬ÈÏ£ºproxy_redirect default;
-ÅäÖÃ¿é£ºhttp¡¢server¡¢location
-µ±ÉÏÓÎ·şÎñÆ÷·µ»ØµÄÏìÓ¦ÊÇÖØ¶¨Ïò»òË¢ĞÂÇëÇó£¨ÈçHTTPÏìÓ¦ÂëÊÇ301»òÕß302£©Ê±£¬proxy_redirect¿ÉÒÔÖØÉèHTTPÍ·²¿µÄlocation»òrefresh×Ö¶Î¡£
-ÀıÈç£¬Èç¹ûÉÏÓÎ·şÎñÆ÷·¢³öµÄÏìÓ¦ÊÇ302ÖØ¶¨ÏòÇëÇó£¬location×Ö¶ÎµÄURIÊÇhttp://localhost:8000/two/some/uri/£¬ÄÇÃ´ÔÚÏÂÃæµÄÅäÖÃÇé¿öÏÂ£¬Êµ¼Ê×ª·¢¸ø¿Í»§¶ËµÄlocationÊÇhttp://frontend/one/some/uri/¡£
+è¯­æ³•ï¼šproxy_redirect [ default|off|redirect replacement ];
+é»˜è®¤ï¼šproxy_redirect default;
+é…ç½®å—ï¼šhttpã€serverã€location
+å½“ä¸Šæ¸¸æœåŠ¡å™¨è¿”å›çš„å“åº”æ˜¯é‡å®šå‘æˆ–åˆ·æ–°è¯·æ±‚ï¼ˆå¦‚HTTPå“åº”ç æ˜¯301æˆ–è€…302ï¼‰æ—¶ï¼Œproxy_redirectå¯ä»¥é‡è®¾HTTPå¤´éƒ¨çš„locationæˆ–refreshå­—æ®µã€‚
+ä¾‹å¦‚ï¼Œå¦‚æœä¸Šæ¸¸æœåŠ¡å™¨å‘å‡ºçš„å“åº”æ˜¯302é‡å®šå‘è¯·æ±‚ï¼Œlocationå­—æ®µçš„URIæ˜¯http://localhost:8000/two/some/uri/ï¼Œé‚£ä¹ˆåœ¨ä¸‹é¢çš„é…ç½®æƒ…å†µä¸‹ï¼Œå®é™…è½¬å‘ç»™å®¢æˆ·ç«¯çš„locationæ˜¯http://frontend/one/some/uri/ã€‚
 proxy_redirect http://localhost:8000/two/ http://frontend/one/;
-ÕâÀï»¹¿ÉÒÔÊ¹ÓÃngx-http-core-moduleÌá¹©µÄ±äÁ¿À´ÉèÖÃĞÂµÄlocation×Ö¶Î¡£ÀıÈç£º
+è¿™é‡Œè¿˜å¯ä»¥ä½¿ç”¨ngx-http-core-moduleæä¾›çš„å˜é‡æ¥è®¾ç½®æ–°çš„locationå­—æ®µã€‚ä¾‹å¦‚ï¼š
 proxy_redirect   http://localhost:8000/    http://$host:$server_port/;
-Ò²¿ÉÒÔÊ¡ÂÔreplacement²ÎÊıÖĞµÄÖ÷»úÃû²¿·Ö£¬ÕâÊ±»áÓÃĞéÄâÖ÷»úÃû³ÆÀ´Ìî³ä¡£ÀıÈç£º
+ä¹Ÿå¯ä»¥çœç•¥replacementå‚æ•°ä¸­çš„ä¸»æœºåéƒ¨åˆ†ï¼Œè¿™æ—¶ä¼šç”¨è™šæ‹Ÿä¸»æœºåç§°æ¥å¡«å……ã€‚ä¾‹å¦‚ï¼š
 proxy_redirect http://localhost:8000/two/ /one/;
-Ê¹ÓÃoff²ÎÊıÊ±£¬½«Ê¹location»òÕßrefresh×Ö¶ÎÎ¬³Ö²»±ä¡£ÀıÈç£º
+ä½¿ç”¨offå‚æ•°æ—¶ï¼Œå°†ä½¿locationæˆ–è€…refreshå­—æ®µç»´æŒä¸å˜ã€‚ä¾‹å¦‚ï¼š
 proxy_redirect off;
-Ê¹ÓÃÄ¬ÈÏµÄdefault²ÎÊıÊ±£¬»á°´ÕÕproxy_passÅäÖÃÏîºÍËùÊôµÄlocationÅäÖÃÏîÖØ×é·¢Íù¿Í»§¶ËµÄlocationÍ·²¿¡£ÀıÈç£¬ÏÂÃæÁ½ÖÖÅäÖÃĞ§¹ûÊÇÒ»ÑùµÄ£º
+ä½¿ç”¨é»˜è®¤çš„defaultå‚æ•°æ—¶ï¼Œä¼šæŒ‰ç…§proxy_passé…ç½®é¡¹å’Œæ‰€å±çš„locationé…ç½®é¡¹é‡ç»„å‘å¾€å®¢æˆ·ç«¯çš„locationå¤´éƒ¨ã€‚ä¾‹å¦‚ï¼Œä¸‹é¢ä¸¤ç§é…ç½®æ•ˆæœæ˜¯ä¸€æ ·çš„ï¼š
 location /one/ {
   proxy_pass       http://upstream:port/two/;
   proxy_redirect   default;
 }
- 
+
 location /one/ {
   proxy_pass       http://upstream:port/two/;
   proxy_redirect   http://upstream:port/two/   /one/;
 }
 
-Óï·¨£ºproxy_redirect [ default|off|redirect replacement ];
-Ä¬ÈÏÖµ£ºproxy_redirect default;
-Ê¹ÓÃ×Ö¶Î£ºhttp, server, location
-Õâ¸öÖ¸ÁîÎª±»´úÀí·şÎñÆ÷Ó¦´ğÖĞ±ØĞë¸Ä±äµÄÓ¦´ğÍ·£º¡±Location¡±ºÍ¡±Refresh¡±ÉèÖÃÖµ¡£
-ÎÒÃÇ¼ÙÉè±»´úÀíµÄ·şÎñÆ÷·µ»ØµÄÓ¦´ğÍ·×Ö¶ÎÎª£ºLocation: http://localhost:8000/two/some/uri/¡£
-Ö¸Áî£º
+è¯­æ³•ï¼šproxy_redirect [ default|off|redirect replacement ];
+é»˜è®¤å€¼ï¼šproxy_redirect default;
+ä½¿ç”¨å­—æ®µï¼šhttp, server, location
+è¿™ä¸ªæŒ‡ä»¤ä¸ºè¢«ä»£ç†æœåŠ¡å™¨åº”ç­”ä¸­å¿…é¡»æ”¹å˜çš„åº”ç­”å¤´ï¼šâ€Locationâ€å’Œâ€Refreshâ€è®¾ç½®å€¼ã€‚
+æˆ‘ä»¬å‡è®¾è¢«ä»£ç†çš„æœåŠ¡å™¨è¿”å›çš„åº”ç­”å¤´å­—æ®µä¸ºï¼šLocation: http://localhost:8000/two/some/uri/ã€‚
+æŒ‡ä»¤ï¼š
 
 
-proxy_redirect http://localhost:8000/two/ http://frontend/one/;»á½«ÆäÖØĞ´Îª£ºLocation: http://frontend/one/some/uri/¡£
-ÔÚÖØĞ´×Ö¶ÎÀïÃæ¿ÉÒÔ²»Ê¹ÓÃ·şÎñÆ÷Ãû£º
+proxy_redirect http://localhost:8000/two/ http://frontend/one/;ä¼šå°†å…¶é‡å†™ä¸ºï¼šLocation: http://frontend/one/some/uri/ã€‚
+åœ¨é‡å†™å­—æ®µé‡Œé¢å¯ä»¥ä¸ä½¿ç”¨æœåŠ¡å™¨åï¼š
 
-proxy_redirect http://localhost:8000/two/ /;ÕâÑù£¬Ä¬ÈÏµÄ·şÎñÆ÷ÃûºÍ¶Ë¿Ú½«±»ÉèÖÃ£¬¶Ë¿ÚÄ¬ÈÏ80¡£
-Ä¬ÈÏµÄÖØĞ´¿ÉÒÔÊ¹ÓÃ²ÎÊıdefault£¬½«Ê¹ÓÃlocationºÍproxy_passµÄÖµ¡£
-ÏÂÃæÁ½¸öÅäÖÃÊÇµÈ¼ÛµÄ£º
+proxy_redirect http://localhost:8000/two/ /;è¿™æ ·ï¼Œé»˜è®¤çš„æœåŠ¡å™¨åå’Œç«¯å£å°†è¢«è®¾ç½®ï¼Œç«¯å£é»˜è®¤80ã€‚
+é»˜è®¤çš„é‡å†™å¯ä»¥ä½¿ç”¨å‚æ•°defaultï¼Œå°†ä½¿ç”¨locationå’Œproxy_passçš„å€¼ã€‚
+ä¸‹é¢ä¸¤ä¸ªé…ç½®æ˜¯ç­‰ä»·çš„ï¼š
 
 
 location /one/ {
   proxy_pass       http://upstream:port/two/;
   proxy_redirect   default;
 }
- 
+
 location /one/ {
   proxy_pass       http://upstream:port/two/;
   proxy_redirect   http://upstream:port/two/   /one/;
-}Í¬Ñù£¬ÔÚÖØĞ´×Ö¶ÎÖĞ¿ÉÒÔÊ¹ÓÃ±äÁ¿£º
+}åŒæ ·ï¼Œåœ¨é‡å†™å­—æ®µä¸­å¯ä»¥ä½¿ç”¨å˜é‡ï¼š
 
 
-proxy_redirect   http://localhost:8000/    http://$host:$server_port/;Õâ¸öÖ¸Áî¿ÉÒÔÖØ¸´Ê¹ÓÃ£º
+proxy_redirect   http://localhost:8000/    http://$host:$server_port/;è¿™ä¸ªæŒ‡ä»¤å¯ä»¥é‡å¤ä½¿ç”¨ï¼š
 
 
 proxy_redirect   default;
 proxy_redirect   http://localhost:8000/    /;
-proxy_redirect   http://www.example.com/   /;²ÎÊıoffÔÚ±¾¼¶ÖĞ½ûÓÃËùÓĞµÄproxy_redirectÖ¸Áî£º
+proxy_redirect   http://www.example.com/   /;å‚æ•°offåœ¨æœ¬çº§ä¸­ç¦ç”¨æ‰€æœ‰çš„proxy_redirectæŒ‡ä»¤ï¼š
 
 
 proxy_redirect   off;
 proxy_redirect   default;
 proxy_redirect   http://localhost:8000/    /;
-proxy_redirect   http://www.example.com/   /;Õâ¸öÖ¸Áî¿ÉÒÔºÜÈİÒ×µÄ½«±»´úÀí·şÎñÆ÷µÄ·şÎñÆ÷ÃûÖØĞ´Îª´úÀí·şÎñÆ÷µÄ·şÎñÆ÷Ãû£º
+proxy_redirect   http://www.example.com/   /;è¿™ä¸ªæŒ‡ä»¤å¯ä»¥å¾ˆå®¹æ˜“çš„å°†è¢«ä»£ç†æœåŠ¡å™¨çš„æœåŠ¡å™¨åé‡å†™ä¸ºä»£ç†æœåŠ¡å™¨çš„æœåŠ¡å™¨åï¼š
 
 proxy_redirect   /   /;
-*/ //ngx_http_proxy_merge_loc_conf¸ÃifÀïÃæÄÚÈİºÍngx_http_proxy_redirectÀïÃæµÄproxy_redirect defaultÒ»Ñù£¬Ò²¾ÍÊÇËµproxy_redirectÄ¬ÈÏÎªdefault
+*/ //ngx_http_proxy_merge_loc_confè¯¥ifé‡Œé¢å†…å®¹å’Œngx_http_proxy_redirecté‡Œé¢çš„proxy_redirect defaultä¸€æ ·ï¼Œä¹Ÿå°±æ˜¯è¯´proxy_redirecté»˜è®¤ä¸ºdefault
     { ngx_string("proxy_redirect"),
       NGX_HTTP_MAIN_CONF|NGX_HTTP_SRV_CONF|NGX_HTTP_LOC_CONF|NGX_CONF_TAKE12,
       ngx_http_proxy_redirect,
@@ -460,19 +460,19 @@ proxy_redirect   /   /;
       NULL },
 
     /*
-     Óï·¨£ºproxy_store [on | off | path] 
-     Ä¬ÈÏÖµ£ºproxy_store off 
-     Ê¹ÓÃ×Ö¶Î£ºhttp, server, location 
-     Õâ¸öÖ¸ÁîÉèÖÃÄÄĞ©´«À´µÄÎÄ¼ş½«±»´æ´¢£¬²ÎÊı¡±on¡±±£³ÖÎÄ¼şÓëalias»òrootÖ¸ÁîÖ¸¶¨µÄÄ¿Â¼Ò»ÖÂ£¬²ÎÊı¡±off¡±½«¹Ø±Õ´æ´¢£¬Â·¾¶ÃûÖĞ¿ÉÒÔÊ¹ÓÃ±äÁ¿£º
+     è¯­æ³•ï¼šproxy_store [on | off | path]
+     é»˜è®¤å€¼ï¼šproxy_store off
+     ä½¿ç”¨å­—æ®µï¼šhttp, server, location
+     è¿™ä¸ªæŒ‡ä»¤è®¾ç½®å“ªäº›ä¼ æ¥çš„æ–‡ä»¶å°†è¢«å­˜å‚¨ï¼Œå‚æ•°â€onâ€ä¿æŒæ–‡ä»¶ä¸aliasæˆ–rootæŒ‡ä»¤æŒ‡å®šçš„ç›®å½•ä¸€è‡´ï¼Œå‚æ•°â€offâ€å°†å…³é—­å­˜å‚¨ï¼Œè·¯å¾„åä¸­å¯ä»¥ä½¿ç”¨å˜é‡ï¼š
 
-     proxy_store   /data/www$original_uri;Ó¦´ğÍ·ÖĞµÄ¡±Last-Modified¡±×Ö¶ÎÉèÖÃÁËÎÄ¼ş×îºóĞŞ¸ÄÊ±¼ä£¬ÎªÁËÎÄ¼şµÄ°²È«£¬¿ÉÒÔÊ¹ÓÃproxy_temp_pathÖ¸¶¨Ò»¸öÁÙÊ±ÎÄ¼şÄ¿Â¼¡£
-     Õâ¸öÖ¸ÁîÎªÄÇĞ©²»ÊÇ¾­³£Ê¹ÓÃµÄÎÄ¼ş×öÒ»·İ±¾µØ¿½±´¡£´Ó¶ø¼õÉÙ±»´úÀí·şÎñÆ÷¸ºÔØ¡£
-     
+     proxy_store   /data/www$original_uri;åº”ç­”å¤´ä¸­çš„â€Last-Modifiedâ€å­—æ®µè®¾ç½®äº†æ–‡ä»¶æœ€åä¿®æ”¹æ—¶é—´ï¼Œä¸ºäº†æ–‡ä»¶çš„å®‰å…¨ï¼Œå¯ä»¥ä½¿ç”¨proxy_temp_pathæŒ‡å®šä¸€ä¸ªä¸´æ—¶æ–‡ä»¶ç›®å½•ã€‚
+     è¿™ä¸ªæŒ‡ä»¤ä¸ºé‚£äº›ä¸æ˜¯ç»å¸¸ä½¿ç”¨çš„æ–‡ä»¶åšä¸€ä»½æœ¬åœ°æ‹·è´ã€‚ä»è€Œå‡å°‘è¢«ä»£ç†æœåŠ¡å™¨è´Ÿè½½ã€‚
+
      location /images/ {
        root                 /data/www;
        error_page           404 = /fetch$uri;
      }
-      
+
      location /fetch {
        internal;
        proxy_pass           http://backend;
@@ -480,44 +480,44 @@ proxy_redirect   /   /;
        proxy_store_access   user:rw  group:rw  all:r;
        proxy_temp_path      /data/temp;
        alias                /data/www;
-     }»òÕßÍ¨¹ıÕâÖÖ·½Ê½£º
-     
+     }æˆ–è€…é€šè¿‡è¿™ç§æ–¹å¼ï¼š
+
      location /images/ {
        root                 /data/www;
        error_page           404 = @fetch;
      }
-      
+
      location @fetch {
        internal;
-      
+
        proxy_pass           http://backend;
        proxy_store          on;
        proxy_store_access   user:rw  group:rw  all:r;
        proxy_temp_path      /data/temp;
-      
+
        root                 /data/www;
-     }×¢Òâproxy_store²»ÊÇÒ»¸ö»º´æ£¬Ëü¸üÏñÊÇÒ»¸ö¾µÏñ¡£
+     }æ³¨æ„proxy_storeä¸æ˜¯ä¸€ä¸ªç¼“å­˜ï¼Œå®ƒæ›´åƒæ˜¯ä¸€ä¸ªé•œåƒã€‚
 
-     nginxµÄ´æ´¢ÏµÍ³·ÖÁ½Àà£¬Ò»ÀàÊÇÍ¨¹ıproxy_store¿ªÆôµÄ£¬´æ´¢·½Ê½ÊÇ°´ÕÕurlÖĞµÄÎÄ¼şÂ·¾¶£¬´æ´¢ÔÚ±¾µØ¡£±ÈÈç/file/2013/0001/en/test.html£¬
-     ÄÇÃ´nginx¾Í»áÔÚÖ¸¶¨µÄ´æ´¢Ä¿Â¼ÏÂÒÀ´Î½¨Á¢¸÷¸öÄ¿Â¼ºÍÎÄ¼ş¡£ÁíÒ»ÀàÊÇÍ¨¹ıproxy_cache¿ªÆô£¬ÕâÖÖ·½Ê½´æ´¢µÄÎÄ¼ş²»ÊÇ°´ÕÕurlÂ·¾¶À´×éÖ¯µÄ£¬
-     ¶øÊÇÊ¹ÓÃÒ»Ğ©ÌØÊâ·½Ê½À´¹ÜÀíµÄ(ÕâÀï³ÆÎª×Ô¶¨Òå·½Ê½)£¬×Ô¶¨Òå·½Ê½¾ÍÊÇÎÒÃÇÒªÖØµã·ÖÎöµÄ¡£ÄÇÃ´ÕâÁ½ÖÖ·½Ê½¸÷ÓĞÊ²Ã´ÓÅÊÆÄØ£¿
+     nginxçš„å­˜å‚¨ç³»ç»Ÿåˆ†ä¸¤ç±»ï¼Œä¸€ç±»æ˜¯é€šè¿‡proxy_storeå¼€å¯çš„ï¼Œå­˜å‚¨æ–¹å¼æ˜¯æŒ‰ç…§urlä¸­çš„æ–‡ä»¶è·¯å¾„ï¼Œå­˜å‚¨åœ¨æœ¬åœ°ã€‚æ¯”å¦‚/file/2013/0001/en/test.htmlï¼Œ
+     é‚£ä¹ˆnginxå°±ä¼šåœ¨æŒ‡å®šçš„å­˜å‚¨ç›®å½•ä¸‹ä¾æ¬¡å»ºç«‹å„ä¸ªç›®å½•å’Œæ–‡ä»¶ã€‚å¦ä¸€ç±»æ˜¯é€šè¿‡proxy_cacheå¼€å¯ï¼Œè¿™ç§æ–¹å¼å­˜å‚¨çš„æ–‡ä»¶ä¸æ˜¯æŒ‰ç…§urlè·¯å¾„æ¥ç»„ç»‡çš„ï¼Œ
+     è€Œæ˜¯ä½¿ç”¨ä¸€äº›ç‰¹æ®Šæ–¹å¼æ¥ç®¡ç†çš„(è¿™é‡Œç§°ä¸ºè‡ªå®šä¹‰æ–¹å¼)ï¼Œè‡ªå®šä¹‰æ–¹å¼å°±æ˜¯æˆ‘ä»¬è¦é‡ç‚¹åˆ†æçš„ã€‚é‚£ä¹ˆè¿™ä¸¤ç§æ–¹å¼å„æœ‰ä»€ä¹ˆä¼˜åŠ¿å‘¢ï¼Ÿ
 
 
-    °´urlÂ·¾¶´æ´¢ÎÄ¼şµÄ·½Ê½£¬³ÌĞò´¦ÀíÆğÀ´±È½Ï¼òµ¥£¬µ«ÊÇĞÔÄÜ²»ĞĞ¡£Ê×ÏÈÓĞµÄurl¾Ş³¤£¬ÎÒÃÇÒªÔÚ±¾µØÎÄ¼şÏµÍ³ÉÏ½¨Á¢Èç´ËÉîµÄÄ¿Â¼£¬ÄÇÃ´ÎÄ¼şµÄ´ò¿ª
-    ºÍ²éÕÒ¶¼ºÜ»áºÜÂı(»ØÏëkernelÖĞÍ¨¹ıÂ·¾¶Ãû²éÕÒinodeµÄ¹ı³Ì°É)¡£Èç¹ûÊ¹ÓÃ×Ô¶¨Òå·½Ê½À´´¦ÀíÄ£Ê½£¬¾¡¹ÜÒ²Àë²»¿ªÎÄ¼şºÍÂ·¾¶£¬µ«ÊÇËü²»»áÒòurl³¤¶È
-    ¶ø²úÉú¸´ÔÓĞÔÔö¼ÓºÍĞÔÄÜµÄ½µµÍ¡£´ÓÄ³ÖÖÒâÒåÉÏËµÕâÊÇÒ»ÖÖÓÃ»§Ì¬ÎÄ¼şÏµÍ³£¬×îµäĞÍµÄÓ¦¸ÃËãÊÇsquidÖĞµÄCFS¡£nginxÊ¹ÓÃµÄ·½Ê½Ïà¶Ô¼òµ¥£¬Ö÷ÒªÒÀ¿¿
-    urlµÄmd5ÖµÀ´¹ÜÀí
+    æŒ‰urlè·¯å¾„å­˜å‚¨æ–‡ä»¶çš„æ–¹å¼ï¼Œç¨‹åºå¤„ç†èµ·æ¥æ¯”è¾ƒç®€å•ï¼Œä½†æ˜¯æ€§èƒ½ä¸è¡Œã€‚é¦–å…ˆæœ‰çš„urlå·¨é•¿ï¼Œæˆ‘ä»¬è¦åœ¨æœ¬åœ°æ–‡ä»¶ç³»ç»Ÿä¸Šå»ºç«‹å¦‚æ­¤æ·±çš„ç›®å½•ï¼Œé‚£ä¹ˆæ–‡ä»¶çš„æ‰“å¼€
+    å’ŒæŸ¥æ‰¾éƒ½å¾ˆä¼šå¾ˆæ…¢(å›æƒ³kernelä¸­é€šè¿‡è·¯å¾„åæŸ¥æ‰¾inodeçš„è¿‡ç¨‹å§)ã€‚å¦‚æœä½¿ç”¨è‡ªå®šä¹‰æ–¹å¼æ¥å¤„ç†æ¨¡å¼ï¼Œå°½ç®¡ä¹Ÿç¦»ä¸å¼€æ–‡ä»¶å’Œè·¯å¾„ï¼Œä½†æ˜¯å®ƒä¸ä¼šå› urlé•¿åº¦
+    è€Œäº§ç”Ÿå¤æ‚æ€§å¢åŠ å’Œæ€§èƒ½çš„é™ä½ã€‚ä»æŸç§æ„ä¹‰ä¸Šè¯´è¿™æ˜¯ä¸€ç§ç”¨æˆ·æ€æ–‡ä»¶ç³»ç»Ÿï¼Œæœ€å…¸å‹çš„åº”è¯¥ç®—æ˜¯squidä¸­çš„CFSã€‚nginxä½¿ç”¨çš„æ–¹å¼ç›¸å¯¹ç®€å•ï¼Œä¸»è¦ä¾é 
+    urlçš„md5å€¼æ¥ç®¡ç†
      */
      /*
-       nginxµÄ´æ´¢ÏµÍ³·ÖÁ½Àà£¬Ò»ÀàÊÇÍ¨¹ıproxy_store¿ªÆôµÄ£¬´æ´¢·½Ê½ÊÇ°´ÕÕurlÖĞµÄÎÄ¼şÂ·¾¶£¬´æ´¢ÔÚ±¾µØ¡£±ÈÈç/file/2013/0001/en/test.html£¬
-     ÄÇÃ´nginx¾Í»áÔÚÖ¸¶¨µÄ´æ´¢Ä¿Â¼ÏÂÒÀ´Î½¨Á¢¸÷¸öÄ¿Â¼ºÍÎÄ¼ş¡£ÁíÒ»ÀàÊÇÍ¨¹ıproxy_cache¿ªÆô£¬ÕâÖÖ·½Ê½´æ´¢µÄÎÄ¼ş²»ÊÇ°´ÕÕurlÂ·¾¶À´×éÖ¯µÄ£¬
-     ¶øÊÇÊ¹ÓÃÒ»Ğ©ÌØÊâ·½Ê½À´¹ÜÀíµÄ(ÕâÀï³ÆÎª×Ô¶¨Òå·½Ê½)£¬×Ô¶¨Òå·½Ê½¾ÍÊÇÎÒÃÇÒªÖØµã·ÖÎöµÄ¡£ÄÇÃ´ÕâÁ½ÖÖ·½Ê½¸÷ÓĞÊ²Ã´ÓÅÊÆÄØ£¿
+       nginxçš„å­˜å‚¨ç³»ç»Ÿåˆ†ä¸¤ç±»ï¼Œä¸€ç±»æ˜¯é€šè¿‡proxy_storeå¼€å¯çš„ï¼Œå­˜å‚¨æ–¹å¼æ˜¯æŒ‰ç…§urlä¸­çš„æ–‡ä»¶è·¯å¾„ï¼Œå­˜å‚¨åœ¨æœ¬åœ°ã€‚æ¯”å¦‚/file/2013/0001/en/test.htmlï¼Œ
+     é‚£ä¹ˆnginxå°±ä¼šåœ¨æŒ‡å®šçš„å­˜å‚¨ç›®å½•ä¸‹ä¾æ¬¡å»ºç«‹å„ä¸ªç›®å½•å’Œæ–‡ä»¶ã€‚å¦ä¸€ç±»æ˜¯é€šè¿‡proxy_cacheå¼€å¯ï¼Œè¿™ç§æ–¹å¼å­˜å‚¨çš„æ–‡ä»¶ä¸æ˜¯æŒ‰ç…§urlè·¯å¾„æ¥ç»„ç»‡çš„ï¼Œ
+     è€Œæ˜¯ä½¿ç”¨ä¸€äº›ç‰¹æ®Šæ–¹å¼æ¥ç®¡ç†çš„(è¿™é‡Œç§°ä¸ºè‡ªå®šä¹‰æ–¹å¼)ï¼Œè‡ªå®šä¹‰æ–¹å¼å°±æ˜¯æˆ‘ä»¬è¦é‡ç‚¹åˆ†æçš„ã€‚é‚£ä¹ˆè¿™ä¸¤ç§æ–¹å¼å„æœ‰ä»€ä¹ˆä¼˜åŠ¿å‘¢ï¼Ÿ
 
 
-    °´urlÂ·¾¶´æ´¢ÎÄ¼şµÄ·½Ê½£¬³ÌĞò´¦ÀíÆğÀ´±È½Ï¼òµ¥£¬µ«ÊÇĞÔÄÜ²»ĞĞ¡£Ê×ÏÈÓĞµÄurl¾Ş³¤£¬ÎÒÃÇÒªÔÚ±¾µØÎÄ¼şÏµÍ³ÉÏ½¨Á¢Èç´ËÉîµÄÄ¿Â¼£¬ÄÇÃ´ÎÄ¼şµÄ´ò¿ª
-    ºÍ²éÕÒ¶¼ºÜ»áºÜÂı(»ØÏëkernelÖĞÍ¨¹ıÂ·¾¶Ãû²éÕÒinodeµÄ¹ı³Ì°É)¡£Èç¹ûÊ¹ÓÃ×Ô¶¨Òå·½Ê½À´´¦ÀíÄ£Ê½£¬¾¡¹ÜÒ²Àë²»¿ªÎÄ¼şºÍÂ·¾¶£¬µ«ÊÇËü²»»áÒòurl³¤¶È
-    ¶ø²úÉú¸´ÔÓĞÔÔö¼ÓºÍĞÔÄÜµÄ½µµÍ¡£´ÓÄ³ÖÖÒâÒåÉÏËµÕâÊÇÒ»ÖÖÓÃ»§Ì¬ÎÄ¼şÏµÍ³£¬×îµäĞÍµÄÓ¦¸ÃËãÊÇsquidÖĞµÄCFS¡£nginxÊ¹ÓÃµÄ·½Ê½Ïà¶Ô¼òµ¥£¬Ö÷ÒªÒÀ¿¿
-    urlµÄmd5ÖµÀ´¹ÜÀí
+    æŒ‰urlè·¯å¾„å­˜å‚¨æ–‡ä»¶çš„æ–¹å¼ï¼Œç¨‹åºå¤„ç†èµ·æ¥æ¯”è¾ƒç®€å•ï¼Œä½†æ˜¯æ€§èƒ½ä¸è¡Œã€‚é¦–å…ˆæœ‰çš„urlå·¨é•¿ï¼Œæˆ‘ä»¬è¦åœ¨æœ¬åœ°æ–‡ä»¶ç³»ç»Ÿä¸Šå»ºç«‹å¦‚æ­¤æ·±çš„ç›®å½•ï¼Œé‚£ä¹ˆæ–‡ä»¶çš„æ‰“å¼€
+    å’ŒæŸ¥æ‰¾éƒ½å¾ˆä¼šå¾ˆæ…¢(å›æƒ³kernelä¸­é€šè¿‡è·¯å¾„åæŸ¥æ‰¾inodeçš„è¿‡ç¨‹å§)ã€‚å¦‚æœä½¿ç”¨è‡ªå®šä¹‰æ–¹å¼æ¥å¤„ç†æ¨¡å¼ï¼Œå°½ç®¡ä¹Ÿç¦»ä¸å¼€æ–‡ä»¶å’Œè·¯å¾„ï¼Œä½†æ˜¯å®ƒä¸ä¼šå› urlé•¿åº¦
+    è€Œäº§ç”Ÿå¤æ‚æ€§å¢åŠ å’Œæ€§èƒ½çš„é™ä½ã€‚ä»æŸç§æ„ä¹‰ä¸Šè¯´è¿™æ˜¯ä¸€ç§ç”¨æˆ·æ€æ–‡ä»¶ç³»ç»Ÿï¼Œæœ€å…¸å‹çš„åº”è¯¥ç®—æ˜¯squidä¸­çš„CFSã€‚nginxä½¿ç”¨çš„æ–¹å¼ç›¸å¯¹ç®€å•ï¼Œä¸»è¦ä¾é 
+    urlçš„md5å€¼æ¥ç®¡ç†
      */
     { ngx_string("proxy_store"),
       NGX_HTTP_MAIN_CONF|NGX_HTTP_SRV_CONF|NGX_HTTP_LOC_CONF|NGX_CONF_TAKE1,
@@ -527,11 +527,11 @@ proxy_redirect   /   /;
       NULL },
 
     /*
-    Óï·¨£ºproxy_store_access users:permissions [users:permission ¡­] 
-    Ä¬ÈÏÖµ£ºproxy_store_access user:rw 
-    Ê¹ÓÃ×Ö¶Î£ºhttp, server, location 
-    Ö¸¶¨´´½¨ÎÄ¼şºÍÄ¿Â¼µÄÏà¹ØÈ¨ÏŞ£¬Èç£º
-    proxy_store_access  user:rw  group:rw  all:r;Èç¹ûÕıÈ·Ö¸¶¨ÁË×éºÍËùÓĞµÄÈ¨ÏŞ£¬ÔòÃ»ÓĞ±ØÒªÈ¥Ö¸¶¨ÓÃ»§µÄÈ¨ÏŞ£º
+    è¯­æ³•ï¼šproxy_store_access users:permissions [users:permission â€¦]
+    é»˜è®¤å€¼ï¼šproxy_store_access user:rw
+    ä½¿ç”¨å­—æ®µï¼šhttp, server, location
+    æŒ‡å®šåˆ›å»ºæ–‡ä»¶å’Œç›®å½•çš„ç›¸å…³æƒé™ï¼Œå¦‚ï¼š
+    proxy_store_access  user:rw  group:rw  all:r;å¦‚æœæ­£ç¡®æŒ‡å®šäº†ç»„å’Œæ‰€æœ‰çš„æƒé™ï¼Œåˆ™æ²¡æœ‰å¿…è¦å»æŒ‡å®šç”¨æˆ·çš„æƒé™ï¼š
     proxy_store_access  group:rw  all:r;
      */
     { ngx_string("proxy_store_access"),
@@ -542,15 +542,15 @@ proxy_redirect   /   /;
       NULL },
 
 /*
-Óï·¨£ºproxy_buffering on|off 
-Ä¬ÈÏÖµ£ºproxy_buffering on 
-Ê¹ÓÃ×Ö¶Î£ºhttp, server, location 
-Îªºó¶ËµÄ·şÎñÆ÷ÆôÓÃÓ¦´ğ»º³å¡£
-Èç¹ûÆôÓÃ»º³å£¬nginx¼ÙÉè±»´úÀí·şÎñÆ÷ÄÜ¹»·Ç³£¿ìµÄ´«µİÓ¦´ğ£¬²¢½«Æä·ÅÈë»º³åÇø£¬¿ÉÒÔÊ¹ÓÃ proxy_buffer_sizeºÍproxy_buffersÉèÖÃÏà¹Ø²ÎÊı¡£
-Èç¹ûÏìÓ¦ÎŞ·¨È«²¿·ÅÈëÄÚ´æ£¬Ôò½«ÆäĞ´ÈëÓ²ÅÌ¡£
-Èç¹û½ûÓÃ»º³å£¬´Óºó¶Ë´«À´µÄÓ¦´ğ½«Á¢¼´±»´«ËÍµ½¿Í»§¶Ë¡£
-nginxºöÂÔ±»´úÀí·şÎñÆ÷µÄÓ¦´ğÊıÄ¿ºÍËùÓĞÓ¦´ğµÄ´óĞ¡£¬½ÓÊÜproxy_buffer_sizeËùÖ¸¶¨µÄÖµ¡£
-¶ÔÓÚ»ùÓÚ³¤ÂÖÑ¯µÄCometÓ¦ÓÃĞèÒª¹Ø±ÕÕâ¸öÖ¸Áî£¬·ñÔòÒì²½µÄÓ¦´ğ½«±»»º³å²¢ÇÒCometÎŞ·¨Õı³£¹¤×÷¡£
+è¯­æ³•ï¼šproxy_buffering on|off
+é»˜è®¤å€¼ï¼šproxy_buffering on
+ä½¿ç”¨å­—æ®µï¼šhttp, server, location
+ä¸ºåç«¯çš„æœåŠ¡å™¨å¯ç”¨åº”ç­”ç¼“å†²ã€‚
+å¦‚æœå¯ç”¨ç¼“å†²ï¼Œnginxå‡è®¾è¢«ä»£ç†æœåŠ¡å™¨èƒ½å¤Ÿéå¸¸å¿«çš„ä¼ é€’åº”ç­”ï¼Œå¹¶å°†å…¶æ”¾å…¥ç¼“å†²åŒºï¼Œå¯ä»¥ä½¿ç”¨ proxy_buffer_sizeå’Œproxy_buffersè®¾ç½®ç›¸å…³å‚æ•°ã€‚
+å¦‚æœå“åº”æ— æ³•å…¨éƒ¨æ”¾å…¥å†…å­˜ï¼Œåˆ™å°†å…¶å†™å…¥ç¡¬ç›˜ã€‚
+å¦‚æœç¦ç”¨ç¼“å†²ï¼Œä»åç«¯ä¼ æ¥çš„åº”ç­”å°†ç«‹å³è¢«ä¼ é€åˆ°å®¢æˆ·ç«¯ã€‚
+nginxå¿½ç•¥è¢«ä»£ç†æœåŠ¡å™¨çš„åº”ç­”æ•°ç›®å’Œæ‰€æœ‰åº”ç­”çš„å¤§å°ï¼Œæ¥å—proxy_buffer_sizeæ‰€æŒ‡å®šçš„å€¼ã€‚
+å¯¹äºåŸºäºé•¿è½®è¯¢çš„Cometåº”ç”¨éœ€è¦å…³é—­è¿™ä¸ªæŒ‡ä»¤ï¼Œå¦åˆ™å¼‚æ­¥çš„åº”ç­”å°†è¢«ç¼“å†²å¹¶ä¸”Cometæ— æ³•æ­£å¸¸å·¥ä½œã€‚
 */
     { ngx_string("proxy_buffering"),
       NGX_HTTP_MAIN_CONF|NGX_HTTP_SRV_CONF|NGX_HTTP_LOC_CONF|NGX_CONF_FLAG,
@@ -561,15 +561,15 @@ nginxºöÂÔ±»´úÀí·şÎñÆ÷µÄÓ¦´ğÊıÄ¿ºÍËùÓĞÓ¦´ğµÄ´óĞ¡£¬½ÓÊÜproxy_buffer_sizeËùÖ¸¶¨µÄÖµ
 
     /*
      Syntax:  proxy_request_buffering on | off;
-     Default:  proxy_request_buffering on; 
+     Default:  proxy_request_buffering on;
      Context:  http, server, location
 
-        Enables or disables buffering of a client request body. 
-         When buffering is enabled, the entire request body is read from the client before sending the request to a proxied server. 
-         When buffering is disabled, the request body is sent to the proxied server immediately as it is received. In this case, 
-     the request cannot be passed to the next server if nginx already started sending the request body. 
-         When HTTP/1.1 chunked transfer encoding is used to send the original request body, the request body will be buffered 
-     regardless of the directive value unless HTTP/1.1 is enabled for proxying. 
+        Enables or disables buffering of a client request body.
+         When buffering is enabled, the entire request body is read from the client before sending the request to a proxied server.
+         When buffering is disabled, the request body is sent to the proxied server immediately as it is received. In this case,
+     the request cannot be passed to the next server if nginx already started sending the request body.
+         When HTTP/1.1 chunked transfer encoding is used to send the original request body, the request body will be buffered
+     regardless of the directive value unless HTTP/1.1 is enabled for proxying.
      */
     { ngx_string("proxy_request_buffering"),
       NGX_HTTP_MAIN_CONF|NGX_HTTP_SRV_CONF|NGX_HTTP_LOC_CONF|NGX_CONF_FLAG,
@@ -587,8 +587,8 @@ nginxºöÂÔ±»´úÀí·şÎñÆ÷µÄÓ¦´ğÊıÄ¿ºÍËùÓĞÓ¦´ğµÄ´óĞ¡£¬½ÓÊÜproxy_buffer_sizeËùÖ¸¶¨µÄÖµ
 
     /*
      proxy_bind  192.168.1.1;
-     ÔÚµ÷ÓÃconnect()Ç°½«ÉÏÓÎsocket°ó¶¨µ½Ò»¸ö±¾µØµØÖ·£¬Èç¹ûÖ÷»úÓĞ¶à¸öÍøÂç½Ó¿Ú»ò±ğÃû£¬µ«ÊÇÄãÏ£Íû´úÀíµÄÁ¬½ÓÍ¨¹ıÖ¸¶¨µÄ½è¿Ú»òµØÖ·£¬
-     ¿ÉÒÔÊ¹ÓÃÕâ¸öÖ¸Áî¡£
+     åœ¨è°ƒç”¨connect()å‰å°†ä¸Šæ¸¸socketç»‘å®šåˆ°ä¸€ä¸ªæœ¬åœ°åœ°å€ï¼Œå¦‚æœä¸»æœºæœ‰å¤šä¸ªç½‘ç»œæ¥å£æˆ–åˆ«åï¼Œä½†æ˜¯ä½ å¸Œæœ›ä»£ç†çš„è¿æ¥é€šè¿‡æŒ‡å®šçš„å€Ÿå£æˆ–åœ°å€ï¼Œ
+     å¯ä»¥ä½¿ç”¨è¿™ä¸ªæŒ‡ä»¤ã€‚
      */
     { ngx_string("proxy_bind"),
       NGX_HTTP_MAIN_CONF|NGX_HTTP_SRV_CONF|NGX_HTTP_LOC_CONF|NGX_CONF_TAKE1,
@@ -598,11 +598,11 @@ nginxºöÂÔ±»´úÀí·şÎñÆ÷µÄÓ¦´ğÊıÄ¿ºÍËùÓĞÓ¦´ğµÄ´óĞ¡£¬½ÓÊÜproxy_buffer_sizeËùÖ¸¶¨µÄÖµ
       NULL },
 
 /*
-Ä¬ÈÏÖµ£ºproxy_connect_timeout 60 
-Ê¹ÓÃ×Ö¶Î£ºhttp, server, location 
-Ö¸¶¨Ò»¸öÁ¬½Óµ½´úÀí·şÎñÆ÷µÄ³¬Ê±Ê±¼ä£¬ĞèÒª×¢ÒâµÄÊÇÕâ¸öÊ±¼ä×îºÃ²»Òª³¬¹ı75Ãë¡£
-Õâ¸öÊ±¼ä²¢²»ÊÇÖ¸·şÎñÆ÷´«»ØÒ³ÃæµÄÊ±¼ä£¨Õâ¸öÊ±¼äÓÉproxy_read_timeoutÉùÃ÷£©¡£Èç¹ûÄãµÄÇ°¶Ë´úÀí·şÎñÆ÷ÊÇÕı³£ÔËĞĞµÄ£¬µ«ÊÇÓöµ½Ò»Ğ©×´¿ö
-£¨ÀıÈçÃ»ÓĞ×ã¹»µÄÏß³ÌÈ¥´¦ÀíÇëÇó£¬ÇëÇó½«±»·ÅÔÚÒ»¸öÁ¬½Ó³ØÖĞÑÓ³Ù´¦Àí£©£¬ÄÇÃ´Õâ¸öÉùÃ÷ÎŞÖúÓÚ·şÎñÆ÷È¥½¨Á¢Á¬½Ó¡£
+é»˜è®¤å€¼ï¼šproxy_connect_timeout 60
+ä½¿ç”¨å­—æ®µï¼šhttp, server, location
+æŒ‡å®šä¸€ä¸ªè¿æ¥åˆ°ä»£ç†æœåŠ¡å™¨çš„è¶…æ—¶æ—¶é—´ï¼Œéœ€è¦æ³¨æ„çš„æ˜¯è¿™ä¸ªæ—¶é—´æœ€å¥½ä¸è¦è¶…è¿‡75ç§’ã€‚
+è¿™ä¸ªæ—¶é—´å¹¶ä¸æ˜¯æŒ‡æœåŠ¡å™¨ä¼ å›é¡µé¢çš„æ—¶é—´ï¼ˆè¿™ä¸ªæ—¶é—´ç”±proxy_read_timeoutå£°æ˜ï¼‰ã€‚å¦‚æœä½ çš„å‰ç«¯ä»£ç†æœåŠ¡å™¨æ˜¯æ­£å¸¸è¿è¡Œçš„ï¼Œä½†æ˜¯é‡åˆ°ä¸€äº›çŠ¶å†µ
+ï¼ˆä¾‹å¦‚æ²¡æœ‰è¶³å¤Ÿçš„çº¿ç¨‹å»å¤„ç†è¯·æ±‚ï¼Œè¯·æ±‚å°†è¢«æ”¾åœ¨ä¸€ä¸ªè¿æ¥æ± ä¸­å»¶è¿Ÿå¤„ç†ï¼‰ï¼Œé‚£ä¹ˆè¿™ä¸ªå£°æ˜æ— åŠ©äºæœåŠ¡å™¨å»å»ºç«‹è¿æ¥ã€‚
 */
     { ngx_string("proxy_connect_timeout"),
       NGX_HTTP_MAIN_CONF|NGX_HTTP_SRV_CONF|NGX_HTTP_LOC_CONF|NGX_CONF_TAKE1,
@@ -612,11 +612,11 @@ nginxºöÂÔ±»´úÀí·şÎñÆ÷µÄÓ¦´ğÊıÄ¿ºÍËùÓĞÓ¦´ğµÄ´óĞ¡£¬½ÓÊÜproxy_buffer_sizeËùÖ¸¶¨µÄÖµ
       NULL },
 
 /*
-Ä¬ÈÏÖµ£ºproxy_connect_timeout 60 
-Ê¹ÓÃ×Ö¶Î£ºhttp, server, location 
-Ö¸¶¨Ò»¸öÁ¬½Óµ½´úÀí·şÎñÆ÷µÄ³¬Ê±Ê±¼ä£¬ĞèÒª×¢ÒâµÄÊÇÕâ¸öÊ±¼ä×îºÃ²»Òª³¬¹ı75Ãë¡£
-Õâ¸öÊ±¼ä²¢²»ÊÇÖ¸·şÎñÆ÷´«»ØÒ³ÃæµÄÊ±¼ä£¨Õâ¸öÊ±¼äÓÉproxy_read_timeoutÉùÃ÷£©¡£Èç¹ûÄãµÄÇ°¶Ë´úÀí·şÎñÆ÷ÊÇÕı³£ÔËĞĞµÄ£¬µ«ÊÇÓöµ½Ò»Ğ©×´
-¿ö£¨ÀıÈçÃ»ÓĞ×ã¹»µÄÏß³ÌÈ¥´¦ÀíÇëÇó£¬ÇëÇó½«±»·ÅÔÚÒ»¸öÁ¬½Ó³ØÖĞÑÓ³Ù´¦Àí£©£¬ÄÇÃ´Õâ¸öÉùÃ÷ÎŞÖúÓÚ·şÎñÆ÷È¥½¨Á¢Á¬½Ó¡£
+é»˜è®¤å€¼ï¼šproxy_connect_timeout 60
+ä½¿ç”¨å­—æ®µï¼šhttp, server, location
+æŒ‡å®šä¸€ä¸ªè¿æ¥åˆ°ä»£ç†æœåŠ¡å™¨çš„è¶…æ—¶æ—¶é—´ï¼Œéœ€è¦æ³¨æ„çš„æ˜¯è¿™ä¸ªæ—¶é—´æœ€å¥½ä¸è¦è¶…è¿‡75ç§’ã€‚
+è¿™ä¸ªæ—¶é—´å¹¶ä¸æ˜¯æŒ‡æœåŠ¡å™¨ä¼ å›é¡µé¢çš„æ—¶é—´ï¼ˆè¿™ä¸ªæ—¶é—´ç”±proxy_read_timeoutå£°æ˜ï¼‰ã€‚å¦‚æœä½ çš„å‰ç«¯ä»£ç†æœåŠ¡å™¨æ˜¯æ­£å¸¸è¿è¡Œçš„ï¼Œä½†æ˜¯é‡åˆ°ä¸€äº›çŠ¶
+å†µï¼ˆä¾‹å¦‚æ²¡æœ‰è¶³å¤Ÿçš„çº¿ç¨‹å»å¤„ç†è¯·æ±‚ï¼Œè¯·æ±‚å°†è¢«æ”¾åœ¨ä¸€ä¸ªè¿æ¥æ± ä¸­å»¶è¿Ÿå¤„ç†ï¼‰ï¼Œé‚£ä¹ˆè¿™ä¸ªå£°æ˜æ— åŠ©äºæœåŠ¡å™¨å»å»ºç«‹è¿æ¥ã€‚
 */
     { ngx_string("proxy_send_timeout"),
       NGX_HTTP_MAIN_CONF|NGX_HTTP_SRV_CONF|NGX_HTTP_LOC_CONF|NGX_CONF_TAKE1,
@@ -633,12 +633,12 @@ nginxºöÂÔ±»´úÀí·şÎñÆ÷µÄÓ¦´ğÊıÄ¿ºÍËùÓĞÓ¦´ğµÄ´óĞ¡£¬½ÓÊÜproxy_buffer_sizeËùÖ¸¶¨µÄÖµ
       &ngx_http_proxy_lowat_post },
 
     /*
-     Óï·¨£ºproxy_intercept_errors [ on|off ] 
-     Ä¬ÈÏÖµ£ºproxy_intercept_errors off 
-     Ê¹ÓÃ×Ö¶Î£ºhttp, server, location 
-     Ê¹nginx×èÖ¹HTTPÓ¦´ğ´úÂëÎª400»òÕß¸ü¸ßµÄÓ¦´ğ¡£
-     Ä¬ÈÏÇé¿öÏÂ±»´úÀí·şÎñÆ÷µÄËùÓĞÓ¦´ğ¶¼½«±»´«µİ¡£ 
-     Èç¹û½«ÆäÉèÖÃÎªonÔònginx»á½«×èÖ¹µÄÕâ²¿·Ö´úÂëÔÚÒ»¸öerror_pageÖ¸Áî´¦Àí£¬Èç¹ûÔÚÕâ¸öerror_pageÖĞÃ»ÓĞÆ¥ÅäµÄ´¦Àí·½·¨£¬Ôò±»´úÀí·şÎñÆ÷´«µİµÄ´íÎóÓ¦´ğ»á°´Ô­Ñù´«µİ¡£
+     è¯­æ³•ï¼šproxy_intercept_errors [ on|off ]
+     é»˜è®¤å€¼ï¼šproxy_intercept_errors off
+     ä½¿ç”¨å­—æ®µï¼šhttp, server, location
+     ä½¿nginxé˜»æ­¢HTTPåº”ç­”ä»£ç ä¸º400æˆ–è€…æ›´é«˜çš„åº”ç­”ã€‚
+     é»˜è®¤æƒ…å†µä¸‹è¢«ä»£ç†æœåŠ¡å™¨çš„æ‰€æœ‰åº”ç­”éƒ½å°†è¢«ä¼ é€’ã€‚
+     å¦‚æœå°†å…¶è®¾ç½®ä¸ºonåˆ™nginxä¼šå°†é˜»æ­¢çš„è¿™éƒ¨åˆ†ä»£ç åœ¨ä¸€ä¸ªerror_pageæŒ‡ä»¤å¤„ç†ï¼Œå¦‚æœåœ¨è¿™ä¸ªerror_pageä¸­æ²¡æœ‰åŒ¹é…çš„å¤„ç†æ–¹æ³•ï¼Œåˆ™è¢«ä»£ç†æœåŠ¡å™¨ä¼ é€’çš„é”™è¯¯åº”ç­”ä¼šæŒ‰åŸæ ·ä¼ é€’ã€‚
      */
     { ngx_string("proxy_intercept_errors"),
       NGX_HTTP_MAIN_CONF|NGX_HTTP_SRV_CONF|NGX_HTTP_LOC_CONF|NGX_CONF_FLAG,
@@ -648,23 +648,23 @@ nginxºöÂÔ±»´úÀí·şÎñÆ÷µÄÓ¦´ğÊıÄ¿ºÍËùÓĞÓ¦´ğµÄ´óĞ¡£¬½ÓÊÜproxy_buffer_sizeËùÖ¸¶¨µÄÖµ
       NULL },
 
     /*
-    Óï·¨£ºproxy_set_header header value 
-    Ä¬ÈÏÖµ£º Host and Connection
-    Ê¹ÓÃ×Ö¶Î£ºhttp, server, location 
-    Õâ¸öÖ¸ÁîÔÊĞí½«·¢ËÍµ½±»´úÀí·şÎñÆ÷µÄÇëÇóÍ·ÖØĞÂ¶¨Òå»òÕßÔö¼ÓÒ»Ğ©×Ö¶Î¡£
-    Õâ¸öÖµ¿ÉÒÔÊÇÒ»¸öÎÄ±¾£¬±äÁ¿»òÕßËüÃÇµÄ×éºÏ¡£
-    proxy_set_headerÔÚÖ¸¶¨µÄ×Ö¶ÎÖĞÃ»ÓĞ¶¨ÒåÊ±»á´ÓËüµÄÉÏ¼¶×Ö¶Î¼Ì³Ğ¡£
-    Ä¬ÈÏÖ»ÓĞÁ½¸ö×Ö¶Î¿ÉÒÔÖØĞÂ¶¨Òå£º
+    è¯­æ³•ï¼šproxy_set_header header value
+    é»˜è®¤å€¼ï¼š Host and Connection
+    ä½¿ç”¨å­—æ®µï¼šhttp, server, location
+    è¿™ä¸ªæŒ‡ä»¤å…è®¸å°†å‘é€åˆ°è¢«ä»£ç†æœåŠ¡å™¨çš„è¯·æ±‚å¤´é‡æ–°å®šä¹‰æˆ–è€…å¢åŠ ä¸€äº›å­—æ®µã€‚
+    è¿™ä¸ªå€¼å¯ä»¥æ˜¯ä¸€ä¸ªæ–‡æœ¬ï¼Œå˜é‡æˆ–è€…å®ƒä»¬çš„ç»„åˆã€‚
+    proxy_set_headeråœ¨æŒ‡å®šçš„å­—æ®µä¸­æ²¡æœ‰å®šä¹‰æ—¶ä¼šä»å®ƒçš„ä¸Šçº§å­—æ®µç»§æ‰¿ã€‚
+    é»˜è®¤åªæœ‰ä¸¤ä¸ªå­—æ®µå¯ä»¥é‡æ–°å®šä¹‰ï¼š
 
     proxy_set_header Host $proxy_host;
-    proxy_set_header Connection Close;Î´ĞŞ¸ÄµÄÇëÇóÍ·¡°Host¡±¿ÉÒÔÓÃÈçÏÂ·½Ê½´«ËÍ£º
+    proxy_set_header Connection Close;æœªä¿®æ”¹çš„è¯·æ±‚å¤´â€œHostâ€å¯ä»¥ç”¨å¦‚ä¸‹æ–¹å¼ä¼ é€ï¼š
 
-    proxy_set_header Host $http_host;µ«ÊÇÈç¹ûÕâ¸ö×Ö¶ÎÔÚ¿Í»§¶ËµÄÇëÇóÍ·ÖĞ²»´æÔÚ£¬ÄÇÃ´²»·¢ËÍÊı¾İµ½±»´úÀí·şÎñÆ÷¡£
-    ÕâÖÖÇé¿öÏÂ×îºÃÊ¹ÓÃ$Host±äÁ¿£¬ËüµÄÖµµÈÓÚÇëÇóÍ·ÖĞµÄ¡±Host¡±×Ö¶Î»ò·şÎñÆ÷Ãû£º
+    proxy_set_header Host $http_host;ä½†æ˜¯å¦‚æœè¿™ä¸ªå­—æ®µåœ¨å®¢æˆ·ç«¯çš„è¯·æ±‚å¤´ä¸­ä¸å­˜åœ¨ï¼Œé‚£ä¹ˆä¸å‘é€æ•°æ®åˆ°è¢«ä»£ç†æœåŠ¡å™¨ã€‚
+    è¿™ç§æƒ…å†µä¸‹æœ€å¥½ä½¿ç”¨$Hostå˜é‡ï¼Œå®ƒçš„å€¼ç­‰äºè¯·æ±‚å¤´ä¸­çš„â€Hostâ€å­—æ®µæˆ–æœåŠ¡å™¨åï¼š
 
-    proxy_set_header Host $host;´ËÍâ£¬¿ÉÒÔ½«±»´úÀíµÄ¶Ë¿ÚÓë·şÎñÆ÷Ãû³ÆÒ»Æğ´«µİ£º
+    proxy_set_header Host $host;æ­¤å¤–ï¼Œå¯ä»¥å°†è¢«ä»£ç†çš„ç«¯å£ä¸æœåŠ¡å™¨åç§°ä¸€èµ·ä¼ é€’ï¼š
 
-    proxy_set_header Host $host:$proxy_port;Èç¹ûÉèÖÃÎª¿Õ×Ö·û´®£¬Ôò²»»á´«µİÍ·²¿µ½ºó¶Ë£¬ÀıÈçÏÂÁĞÉèÖÃ½«½ûÖ¹ºó¶ËÊ¹ÓÃgzipÑ¹Ëõ£º
+    proxy_set_header Host $host:$proxy_port;å¦‚æœè®¾ç½®ä¸ºç©ºå­—ç¬¦ä¸²ï¼Œåˆ™ä¸ä¼šä¼ é€’å¤´éƒ¨åˆ°åç«¯ï¼Œä¾‹å¦‚ä¸‹åˆ—è®¾ç½®å°†ç¦æ­¢åç«¯ä½¿ç”¨gzipå‹ç¼©ï¼š
 
     proxy_set_header  Accept-Encoding  "";
      */
@@ -690,10 +690,10 @@ nginxºöÂÔ±»´úÀí·şÎñÆ÷µÄÓ¦´ğÊıÄ¿ºÍËùÓĞÓ¦´ğµÄ´óĞ¡£¬½ÓÊÜproxy_buffer_sizeËùÖ¸¶¨µÄÖµ
       NULL },
 
 /*
-Allows redefining the request body passed to the proxied server. The value can contain text, variables, and their combination. 
-*/ //ÉèÖÃÍ¨¹ıºó¶ËµÄbodyµÄÖµ£¬Õâ¸öÖµ¿ÉÒÔ°üº¬±äÁ¿¡£
-  /* ÏÂÃæÕâ¼¸¸öºÍproxy_set_body XXXÅäÖÃÏà¹Ø proxy_set_bodyÉèÖÃ°üÌåºó£¬¾Í²»»á´«ËÍ¿Í»§¶Ë·¢ËÍÀ´µÄÊı¾İµ½ºó¶Ë·şÎñÆ÷(Ö»´«ËÍproxy_set_bodyÉèÖÃµÄ°üÌå)£¬
-    Èç¹ûÃ»ÓĞÉèÖÃ£¬Ôò»á·¢ËÍ¿Í»§¶Ë°üÌåÊı¾İµ½ºó¶Ë£¬ ²Î¿¼ngx_http_proxy_create_request */  
+Allows redefining the request body passed to the proxied server. The value can contain text, variables, and their combination.
+*/ //è®¾ç½®é€šè¿‡åç«¯çš„bodyçš„å€¼ï¼Œè¿™ä¸ªå€¼å¯ä»¥åŒ…å«å˜é‡ã€‚
+  /* ä¸‹é¢è¿™å‡ ä¸ªå’Œproxy_set_body XXXé…ç½®ç›¸å…³ proxy_set_bodyè®¾ç½®åŒ…ä½“åï¼Œå°±ä¸ä¼šä¼ é€å®¢æˆ·ç«¯å‘é€æ¥çš„æ•°æ®åˆ°åç«¯æœåŠ¡å™¨(åªä¼ é€proxy_set_bodyè®¾ç½®çš„åŒ…ä½“)ï¼Œ
+    å¦‚æœæ²¡æœ‰è®¾ç½®ï¼Œåˆ™ä¼šå‘é€å®¢æˆ·ç«¯åŒ…ä½“æ•°æ®åˆ°åç«¯ï¼Œ å‚è€ƒngx_http_proxy_create_request */
     { ngx_string("proxy_set_body"),
       NGX_HTTP_MAIN_CONF|NGX_HTTP_SRV_CONF|NGX_HTTP_LOC_CONF|NGX_CONF_TAKE1,
       ngx_conf_set_str_slot,
@@ -704,15 +704,15 @@ Allows redefining the request body passed to the proxied server. The value can c
 /*
 proxy_method
 
-Óï·¨£ºproxy_method method;
+è¯­æ³•ï¼šproxy_method method;
 
-ÅäÖÃ¿é£ºhttp¡¢server¡¢location
+é…ç½®å—ï¼šhttpã€serverã€location
 
-´ËÅäÖÃÏî±íÊ¾×ª·¢Ê±µÄĞ­Òé·½·¨Ãû¡£ÀıÈçÉèÖÃÎª£º
+æ­¤é…ç½®é¡¹è¡¨ç¤ºè½¬å‘æ—¶çš„åè®®æ–¹æ³•åã€‚ä¾‹å¦‚è®¾ç½®ä¸ºï¼š
 
 proxy_method POST;
 
-ÄÇÃ´¿Í»§¶Ë·¢À´µÄGETÇëÇóÔÚ×ª·¢Ê±·½·¨ÃûÒ²»á¸ÄÎªPOST
+é‚£ä¹ˆå®¢æˆ·ç«¯å‘æ¥çš„GETè¯·æ±‚åœ¨è½¬å‘æ—¶æ–¹æ³•åä¹Ÿä¼šæ”¹ä¸ºPOST
 */
     { ngx_string("proxy_method"),
       NGX_HTTP_MAIN_CONF|NGX_HTTP_SRV_CONF|NGX_HTTP_LOC_CONF|NGX_CONF_TAKE1,
@@ -722,10 +722,10 @@ proxy_method POST;
       NULL },
 
 /*
-Óï·¨£ºproxy_pass_request_headers on | off;
-Ä¬ÈÏ£ºproxy_pass_request_headers on;
-ÅäÖÃ¿é£ºhttp¡¢server¡¢location
-×÷ÓÃÎªÈ·¶¨ÊÇ·ñ×ª·¢HTTPÍ·²¿¡£
+è¯­æ³•ï¼šproxy_pass_request_headers on | off;
+é»˜è®¤ï¼šproxy_pass_request_headers on;
+é…ç½®å—ï¼šhttpã€serverã€location
+ä½œç”¨ä¸ºç¡®å®šæ˜¯å¦è½¬å‘HTTPå¤´éƒ¨ã€‚
 */
     { ngx_string("proxy_pass_request_headers"),
       NGX_HTTP_MAIN_CONF|NGX_HTTP_SRV_CONF|NGX_HTTP_LOC_CONF|NGX_CONF_FLAG,
@@ -735,10 +735,10 @@ proxy_method POST;
       NULL },
 
 /*
-Óï·¨£ºproxy_pass_request_body on | off;
-Ä¬ÈÏ£ºproxy_pass_request_body on;
-ÅäÖÃ¿é£ºhttp¡¢server¡¢location
-×÷ÓÃÎªÈ·¶¨ÊÇ·ñÏòÉÏÓÎ·şÎñÆ÷·¢ËÍHTTP°üÌå²¿·Ö¡£
+è¯­æ³•ï¼šproxy_pass_request_body on | off;
+é»˜è®¤ï¼šproxy_pass_request_body on;
+é…ç½®å—ï¼šhttpã€serverã€location
+ä½œç”¨ä¸ºç¡®å®šæ˜¯å¦å‘ä¸Šæ¸¸æœåŠ¡å™¨å‘é€HTTPåŒ…ä½“éƒ¨åˆ†ã€‚
 */
     { ngx_string("proxy_pass_request_body"),
       NGX_HTTP_MAIN_CONF|NGX_HTTP_SRV_CONF|NGX_HTTP_LOC_CONF|NGX_CONF_FLAG,
@@ -748,14 +748,14 @@ proxy_method POST;
       NULL },
 
 /*
-proxy_buffer_size 
-Óï·¨£ºproxy_buffer_size the_size 
-Ä¬ÈÏÖµ£ºproxy_buffer_size 4k/8k 
-Ê¹ÓÃ×Ö¶Î£ºhttp, server, location 
-ÉèÖÃ´Ó±»´úÀí·şÎñÆ÷¶ÁÈ¡µÄµÚÒ»²¿·ÖÓ¦´ğµÄ»º³åÇø´óĞ¡¡£
-Í¨³£Çé¿öÏÂÕâ²¿·ÖÓ¦´ğÖĞ°üº¬Ò»¸öĞ¡µÄÓ¦´ğÍ·¡£
-Ä¬ÈÏÇé¿öÏÂÕâ¸öÖµµÄ´óĞ¡ÎªÖ¸Áîproxy_buffersÖĞÖ¸¶¨µÄÒ»¸ö»º³åÇøµÄ´óĞ¡£¬²»¹ı¿ÉÒÔ½«ÆäÉèÖÃÎª¸üĞ¡¡£
-*/ //Ö¸¶¨µÄ¿Õ¼ä¿ª±ÙÔÚngx_http_upstream_process_header  
+proxy_buffer_size
+è¯­æ³•ï¼šproxy_buffer_size the_size
+é»˜è®¤å€¼ï¼šproxy_buffer_size 4k/8k
+ä½¿ç”¨å­—æ®µï¼šhttp, server, location
+è®¾ç½®ä»è¢«ä»£ç†æœåŠ¡å™¨è¯»å–çš„ç¬¬ä¸€éƒ¨åˆ†åº”ç­”çš„ç¼“å†²åŒºå¤§å°ã€‚
+é€šå¸¸æƒ…å†µä¸‹è¿™éƒ¨åˆ†åº”ç­”ä¸­åŒ…å«ä¸€ä¸ªå°çš„åº”ç­”å¤´ã€‚
+é»˜è®¤æƒ…å†µä¸‹è¿™ä¸ªå€¼çš„å¤§å°ä¸ºæŒ‡ä»¤proxy_buffersä¸­æŒ‡å®šçš„ä¸€ä¸ªç¼“å†²åŒºçš„å¤§å°ï¼Œä¸è¿‡å¯ä»¥å°†å…¶è®¾ç½®ä¸ºæ›´å°ã€‚
+*/ //æŒ‡å®šçš„ç©ºé—´å¼€è¾Ÿåœ¨ngx_http_upstream_process_header
     { ngx_string("proxy_buffer_size"),
       NGX_HTTP_MAIN_CONF|NGX_HTTP_SRV_CONF|NGX_HTTP_LOC_CONF|NGX_CONF_TAKE1,
       ngx_conf_set_size_slot,
@@ -764,17 +764,17 @@ proxy_buffer_size
       NULL },
 
     /*
-    Óï·¨£ºproxy_read_timeout time 
-    Ä¬ÈÏÖµ£ºproxy_read_timeout 60s 
-    Ê¹ÓÃ×Ö¶Î£ºhttp, server, location 
-        ¾ö¶¨¶ÁÈ¡ºó¶Ë·şÎñÆ÷Ó¦´ğµÄ³¬Ê±Ê±¼ä£¬µ¥Î»ÎªÃë£¬Ëü¾ö¶¨nginx½«µÈ´ı¶à¾ÃÊ±¼äÀ´È¡µÃÒ»¸öÇëÇóµÄÓ¦´ğ¡£³¬Ê±Ê±¼äÊÇÖ¸Íê³ÉÁËÁ½´ÎÎÕÊÖºó²¢
-    ÇÒ×´Ì¬ÎªestablishedºóµÈ´ı¶ÁÈ¡ºó¶ËÊı¾İµÄÊÂ¼ş¡£
-        Ïà¶ÔÓÚproxy_connect_timeout£¬Õâ¸öÊ±¼ä¿ÉÒÔÆË×½µ½Ò»Ì¨½«ÄãµÄÁ¬½Ó·ÅÈëÁ¬½Ó³ØÑÓ³Ù´¦Àí²¢ÇÒÃ»ÓĞÊı¾İ´«ËÍµÄ·şÎñÆ÷£¬×¢Òâ²»Òª½«´ËÖµÉèÖÃÌ«µÍ£¬
-    Ä³Ğ©Çé¿öÏÂ´úÀí·şÎñÆ÷½«»¨ºÜ³¤µÄÊ±¼äÀ´»ñµÃÒ³ÃæÓ¦´ğ£¨ÀıÈçÈçµ±½ÓÊÕÒ»¸öĞèÒªºÜ¶à¼ÆËãµÄ±¨±íÊ±£©£¬µ±È»Äã¿ÉÒÔÔÚ²»Í¬µÄlocationÀïÃæÉèÖÃ²»Í¬µÄÖµ¡£
-    ¿ÉÒÔÍ¨¹ıÖ¸¶¨Ê±¼äµ¥Î»ÒÔÃâÒıÆğ»ìÂÒ£¬Ö§³ÖµÄÊ±¼äµ¥Î»ÓĞ¡±s¡±(Ãë), ¡°ms¡±(ºÁÃë), ¡°y¡±(Äê), ¡°M¡±(ÔÂ), ¡°w¡±(ÖÜ), ¡°d¡±(ÈÕ), ¡°h¡±(Ğ¡Ê±),ºÍ ¡°m¡±(·ÖÖÓ)¡£
-    Õâ¸öÖµ²»ÄÜ´óÓÚ597Ğ¡Ê±¡£
+    è¯­æ³•ï¼šproxy_read_timeout time
+    é»˜è®¤å€¼ï¼šproxy_read_timeout 60s
+    ä½¿ç”¨å­—æ®µï¼šhttp, server, location
+        å†³å®šè¯»å–åç«¯æœåŠ¡å™¨åº”ç­”çš„è¶…æ—¶æ—¶é—´ï¼Œå•ä½ä¸ºç§’ï¼Œå®ƒå†³å®šnginxå°†ç­‰å¾…å¤šä¹…æ—¶é—´æ¥å–å¾—ä¸€ä¸ªè¯·æ±‚çš„åº”ç­”ã€‚è¶…æ—¶æ—¶é—´æ˜¯æŒ‡å®Œæˆäº†ä¸¤æ¬¡æ¡æ‰‹åå¹¶
+    ä¸”çŠ¶æ€ä¸ºestablishedåç­‰å¾…è¯»å–åç«¯æ•°æ®çš„äº‹ä»¶ã€‚
+        ç›¸å¯¹äºproxy_connect_timeoutï¼Œè¿™ä¸ªæ—¶é—´å¯ä»¥æ‰‘æ‰åˆ°ä¸€å°å°†ä½ çš„è¿æ¥æ”¾å…¥è¿æ¥æ± å»¶è¿Ÿå¤„ç†å¹¶ä¸”æ²¡æœ‰æ•°æ®ä¼ é€çš„æœåŠ¡å™¨ï¼Œæ³¨æ„ä¸è¦å°†æ­¤å€¼è®¾ç½®å¤ªä½ï¼Œ
+    æŸäº›æƒ…å†µä¸‹ä»£ç†æœåŠ¡å™¨å°†èŠ±å¾ˆé•¿çš„æ—¶é—´æ¥è·å¾—é¡µé¢åº”ç­”ï¼ˆä¾‹å¦‚å¦‚å½“æ¥æ”¶ä¸€ä¸ªéœ€è¦å¾ˆå¤šè®¡ç®—çš„æŠ¥è¡¨æ—¶ï¼‰ï¼Œå½“ç„¶ä½ å¯ä»¥åœ¨ä¸åŒçš„locationé‡Œé¢è®¾ç½®ä¸åŒçš„å€¼ã€‚
+    å¯ä»¥é€šè¿‡æŒ‡å®šæ—¶é—´å•ä½ä»¥å…å¼•èµ·æ··ä¹±ï¼Œæ”¯æŒçš„æ—¶é—´å•ä½æœ‰â€sâ€(ç§’), â€œmsâ€(æ¯«ç§’), â€œyâ€(å¹´), â€œMâ€(æœˆ), â€œwâ€(å‘¨), â€œdâ€(æ—¥), â€œhâ€(å°æ—¶),å’Œ â€œmâ€(åˆ†é’Ÿ)ã€‚
+    è¿™ä¸ªå€¼ä¸èƒ½å¤§äº597å°æ—¶ã€‚
     */
-    { ngx_string("proxy_read_timeout"), //¶ÁÈ¡ºó¶ËÊı¾İµÄ³¬Ê±Ê±¼ä
+    { ngx_string("proxy_read_timeout"), //è¯»å–åç«¯æ•°æ®çš„è¶…æ—¶æ—¶é—´
       NGX_HTTP_MAIN_CONF|NGX_HTTP_SRV_CONF|NGX_HTTP_LOC_CONF|NGX_CONF_TAKE1,
       ngx_conf_set_msec_slot,
       NGX_HTTP_LOC_CONF_OFFSET,
@@ -782,11 +782,11 @@ proxy_buffer_size
       NULL },
 
     /*
-     Óï·¨£ºproxy_buffers the_number is_size; 
-     Ä¬ÈÏÖµ£ºproxy_buffers 8 4k/8k; 
-     Ê¹ÓÃ×Ö¶Î£ºhttp, server, location 
-     ÉèÖÃÓÃÓÚ¶ÁÈ¡Ó¦´ğ£¨À´×Ô±»´úÀí·şÎñÆ÷£©µÄ»º³åÇøÊıÄ¿ºÍ´óĞ¡£¬Ä¬ÈÏÇé¿öÒ²Îª·ÖÒ³´óĞ¡£¬¸ù¾İ²Ù×÷ÏµÍ³µÄ²»Í¬¿ÉÄÜÊÇ4k»òÕß8k¡£
-     */ //¸ÃÅäÖÃÅäÖÃµÄ¿Õ¼äÕæÕı·ÖÅä¿Õ¼äÔÚ//ÔÚngx_event_pipe_read_upstreamÖĞ´´½¨¿Õ¼ä
+     è¯­æ³•ï¼šproxy_buffers the_number is_size;
+     é»˜è®¤å€¼ï¼šproxy_buffers 8 4k/8k;
+     ä½¿ç”¨å­—æ®µï¼šhttp, server, location
+     è®¾ç½®ç”¨äºè¯»å–åº”ç­”ï¼ˆæ¥è‡ªè¢«ä»£ç†æœåŠ¡å™¨ï¼‰çš„ç¼“å†²åŒºæ•°ç›®å’Œå¤§å°ï¼Œé»˜è®¤æƒ…å†µä¹Ÿä¸ºåˆ†é¡µå¤§å°ï¼Œæ ¹æ®æ“ä½œç³»ç»Ÿçš„ä¸åŒå¯èƒ½æ˜¯4kæˆ–è€…8kã€‚
+     */ //è¯¥é…ç½®é…ç½®çš„ç©ºé—´çœŸæ­£åˆ†é…ç©ºé—´åœ¨//åœ¨ngx_event_pipe_read_upstreamä¸­åˆ›å»ºç©ºé—´
     { ngx_string("proxy_buffers"),
       NGX_HTTP_MAIN_CONF|NGX_HTTP_SRV_CONF|NGX_HTTP_LOC_CONF|NGX_CONF_TAKE2,
       ngx_conf_set_bufs_slot,
@@ -794,9 +794,9 @@ proxy_buffer_size
       offsetof(ngx_http_proxy_loc_conf_t, upstream.bufs),
       NULL },
 
-    //Ä¬ÈÏÖµ£ºproxy_busy_buffers_size ["#proxy buffer size"] * 2; 
-    //xxx_buffersÖ¸¶¨Îª½ÓÊÕºó¶Ë·şÎñÆ÷Êı¾İ×î¶à¿ª±ÙÕâÃ´¶à¿Õ¼ä£¬xxx_busy_buffers_sizeÖ¸¶¨Ò»´Î·¢ËÍºóÓĞ¿ÉÄÜÊı¾İÃ»ÓĞÈ«²¿·¢ËÍ³öÈ¥£¬Òò´Ë·ÅÈëbusyÁ´ÖĞ
-    //µ±Ã»ÓĞ·¢ËÍ³öÈ¥µÄbusyÁ´ÖĞµÄÊı¾İ´ïµ½xxx_busy_buffers_size¾Í²»ÄÜ´Óºó¶Ë¶ÁÈ¡Êı¾İ£¬Ö»ÓĞbusyÁ´ÖĞµÄÊı¾İ·¢ËÍÒ»²¿·Ö³öÈ¥ºóĞ¡Óëxxx_busy_buffers_size²ÅÄÜ¼ÌĞø¶ÁÈ¡
+    //é»˜è®¤å€¼ï¼šproxy_busy_buffers_size ["#proxy buffer size"] * 2;
+    //xxx_buffersæŒ‡å®šä¸ºæ¥æ”¶åç«¯æœåŠ¡å™¨æ•°æ®æœ€å¤šå¼€è¾Ÿè¿™ä¹ˆå¤šç©ºé—´ï¼Œxxx_busy_buffers_sizeæŒ‡å®šä¸€æ¬¡å‘é€åæœ‰å¯èƒ½æ•°æ®æ²¡æœ‰å…¨éƒ¨å‘é€å‡ºå»ï¼Œå› æ­¤æ”¾å…¥busyé“¾ä¸­
+    //å½“æ²¡æœ‰å‘é€å‡ºå»çš„busyé“¾ä¸­çš„æ•°æ®è¾¾åˆ°xxx_busy_buffers_sizeå°±ä¸èƒ½ä»åç«¯è¯»å–æ•°æ®ï¼Œåªæœ‰busyé“¾ä¸­çš„æ•°æ®å‘é€ä¸€éƒ¨åˆ†å‡ºå»åå°ä¸xxx_busy_buffers_sizeæ‰èƒ½ç»§ç»­è¯»å–
     { ngx_string("proxy_busy_buffers_size"),
       NGX_HTTP_MAIN_CONF|NGX_HTTP_SRV_CONF|NGX_HTTP_LOC_CONF|NGX_CONF_TAKE1,
       ngx_conf_set_size_slot,
@@ -820,31 +820,31 @@ proxy_buffer_size
 
 #if (NGX_HTTP_CACHE)
 /*
-       nginxµÄ´æ´¢ÏµÍ³·ÖÁ½Àà£¬Ò»ÀàÊÇÍ¨¹ıproxy_store¿ªÆôµÄ£¬´æ´¢·½Ê½ÊÇ°´ÕÕurlÖĞµÄÎÄ¼şÂ·¾¶£¬´æ´¢ÔÚ±¾µØ¡£±ÈÈç/file/2013/0001/en/test.html£¬
-     ÄÇÃ´nginx¾Í»áÔÚÖ¸¶¨µÄ´æ´¢Ä¿Â¼ÏÂÒÀ´Î½¨Á¢¸÷¸öÄ¿Â¼ºÍÎÄ¼ş¡£ÁíÒ»ÀàÊÇÍ¨¹ıproxy_cache¿ªÆô£¬ÕâÖÖ·½Ê½´æ´¢µÄÎÄ¼ş²»ÊÇ°´ÕÕurlÂ·¾¶À´×éÖ¯µÄ£¬
-     ¶øÊÇÊ¹ÓÃÒ»Ğ©ÌØÊâ·½Ê½À´¹ÜÀíµÄ(ÕâÀï³ÆÎª×Ô¶¨Òå·½Ê½)£¬×Ô¶¨Òå·½Ê½¾ÍÊÇÎÒÃÇÒªÖØµã·ÖÎöµÄ¡£ÄÇÃ´ÕâÁ½ÖÖ·½Ê½¸÷ÓĞÊ²Ã´ÓÅÊÆÄØ£¿
+       nginxçš„å­˜å‚¨ç³»ç»Ÿåˆ†ä¸¤ç±»ï¼Œä¸€ç±»æ˜¯é€šè¿‡proxy_storeå¼€å¯çš„ï¼Œå­˜å‚¨æ–¹å¼æ˜¯æŒ‰ç…§urlä¸­çš„æ–‡ä»¶è·¯å¾„ï¼Œå­˜å‚¨åœ¨æœ¬åœ°ã€‚æ¯”å¦‚/file/2013/0001/en/test.htmlï¼Œ
+     é‚£ä¹ˆnginxå°±ä¼šåœ¨æŒ‡å®šçš„å­˜å‚¨ç›®å½•ä¸‹ä¾æ¬¡å»ºç«‹å„ä¸ªç›®å½•å’Œæ–‡ä»¶ã€‚å¦ä¸€ç±»æ˜¯é€šè¿‡proxy_cacheå¼€å¯ï¼Œè¿™ç§æ–¹å¼å­˜å‚¨çš„æ–‡ä»¶ä¸æ˜¯æŒ‰ç…§urlè·¯å¾„æ¥ç»„ç»‡çš„ï¼Œ
+     è€Œæ˜¯ä½¿ç”¨ä¸€äº›ç‰¹æ®Šæ–¹å¼æ¥ç®¡ç†çš„(è¿™é‡Œç§°ä¸ºè‡ªå®šä¹‰æ–¹å¼)ï¼Œè‡ªå®šä¹‰æ–¹å¼å°±æ˜¯æˆ‘ä»¬è¦é‡ç‚¹åˆ†æçš„ã€‚é‚£ä¹ˆè¿™ä¸¤ç§æ–¹å¼å„æœ‰ä»€ä¹ˆä¼˜åŠ¿å‘¢ï¼Ÿ
 
 
-    °´urlÂ·¾¶´æ´¢ÎÄ¼şµÄ·½Ê½£¬³ÌĞò´¦ÀíÆğÀ´±È½Ï¼òµ¥£¬µ«ÊÇĞÔÄÜ²»ĞĞ¡£Ê×ÏÈÓĞµÄurl¾Ş³¤£¬ÎÒÃÇÒªÔÚ±¾µØÎÄ¼şÏµÍ³ÉÏ½¨Á¢Èç´ËÉîµÄÄ¿Â¼£¬ÄÇÃ´ÎÄ¼şµÄ´ò¿ª
-    ºÍ²éÕÒ¶¼ºÜ»áºÜÂı(»ØÏëkernelÖĞÍ¨¹ıÂ·¾¶Ãû²éÕÒinodeµÄ¹ı³Ì°É)¡£Èç¹ûÊ¹ÓÃ×Ô¶¨Òå·½Ê½À´´¦ÀíÄ£Ê½£¬¾¡¹ÜÒ²Àë²»¿ªÎÄ¼şºÍÂ·¾¶£¬µ«ÊÇËü²»»áÒòurl³¤¶È
-    ¶ø²úÉú¸´ÔÓĞÔÔö¼ÓºÍĞÔÄÜµÄ½µµÍ¡£´ÓÄ³ÖÖÒâÒåÉÏËµÕâÊÇÒ»ÖÖÓÃ»§Ì¬ÎÄ¼şÏµÍ³£¬×îµäĞÍµÄÓ¦¸ÃËãÊÇsquidÖĞµÄCFS¡£nginxÊ¹ÓÃµÄ·½Ê½Ïà¶Ô¼òµ¥£¬Ö÷ÒªÒÀ¿¿
-    urlµÄmd5ÖµÀ´¹ÜÀí
+    æŒ‰urlè·¯å¾„å­˜å‚¨æ–‡ä»¶çš„æ–¹å¼ï¼Œç¨‹åºå¤„ç†èµ·æ¥æ¯”è¾ƒç®€å•ï¼Œä½†æ˜¯æ€§èƒ½ä¸è¡Œã€‚é¦–å…ˆæœ‰çš„urlå·¨é•¿ï¼Œæˆ‘ä»¬è¦åœ¨æœ¬åœ°æ–‡ä»¶ç³»ç»Ÿä¸Šå»ºç«‹å¦‚æ­¤æ·±çš„ç›®å½•ï¼Œé‚£ä¹ˆæ–‡ä»¶çš„æ‰“å¼€
+    å’ŒæŸ¥æ‰¾éƒ½å¾ˆä¼šå¾ˆæ…¢(å›æƒ³kernelä¸­é€šè¿‡è·¯å¾„åæŸ¥æ‰¾inodeçš„è¿‡ç¨‹å§)ã€‚å¦‚æœä½¿ç”¨è‡ªå®šä¹‰æ–¹å¼æ¥å¤„ç†æ¨¡å¼ï¼Œå°½ç®¡ä¹Ÿç¦»ä¸å¼€æ–‡ä»¶å’Œè·¯å¾„ï¼Œä½†æ˜¯å®ƒä¸ä¼šå› urlé•¿åº¦
+    è€Œäº§ç”Ÿå¤æ‚æ€§å¢åŠ å’Œæ€§èƒ½çš„é™ä½ã€‚ä»æŸç§æ„ä¹‰ä¸Šè¯´è¿™æ˜¯ä¸€ç§ç”¨æˆ·æ€æ–‡ä»¶ç³»ç»Ÿï¼Œæœ€å…¸å‹çš„åº”è¯¥ç®—æ˜¯squidä¸­çš„CFSã€‚nginxä½¿ç”¨çš„æ–¹å¼ç›¸å¯¹ç®€å•ï¼Œä¸»è¦ä¾é 
+    urlçš„md5å€¼æ¥ç®¡ç†
      */
 
     /*
-     Óï·¨£ºproxy_cache zone_name; 
-Ä¬ÈÏÖµ£ºNone 
-Ê¹ÓÃ×Ö¶Î£ºhttp, server, location 
-ÉèÖÃÒ»¸ö»º´æÇøÓòµÄÃû³Æ£¬Ò»¸öÏàÍ¬µÄÇøÓò¿ÉÒÔÔÚ²»Í¬µÄµØ·½Ê¹ÓÃ¡£
-ÔÚ0.7.48ºó£¬»º´æ×ñÑ­ºó¶ËµÄ"Expires", "Cache-Control: no-cache", "Cache-Control: max-age=XXX"Í·²¿×Ö¶Î£¬0.7.66°æ±¾ÒÔºó£¬
-"Cache-Control:"private"ºÍ"no-store"Í·Í¬Ñù±»×ñÑ­¡£nginxÔÚ»º´æ¹ı³ÌÖĞ²»»á´¦Àí"Vary"Í·£¬ÎªÁËÈ·±£Ò»Ğ©Ë½ÓĞÊı¾İ²»±»ËùÓĞµÄÓÃ»§¿´µ½£¬
-ºó¶Ë±ØĞëÉèÖÃ "no-cache"»òÕß"max-age=0"Í·£¬»òÕßproxy_cache_key°üº¬ÓÃ»§Ö¸¶¨µÄÊı¾İÈç$cookie_xxx£¬Ê¹ÓÃcookieµÄÖµ×÷Îªproxy_cache_key
-µÄÒ»²¿·Ö¿ÉÒÔ·ÀÖ¹»º´æË½ÓĞÊı¾İ£¬ËùÒÔ¿ÉÒÔÔÚ²»Í¬µÄlocationÖĞ·Ö±ğÖ¸¶¨proxy_cache_keyµÄÖµÒÔ±ã·Ö¿ªË½ÓĞÊı¾İºÍ¹«ÓĞÊı¾İ¡£
-»º´æÖ¸ÁîÒÀÀµ´úÀí»º³åÇø(buffers)£¬Èç¹ûproxy_buffersÉèÖÃÎªoff£¬»º´æ²»»áÉúĞ§¡£
-*/ 
-//xxx_cache(proxy_cache fastcgi_cache) abc±ØĞëxxx_cache_path(proxy_cache_path fastcgi_cache_path) xxx keys_zone=abc:10m;Ò»Æğ£¬·ñÔòÔÚngx_http_proxy_merge_loc_conf»áÊ§°Ü£¬ÒòÎªÃ»ÓĞÎª¸Ãabc´´½¨ngx_http_file_cache_t
-//fastcgi_cache Ö¸ÁîÖ¸¶¨ÁËÔÚµ±Ç°×÷ÓÃÓòÖĞÊ¹ÓÃÄÄ¸ö»º´æÎ¬»¤»º´æÌõÄ¿£¬²ÎÊı¶ÔÓ¦µÄ»º´æ±ØĞëÊÂÏÈÓÉ fastcgi_cache_path Ö¸Áî¶¨Òå¡£ 
-//»ñÈ¡¸Ã½á¹¹ngx_http_upstream_cache_get£¬Êµ¼ÊÉÏÊÇÍ¨¹ıproxy_cache xxx»òÕßfastcgi_cache xxxÀ´»ñÈ¡¹²ÏíÄÚ´æ¿éÃûµÄ£¬Òò´Ë±ØĞëÉèÖÃproxy_cache»òÕßfastcgi_cache
+     è¯­æ³•ï¼šproxy_cache zone_name;
+é»˜è®¤å€¼ï¼šNone
+ä½¿ç”¨å­—æ®µï¼šhttp, server, location
+è®¾ç½®ä¸€ä¸ªç¼“å­˜åŒºåŸŸçš„åç§°ï¼Œä¸€ä¸ªç›¸åŒçš„åŒºåŸŸå¯ä»¥åœ¨ä¸åŒçš„åœ°æ–¹ä½¿ç”¨ã€‚
+åœ¨0.7.48åï¼Œç¼“å­˜éµå¾ªåç«¯çš„"Expires", "Cache-Control: no-cache", "Cache-Control: max-age=XXX"å¤´éƒ¨å­—æ®µï¼Œ0.7.66ç‰ˆæœ¬ä»¥åï¼Œ
+"Cache-Control:"private"å’Œ"no-store"å¤´åŒæ ·è¢«éµå¾ªã€‚nginxåœ¨ç¼“å­˜è¿‡ç¨‹ä¸­ä¸ä¼šå¤„ç†"Vary"å¤´ï¼Œä¸ºäº†ç¡®ä¿ä¸€äº›ç§æœ‰æ•°æ®ä¸è¢«æ‰€æœ‰çš„ç”¨æˆ·çœ‹åˆ°ï¼Œ
+åç«¯å¿…é¡»è®¾ç½® "no-cache"æˆ–è€…"max-age=0"å¤´ï¼Œæˆ–è€…proxy_cache_keyåŒ…å«ç”¨æˆ·æŒ‡å®šçš„æ•°æ®å¦‚$cookie_xxxï¼Œä½¿ç”¨cookieçš„å€¼ä½œä¸ºproxy_cache_key
+çš„ä¸€éƒ¨åˆ†å¯ä»¥é˜²æ­¢ç¼“å­˜ç§æœ‰æ•°æ®ï¼Œæ‰€ä»¥å¯ä»¥åœ¨ä¸åŒçš„locationä¸­åˆ†åˆ«æŒ‡å®šproxy_cache_keyçš„å€¼ä»¥ä¾¿åˆ†å¼€ç§æœ‰æ•°æ®å’Œå…¬æœ‰æ•°æ®ã€‚
+ç¼“å­˜æŒ‡ä»¤ä¾èµ–ä»£ç†ç¼“å†²åŒº(buffers)ï¼Œå¦‚æœproxy_buffersè®¾ç½®ä¸ºoffï¼Œç¼“å­˜ä¸ä¼šç”Ÿæ•ˆã€‚
+*/
+//xxx_cache(proxy_cache fastcgi_cache) abcå¿…é¡»xxx_cache_path(proxy_cache_path fastcgi_cache_path) xxx keys_zone=abc:10m;ä¸€èµ·ï¼Œå¦åˆ™åœ¨ngx_http_proxy_merge_loc_confä¼šå¤±è´¥ï¼Œå› ä¸ºæ²¡æœ‰ä¸ºè¯¥abcåˆ›å»ºngx_http_file_cache_t
+//fastcgi_cache æŒ‡ä»¤æŒ‡å®šäº†åœ¨å½“å‰ä½œç”¨åŸŸä¸­ä½¿ç”¨å“ªä¸ªç¼“å­˜ç»´æŠ¤ç¼“å­˜æ¡ç›®ï¼Œå‚æ•°å¯¹åº”çš„ç¼“å­˜å¿…é¡»äº‹å…ˆç”± fastcgi_cache_path æŒ‡ä»¤å®šä¹‰ã€‚
+//è·å–è¯¥ç»“æ„ngx_http_upstream_cache_getï¼Œå®é™…ä¸Šæ˜¯é€šè¿‡proxy_cache xxxæˆ–è€…fastcgi_cache xxxæ¥è·å–å…±äº«å†…å­˜å—åçš„ï¼Œå› æ­¤å¿…é¡»è®¾ç½®proxy_cacheæˆ–è€…fastcgi_cache
 
     { ngx_string("proxy_cache"),
       NGX_HTTP_MAIN_CONF|NGX_HTTP_SRV_CONF|NGX_HTTP_LOC_CONF|NGX_CONF_TAKE1,
@@ -854,14 +854,14 @@ proxy_buffer_size
       NULL },
 
 /*
-Óï·¨£ºproxy_cache_key line; 
-Ä¬ÈÏÖµ£º$scheme$proxy_host$request_uri; 
-Ê¹ÓÃ×Ö¶Î£ºhttp, server, location 
-Ö¸ÁîÖ¸¶¨ÁË°üº¬ÔÚ»º´æÖĞµÄ»º´æ¹Ø¼ü×Ö¡£
-proxy_cache_key "$host$request_uri$cookie_user";×¢ÒâÄ¬ÈÏÇé¿öÏÂ·şÎñÆ÷µÄÖ÷»úÃû²¢Ã»ÓĞ°üº¬µ½»º´æ¹Ø¼ü×ÖÖĞ£¬Èç¹ûÄãÎªÄãµÄÕ¾µãÔÚ²»Í¬µÄlocationÖĞÊ¹ÓÃ¶ş¼¶Óò£¬
-Äã¿ÉÄÜĞèÒªÔÚ»º´æ¹Ø¼ü×ÖÖĞ°ü»»Ö÷»úÃû£º
+è¯­æ³•ï¼šproxy_cache_key line;
+é»˜è®¤å€¼ï¼š$scheme$proxy_host$request_uri;
+ä½¿ç”¨å­—æ®µï¼šhttp, server, location
+æŒ‡ä»¤æŒ‡å®šäº†åŒ…å«åœ¨ç¼“å­˜ä¸­çš„ç¼“å­˜å…³é”®å­—ã€‚
+proxy_cache_key "$host$request_uri$cookie_user";æ³¨æ„é»˜è®¤æƒ…å†µä¸‹æœåŠ¡å™¨çš„ä¸»æœºåå¹¶æ²¡æœ‰åŒ…å«åˆ°ç¼“å­˜å…³é”®å­—ä¸­ï¼Œå¦‚æœä½ ä¸ºä½ çš„ç«™ç‚¹åœ¨ä¸åŒçš„locationä¸­ä½¿ç”¨äºŒçº§åŸŸï¼Œ
+ä½ å¯èƒ½éœ€è¦åœ¨ç¼“å­˜å…³é”®å­—ä¸­åŒ…æ¢ä¸»æœºåï¼š
 
-proxy_cache_key "$scheme$host$request_uri";  
+proxy_cache_key "$scheme$host$request_uri";
 */
     { ngx_string("proxy_cache_key"),
       NGX_HTTP_MAIN_CONF|NGX_HTTP_SRV_CONF|NGX_HTTP_LOC_CONF|NGX_CONF_TAKE1,
@@ -871,48 +871,48 @@ proxy_cache_key "$scheme$host$request_uri";
       NULL },
 
 /*
-proxy_cache_path 
-Óï·¨£ºproxy_cache_path path [levels=number] keys_zone=zone_name:zone_size [inactive=time] [max_size=size]; 
-Ä¬ÈÏÖµ£ºNone 
-Ê¹ÓÃ×Ö¶Î£ºhttp 
-Ö¸ÁîÖ¸¶¨»º´æµÄÂ·¾¶ºÍÒ»Ğ©ÆäËû²ÎÊı£¬»º´æµÄÊı¾İ´æ´¢ÔÚÎÄ¼şÖĞ£¬²¢ÇÒÊ¹ÓÃ´úÀíurlµÄ¹şÏ£Öµ×÷Îª¹Ø¼ü×ÖÓëÎÄ¼şÃû¡£levels²ÎÊıÖ¸¶¨»º´æµÄ×ÓÄ¿Â¼Êı£¬ÀıÈç£º 
-proxy_cache_path  /data/nginx/cache  levels=1:2   keys_zone=one:10m;ÎÄ¼şÃûÀàËÆÓÚ£º
+proxy_cache_path
+è¯­æ³•ï¼šproxy_cache_path path [levels=number] keys_zone=zone_name:zone_size [inactive=time] [max_size=size];
+é»˜è®¤å€¼ï¼šNone
+ä½¿ç”¨å­—æ®µï¼šhttp
+æŒ‡ä»¤æŒ‡å®šç¼“å­˜çš„è·¯å¾„å’Œä¸€äº›å…¶ä»–å‚æ•°ï¼Œç¼“å­˜çš„æ•°æ®å­˜å‚¨åœ¨æ–‡ä»¶ä¸­ï¼Œå¹¶ä¸”ä½¿ç”¨ä»£ç†urlçš„å“ˆå¸Œå€¼ä½œä¸ºå…³é”®å­—ä¸æ–‡ä»¶åã€‚levelså‚æ•°æŒ‡å®šç¼“å­˜çš„å­ç›®å½•æ•°ï¼Œä¾‹å¦‚ï¼š
+proxy_cache_path  /data/nginx/cache  levels=1:2   keys_zone=one:10m;æ–‡ä»¶åç±»ä¼¼äºï¼š
 
-/data/nginx/cache/c/29/b7f54b2df7773722d382f4809d65029c 
-¿ÉÒÔÊ¹ÓÃÈÎÒâµÄ1Î»»ò2Î»Êı×Ö×÷ÎªÄ¿Â¼½á¹¹£¬Èç X, X:X,»òX:X:X e.g.: "2", "2:2", "1:1:2"£¬µ«ÊÇ×î¶àÖ»ÄÜÊÇÈı¼¶Ä¿Â¼¡£
-ËùÓĞ»î¶¯µÄkeyºÍÔªÊı¾İ´æ´¢ÔÚ¹²ÏíµÄÄÚ´æ³ØÖĞ£¬Õâ¸öÇøÓòÓÃkeys_zone²ÎÊıÖ¸¶¨¡£
-×¢ÒâÃ¿Ò»¸ö¶¨ÒåµÄÄÚ´æ³Ø±ØĞëÊÇ²»ÖØ¸´µÄÂ·¾¶£¬ÀıÈç£º
+/data/nginx/cache/c/29/b7f54b2df7773722d382f4809d65029c
+å¯ä»¥ä½¿ç”¨ä»»æ„çš„1ä½æˆ–2ä½æ•°å­—ä½œä¸ºç›®å½•ç»“æ„ï¼Œå¦‚ X, X:X,æˆ–X:X:X e.g.: "2", "2:2", "1:1:2"ï¼Œä½†æ˜¯æœ€å¤šåªèƒ½æ˜¯ä¸‰çº§ç›®å½•ã€‚
+æ‰€æœ‰æ´»åŠ¨çš„keyå’Œå…ƒæ•°æ®å­˜å‚¨åœ¨å…±äº«çš„å†…å­˜æ± ä¸­ï¼Œè¿™ä¸ªåŒºåŸŸç”¨keys_zoneå‚æ•°æŒ‡å®šã€‚
+æ³¨æ„æ¯ä¸€ä¸ªå®šä¹‰çš„å†…å­˜æ± å¿…é¡»æ˜¯ä¸é‡å¤çš„è·¯å¾„ï¼Œä¾‹å¦‚ï¼š
 
 proxy_cache_path  /data/nginx/cache/one    levels=1      keys_zone=one:10m;
 proxy_cache_path  /data/nginx/cache/two    levels=2:2    keys_zone=two:100m;
-proxy_cache_path  /data/nginx/cache/three  levels=1:1:2  keys_zone=three:1000m;Èç¹ûÔÚinactive²ÎÊıÖ¸¶¨µÄÊ±¼äÄÚ»º´æµÄÊı¾İÃ»ÓĞ±»ÇëÇóÔò±»É¾³ı£¬
-Ä¬ÈÏinactiveÎª10·ÖÖÓ¡£
-Ò»¸öÃûÎªcache managerµÄ½ø³Ì¿ØÖÆ´ÅÅÌµÄ»º´æ´óĞ¡£¬Ëü±»ÓÃÀ´É¾³ı²»»î¶¯µÄ»º´æºÍ¿ØÖÆ»º´æ´óĞ¡£¬ÕâĞ©¶¼ÔÚmax_size²ÎÊıÖĞ¶¨Òå£¬µ±Ä¿Ç°»º´æµÄÖµ³¬³ömax_size
-Ö¸¶¨µÄÖµÖ®ºó£¬³¬¹ıÆä´óĞ¡ºó×îÉÙÊ¹ÓÃÊı¾İ£¨LRUÌæ»»Ëã·¨£©½«±»É¾³ı¡£
-ÄÚ´æ³ØµÄ´óĞ¡°´ÕÕ»º´æÒ³ÃæÊıµÄ±ÈÀı½øĞĞÉèÖÃ£¬Ò»¸öÒ³Ãæ£¨ÎÄ¼ş£©µÄÔªÊı¾İ´óĞ¡°´ÕÕ²Ù×÷ÏµÍ³À´¶¨£¬FreeBSD/i386ÏÂÎª64×Ö½Ú£¬FreeBSD/amd64ÏÂÎª128×Ö½Ú¡£
-proxy_cache_pathºÍproxy_temp_pathÓ¦¸ÃÊ¹ÓÃÔÚÏàÍ¬µÄÎÄ¼şÏµÍ³ÉÏ¡£
+proxy_cache_path  /data/nginx/cache/three  levels=1:1:2  keys_zone=three:1000m;å¦‚æœåœ¨inactiveå‚æ•°æŒ‡å®šçš„æ—¶é—´å†…ç¼“å­˜çš„æ•°æ®æ²¡æœ‰è¢«è¯·æ±‚åˆ™è¢«åˆ é™¤ï¼Œ
+é»˜è®¤inactiveä¸º10åˆ†é’Ÿã€‚
+ä¸€ä¸ªåä¸ºcache managerçš„è¿›ç¨‹æ§åˆ¶ç£ç›˜çš„ç¼“å­˜å¤§å°ï¼Œå®ƒè¢«ç”¨æ¥åˆ é™¤ä¸æ´»åŠ¨çš„ç¼“å­˜å’Œæ§åˆ¶ç¼“å­˜å¤§å°ï¼Œè¿™äº›éƒ½åœ¨max_sizeå‚æ•°ä¸­å®šä¹‰ï¼Œå½“ç›®å‰ç¼“å­˜çš„å€¼è¶…å‡ºmax_size
+æŒ‡å®šçš„å€¼ä¹‹åï¼Œè¶…è¿‡å…¶å¤§å°åæœ€å°‘ä½¿ç”¨æ•°æ®ï¼ˆLRUæ›¿æ¢ç®—æ³•ï¼‰å°†è¢«åˆ é™¤ã€‚
+å†…å­˜æ± çš„å¤§å°æŒ‰ç…§ç¼“å­˜é¡µé¢æ•°çš„æ¯”ä¾‹è¿›è¡Œè®¾ç½®ï¼Œä¸€ä¸ªé¡µé¢ï¼ˆæ–‡ä»¶ï¼‰çš„å…ƒæ•°æ®å¤§å°æŒ‰ç…§æ“ä½œç³»ç»Ÿæ¥å®šï¼ŒFreeBSD/i386ä¸‹ä¸º64å­—èŠ‚ï¼ŒFreeBSD/amd64ä¸‹ä¸º128å­—èŠ‚ã€‚
+proxy_cache_pathå’Œproxy_temp_pathåº”è¯¥ä½¿ç”¨åœ¨ç›¸åŒçš„æ–‡ä»¶ç³»ç»Ÿä¸Šã€‚
 
-Proxy_cache_path£º»º´æµÄ´æ´¢Â·¾¶ºÍË÷ÒıĞÅÏ¢£»
-  path »º´æÎÄ¼şµÄ¸ùÄ¿Â¼£»
-  level=N:NÔÚÄ¿Â¼µÄµÚ¼¸¼¶hashÄ¿Â¼»º´æÊı¾İ£»
-  keys_zone=name:size »º´æË÷ÒıÖØ½¨½ø³Ì½¨Á¢Ë÷ÒıÊ±ÓÃÓÚ´æ·ÅË÷ÒıµÄÄÚ´æÇøÓòÃûºÍ´óĞ¡£»
-  interval=timeÇ¿ÖÆ¸üĞÂ»º´æÊ±¼ä£¬¹æ¶¨Ê±¼äÄÚÃ»ÓĞ·ÃÎÊÔò´ÓÄÚ´æÖĞÉ¾³ı£¬Ä¬ÈÏ10s£»
-  max_size=sizeÓ²ÅÌÖĞ»º´æÊı¾İµÄÉÏÏŞ£¬ÓÉcache manager¹ÜÀí£¬³¬³öÔò¸ù¾İLRU²ßÂÔÉ¾³ı£»
-  loader_sleep=timeË÷ÒıÖØ½¨½ø³ÌÔÚÁ½´Î±éÀú¼äµÄÔİÍ£Ê±³¤£¬Ä¬ÈÏ50ms£»
-  loader_files=numberÖØ½¨Ë÷ÒıÊ±Ã¿´Î¼ÓÔØÊı¾İÔªËØµÄÉÏÏŞ£¬½ø³Ìµİ¹é±éÀú¶ÁÈ¡Ó²ÅÌÉÏµÄ»º´æÄ¿Â¼ºÍÎÄ¼ş£¬¶ÔÃ¿¸öÎÄ¼şÔÚÄÚ´æÖĞ½¨Á¢Ë÷Òı£¬Ã¿
-  ½¨Á¢Ò»¸öË÷Òı³ÆÎª¼ÓÔØÒ»¸öÊı¾İÔªËØ£¬Ã¿´Î±éÀúÊ±¿ÉÍ¬Ê±¼ÓÔØ¶à¸öÊı¾İÔªËØ£¬Ä¬ÈÏ100£»
-*/  //XXX_cache»º´æÊÇÏÈĞ´ÔÚxxx_temp_pathÔÙÒÆµ½xxx_cache_path£¬ËùÒÔÕâÁ½¸öÄ¿Â¼×îºÃÔÚÍ¬Ò»¸ö·ÖÇø
-//xxx_cache(proxy_cache fastcgi_cache) abc±ØĞëxxx_cache_path(proxy_cache_path fastcgi_cache_path) xxx keys_zone=abc:10m;Ò»Æğ£¬·ñÔòÔÚngx_http_proxy_merge_loc_conf»áÊ§°Ü£¬ÒòÎªÃ»ÓĞÎª¸Ãabc´´½¨ngx_http_file_cache_t
-//fastcgi_cache Ö¸ÁîÖ¸¶¨ÁËÔÚµ±Ç°×÷ÓÃÓòÖĞÊ¹ÓÃÄÄ¸ö»º´æÎ¬»¤»º´æÌõÄ¿£¬²ÎÊı¶ÔÓ¦µÄ»º´æ±ØĞëÊÂÏÈÓÉ fastcgi_cache_path Ö¸Áî¶¨Òå¡£ 
-//»ñÈ¡¸Ã½á¹¹ngx_http_upstream_cache_get£¬Êµ¼ÊÉÏÊÇÍ¨¹ıproxy_cache xxx»òÕßfastcgi_cache xxxÀ´»ñÈ¡¹²ÏíÄÚ´æ¿éÃûµÄ£¬Òò´Ë±ØĞëÉèÖÃproxy_cache»òÕßfastcgi_cache
+Proxy_cache_pathï¼šç¼“å­˜çš„å­˜å‚¨è·¯å¾„å’Œç´¢å¼•ä¿¡æ¯ï¼›
+  path ç¼“å­˜æ–‡ä»¶çš„æ ¹ç›®å½•ï¼›
+  level=N:Nåœ¨ç›®å½•çš„ç¬¬å‡ çº§hashç›®å½•ç¼“å­˜æ•°æ®ï¼›
+  keys_zone=name:size ç¼“å­˜ç´¢å¼•é‡å»ºè¿›ç¨‹å»ºç«‹ç´¢å¼•æ—¶ç”¨äºå­˜æ”¾ç´¢å¼•çš„å†…å­˜åŒºåŸŸåå’Œå¤§å°ï¼›
+  interval=timeå¼ºåˆ¶æ›´æ–°ç¼“å­˜æ—¶é—´ï¼Œè§„å®šæ—¶é—´å†…æ²¡æœ‰è®¿é—®åˆ™ä»å†…å­˜ä¸­åˆ é™¤ï¼Œé»˜è®¤10sï¼›
+  max_size=sizeç¡¬ç›˜ä¸­ç¼“å­˜æ•°æ®çš„ä¸Šé™ï¼Œç”±cache managerç®¡ç†ï¼Œè¶…å‡ºåˆ™æ ¹æ®LRUç­–ç•¥åˆ é™¤ï¼›
+  loader_sleep=timeç´¢å¼•é‡å»ºè¿›ç¨‹åœ¨ä¸¤æ¬¡éå†é—´çš„æš‚åœæ—¶é•¿ï¼Œé»˜è®¤50msï¼›
+  loader_files=numberé‡å»ºç´¢å¼•æ—¶æ¯æ¬¡åŠ è½½æ•°æ®å…ƒç´ çš„ä¸Šé™ï¼Œè¿›ç¨‹é€’å½’éå†è¯»å–ç¡¬ç›˜ä¸Šçš„ç¼“å­˜ç›®å½•å’Œæ–‡ä»¶ï¼Œå¯¹æ¯ä¸ªæ–‡ä»¶åœ¨å†…å­˜ä¸­å»ºç«‹ç´¢å¼•ï¼Œæ¯
+  å»ºç«‹ä¸€ä¸ªç´¢å¼•ç§°ä¸ºåŠ è½½ä¸€ä¸ªæ•°æ®å…ƒç´ ï¼Œæ¯æ¬¡éå†æ—¶å¯åŒæ—¶åŠ è½½å¤šä¸ªæ•°æ®å…ƒç´ ï¼Œé»˜è®¤100ï¼›
+*/  //XXX_cacheç¼“å­˜æ˜¯å…ˆå†™åœ¨xxx_temp_pathå†ç§»åˆ°xxx_cache_pathï¼Œæ‰€ä»¥è¿™ä¸¤ä¸ªç›®å½•æœ€å¥½åœ¨åŒä¸€ä¸ªåˆ†åŒº
+//xxx_cache(proxy_cache fastcgi_cache) abcå¿…é¡»xxx_cache_path(proxy_cache_path fastcgi_cache_path) xxx keys_zone=abc:10m;ä¸€èµ·ï¼Œå¦åˆ™åœ¨ngx_http_proxy_merge_loc_confä¼šå¤±è´¥ï¼Œå› ä¸ºæ²¡æœ‰ä¸ºè¯¥abcåˆ›å»ºngx_http_file_cache_t
+//fastcgi_cache æŒ‡ä»¤æŒ‡å®šäº†åœ¨å½“å‰ä½œç”¨åŸŸä¸­ä½¿ç”¨å“ªä¸ªç¼“å­˜ç»´æŠ¤ç¼“å­˜æ¡ç›®ï¼Œå‚æ•°å¯¹åº”çš„ç¼“å­˜å¿…é¡»äº‹å…ˆç”± fastcgi_cache_path æŒ‡ä»¤å®šä¹‰ã€‚
+//è·å–è¯¥ç»“æ„ngx_http_upstream_cache_getï¼Œå®é™…ä¸Šæ˜¯é€šè¿‡proxy_cache xxxæˆ–è€…fastcgi_cache xxxæ¥è·å–å…±äº«å†…å­˜å—åçš„ï¼Œå› æ­¤å¿…é¡»è®¾ç½®proxy_cacheæˆ–è€…fastcgi_cache
 
 /*
-·Ç»º´æ·½Ê½(p->cacheable=0)p->temp_file->path = u->conf->temp_path; ÓÉngx_http_fastcgi_temp_pathÖ¸¶¨Â·¾¶
-»º´æ·½Ê½(p->cacheable=1) p->temp_file->path = r->cache->file_cache->temp_path;¼ûproxy_cache_path»òÕßfastcgi_cache_pathÖ¸¶¨Â·¾¶ 
-¼ûngx_http_upstream_send_response 
+éç¼“å­˜æ–¹å¼(p->cacheable=0)p->temp_file->path = u->conf->temp_path; ç”±ngx_http_fastcgi_temp_pathæŒ‡å®šè·¯å¾„
+ç¼“å­˜æ–¹å¼(p->cacheable=1) p->temp_file->path = r->cache->file_cache->temp_path;è§proxy_cache_pathæˆ–è€…fastcgi_cache_pathæŒ‡å®šè·¯å¾„
+è§ngx_http_upstream_send_response
 
-µ±Ç°fastcgi_buffers ºÍfastcgi_buffer_sizeÅäÖÃµÄ¿Õ¼ä¶¼ÒÑ¾­ÓÃÍêÁË£¬ÔòĞèÒª°ÑÊı¾İĞ´µÀÁÙÊ±ÎÄ¼şÖĞÈ¥£¬²Î¿¼ngx_event_pipe_read_upstream
-*/  //´Óngx_http_file_cache_update¿ÉÒÔ¿´³ö£¬ºó¶ËÊı¾İÏÈĞ´µ½ÁÙÊ±ÎÄ¼şºó£¬ÔÚĞ´Èëxxx_cache_pathÖĞ£¬¼ûngx_http_file_cache_update
+å½“å‰fastcgi_buffers å’Œfastcgi_buffer_sizeé…ç½®çš„ç©ºé—´éƒ½å·²ç»ç”¨å®Œäº†ï¼Œåˆ™éœ€è¦æŠŠæ•°æ®å†™é“ä¸´æ—¶æ–‡ä»¶ä¸­å»ï¼Œå‚è€ƒngx_event_pipe_read_upstream
+*/  //ä»ngx_http_file_cache_updateå¯ä»¥çœ‹å‡ºï¼Œåç«¯æ•°æ®å…ˆå†™åˆ°ä¸´æ—¶æ–‡ä»¶åï¼Œåœ¨å†™å…¥xxx_cache_pathä¸­ï¼Œè§ngx_http_file_cache_update
     { ngx_string("proxy_cache_path"),
       NGX_HTTP_MAIN_CONF|NGX_CONF_2MORE,
       ngx_http_file_cache_set_slot,
@@ -921,20 +921,20 @@ Proxy_cache_path£º»º´æµÄ´æ´¢Â·¾¶ºÍË÷ÒıĞÅÏ¢£»
       &ngx_http_proxy_module },
 
 /*
-Óï·¨: proxy_cache_bypass line [¡­];
-Ä¬ÈÏÖµ: off
-Ê¹ÓÃ×Ö¶Î: http, server, location
-Õâ¸öÖ¸ÁîÖ¸¶¨²»Ê¹ÓÃ»º´æ·µ»ØÓ¦´ğµÄÌõ¼ş£¬Èç¹ûÖ¸¶¨µÄ±äÁ¿ÖĞÖÁÉÙÓĞÒ»¸öÎª·Ç¿Õ£¬»òÕß²»µÈÓÚ¡°0¡±£¬Õâ¸öÓ¦´ğ½«²»´Ó»º´æÖĞ·µ»Ø£º
+è¯­æ³•: proxy_cache_bypass line [â€¦];
+é»˜è®¤å€¼: off
+ä½¿ç”¨å­—æ®µ: http, server, location
+è¿™ä¸ªæŒ‡ä»¤æŒ‡å®šä¸ä½¿ç”¨ç¼“å­˜è¿”å›åº”ç­”çš„æ¡ä»¶ï¼Œå¦‚æœæŒ‡å®šçš„å˜é‡ä¸­è‡³å°‘æœ‰ä¸€ä¸ªä¸ºéç©ºï¼Œæˆ–è€…ä¸ç­‰äºâ€œ0â€ï¼Œè¿™ä¸ªåº”ç­”å°†ä¸ä»ç¼“å­˜ä¸­è¿”å›ï¼š
 
  proxy_cache_bypass $cookie_nocache $ arg_nocache$arg_comment;
- proxy_cache_bypass $http_pragma $http_authorization;¿ÉÒÔ½áºÏproxy_no_cacheÊ¹ÓÃ¡£
+ proxy_cache_bypass $http_pragma $http_authorization;å¯ä»¥ç»“åˆproxy_no_cacheä½¿ç”¨ã€‚
 
- 
-Defines conditions under which the response will not be taken from a cache. If at least one value of the string parameters is not 
-empty and is not equal to ¡°0¡± then the response will not be taken from the cache: 
-*/ //×¢Òâproxy_no_cacheºÍproxy_cache_proxyµÄÇø±ğ
-    { ngx_string("proxy_cache_bypass"), 
-    //proxy_cache_bypass  xx1 xx2ÉèÖÃµÄxx2²»Îª¿Õ»òÕß²»Îª0£¬Ôò²»»á´Ó»º´æÖĞÈ¡£¬¶øÊÇÖ±½Ó³åºó¶Ë¶ÁÈ¡  µ«ÊÇÕâĞ©ÇëÇóµÄºó¶ËÏìÓ¦Êı¾İÒÀÈ»¿ÉÒÔ±» upstream Ä£¿é»º´æ¡£ 
+
+Defines conditions under which the response will not be taken from a cache. If at least one value of the string parameters is not
+empty and is not equal to â€œ0â€ then the response will not be taken from the cache:
+*/ //æ³¨æ„proxy_no_cacheå’Œproxy_cache_proxyçš„åŒºåˆ«
+    { ngx_string("proxy_cache_bypass"),
+    //proxy_cache_bypass  xx1 xx2è®¾ç½®çš„xx2ä¸ä¸ºç©ºæˆ–è€…ä¸ä¸º0ï¼Œåˆ™ä¸ä¼šä»ç¼“å­˜ä¸­å–ï¼Œè€Œæ˜¯ç›´æ¥å†²åç«¯è¯»å–  ä½†æ˜¯è¿™äº›è¯·æ±‚çš„åç«¯å“åº”æ•°æ®ä¾ç„¶å¯ä»¥è¢« upstream æ¨¡å—ç¼“å­˜ã€‚
       NGX_HTTP_MAIN_CONF|NGX_HTTP_SRV_CONF|NGX_HTTP_LOC_CONF|NGX_CONF_1MORE,
       ngx_http_set_predicate_slot,
       NGX_HTTP_LOC_CONF_OFFSET,
@@ -942,24 +942,24 @@ empty and is not equal to ¡°0¡± then the response will not be taken from the cac
       NULL },
 
 /*
-Óï·¨£ºproxy_no_cache variable1 variable2 ¡­; 
-Ä¬ÈÏÖµ£ºNone 
-Ê¹ÓÃ×Ö¶Î£ºhttp, server, location 
-È·¶¨ÔÚºÎÖÖÇé¿öÏÂ»º´æµÄÓ¦´ğ½«²»»áÊ¹ÓÃ£¬Ê¾Àı£º
+è¯­æ³•ï¼šproxy_no_cache variable1 variable2 â€¦;
+é»˜è®¤å€¼ï¼šNone
+ä½¿ç”¨å­—æ®µï¼šhttp, server, location
+ç¡®å®šåœ¨ä½•ç§æƒ…å†µä¸‹ç¼“å­˜çš„åº”ç­”å°†ä¸ä¼šä½¿ç”¨ï¼Œç¤ºä¾‹ï¼š
 
 proxy_no_cache $cookie_nocache  $arg_nocache$arg_comment;
-proxy_no_cache $http_pragma     $http_authorization;Èç¹ûÎª¿Õ×Ö·û´®»òÕßµÈÓÚ0£¬±í´ïÊ½µÄÖµµÈÓÚfalse£¬ÀıÈç£¬ÔÚÉÏÊöÀı×ÓÖĞ£¬Èç¹ûÔÚ
-ÇëÇóÖĞÉèÖÃÁËcookie ¡°nocache¡±£¬ÇëÇó½«×ÜÊÇ´©¹ı»º´æ¶ø±»´«ËÍµ½ºó¶Ë¡£
-×¢Òâ£ºÀ´×Ôºó¶ËµÄÓ¦´ğÒÀÈ»ÓĞ¿ÉÄÜ·ûºÏ»º´æÌõ¼ş£¬ÓĞÒ»ÖÖ·½·¨¿ÉÒÔ¿ìËÙµÄ¸üĞÂ»º´æÖĞµÄÄÚÈİ£¬ÄÇ¾ÍÊÇ·¢ËÍÒ»¸öÓµÓĞÄã×Ô¼º¶¨ÒåµÄÇëÇóÍ·²¿×Ö¶Î
-µÄÇëÇó¡£ÀıÈç£ºMy-Secret-Header£¬ÄÇÃ´ÔÚproxy_no_cacheÖ¸ÁîÖĞ¿ÉÒÔÕâÑù¶¨Òå£º
+proxy_no_cache $http_pragma     $http_authorization;å¦‚æœä¸ºç©ºå­—ç¬¦ä¸²æˆ–è€…ç­‰äº0ï¼Œè¡¨è¾¾å¼çš„å€¼ç­‰äºfalseï¼Œä¾‹å¦‚ï¼Œåœ¨ä¸Šè¿°ä¾‹å­ä¸­ï¼Œå¦‚æœåœ¨
+è¯·æ±‚ä¸­è®¾ç½®äº†cookie â€œnocacheâ€ï¼Œè¯·æ±‚å°†æ€»æ˜¯ç©¿è¿‡ç¼“å­˜è€Œè¢«ä¼ é€åˆ°åç«¯ã€‚
+æ³¨æ„ï¼šæ¥è‡ªåç«¯çš„åº”ç­”ä¾ç„¶æœ‰å¯èƒ½ç¬¦åˆç¼“å­˜æ¡ä»¶ï¼Œæœ‰ä¸€ç§æ–¹æ³•å¯ä»¥å¿«é€Ÿçš„æ›´æ–°ç¼“å­˜ä¸­çš„å†…å®¹ï¼Œé‚£å°±æ˜¯å‘é€ä¸€ä¸ªæ‹¥æœ‰ä½ è‡ªå·±å®šä¹‰çš„è¯·æ±‚å¤´éƒ¨å­—æ®µ
+çš„è¯·æ±‚ã€‚ä¾‹å¦‚ï¼šMy-Secret-Headerï¼Œé‚£ä¹ˆåœ¨proxy_no_cacheæŒ‡ä»¤ä¸­å¯ä»¥è¿™æ ·å®šä¹‰ï¼š
 proxy_no_cache $http_my_secret_header;
 
-Defines conditions under which the response will not be saved to a cache. If at least one value of the string parameters is 
-not empty and is not equal to ¡°0¡± then the response will not be saved(×¢ÒâÊÇnot be saved): 
-*/ //×¢Òâproxy_no_cacheºÍproxy_cache_proxyµÄÇø±ğ
+Defines conditions under which the response will not be saved to a cache. If at least one value of the string parameters is
+not empty and is not equal to â€œ0â€ then the response will not be saved(æ³¨æ„æ˜¯not be saved):
+*/ //æ³¨æ„proxy_no_cacheå’Œproxy_cache_proxyçš„åŒºåˆ«
 
-    //proxy_cache_bypass  xx1 xx2ÉèÖÃµÄxx2²»Îª¿Õ»òÕß²»Îª0£¬Ôò²»»á´Ó»º´æÖĞÈ¡£¬¶øÊÇÖ±½Ó³åºó¶Ë¶ÁÈ¡
-    //proxy_no_cache  xx1 xx2ÉèÖÃµÄxx2²»Îª¿Õ»òÕß²»Îª0£¬Ôòºó¶Ë»ØÀ´µÄÊı¾İ²»»á±»»º´æ
+    //proxy_cache_bypass  xx1 xx2è®¾ç½®çš„xx2ä¸ä¸ºç©ºæˆ–è€…ä¸ä¸º0ï¼Œåˆ™ä¸ä¼šä»ç¼“å­˜ä¸­å–ï¼Œè€Œæ˜¯ç›´æ¥å†²åç«¯è¯»å–
+    //proxy_no_cache  xx1 xx2è®¾ç½®çš„xx2ä¸ä¸ºç©ºæˆ–è€…ä¸ä¸º0ï¼Œåˆ™åç«¯å›æ¥çš„æ•°æ®ä¸ä¼šè¢«ç¼“å­˜
     { ngx_string("proxy_no_cache"),
       NGX_HTTP_MAIN_CONF|NGX_HTTP_SRV_CONF|NGX_HTTP_LOC_CONF|NGX_CONF_1MORE,
       ngx_http_set_predicate_slot,
@@ -968,15 +968,15 @@ not empty and is not equal to ¡°0¡± then the response will not be saved(×¢ÒâÊÇno
       NULL },
 
 /*
-Óï·¨£ºproxy_cache_valid reply_code [reply_code ...] time; 
-Ä¬ÈÏÖµ£ºNone 
-Ê¹ÓÃ×Ö¶Î£ºhttp, server, location 
-Îª²»Í¬µÄÓ¦´ğÉèÖÃ²»Í¬µÄ»º´æÊ±¼ä£¬ÀıÈç£º 
+è¯­æ³•ï¼šproxy_cache_valid reply_code [reply_code ...] time;
+é»˜è®¤å€¼ï¼šNone
+ä½¿ç”¨å­—æ®µï¼šhttp, server, location
+ä¸ºä¸åŒçš„åº”ç­”è®¾ç½®ä¸åŒçš„ç¼“å­˜æ—¶é—´ï¼Œä¾‹å¦‚ï¼š
   proxy_cache_valid  200 302  10m;
-  proxy_cache_valid  404      1m;ÎªÓ¦´ğ´úÂëÎª200ºÍ302µÄÉèÖÃ»º´æÊ±¼äÎª10·ÖÖÓ£¬404´úÂë»º´æ1·ÖÖÓ¡£
-Èç¹ûÖ»¶¨ÒåÊ±¼ä£º
- proxy_cache_valid 5m;ÄÇÃ´Ö»¶Ô´úÂëÎª200, 301ºÍ302µÄÓ¦´ğ½øĞĞ»º´æ¡£
-Í¬Ñù¿ÉÒÔÊ¹ÓÃany²ÎÊıÈÎºÎÓ¦´ğ¡£ 
+  proxy_cache_valid  404      1m;ä¸ºåº”ç­”ä»£ç ä¸º200å’Œ302çš„è®¾ç½®ç¼“å­˜æ—¶é—´ä¸º10åˆ†é’Ÿï¼Œ404ä»£ç ç¼“å­˜1åˆ†é’Ÿã€‚
+å¦‚æœåªå®šä¹‰æ—¶é—´ï¼š
+ proxy_cache_valid 5m;é‚£ä¹ˆåªå¯¹ä»£ç ä¸º200, 301å’Œ302çš„åº”ç­”è¿›è¡Œç¼“å­˜ã€‚
+åŒæ ·å¯ä»¥ä½¿ç”¨anyå‚æ•°ä»»ä½•åº”ç­”ã€‚
   proxy_cache_valid  200 302 10m;
   proxy_cache_valid  301 1h;
   proxy_cache_valid  any 1m;
@@ -989,12 +989,12 @@ not empty and is not equal to ¡°0¡± then the response will not be saved(×¢ÒâÊÇno
       NULL },
 
 /*
-Óï·¨£ºproxy_cache_min_uses the_number; 
-Ä¬ÈÏÖµ£ºproxy_cache_min_uses 1; 
-Ê¹ÓÃ×Ö¶Î£ºhttp, server, location 
-¶àÉÙ´ÎµÄ²éÑ¯ºóÓ¦´ğ½«±»»º´æ£¬Ä¬ÈÏ1¡£
-*/ //Proxy_cache_min_uses number Ä¬ÈÏÎª1£¬µ±¿Í»§¶Ë·¢ËÍÏàÍ¬ÇëÇó´ïµ½¹æ¶¨´ÎÊıºó£¬nginx²Å¶ÔÏìÓ¦Êı¾İ½øĞĞ»º´æ£»
-////ÀıÈçÅäÖÃProxy_cache_min_uses 5£¬ÔòĞèÒª¿Í»§¶ËÇëÇó5²Å²ÅÄÜ´Ó»º´æÖĞÈ¡£¬Èç¹ûÏÖÔÚÖ»ÓĞ4´Î£¬Ôò¶¼ĞèÒª´Óºó¶Ë»ñÈ¡Êı¾İ,Èç¹ûÃ»ÓĞ´ïµ½5´Î£¬º¯Êıngx_http_upstream_cache»á°Ñ u->cacheable = 0;
+è¯­æ³•ï¼šproxy_cache_min_uses the_number;
+é»˜è®¤å€¼ï¼šproxy_cache_min_uses 1;
+ä½¿ç”¨å­—æ®µï¼šhttp, server, location
+å¤šå°‘æ¬¡çš„æŸ¥è¯¢ååº”ç­”å°†è¢«ç¼“å­˜ï¼Œé»˜è®¤1ã€‚
+*/ //Proxy_cache_min_uses number é»˜è®¤ä¸º1ï¼Œå½“å®¢æˆ·ç«¯å‘é€ç›¸åŒè¯·æ±‚è¾¾åˆ°è§„å®šæ¬¡æ•°åï¼Œnginxæ‰å¯¹å“åº”æ•°æ®è¿›è¡Œç¼“å­˜ï¼›
+////ä¾‹å¦‚é…ç½®Proxy_cache_min_uses 5ï¼Œåˆ™éœ€è¦å®¢æˆ·ç«¯è¯·æ±‚5æ‰æ‰èƒ½ä»ç¼“å­˜ä¸­å–ï¼Œå¦‚æœç°åœ¨åªæœ‰4æ¬¡ï¼Œåˆ™éƒ½éœ€è¦ä»åç«¯è·å–æ•°æ®,å¦‚æœæ²¡æœ‰è¾¾åˆ°5æ¬¡ï¼Œå‡½æ•°ngx_http_upstream_cacheä¼šæŠŠ u->cacheable = 0;
     { ngx_string("proxy_cache_min_uses"),
       NGX_HTTP_MAIN_CONF|NGX_HTTP_SRV_CONF|NGX_HTTP_LOC_CONF|NGX_CONF_TAKE1,
       ngx_conf_set_num_slot,
@@ -1003,16 +1003,16 @@ not empty and is not equal to ¡°0¡± then the response will not be saved(×¢ÒâÊÇno
       NULL },
 
 /*
-Óï·¨£ºproxy_cache_use_stale [error|timeout|updating|invalid_header|http_500|http_502|http_503|http_504|http_404|off] [...]; 
-Ä¬ÈÏÖµ£ºproxy_cache_use_stale off; 
-Ê¹ÓÃ×Ö¶Î£ºhttp, server, location 
-Õâ¸öÖ¸Áî¸æËßnginxºÎÊ±´Ó´úÀí»º´æÖĞÌá¹©Ò»¸ö¹ıÆÚµÄÏìÓ¦£¬²ÎÊıÀàËÆÓÚproxy_next_upstreamÖ¸Áî¡£
-ÎªÁË·ÀÖ¹»º´æÊ§Ğ§£¨ÔÚ¶à¸öÏß³ÌÍ¬Ê±¸üĞÂ±¾µØ»º´æÊ±£©£¬Äã¿ÉÒÔÖ¸¶¨'updating'²ÎÊı£¬Ëü½«±£Ö¤Ö»ÓĞÒ»¸öÏß³ÌÈ¥¸üĞÂ»º´æ£¬²¢ÇÒÔÚÕâ¸öÏß³Ì¸ü
-ĞÂ»º´æµÄ¹ı³ÌÖĞÆäËûµÄÏß³ÌÖ»»áÏìÓ¦µ±Ç°»º´æÖĞµÄ¹ıÆÚ°æ±¾¡£
+è¯­æ³•ï¼šproxy_cache_use_stale [error|timeout|updating|invalid_header|http_500|http_502|http_503|http_504|http_404|off] [...];
+é»˜è®¤å€¼ï¼šproxy_cache_use_stale off;
+ä½¿ç”¨å­—æ®µï¼šhttp, server, location
+è¿™ä¸ªæŒ‡ä»¤å‘Šè¯‰nginxä½•æ—¶ä»ä»£ç†ç¼“å­˜ä¸­æä¾›ä¸€ä¸ªè¿‡æœŸçš„å“åº”ï¼Œå‚æ•°ç±»ä¼¼äºproxy_next_upstreamæŒ‡ä»¤ã€‚
+ä¸ºäº†é˜²æ­¢ç¼“å­˜å¤±æ•ˆï¼ˆåœ¨å¤šä¸ªçº¿ç¨‹åŒæ—¶æ›´æ–°æœ¬åœ°ç¼“å­˜æ—¶ï¼‰ï¼Œä½ å¯ä»¥æŒ‡å®š'updating'å‚æ•°ï¼Œå®ƒå°†ä¿è¯åªæœ‰ä¸€ä¸ªçº¿ç¨‹å»æ›´æ–°ç¼“å­˜ï¼Œå¹¶ä¸”åœ¨è¿™ä¸ªçº¿ç¨‹æ›´
+æ–°ç¼“å­˜çš„è¿‡ç¨‹ä¸­å…¶ä»–çš„çº¿ç¨‹åªä¼šå“åº”å½“å‰ç¼“å­˜ä¸­çš„è¿‡æœŸç‰ˆæœ¬ã€‚
 */
 /*
-ÀıÈçÈç¹ûÉèÖÃÁËfastcgi_cache_use_stale updating£¬±íÊ¾ËµËäÈ»¸Ã»º´æÎÄ¼şÊ§Ğ§ÁË£¬ÒÑ¾­ÓĞÆäËû¿Í»§¶ËÇëÇóÔÚ»ñÈ¡ºó¶ËÊı¾İ£¬µ«ÊÇ¸Ã¿Í»§¶ËÇëÇóÏÖÔÚ»¹Ã»ÓĞ»ñÈ¡ÍêÕû£¬
-ÕâÊ±ºò¾Í¿ÉÒÔ°ÑÒÔÇ°¹ıÆÚµÄ»º´æ·¢ËÍ¸øµ±Ç°ÇëÇóµÄ¿Í»§¶Ë //¿ÉÒÔÅäºÏngx_http_upstream_cacheÔÄ¶Á
+ä¾‹å¦‚å¦‚æœè®¾ç½®äº†fastcgi_cache_use_stale updatingï¼Œè¡¨ç¤ºè¯´è™½ç„¶è¯¥ç¼“å­˜æ–‡ä»¶å¤±æ•ˆäº†ï¼Œå·²ç»æœ‰å…¶ä»–å®¢æˆ·ç«¯è¯·æ±‚åœ¨è·å–åç«¯æ•°æ®ï¼Œä½†æ˜¯è¯¥å®¢æˆ·ç«¯è¯·æ±‚ç°åœ¨è¿˜æ²¡æœ‰è·å–å®Œæ•´ï¼Œ
+è¿™æ—¶å€™å°±å¯ä»¥æŠŠä»¥å‰è¿‡æœŸçš„ç¼“å­˜å‘é€ç»™å½“å‰è¯·æ±‚çš„å®¢æˆ·ç«¯ //å¯ä»¥é…åˆngx_http_upstream_cacheé˜…è¯»
 */
     { ngx_string("proxy_cache_use_stale"),
       NGX_HTTP_MAIN_CONF|NGX_HTTP_SRV_CONF|NGX_HTTP_LOC_CONF|NGX_CONF_1MORE,
@@ -1022,10 +1022,10 @@ not empty and is not equal to ¡°0¡± then the response will not be saved(×¢ÒâÊÇno
       &ngx_http_proxy_next_upstream_masks },
 
 /*
-Óï·¨£ºproxy_cache_methods [GET HEAD POST]; 
-Ä¬ÈÏÖµ£ºproxy_cache_methods GET HEAD; 
-Ê¹ÓÃ×Ö¶Î£ºhttp, server, location 
-GET/HEADÓÃÀ´×°ÊÎÓï¾ä£¬¼´ÄãÎŞ·¨½ûÓÃGET/HEAD¼´Ê¹ÄãÖ»Ê¹ÓÃÏÂÁĞÓï¾äÉèÖÃ£º 
+è¯­æ³•ï¼šproxy_cache_methods [GET HEAD POST];
+é»˜è®¤å€¼ï¼šproxy_cache_methods GET HEAD;
+ä½¿ç”¨å­—æ®µï¼šhttp, server, location
+GET/HEADç”¨æ¥è£…é¥°è¯­å¥ï¼Œå³ä½ æ— æ³•ç¦ç”¨GET/HEADå³ä½¿ä½ åªä½¿ç”¨ä¸‹åˆ—è¯­å¥è®¾ç½®ï¼š
 proxy_cache_methods POST;
 */
     { ngx_string("proxy_cache_methods"),
@@ -1036,17 +1036,17 @@ proxy_cache_methods POST;
       &ngx_http_upstream_cache_method_mask },
 
 /*
-When enabled, only one request at a time will be allowed to populate a new cache element identified according to the proxy_cache_key 
-directive by passing a request to a proxied server. Other requests of the same cache element will either wait for a response to appear 
-in the cache or the cache lock for this element to be released, up to the time set by the proxy_cache_lock_timeout directive. 
+When enabled, only one request at a time will be allowed to populate a new cache element identified according to the proxy_cache_key
+directive by passing a request to a proxied server. Other requests of the same cache element will either wait for a response to appear
+in the cache or the cache lock for this element to be released, up to the time set by the proxy_cache_lock_timeout directive.
 
 
-Õâ¸öÖ÷Òª½â¾öÒ»¸öÎÊÌâ:
-¼ÙÉèÏÖÔÚÓÖÁ½¸ö¿Í»§¶Ë£¬Ò»¸ö¿Í»§¶ËÕıÔÚ»ñÈ¡ºó¶ËÊı¾İ£¬²¢ÇÒºó¶Ë·µ»ØÁËÒ»²¿·Ö£¬Ôònginx»á»º´æÕâÒ»²¿·Ö£¬²¢ÇÒµÈ´ıËùÓĞºó¶ËÊı¾İ·µ»Ø¼ÌĞø»º´æ¡£
-µ«ÊÇÔÚ»º´æµÄ¹ı³ÌÖĞÈç¹û¿Í»§¶Ë2Ò³À´Ïëºó¶ËÈ¥Í¬ÑùµÄÊı¾İuriµÈ¶¼Ò»Ñù£¬Ôò»áÈ¥µ½¿Í»§¶Ë»º´æÒ»°ëµÄÊı¾İ£¬ÕâÊ±ºò¾Í¿ÉÒÔÍ¨¹ı¸ÃÅäÖÃÀ´½â¾öÕâ¸öÎÊÌâ£¬
-Ò²¾ÍÊÇ¿Í»§¶Ë1»¹Ã»»º´æÍêÈ«²¿Êı¾İµÄ¹ı³ÌÖĞ¿Í»§¶Ë2Ö»ÓĞµÈ¿Í»§¶Ë1»ñÈ¡ÍêÈ«²¿ºó¶ËÊı¾İ£¬»òÕß»ñÈ¡µ½proxy_cache_lock_timeout³¬Ê±£¬Ôò¿Í»§¶Ë2Ö»ÓĞ´Óºó¶Ë»ñÈ¡Êı¾İ
+è¿™ä¸ªä¸»è¦è§£å†³ä¸€ä¸ªé—®é¢˜:
+å‡è®¾ç°åœ¨åˆä¸¤ä¸ªå®¢æˆ·ç«¯ï¼Œä¸€ä¸ªå®¢æˆ·ç«¯æ­£åœ¨è·å–åç«¯æ•°æ®ï¼Œå¹¶ä¸”åç«¯è¿”å›äº†ä¸€éƒ¨åˆ†ï¼Œåˆ™nginxä¼šç¼“å­˜è¿™ä¸€éƒ¨åˆ†ï¼Œå¹¶ä¸”ç­‰å¾…æ‰€æœ‰åç«¯æ•°æ®è¿”å›ç»§ç»­ç¼“å­˜ã€‚
+ä½†æ˜¯åœ¨ç¼“å­˜çš„è¿‡ç¨‹ä¸­å¦‚æœå®¢æˆ·ç«¯2é¡µæ¥æƒ³åç«¯å»åŒæ ·çš„æ•°æ®uriç­‰éƒ½ä¸€æ ·ï¼Œåˆ™ä¼šå»åˆ°å®¢æˆ·ç«¯ç¼“å­˜ä¸€åŠçš„æ•°æ®ï¼Œè¿™æ—¶å€™å°±å¯ä»¥é€šè¿‡è¯¥é…ç½®æ¥è§£å†³è¿™ä¸ªé—®é¢˜ï¼Œ
+ä¹Ÿå°±æ˜¯å®¢æˆ·ç«¯1è¿˜æ²¡ç¼“å­˜å®Œå…¨éƒ¨æ•°æ®çš„è¿‡ç¨‹ä¸­å®¢æˆ·ç«¯2åªæœ‰ç­‰å®¢æˆ·ç«¯1è·å–å®Œå…¨éƒ¨åç«¯æ•°æ®ï¼Œæˆ–è€…è·å–åˆ°proxy_cache_lock_timeoutè¶…æ—¶ï¼Œåˆ™å®¢æˆ·ç«¯2åªæœ‰ä»åç«¯è·å–æ•°æ®
 */
-    { ngx_string("proxy_cache_lock"), //Ä¬ÈÏ¹Ø±Õ
+    { ngx_string("proxy_cache_lock"), //é»˜è®¤å…³é—­
       NGX_HTTP_MAIN_CONF|NGX_HTTP_SRV_CONF|NGX_HTTP_LOC_CONF|NGX_CONF_FLAG,
       ngx_conf_set_flag_slot,
       NGX_HTTP_LOC_CONF_OFFSET,
@@ -1054,10 +1054,10 @@ in the cache or the cache lock for this element to be released, up to the time s
       NULL },
 
 /*
-If the last request passed to the proxied server for populating a new cache element has not completed for the specified time, one 
-more request may be passed to the proxied server. 
+If the last request passed to the proxied server for populating a new cache element has not completed for the specified time, one
+more request may be passed to the proxied server.
 */
-    { ngx_string("proxy_cache_lock_timeout"),  //Ä¬ÈÏ5S
+    { ngx_string("proxy_cache_lock_timeout"),  //é»˜è®¤5S
       NGX_HTTP_MAIN_CONF|NGX_HTTP_SRV_CONF|NGX_HTTP_LOC_CONF|NGX_CONF_TAKE1,
       ngx_conf_set_msec_slot,
       NGX_HTTP_LOC_CONF_OFFSET,
@@ -1081,25 +1081,25 @@ more request may be passed to the proxied server.
 #endif
 
     /*
-     Óï·¨£ºproxy_temp_path dir-path [ level1 [ level2 [ level3 ] ; 
-     Ä¬ÈÏÖµ£ºÔÚconfigureÊ±ÓÉ¨Chttp-proxy-temp-pathÖ¸¶¨ 
-     Ê¹ÓÃ×Ö¶Î£ºhttp, server, location 
-     ÀàËÆÓÚhttpºËĞÄÄ£¿éÖĞµÄclient_body_temp_pathÖ¸Áî£¬Ö¸¶¨Ò»¸öµØÖ·À´»º³å±È½Ï´óµÄ±»´úÀíÇëÇó¡£
-     */ //XXX_cache»º´æÊÇÏÈĞ´ÔÚxxx_temp_pathÔÙÒÆµ½xxx_cache_path£¬ËùÒÔÕâÁ½¸öÄ¿Â¼×îºÃÔÚÍ¬Ò»¸ö·ÖÇø
+     è¯­æ³•ï¼šproxy_temp_path dir-path [ level1 [ level2 [ level3 ] ;
+     é»˜è®¤å€¼ï¼šåœ¨configureæ—¶ç”±â€“http-proxy-temp-pathæŒ‡å®š
+     ä½¿ç”¨å­—æ®µï¼šhttp, server, location
+     ç±»ä¼¼äºhttpæ ¸å¿ƒæ¨¡å—ä¸­çš„client_body_temp_pathæŒ‡ä»¤ï¼ŒæŒ‡å®šä¸€ä¸ªåœ°å€æ¥ç¼“å†²æ¯”è¾ƒå¤§çš„è¢«ä»£ç†è¯·æ±‚ã€‚
+     */ //XXX_cacheç¼“å­˜æ˜¯å…ˆå†™åœ¨xxx_temp_pathå†ç§»åˆ°xxx_cache_pathï¼Œæ‰€ä»¥è¿™ä¸¤ä¸ªç›®å½•æœ€å¥½åœ¨åŒä¸€ä¸ªåˆ†åŒº
 
          /*
-Ä¬ÈÏÇé¿öÏÂp->temp_file->path = u->conf->temp_path; Ò²¾ÍÊÇÓÉngx_http_fastcgi_temp_pathÖ¸¶¨Â·¾¶£¬µ«ÊÇÈç¹ûÊÇ»º´æ·½Ê½(p->cacheable=1)²¢ÇÒÅäÖÃ
-proxy_cache_path(fastcgi_cache_path) /a/bµÄÊ±ºò´øÓĞuse_temp_path=off(±íÊ¾²»Ê¹ÓÃngx_http_fastcgi_temp_pathÅäÖÃµÄpath)£¬
-Ôòp->temp_file->path = r->cache->file_cache->temp_path; Ò²¾ÍÊÇÁÙÊ±ÎÄ¼ş/a/b/temp¡£use_temp_path=off±íÊ¾²»Ê¹ÓÃngx_http_fastcgi_temp_path
-ÅäÖÃµÄÂ·¾¶£¬¶øÊ¹ÓÃÖ¸¶¨µÄÁÙÊ±Â·¾¶/a/b/temp   ¼ûngx_http_upstream_send_response 
-*/ 
-    /*ºó¶ËÊı¾İ¶ÁÈ¡Íê±Ï£¬²¢ÇÒÈ«²¿Ğ´ÈëÁÙÊ±ÎÄ¼şºó²Å»áÖ´ĞĞrename¹ı³Ì£¬ÎªÊ²Ã´ĞèÒªÁÙÊ±ÎÄ¼şµÄÔ­ÒòÊÇ:ÀıÈçÖ®Ç°µÄ»º´æ¹ıÆÚÁË£¬ÏÖÔÚÓĞ¸öÇëÇóÕıÔÚ´Óºó¶Ë
-    »ñÈ¡Êı¾İĞ´ÈëÁÙÊ±ÎÄ¼ş£¬Èç¹ûÊÇÖ±½ÓĞ´Èë»º´æÎÄ¼ş£¬ÔòÔÚ»ñÈ¡ºó¶ËÊı¾İ¹ı³ÌÖĞ£¬Èç¹ûÔÚÀ´Ò»¸ö¿Í»§¶ËÇëÇó£¬Èç¹ûÔÊĞíproxy_cache_use_stale updating£¬Ôò
-    ºóÃæµÄÇëÇó¿ÉÒÔÖ±½Ó»ñÈ¡Ö®Ç°ÀÏ¾ÉµÄ¹ıÆÚ»º´æ£¬´Ó¶ø¿ÉÒÔ±ÜÃâ³åÍ»(Ç°ÃæµÄÇëÇóĞ´ÎÄ¼ş£¬ºóÃæµÄÇëÇó»ñÈ¡ÎÄ¼şÄÚÈİ) 
+é»˜è®¤æƒ…å†µä¸‹p->temp_file->path = u->conf->temp_path; ä¹Ÿå°±æ˜¯ç”±ngx_http_fastcgi_temp_pathæŒ‡å®šè·¯å¾„ï¼Œä½†æ˜¯å¦‚æœæ˜¯ç¼“å­˜æ–¹å¼(p->cacheable=1)å¹¶ä¸”é…ç½®
+proxy_cache_path(fastcgi_cache_path) /a/bçš„æ—¶å€™å¸¦æœ‰use_temp_path=off(è¡¨ç¤ºä¸ä½¿ç”¨ngx_http_fastcgi_temp_pathé…ç½®çš„path)ï¼Œ
+åˆ™p->temp_file->path = r->cache->file_cache->temp_path; ä¹Ÿå°±æ˜¯ä¸´æ—¶æ–‡ä»¶/a/b/tempã€‚use_temp_path=offè¡¨ç¤ºä¸ä½¿ç”¨ngx_http_fastcgi_temp_path
+é…ç½®çš„è·¯å¾„ï¼Œè€Œä½¿ç”¨æŒ‡å®šçš„ä¸´æ—¶è·¯å¾„/a/b/temp   è§ngx_http_upstream_send_response
+*/
+    /*åç«¯æ•°æ®è¯»å–å®Œæ¯•ï¼Œå¹¶ä¸”å…¨éƒ¨å†™å…¥ä¸´æ—¶æ–‡ä»¶åæ‰ä¼šæ‰§è¡Œrenameè¿‡ç¨‹ï¼Œä¸ºä»€ä¹ˆéœ€è¦ä¸´æ—¶æ–‡ä»¶çš„åŸå› æ˜¯:ä¾‹å¦‚ä¹‹å‰çš„ç¼“å­˜è¿‡æœŸäº†ï¼Œç°åœ¨æœ‰ä¸ªè¯·æ±‚æ­£åœ¨ä»åç«¯
+    è·å–æ•°æ®å†™å…¥ä¸´æ—¶æ–‡ä»¶ï¼Œå¦‚æœæ˜¯ç›´æ¥å†™å…¥ç¼“å­˜æ–‡ä»¶ï¼Œåˆ™åœ¨è·å–åç«¯æ•°æ®è¿‡ç¨‹ä¸­ï¼Œå¦‚æœåœ¨æ¥ä¸€ä¸ªå®¢æˆ·ç«¯è¯·æ±‚ï¼Œå¦‚æœå…è®¸proxy_cache_use_stale updatingï¼Œåˆ™
+    åé¢çš„è¯·æ±‚å¯ä»¥ç›´æ¥è·å–ä¹‹å‰è€æ—§çš„è¿‡æœŸç¼“å­˜ï¼Œä»è€Œå¯ä»¥é¿å…å†²çª(å‰é¢çš„è¯·æ±‚å†™æ–‡ä»¶ï¼Œåé¢çš„è¯·æ±‚è·å–æ–‡ä»¶å†…å®¹)
     */
 
-//´Óngx_http_file_cache_update¿ÉÒÔ¿´³ö£¬ºó¶ËÊı¾İÏÈĞ´µ½ÁÙÊ±ÎÄ¼şºó£¬ÔÚĞ´Èëxxx_cache_pathÖĞ£¬¼ûngx_http_file_cache_update
-    { ngx_string("proxy_temp_path"), //´Óngx_http_file_cache_update¿ÉÒÔ¿´³ö£¬ºó¶ËÊı¾İÏÈĞ´µ½ÁÙÊ±ÎÄ¼şºó£¬ÔÚĞ´Èëxxx_cache_pathÖĞ£¬¼ûngx_http_file_cache_update
+//ä»ngx_http_file_cache_updateå¯ä»¥çœ‹å‡ºï¼Œåç«¯æ•°æ®å…ˆå†™åˆ°ä¸´æ—¶æ–‡ä»¶åï¼Œåœ¨å†™å…¥xxx_cache_pathä¸­ï¼Œè§ngx_http_file_cache_update
+    { ngx_string("proxy_temp_path"), //ä»ngx_http_file_cache_updateå¯ä»¥çœ‹å‡ºï¼Œåç«¯æ•°æ®å…ˆå†™åˆ°ä¸´æ—¶æ–‡ä»¶åï¼Œåœ¨å†™å…¥xxx_cache_pathä¸­ï¼Œè§ngx_http_file_cache_update
       NGX_HTTP_MAIN_CONF|NGX_HTTP_SRV_CONF|NGX_HTTP_LOC_CONF|NGX_CONF_TAKE1234,
       ngx_conf_set_path_slot,
       NGX_HTTP_LOC_CONF_OFFSET,
@@ -1107,11 +1107,11 @@ proxy_cache_path(fastcgi_cache_path) /a/bµÄÊ±ºò´øÓĞuse_temp_path=off(±íÊ¾²»Ê¹ÓÃn
       NULL },
 
     /*
-     Óï·¨£ºproxy_max_temp_file_size size; 
-     Ä¬ÈÏÖµ£ºproxy_max_temp_file_size 1G; 
-     Ê¹ÓÃ×Ö¶Î£ºhttp, server, location, if 
-     µ±´úÀí»º³åÇø¹ı´óÊ±Ê¹ÓÃÒ»¸öÁÙÊ±ÎÄ¼şµÄ×î´óÖµ£¬Èç¹ûÎÄ¼ş´óÓÚÕâ¸öÖµ£¬½«Í¬²½´«µİÇëÇó¶ø²»Ğ´Èë´ÅÅÌ½øĞĞ»º´æ¡£
-     Èç¹ûÕâ¸öÖµÉèÖÃÎªÁã£¬Ôò½ûÖ¹Ê¹ÓÃÁÙÊ±ÎÄ¼ş¡£
+     è¯­æ³•ï¼šproxy_max_temp_file_size size;
+     é»˜è®¤å€¼ï¼šproxy_max_temp_file_size 1G;
+     ä½¿ç”¨å­—æ®µï¼šhttp, server, location, if
+     å½“ä»£ç†ç¼“å†²åŒºè¿‡å¤§æ—¶ä½¿ç”¨ä¸€ä¸ªä¸´æ—¶æ–‡ä»¶çš„æœ€å¤§å€¼ï¼Œå¦‚æœæ–‡ä»¶å¤§äºè¿™ä¸ªå€¼ï¼Œå°†åŒæ­¥ä¼ é€’è¯·æ±‚è€Œä¸å†™å…¥ç£ç›˜è¿›è¡Œç¼“å­˜ã€‚
+     å¦‚æœè¿™ä¸ªå€¼è®¾ç½®ä¸ºé›¶ï¼Œåˆ™ç¦æ­¢ä½¿ç”¨ä¸´æ—¶æ–‡ä»¶ã€‚
      */
     { ngx_string("proxy_max_temp_file_size"),
       NGX_HTTP_MAIN_CONF|NGX_HTTP_SRV_CONF|NGX_HTTP_LOC_CONF|NGX_CONF_TAKE1,
@@ -1121,10 +1121,10 @@ proxy_cache_path(fastcgi_cache_path) /a/bµÄÊ±ºò´øÓĞuse_temp_path=off(±íÊ¾²»Ê¹ÓÃn
       NULL },
 
     /*
-     Óï·¨£ºproxy_temp_file_write_size size; 
-     Ä¬ÈÏÖµ£ºproxy_temp_file_write_size [¡±#proxy buffer size¡±] * 2; 
-     Ê¹ÓÃ×Ö¶Î£ºhttp, server, location, if 
-     ÉèÖÃÔÚĞ´Èëproxy_temp_pathÊ±Êı¾İµÄ´óĞ¡£¬ÔÚÔ¤·ÀÒ»¸ö¹¤×÷½ø³ÌÔÚ´«µİÎÄ¼şÊ±×èÈûÌ«³¤¡£
+     è¯­æ³•ï¼šproxy_temp_file_write_size size;
+     é»˜è®¤å€¼ï¼šproxy_temp_file_write_size [â€#proxy buffer sizeâ€] * 2;
+     ä½¿ç”¨å­—æ®µï¼šhttp, server, location, if
+     è®¾ç½®åœ¨å†™å…¥proxy_temp_pathæ—¶æ•°æ®çš„å¤§å°ï¼Œåœ¨é¢„é˜²ä¸€ä¸ªå·¥ä½œè¿›ç¨‹åœ¨ä¼ é€’æ–‡ä»¶æ—¶é˜»å¡å¤ªé•¿ã€‚
      */
     { ngx_string("proxy_temp_file_write_size"),
       NGX_HTTP_MAIN_CONF|NGX_HTTP_SRV_CONF|NGX_HTTP_LOC_CONF|NGX_CONF_TAKE1,
@@ -1134,27 +1134,27 @@ proxy_cache_path(fastcgi_cache_path) /a/bµÄÊ±ºò´øÓĞuse_temp_path=off(±íÊ¾²»Ê¹ÓÃn
       NULL },
 
 /*
-Óï·¨£ºproxy_next_upstream [error | timeout | invalid_header | http_500 | http_502 | http_503 | http_504 | http_404 | off ];
+è¯­æ³•ï¼šproxy_next_upstream [error | timeout | invalid_header | http_500 | http_502 | http_503 | http_504 | http_404 | off ];
 
-Ä¬ÈÏ£ºproxy_next_upstream error timeout;
+é»˜è®¤ï¼šproxy_next_upstream error timeout;
 
-ÅäÖÃ¿é£ºhttp¡¢server¡¢location
+é…ç½®å—ï¼šhttpã€serverã€location
 
-´ËÅäÖÃÏî±íÊ¾µ±ÏòÒ»Ì¨ÉÏÓÎ·şÎñÆ÷×ª·¢ÇëÇó³öÏÖ´íÎóÊ±£¬¼ÌĞø»»Ò»Ì¨ÉÏÓÎ·şÎñÆ÷´¦ÀíÕâ¸öÇëÇó¡£ÉÏÓÎ·şÎñÆ÷Ò»µ©¿ªÊ¼·¢ËÍÓ¦´ğ£¬
-Nginx·´Ïò´úÀí·şÎñÆ÷»áÁ¢¿Ì°ÑÓ¦´ğ°ü×ª·¢¸ø¿Í»§¶Ë¡£Òò´Ë£¬Ò»µ©Nginx¿ªÊ¼Ïò¿Í»§¶Ë·¢ËÍÏìÓ¦°ü£¬Ö®ºóµÄ¹ı³ÌÖĞÈô³öÏÖ´íÎóÒ²ÊÇ²»ÔÊĞí»»ÏÂÒ»Ì¨
-ÉÏÓÎ·şÎñÆ÷¼ÌĞø´¦ÀíµÄ¡£ÕâºÜºÃÀí½â£¬ÕâÑù²Å¿ÉÒÔ¸üºÃµØ±£Ö¤¿Í»§¶ËÖ»ÊÕµ½À´×ÔÒ»¸öÉÏÓÎ·şÎñÆ÷µÄÓ¦´ğ¡£proxy_next_upstreamµÄ²ÎÊıÓÃÀ´ËµÃ÷
-ÔÚÄÄĞ©Çé¿öÏÂ»á¼ÌĞøÑ¡ÔñÏÂÒ»Ì¨ÉÏÓÎ·şÎñÆ÷×ª·¢ÇëÇó¡£
+æ­¤é…ç½®é¡¹è¡¨ç¤ºå½“å‘ä¸€å°ä¸Šæ¸¸æœåŠ¡å™¨è½¬å‘è¯·æ±‚å‡ºç°é”™è¯¯æ—¶ï¼Œç»§ç»­æ¢ä¸€å°ä¸Šæ¸¸æœåŠ¡å™¨å¤„ç†è¿™ä¸ªè¯·æ±‚ã€‚ä¸Šæ¸¸æœåŠ¡å™¨ä¸€æ—¦å¼€å§‹å‘é€åº”ç­”ï¼Œ
+Nginxåå‘ä»£ç†æœåŠ¡å™¨ä¼šç«‹åˆ»æŠŠåº”ç­”åŒ…è½¬å‘ç»™å®¢æˆ·ç«¯ã€‚å› æ­¤ï¼Œä¸€æ—¦Nginxå¼€å§‹å‘å®¢æˆ·ç«¯å‘é€å“åº”åŒ…ï¼Œä¹‹åçš„è¿‡ç¨‹ä¸­è‹¥å‡ºç°é”™è¯¯ä¹Ÿæ˜¯ä¸å…è®¸æ¢ä¸‹ä¸€å°
+ä¸Šæ¸¸æœåŠ¡å™¨ç»§ç»­å¤„ç†çš„ã€‚è¿™å¾ˆå¥½ç†è§£ï¼Œè¿™æ ·æ‰å¯ä»¥æ›´å¥½åœ°ä¿è¯å®¢æˆ·ç«¯åªæ”¶åˆ°æ¥è‡ªä¸€ä¸ªä¸Šæ¸¸æœåŠ¡å™¨çš„åº”ç­”ã€‚proxy_next_upstreamçš„å‚æ•°ç”¨æ¥è¯´æ˜
+åœ¨å“ªäº›æƒ…å†µä¸‹ä¼šç»§ç»­é€‰æ‹©ä¸‹ä¸€å°ä¸Šæ¸¸æœåŠ¡å™¨è½¬å‘è¯·æ±‚ã€‚
 
-error£ºµ±ÏòÉÏÓÎ·şÎñÆ÷·¢ÆğÁ¬½Ó¡¢·¢ËÍÇëÇó¡¢¶ÁÈ¡ÏìÓ¦Ê±³ö´í¡£
+errorï¼šå½“å‘ä¸Šæ¸¸æœåŠ¡å™¨å‘èµ·è¿æ¥ã€å‘é€è¯·æ±‚ã€è¯»å–å“åº”æ—¶å‡ºé”™ã€‚
 
-timeout£º·¢ËÍÇëÇó»ò¶ÁÈ¡ÏìÓ¦Ê±·¢Éú³¬Ê±¡£
-invalid_header£ºÉÏÓÎ·şÎñÆ÷·¢ËÍµÄÏìÓ¦ÊÇ²»ºÏ·¨µÄ¡£
-http_500£ºÉÏÓÎ·şÎñÆ÷·µ»ØµÄHTTPÏìÓ¦ÂëÊÇ500¡£
-http_502£ºÉÏÓÎ·şÎñÆ÷·µ»ØµÄHTTPÏìÓ¦ÂëÊÇ502¡£
-http_503£ºÉÏÓÎ·şÎñÆ÷·µ»ØµÄHTTPÏìÓ¦ÂëÊÇ503¡£
-http_504£ºÉÏÓÎ·şÎñÆ÷·µ»ØµÄHTTPÏìÓ¦ÂëÊÇ504¡£
-http_404£ºÉÏÓÎ·şÎñÆ÷·µ»ØµÄHTTPÏìÓ¦ÂëÊÇ404¡£
-off£º¹Ø±Õproxy_next_upstream¹¦ÄÜ¡ª³ö´í¾ÍÑ¡ÔñÁíÒ»Ì¨ÉÏÓÎ·şÎñÆ÷ÔÙ´Î×ª·¢¡£
+timeoutï¼šå‘é€è¯·æ±‚æˆ–è¯»å–å“åº”æ—¶å‘ç”Ÿè¶…æ—¶ã€‚
+invalid_headerï¼šä¸Šæ¸¸æœåŠ¡å™¨å‘é€çš„å“åº”æ˜¯ä¸åˆæ³•çš„ã€‚
+http_500ï¼šä¸Šæ¸¸æœåŠ¡å™¨è¿”å›çš„HTTPå“åº”ç æ˜¯500ã€‚
+http_502ï¼šä¸Šæ¸¸æœåŠ¡å™¨è¿”å›çš„HTTPå“åº”ç æ˜¯502ã€‚
+http_503ï¼šä¸Šæ¸¸æœåŠ¡å™¨è¿”å›çš„HTTPå“åº”ç æ˜¯503ã€‚
+http_504ï¼šä¸Šæ¸¸æœåŠ¡å™¨è¿”å›çš„HTTPå“åº”ç æ˜¯504ã€‚
+http_404ï¼šä¸Šæ¸¸æœåŠ¡å™¨è¿”å›çš„HTTPå“åº”ç æ˜¯404ã€‚
+offï¼šå…³é—­proxy_next_upstreamåŠŸèƒ½â€”å‡ºé”™å°±é€‰æ‹©å¦ä¸€å°ä¸Šæ¸¸æœåŠ¡å™¨å†æ¬¡è½¬å‘ã€‚
 */
     { ngx_string("proxy_next_upstream"),
       NGX_HTTP_MAIN_CONF|NGX_HTTP_SRV_CONF|NGX_HTTP_LOC_CONF|NGX_CONF_1MORE,
@@ -1179,9 +1179,9 @@ off£º¹Ø±Õproxy_next_upstream¹¦ÄÜ¡ª³ö´í¾ÍÑ¡ÔñÁíÒ»Ì¨ÉÏÓÎ·şÎñÆ÷ÔÙ´Î×ª·¢¡£
 
 /*
 proxy_pass_header
-Óï·¨£ºproxy_pass_header the_header;
-ÅäÖÃ¿é£ºhttp¡¢server¡¢location
-Óëproxy_hide_header¹¦ÄÜÏà·´£¬proxy_pass_header»á½«Ô­À´½ûÖ¹×ª·¢µÄheaderÉèÖÃÎªÔÊĞí×ª·¢¡£ÀıÈç£º
+è¯­æ³•ï¼šproxy_pass_header the_header;
+é…ç½®å—ï¼šhttpã€serverã€location
+ä¸proxy_hide_headeråŠŸèƒ½ç›¸åï¼Œproxy_pass_headerä¼šå°†åŸæ¥ç¦æ­¢è½¬å‘çš„headerè®¾ç½®ä¸ºå…è®¸è½¬å‘ã€‚ä¾‹å¦‚ï¼š
 proxy_pass_header X-Accel-Redirect;
 */
     { ngx_string("proxy_pass_header"),
@@ -1193,32 +1193,32 @@ proxy_pass_header X-Accel-Redirect;
 
 /*
 proxy_hide_header
-Óï·¨£ºproxy_hide_header the_header;
-ÅäÖÃ¿é£ºhttp¡¢server¡¢location
-Nginx»á½«ÉÏÓÎ·şÎñÆ÷µÄÏìÓ¦×ª·¢¸ø¿Í»§¶Ë£¬µ«Ä¬ÈÏ²»»á×ª·¢ÒÔÏÂHTTPÍ·²¿×Ö¶Î£ºDate¡¢Server¡¢X-PadºÍX-Accel-*¡£Ê¹ÓÃproxy_hide_headerºó¿ÉÒÔ
-ÈÎÒâµØÖ¸¶¨ÄÄĞ©HTTPÍ·²¿×Ö¶Î²»ÄÜ±»×ª·¢¡£ÀıÈç£º
+è¯­æ³•ï¼šproxy_hide_header the_header;
+é…ç½®å—ï¼šhttpã€serverã€location
+Nginxä¼šå°†ä¸Šæ¸¸æœåŠ¡å™¨çš„å“åº”è½¬å‘ç»™å®¢æˆ·ç«¯ï¼Œä½†é»˜è®¤ä¸ä¼šè½¬å‘ä»¥ä¸‹HTTPå¤´éƒ¨å­—æ®µï¼šDateã€Serverã€X-Padå’ŒX-Accel-*ã€‚ä½¿ç”¨proxy_hide_headeråå¯ä»¥
+ä»»æ„åœ°æŒ‡å®šå“ªäº›HTTPå¤´éƒ¨å­—æ®µä¸èƒ½è¢«è½¬å‘ã€‚ä¾‹å¦‚ï¼š
 proxy_hide_header Cache-Control;
 proxy_hide_header MicrosoftOfficeWebServer;
 
-Óï·¨£ºproxy_hide_header the_header 
-Ê¹ÓÃ×Ö¶Î£ºhttp, server, location 
-nginx²»¶Ô´Ó±»´úÀí·şÎñÆ÷´«À´µÄ"Date", "Server", "X-Pad"ºÍ"X-Accel-..."Ó¦´ğ½øĞĞ×ª·¢£¬Õâ¸ö²ÎÊıÔÊĞíÒş²ØÒ»Ğ©ÆäËûµÄÍ·²¿×Ö¶Î£¬µ«ÊÇÈç¹û
-ÉÏÊöÌáµ½µÄÍ·²¿×Ö¶Î±ØĞë±»×ª·¢£¬¿ÉÒÔÊ¹ÓÃproxy_pass_headerÖ¸Áî£¬ÀıÈç£ºĞèÒªÒş²ØMS-OfficeWebserverºÍAspNet-Version¿ÉÒÔÊ¹ÓÃÈçÏÂÅäÖÃ£º 
+è¯­æ³•ï¼šproxy_hide_header the_header
+ä½¿ç”¨å­—æ®µï¼šhttp, server, location
+nginxä¸å¯¹ä»è¢«ä»£ç†æœåŠ¡å™¨ä¼ æ¥çš„"Date", "Server", "X-Pad"å’Œ"X-Accel-..."åº”ç­”è¿›è¡Œè½¬å‘ï¼Œè¿™ä¸ªå‚æ•°å…è®¸éšè—ä¸€äº›å…¶ä»–çš„å¤´éƒ¨å­—æ®µï¼Œä½†æ˜¯å¦‚æœ
+ä¸Šè¿°æåˆ°çš„å¤´éƒ¨å­—æ®µå¿…é¡»è¢«è½¬å‘ï¼Œå¯ä»¥ä½¿ç”¨proxy_pass_headeræŒ‡ä»¤ï¼Œä¾‹å¦‚ï¼šéœ€è¦éšè—MS-OfficeWebserverå’ŒAspNet-Versionå¯ä»¥ä½¿ç”¨å¦‚ä¸‹é…ç½®ï¼š
 location / {
   proxy_hide_header X-AspNet-Version;
   proxy_hide_header MicrosoftOfficeWebServer;
-}µ±Ê¹ÓÃX-Accel-RedirectÊ±Õâ¸öÖ¸Áî·Ç³£ÓĞÓÃ¡£ÀıÈç£¬Äã¿ÉÄÜÒªÔÚºó¶ËÓ¦ÓÃ·şÎñÆ÷¶ÔÒ»¸öĞèÒªÏÂÔØµÄÎÄ¼şÉèÖÃÒ»¸ö·µ»ØÍ·£¬ÆäÖĞX-Accel-Redirect
-×Ö¶Î¼´ÎªÕâ¸öÎÄ¼ş£¬Í¬Ê±ÒªÓĞÇ¡µ±µÄContent-Type£¬µ«ÊÇ£¬ÖØ¶¨ÏòµÄURL½«Ö¸Ïò°üº¬Õâ¸öÎÄ¼şµÄÎÄ¼ş·şÎñÆ÷£¬¶øÕâ¸ö·şÎñÆ÷´«µİÁËËü×Ô¼ºµÄContent-Type£¬
-¿ÉÄÜÕâ²¢²»ÊÇÕıÈ·µÄ£¬ÕâÑù¾ÍºöÂÔÁËºó¶ËÓ¦ÓÃ·şÎñÆ÷´«µİµÄContent-Type¡£ÎªÁË±ÜÃâÕâÖÖÇé¿öÄã¿ÉÒÔÊ¹ÓÃÕâ¸öÖ¸Áî£º 
+}å½“ä½¿ç”¨X-Accel-Redirectæ—¶è¿™ä¸ªæŒ‡ä»¤éå¸¸æœ‰ç”¨ã€‚ä¾‹å¦‚ï¼Œä½ å¯èƒ½è¦åœ¨åç«¯åº”ç”¨æœåŠ¡å™¨å¯¹ä¸€ä¸ªéœ€è¦ä¸‹è½½çš„æ–‡ä»¶è®¾ç½®ä¸€ä¸ªè¿”å›å¤´ï¼Œå…¶ä¸­X-Accel-Redirect
+å­—æ®µå³ä¸ºè¿™ä¸ªæ–‡ä»¶ï¼ŒåŒæ—¶è¦æœ‰æ°å½“çš„Content-Typeï¼Œä½†æ˜¯ï¼Œé‡å®šå‘çš„URLå°†æŒ‡å‘åŒ…å«è¿™ä¸ªæ–‡ä»¶çš„æ–‡ä»¶æœåŠ¡å™¨ï¼Œè€Œè¿™ä¸ªæœåŠ¡å™¨ä¼ é€’äº†å®ƒè‡ªå·±çš„Content-Typeï¼Œ
+å¯èƒ½è¿™å¹¶ä¸æ˜¯æ­£ç¡®çš„ï¼Œè¿™æ ·å°±å¿½ç•¥äº†åç«¯åº”ç”¨æœåŠ¡å™¨ä¼ é€’çš„Content-Typeã€‚ä¸ºäº†é¿å…è¿™ç§æƒ…å†µä½ å¯ä»¥ä½¿ç”¨è¿™ä¸ªæŒ‡ä»¤ï¼š
 location / {
   proxy_pass http://backend_servers;
 }
- 
+
 location /files/ {
   proxy_pass http://fileserver;
   proxy_hide_header Content-Type;
 
-*/ //proxy_hide_headerºÍproxy_pass_header¹¦ÄÜÏà·´
+*/ //proxy_hide_headerå’Œproxy_pass_headeråŠŸèƒ½ç›¸å
     { ngx_string("proxy_hide_header"),
       NGX_HTTP_MAIN_CONF|NGX_HTTP_SRV_CONF|NGX_HTTP_LOC_CONF|NGX_CONF_TAKE1,
       ngx_conf_set_str_array_slot,
@@ -1227,11 +1227,11 @@ location /files/ {
       NULL },
 
     /*
-     Óï·¨£ºproxy_ignore_headers name [name ¡­] 
-     Ä¬ÈÏÖµ£ºnone 
-     Ê¹ÓÃ×Ö¶Î£ºhttp, server, location 
-     Õâ¸öÖ¸Áî(0.7.54+) ½ûÖ¹´¦ÀíÀ´×Ô´úÀí·şÎñÆ÷µÄÓ¦´ğ¡£
-     ¿ÉÒÔÖ¸¶¨µÄ×Ö¶ÎÎª¡±X-Accel-Redirect¡±, ¡°X-Accel-Expires¡±, ¡°Expires¡±»ò¡±Cache-Control¡±¡£
+     è¯­æ³•ï¼šproxy_ignore_headers name [name â€¦]
+     é»˜è®¤å€¼ï¼šnone
+     ä½¿ç”¨å­—æ®µï¼šhttp, server, location
+     è¿™ä¸ªæŒ‡ä»¤(0.7.54+) ç¦æ­¢å¤„ç†æ¥è‡ªä»£ç†æœåŠ¡å™¨çš„åº”ç­”ã€‚
+     å¯ä»¥æŒ‡å®šçš„å­—æ®µä¸ºâ€X-Accel-Redirectâ€, â€œX-Accel-Expiresâ€, â€œExpiresâ€æˆ–â€Cache-Controlâ€ã€‚
      */
     { ngx_string("proxy_ignore_headers"),
       NGX_HTTP_MAIN_CONF|NGX_HTTP_SRV_CONF|NGX_HTTP_LOC_CONF|NGX_CONF_1MORE,
@@ -1240,7 +1240,7 @@ location /files/ {
       offsetof(ngx_http_proxy_loc_conf_t, upstream.ignore_headers),
       &ngx_http_upstream_ignore_headers_masks },
 
-    //µ½ºó¶Ë·şÎñÆ÷²ÉÓÃµÄhttp°æ±¾ºÅ£¬Ä¬ÈÏ1.0£¬¼ûngx_http_proxy_create_request
+    //åˆ°åç«¯æœåŠ¡å™¨é‡‡ç”¨çš„httpç‰ˆæœ¬å·ï¼Œé»˜è®¤1.0ï¼Œè§ngx_http_proxy_create_request
     { ngx_string("proxy_http_version"),
       NGX_HTTP_MAIN_CONF|NGX_HTTP_SRV_CONF|NGX_HTTP_LOC_CONF|NGX_CONF_TAKE1,
       ngx_conf_set_enum_slot,
@@ -1252,11 +1252,11 @@ location /files/ {
 
     /*
      proxy_ssl_session_reuse
-     Óï·¨£ºproxy_ssl_session_reuse [ on | off ];
-     Ä¬ÈÏÖµ£º proxy_ssl_session_reuse on;
-     Ê¹ÓÃ×Ö¶Î£ºhttp, server, location
-     Ê¹ÓÃ°æ±¾£º¡İ 0.7.11
-     µ±Ê¹ÓÃhttpsÁ¬½Óµ½ÉÏÓÎ·şÎñÆ÷Ê±³¢ÊÔÖØÓÃssl»á»°¡£
+     è¯­æ³•ï¼šproxy_ssl_session_reuse [ on | off ];
+     é»˜è®¤å€¼ï¼š proxy_ssl_session_reuse on;
+     ä½¿ç”¨å­—æ®µï¼šhttp, server, location
+     ä½¿ç”¨ç‰ˆæœ¬ï¼šâ‰¥ 0.7.11
+     å½“ä½¿ç”¨httpsè¿æ¥åˆ°ä¸Šæ¸¸æœåŠ¡å™¨æ—¶å°è¯•é‡ç”¨sslä¼šè¯ã€‚
      */
     { ngx_string("proxy_ssl_session_reuse"),
       NGX_HTTP_MAIN_CONF|NGX_HTTP_SRV_CONF|NGX_HTTP_LOC_CONF|NGX_CONF_FLAG,
@@ -1388,14 +1388,14 @@ static ngx_keyval_t  ngx_http_proxy_headers[] = {
     { ngx_string("Connection"), ngx_string("close") },
     { ngx_string("Content-Length"), ngx_string("$proxy_internal_body_length") },
     { ngx_string("Transfer-Encoding"), ngx_string("$proxy_internal_chunked") },
-    { ngx_string("TE"), ngx_string("") }, //ÕâÀïÃæµÄvalueÎª¿Õ£¬ÔòÈç¹ûproxy_set_headerÓÖÖØĞÂÉèÖÃÁË£¬Ôò»¹ÊÇ»áÉúĞ§£¬·ñÔò¸ÃÏî²»ÉúĞ§£¬¼ûngx_http_proxy_init_headers
+    { ngx_string("TE"), ngx_string("") }, //è¿™é‡Œé¢çš„valueä¸ºç©ºï¼Œåˆ™å¦‚æœproxy_set_headeråˆé‡æ–°è®¾ç½®äº†ï¼Œåˆ™è¿˜æ˜¯ä¼šç”Ÿæ•ˆï¼Œå¦åˆ™è¯¥é¡¹ä¸ç”Ÿæ•ˆï¼Œè§ngx_http_proxy_init_headers
     { ngx_string("Keep-Alive"), ngx_string("") },
     { ngx_string("Expect"), ngx_string("") },
     { ngx_string("Upgrade"), ngx_string("") },
     { ngx_null_string, ngx_null_string }
 };
 
-//×îÖÕÌí¼Óµ½ÁËngx_http_upstream_conf_t->hide_headers_hash±íÖĞ ²»ĞèÒª·¢ËÍ¸ø¿Í»§¶Ë
+//æœ€ç»ˆæ·»åŠ åˆ°äº†ngx_http_upstream_conf_t->hide_headers_hashè¡¨ä¸­ ä¸éœ€è¦å‘é€ç»™å®¢æˆ·ç«¯
 static ngx_str_t  ngx_http_proxy_hide_headers[] = {
     ngx_string("Date"),
     ngx_string("Server"),
@@ -1434,19 +1434,19 @@ static ngx_keyval_t  ngx_http_proxy_cache_headers[] = {
 
 
 /*
-¸ÃÄ£¿éÖĞ°üº¬Ò»Ğ©ÄÚÖÃ±äÁ¿£¬¿ÉÒÔÓÃÓÚproxy_set_headerÖ¸ÁîÖĞÒÔ´´½¨Í·²¿¡£
+è¯¥æ¨¡å—ä¸­åŒ…å«ä¸€äº›å†…ç½®å˜é‡ï¼Œå¯ä»¥ç”¨äºproxy_set_headeræŒ‡ä»¤ä¸­ä»¥åˆ›å»ºå¤´éƒ¨ã€‚
 
 $proxy_add_x_forwarded_for
-°üº¬¿Í»§¶ËµÄÇëÇóÍ·¡°X-Forwarded-For¡±Óë$remote_addr£¬ÓÃ¶ººÅ·Ö¿ª£¬Èç¹û²»´æÔÚX-Forwarded-ForÇëÇóÍ·£¬Ôò$proxy_add_x_forwarded_forµÈÓÚ$remote_addr¡£
+åŒ…å«å®¢æˆ·ç«¯çš„è¯·æ±‚å¤´â€œX-Forwarded-Forâ€ä¸$remote_addrï¼Œç”¨é€—å·åˆ†å¼€ï¼Œå¦‚æœä¸å­˜åœ¨X-Forwarded-Forè¯·æ±‚å¤´ï¼Œåˆ™$proxy_add_x_forwarded_forç­‰äº$remote_addrã€‚
 
 $proxy_host
-±»´úÀí·şÎñÆ÷µÄÖ÷»úÃûÓë¶Ë¿ÚºÅ¡£
+è¢«ä»£ç†æœåŠ¡å™¨çš„ä¸»æœºåä¸ç«¯å£å·ã€‚
 
 $proxy_internal_body_length
-Í¨¹ıproxy_set_bodyÉèÖÃµÄ´úÀíÇëÇóÊµÌåµÄ³¤¶È¡£
+é€šè¿‡proxy_set_bodyè®¾ç½®çš„ä»£ç†è¯·æ±‚å®ä½“çš„é•¿åº¦ã€‚
 
 $proxy_host
-±»´úÀí·şÎñÆ÷µÄ¶Ë¿ÚºÅ
+è¢«ä»£ç†æœåŠ¡å™¨çš„ç«¯å£å·
 */
 static ngx_http_variable_t  ngx_http_proxy_vars[] = {
 
@@ -1479,11 +1479,11 @@ static ngx_path_init_t  ngx_http_proxy_temp_path = {
     ngx_string(NGX_HTTP_PROXY_TEMP_PATH), { 1, 2, 0 }
 };
 
-//ÅäÖÃproxy_passºó£¬ÔÚngx_http_core_content_phaseÀïÃæÖ¸Ïò¸Ãº¯Êı
+//é…ç½®proxy_passåï¼Œåœ¨ngx_http_core_content_phaseé‡Œé¢æŒ‡å‘è¯¥å‡½æ•°
 /*
-ÄÇÃ´£¬µ±ÓĞÇëÇó·ÃÎÊµ½ÌØ¶¨µÄlocationµÄÊ±ºò(¼ÙÉèÕâ¸ölocationÅäÖÃÁËproxy_passÖ¸Áî)£¬
-¸úÆäËûÇëÇóÒ»Ñù£¬»áµ÷ÓÃ¸÷¸öphaseµÄcheckerºÍhandler£¬µ½ÁËNGX_HTTP_CONTENT_PHASEµÄchecker£¬
-¼´ngx_http_core_content_phase()µÄÊ±ºò£¬»áµ÷ÓÃr->content_handler(r)£¬¼´ngx_http_proxy_handler¡£
+é‚£ä¹ˆï¼Œå½“æœ‰è¯·æ±‚è®¿é—®åˆ°ç‰¹å®šçš„locationçš„æ—¶å€™(å‡è®¾è¿™ä¸ªlocationé…ç½®äº†proxy_passæŒ‡ä»¤)ï¼Œ
+è·Ÿå…¶ä»–è¯·æ±‚ä¸€æ ·ï¼Œä¼šè°ƒç”¨å„ä¸ªphaseçš„checkerå’Œhandlerï¼Œåˆ°äº†NGX_HTTP_CONTENT_PHASEçš„checkerï¼Œ
+å³ngx_http_core_content_phase()çš„æ—¶å€™ï¼Œä¼šè°ƒç”¨r->content_handler(r)ï¼Œå³ngx_http_proxy_handlerã€‚
 */
 static ngx_int_t ngx_http_proxy_handler(ngx_http_request_t *r)
 {
@@ -1495,20 +1495,22 @@ static ngx_int_t ngx_http_proxy_handler(ngx_http_request_t *r)
     ngx_http_proxy_main_conf_t  *pmcf;
 #endif
 
-    if (ngx_http_upstream_create(r) != NGX_OK) { //Éú³ÉÒ»¸öngx_http_upstream_t½á¹¹£¬¸³Öµµ½r->upstream
+    if (ngx_http_upstream_create(r) != NGX_OK) { //ç”Ÿæˆä¸€ä¸ªngx_http_upstream_tç»“æ„ï¼Œèµ‹å€¼åˆ°r->upstream
         return NGX_HTTP_INTERNAL_SERVER_ERROR;
     }
 
+    /*ä¸ºåå‘ä»£ç†å¤„ç†ä¸Šä¸‹æ–‡åˆ†é…ç©ºé—´*/
     ctx = ngx_pcalloc(r->pool, sizeof(ngx_http_proxy_ctx_t));
     if (ctx == NULL) {
+        /*åˆ†é…å¤±è´¥ è¿”å›500é”™è¯¯*/
         return NGX_HTTP_INTERNAL_SERVER_ERROR;
     }
 
-    //½«Õâ¸öÉÏÏÂÎÄ·Åµ½ÇëÇóµÄctxÊı×éµÄngx_http_proxy_moduleÄ£¿éÖĞ£¬r->ctx[module.ctx_index] = c;
+    //å°†è¿™ä¸ªä¸Šä¸‹æ–‡æ”¾åˆ°è¯·æ±‚çš„ctxæ•°ç»„çš„ngx_http_proxy_moduleæ¨¡å—ä¸­ï¼Œr->ctx[module.ctx_index] = c;
     ngx_http_set_ctx(r, ctx, ngx_http_proxy_module);
-
+    /*å¾—åˆ°proxyçš„locationåŸŸé…ç½®ä¿¡æ¯*/
     plcf = ngx_http_get_module_loc_conf(r, ngx_http_proxy_module);
-
+    /*r->upstreamå·²ç»ç”±ngx_http_upstream_createåˆ†é…è¿‡äº†*/
     u = r->upstream;
 
     if (plcf->proxy_lengths == NULL) {
@@ -1519,8 +1521,8 @@ static ngx_int_t ngx_http_proxy_handler(ngx_http_request_t *r)
 #endif
 
     } else {
-        if (ngx_http_proxy_eval(r, ctx, plcf) != NGX_OK) { 
-        //»ñÈ¡uriÖĞ±äÁ¿µÄÖµ£¬´Ó¶ø¿ÉÒÔµÃµ½ÍêÕûµÄuri£¬ºÍngx_http_proxy_passÅäºÏÔÄ¶Á
+        if (ngx_http_proxy_eval(r, ctx, plcf) != NGX_OK) {
+        //è·å–uriä¸­å˜é‡çš„å€¼ï¼Œä»è€Œå¯ä»¥å¾—åˆ°å®Œæ•´çš„uriï¼Œå’Œngx_http_proxy_passé…åˆé˜…è¯»
             return NGX_HTTP_INTERNAL_SERVER_ERROR;
         }
     }
@@ -1536,13 +1538,13 @@ static ngx_int_t ngx_http_proxy_handler(ngx_http_request_t *r)
     u->create_key = ngx_http_proxy_create_key;
 #endif
 
-    //Îªupstream×¼±¸¸÷ÖÖÇëÇóµÄ»Øµ÷
-    u->create_request = ngx_http_proxy_create_request; //Éú³É·¢ËÍµ½ÉÏÓÎ·şÎñÆ÷µÄÇëÇó»º³å£¨»òÕßÒ»Ìõ»º³åÁ´£©£¬Ò²¾ÍÊÇÒª·¢¸øÉÏÓÎµÄÊı¾İ
+    //ä¸ºupstreamå‡†å¤‡å„ç§è¯·æ±‚çš„å›è°ƒ
+    u->create_request = ngx_http_proxy_create_request; //ç”Ÿæˆå‘é€åˆ°ä¸Šæ¸¸æœåŠ¡å™¨çš„è¯·æ±‚ç¼“å†²ï¼ˆæˆ–è€…ä¸€æ¡ç¼“å†²é“¾ï¼‰ï¼Œä¹Ÿå°±æ˜¯è¦å‘ç»™ä¸Šæ¸¸çš„æ•°æ®
     u->reinit_request = ngx_http_proxy_reinit_request;
-    //´¦Àí»Øµ÷¾ÍÊÇµÚÒ»ĞĞµÄ»Øµ÷£¬µÚÒ»ĞĞ´¦ÀíÍêºó»áÉèÖÃÎªngx_http_proxy_process_header£¬×ßÏÂÒ»²½
+    //å¤„ç†å›è°ƒå°±æ˜¯ç¬¬ä¸€è¡Œçš„å›è°ƒï¼Œç¬¬ä¸€è¡Œå¤„ç†å®Œåä¼šè®¾ç½®ä¸ºngx_http_proxy_process_headerï¼Œèµ°ä¸‹ä¸€æ­¥
     u->process_header = ngx_http_proxy_process_status_line;
-    //Ò»¸öupstreamµÄu->read_event_handler ¶ÁÊÂ¼ş»Øµ÷±»ÉèÖÃÎªngx_http_upstream_process_header;£¬Ëû»á²»¶ÏµÄ¶ÁÈ¡Êı¾İ£¬È»ºó
-    //µ÷ÓÃprocess_header¶ÔÓÚFCGI£¬µ±È»ÊÇµ÷ÓÃ¶ÔÓ¦µÄ¶ÁÈ¡FCGI¸ñÊ½µÄº¯ÊıÁË£¬¶ÔÓÚ´úÀíÄ£¿é£¬Ö»Òª´¦ÀíHTTP¸ñÊ½¼´¿É
+    //ä¸€ä¸ªupstreamçš„u->read_event_handler è¯»äº‹ä»¶å›è°ƒè¢«è®¾ç½®ä¸ºngx_http_upstream_process_header;ï¼Œä»–ä¼šä¸æ–­çš„è¯»å–æ•°æ®ï¼Œç„¶å
+    //è°ƒç”¨process_headerå¯¹äºFCGIï¼Œå½“ç„¶æ˜¯è°ƒç”¨å¯¹åº”çš„è¯»å–FCGIæ ¼å¼çš„å‡½æ•°äº†ï¼Œå¯¹äºä»£ç†æ¨¡å—ï¼Œåªè¦å¤„ç†HTTPæ ¼å¼å³å¯
     u->abort_request = ngx_http_proxy_abort_request;
     u->finalize_request = ngx_http_proxy_finalize_request;
     r->state = 0;
@@ -1562,12 +1564,12 @@ static ngx_int_t ngx_http_proxy_handler(ngx_http_request_t *r)
         return NGX_HTTP_INTERNAL_SERVER_ERROR;
     }
 
-    //ÉèÖÃÔÚÓĞbufferingµÄ×´Ì¬ÏÂ£¬nginx¶ÁÈ¡upstreamµÄ»Øµ÷£¬Èç¹ûÊÇFCGI£¬ÔòÊÇ¶ÔÓ¦µÄ»Øµ÷ngx_http_fastcgi_input_filterÓÃÀ´½âÎöFCGIĞ­ÒéµÄÊı¾İ¡£
-	//Èç¹ûÎÒÃÇÒªÊµÏÖÎÒÃÇ×Ô¼ºµÄĞ­Òé¸ñÊ½£¬ÄÇ¾ÍÓÃ¶ÔÓ¦µÄ½âÎö·½Ê½¡£
+    //è®¾ç½®åœ¨æœ‰bufferingçš„çŠ¶æ€ä¸‹ï¼Œnginxè¯»å–upstreamçš„å›è°ƒï¼Œå¦‚æœæ˜¯FCGIï¼Œåˆ™æ˜¯å¯¹åº”çš„å›è°ƒngx_http_fastcgi_input_filterç”¨æ¥è§£æFCGIåè®®çš„æ•°æ®ã€‚
+	//å¦‚æœæˆ‘ä»¬è¦å®ç°æˆ‘ä»¬è‡ªå·±çš„åè®®æ ¼å¼ï¼Œé‚£å°±ç”¨å¯¹åº”çš„è§£ææ–¹å¼ã€‚
     u->pipe->input_filter = ngx_http_proxy_copy_filter;
     u->pipe->input_ctx = r;
 
-    //bufferingºó¶ËÏìÓ¦°üÌåÊ¹ÓÃngx_event_pipe_t->input_filter  ·Çbuffering·½Ê½ÏìÓ¦ºó¶Ë°üÌåÊ¹ÓÃngx_http_upstream_s->input_filter ,ÔÚngx_http_upstream_send_response·Ö²æ
+    //bufferingåç«¯å“åº”åŒ…ä½“ä½¿ç”¨ngx_event_pipe_t->input_filter  ébufferingæ–¹å¼å“åº”åç«¯åŒ…ä½“ä½¿ç”¨ngx_http_upstream_s->input_filter ,åœ¨ngx_http_upstream_send_responseåˆ†å‰
 
     u->input_filter_init = ngx_http_proxy_input_filter_init;
     u->input_filter = ngx_http_proxy_non_buffered_copy_filter;
@@ -1584,18 +1586,18 @@ static ngx_int_t ngx_http_proxy_handler(ngx_http_request_t *r)
     }
 
     /*
-ÔÚÔÄ¶ÁHTTP·´Ïò´úÀíÄ£¿é(ngx_http_proxy_module)Ô´´úÂëÊ±£¬»á·¢ÏÖËü²¢Ã»ÓĞµ÷ÓÃr->main->count++£¬ÆäÖĞproxyÄ£¿éÊÇÕâÑùÆô¶¯upstream»úÖÆµÄ£º
-ngx_http_read_client_request_body(r£¬ngx_http_upstream_init);£¬Õâ±íÊ¾¶ÁÈ¡ÍêÓÃ»§ÇëÇóµÄHTTP°üÌåºó²Å»áµ÷ÓÃngx_http_upstream_init·½·¨
-Æô¶¯upstream»úÖÆ¡£ÓÉÓÚngx_http_read_client_request_bodyµÄµÚÒ»ĞĞÓĞĞ§Óï¾äÊÇr->maln->count++£¬ËùÒÔHTTP·´Ïò´úÀíÄ£¿é²»ÄÜ
-ÔÙ´ÎÔÚÆä´úÂëÖĞÖ´ĞĞr->main->count++¡£
+    åœ¨é˜…è¯»HTTPåå‘ä»£ç†æ¨¡å—(ngx_http_proxy_module)æºä»£ç æ—¶ï¼Œä¼šå‘ç°å®ƒå¹¶æ²¡æœ‰è°ƒç”¨r->main->count++ï¼Œå…¶ä¸­proxyæ¨¡å—æ˜¯è¿™æ ·å¯åŠ¨upstreamæœºåˆ¶çš„ï¼š
+    ngx_http_read_client_request_body(rï¼Œngx_http_upstream_init);ï¼Œè¿™è¡¨ç¤ºè¯»å–å®Œç”¨æˆ·è¯·æ±‚çš„HTTPåŒ…ä½“åæ‰ä¼šè°ƒç”¨ngx_http_upstream_initæ–¹æ³•
+    å¯åŠ¨upstreamæœºåˆ¶ã€‚ç”±äºngx_http_read_client_request_bodyçš„ç¬¬ä¸€è¡Œæœ‰æ•ˆè¯­å¥æ˜¯r->maln->count++ï¼Œæ‰€ä»¥HTTPåå‘ä»£ç†æ¨¡å—ä¸èƒ½
+    å†æ¬¡åœ¨å…¶ä»£ç ä¸­æ‰§è¡Œr->main->count++ã€‚
 
-Õâ¸ö¹ı³Ì¿´ÆğÀ´ËÆºõÈÃÈËÀ§»ó¡£ÎªÊ²Ã´ÓĞÊ±ĞèÒª°ÑÒıÓÃ¼ÆÊı¼Ó1£¬ÓĞÊ±È´²»ĞèÒªÄØ£¿ÒòÎªngx_http_read- client_request_body¶ÁÈ¡ÇëÇó°üÌåÊÇ
-Ò»¸öÒì²½²Ù×÷£¨ĞèÒªepoll¶à´Îµ÷¶È·½ÄÜÍê³ÉµÄ¿É³ÆÆäÎªÒì²½²Ù×÷£©£¬ngx_http_upstream_init·½·¨ÆôÓÃupstream»úÖÆÒ²ÊÇÒ»¸öÒì²½²Ù×÷£¬Òò´Ë£¬
-´ÓÀíÂÛÉÏÀ´Ëµ£¬Ã¿Ö´ĞĞÒ»´ÎÒì²½²Ù×÷Ó¦¸Ã°ÑÒıÓÃ¼ÆÊı¼Ó1£¬¶øÒì²½²Ù×÷½áÊøÊ±Ó¦¸Ãµ÷ÓÃngx_http_finalize_request·½·¨°ÑÒıÓÃ¼ÆÊı¼õ1¡£ÁíÍâ£¬
-ngx_http_read_client_request_body·½·¨ÄÚÊÇ¼Ó¹ıÒıÓÃ¼ÆÊıµÄ£¬¶øngx_http_upstream_init·½·¨ÄÚÈ´Ã»ÓĞ¼Ó¹ıÒıÓÃ¼ÆÊı£¨»òĞíNginx½«À´»áĞŞ¸Ä
-Õâ¸öÎÊÌâ£©¡£ÔÚHTTP·´Ïò´úÀíÄ£¿éÖĞ£¬ËüµÄngx_http_proxy_handler·½·¨ÖĞÓÃ¡°ngx_http_read- client_request_body(r£¬ngx_http_upstream_init);¡±
-Óï¾äÍ¬Ê±Æô¶¯ÁËÁ½¸öÒì²½²Ù×÷£¬×¢Òâ£¬ÕâĞĞÓï¾äÖĞÖ»¼ÓÁËÒ»´ÎÒıÓÃ¼ÆÊı¡£Ö´ĞĞÕâĞĞÓï¾äµÄngx_http_proxy_handler·½·¨·µ»ØÊ±Ö»µ÷ÓÃ
-ngx_http_finalize_request·½·¨Ò»´Î£¬ÕâÊÇÕıÈ·µÄ¡£¶ÔÓÚmytestÄ£¿éÒ²Ò»Ñù£¬Îñ±ØÒª±£Ö¤¶ÔÒıÓÃ¼ÆÊıµÄÔö¼ÓºÍ¼õÉÙÊÇÅä¶Ô½øĞĞµÄ¡£
+    è¿™ä¸ªè¿‡ç¨‹çœ‹èµ·æ¥ä¼¼ä¹è®©äººå›°æƒ‘ã€‚ä¸ºä»€ä¹ˆæœ‰æ—¶éœ€è¦æŠŠå¼•ç”¨è®¡æ•°åŠ 1ï¼Œæœ‰æ—¶å´ä¸éœ€è¦å‘¢ï¼Ÿå› ä¸ºngx_http_read- client_request_bodyè¯»å–è¯·æ±‚åŒ…ä½“æ˜¯
+    ä¸€ä¸ªå¼‚æ­¥æ“ä½œï¼ˆéœ€è¦epollå¤šæ¬¡è°ƒåº¦æ–¹èƒ½å®Œæˆçš„å¯ç§°å…¶ä¸ºå¼‚æ­¥æ“ä½œï¼‰ï¼Œngx_http_upstream_initæ–¹æ³•å¯ç”¨upstreamæœºåˆ¶ä¹Ÿæ˜¯ä¸€ä¸ªå¼‚æ­¥æ“ä½œï¼Œå› æ­¤ï¼Œ
+    ä»ç†è®ºä¸Šæ¥è¯´ï¼Œæ¯æ‰§è¡Œä¸€æ¬¡å¼‚æ­¥æ“ä½œåº”è¯¥æŠŠå¼•ç”¨è®¡æ•°åŠ 1ï¼Œè€Œå¼‚æ­¥æ“ä½œç»“æŸæ—¶åº”è¯¥è°ƒç”¨ngx_http_finalize_requestæ–¹æ³•æŠŠå¼•ç”¨è®¡æ•°å‡1ã€‚å¦å¤–ï¼Œ
+    ngx_http_read_client_request_bodyæ–¹æ³•å†…æ˜¯åŠ è¿‡å¼•ç”¨è®¡æ•°çš„ï¼Œè€Œngx_http_upstream_initæ–¹æ³•å†…å´æ²¡æœ‰åŠ è¿‡å¼•ç”¨è®¡æ•°ï¼ˆæˆ–è®¸Nginxå°†æ¥ä¼šä¿®æ”¹
+    è¿™ä¸ªé—®é¢˜ï¼‰ã€‚åœ¨HTTPåå‘ä»£ç†æ¨¡å—ä¸­ï¼Œå®ƒçš„ngx_http_proxy_handleræ–¹æ³•ä¸­ç”¨â€œngx_http_read- client_request_body(rï¼Œngx_http_upstream_init);â€
+    è¯­å¥åŒæ—¶å¯åŠ¨äº†ä¸¤ä¸ªå¼‚æ­¥æ“ä½œï¼Œæ³¨æ„ï¼Œè¿™è¡Œè¯­å¥ä¸­åªåŠ äº†ä¸€æ¬¡å¼•ç”¨è®¡æ•°ã€‚æ‰§è¡Œè¿™è¡Œè¯­å¥çš„ngx_http_proxy_handleræ–¹æ³•è¿”å›æ—¶åªè°ƒç”¨
+    ngx_http_finalize_requestæ–¹æ³•ä¸€æ¬¡ï¼Œè¿™æ˜¯æ­£ç¡®çš„ã€‚å¯¹äºmytestæ¨¡å—ä¹Ÿä¸€æ ·ï¼ŒåŠ¡å¿…è¦ä¿è¯å¯¹å¼•ç”¨è®¡æ•°çš„å¢åŠ å’Œå‡å°‘æ˜¯é…å¯¹è¿›è¡Œçš„ã€‚
     */
     rc = ngx_http_read_client_request_body(r, ngx_http_upstream_init);
 
@@ -1712,8 +1714,8 @@ ngx_http_proxy_eval(ngx_http_request_t *r, ngx_http_proxy_ctx_t *ctx,
 
 #if (NGX_HTTP_CACHE)
 
-//½âÎöproxy_cache_key xxx ²ÎÊıÖµµ½r->cache->keys
-static ngx_int_t //ngx_http_upstream_cacheÖĞÖ´ĞĞ
+//è§£æproxy_cache_key xxx å‚æ•°å€¼åˆ°r->cache->keys
+static ngx_int_t //ngx_http_upstream_cacheä¸­æ‰§è¡Œ
 ngx_http_proxy_create_key(ngx_http_request_t *r)
 {
     size_t                      len, loc_len;
@@ -1735,27 +1737,27 @@ ngx_http_proxy_create_key(ngx_http_request_t *r)
         return NGX_ERROR;
     }
 
-    if (plcf->cache_key.value.data) { //Èç¹ûÉèÖÃÁËproxy_cache_key
+    if (plcf->cache_key.value.data) { //å¦‚æœè®¾ç½®äº†proxy_cache_key
 
-        if (ngx_http_complex_value(r, &plcf->cache_key, key) != NGX_OK) { //½âÎöplcf->cache_keyÖĞµÄ±äÁ¿valueÖµµ½r->cache->keysÖĞ
+        if (ngx_http_complex_value(r, &plcf->cache_key, key) != NGX_OK) { //è§£æplcf->cache_keyä¸­çš„å˜é‡valueå€¼åˆ°r->cache->keysä¸­
             return NGX_ERROR;
         }
 
         return NGX_OK;
     }
 
-    //Èç¹ûÃ»ÓĞÉèÖÃproxy_cache_key£¬ÔòÊ¹ÓÃÄ¬ÈÏDefault:  proxy_cache_key $scheme$proxy_host$request_uri; 
-    /* 
-    
+    //å¦‚æœæ²¡æœ‰è®¾ç½®proxy_cache_keyï¼Œåˆ™ä½¿ç”¨é»˜è®¤Default:  proxy_cache_key $scheme$proxy_host$request_uri;
+    /*
+
      Syntax:  proxy_cache_key string;
-      
-     Default:  proxy_cache_key $scheme$proxy_host$request_uri; 
+
+     Default:  proxy_cache_key $scheme$proxy_host$request_uri;
      Context:  http, server, location
      */
-    
+
     *key = ctx->vars.key_start;
 
-    key = ngx_array_push(&r->cache->keys); //ÏÂÃæÕâĞ©´úÂëÊÇ½âÎöÄ¬ÈÏµÄ proxy_cache_key $scheme$proxy_host$request_uri; ´æµ½keysÊı×é
+    key = ngx_array_push(&r->cache->keys); //ä¸‹é¢è¿™äº›ä»£ç æ˜¯è§£æé»˜è®¤çš„ proxy_cache_key $scheme$proxy_host$request_uri; å­˜åˆ°keysæ•°ç»„
     if (key == NULL) {
         return NGX_ERROR;
     }
@@ -1821,23 +1823,23 @@ ngx_http_proxy_create_key(ngx_http_request_t *r)
 #endif
 
 /*
-  proxy_pass  http://10.10.0.103:8080/tttxxsss; 
-  ä¯ÀÀÆ÷ÊäÈë:http://10.2.13.167/proxy1111/yangtest
-  Êµ¼ÊÉÏµ½ºó¶ËµÄuri»á±äÎª/tttxxsss/yangtest
+  proxy_pass  http://10.10.0.103:8080/tttxxsss;
+  æµè§ˆå™¨è¾“å…¥:http://10.2.13.167/proxy1111/yangtest
+  å®é™…ä¸Šåˆ°åç«¯çš„uriä¼šå˜ä¸º/tttxxsss/yangtest
   plcf->location:/proxy1111, ctx->vars.uri:/tttxxsss,  r->uri:/proxy1111/yangtest, r->args:, urilen:19
 */
 
 /*
-Èç¹ûÊÇFCGI¡£ÏÂÃæ×é½¨ºÃFCGIµÄ¸÷ÖÖÍ·²¿£¬°üÀ¨ÇëÇó¿ªÊ¼Í·£¬ÇëÇó²ÎÊıÍ·£¬ÇëÇóSTDINÍ·¡£´æ·ÅÔÚu->request_bufsÁ´½Ó±íÀïÃæ¡£
-Èç¹ûÊÇProxyÄ£¿é£¬ngx_http_proxy_create_request×é¼ş·´Ïò´úÀíµÄÍ·²¿É¶µÄ,·Åµ½u->request_bufsÀïÃæ
-FastCGI memcached  uwsgi  scgi proxy¶¼»áÓÃµ½upstreamÄ£¿é
+å¦‚æœæ˜¯FCGIã€‚ä¸‹é¢ç»„å»ºå¥½FCGIçš„å„ç§å¤´éƒ¨ï¼ŒåŒ…æ‹¬è¯·æ±‚å¼€å§‹å¤´ï¼Œè¯·æ±‚å‚æ•°å¤´ï¼Œè¯·æ±‚STDINå¤´ã€‚å­˜æ”¾åœ¨u->request_bufsé“¾æ¥è¡¨é‡Œé¢ã€‚
+å¦‚æœæ˜¯Proxyæ¨¡å—ï¼Œngx_http_proxy_create_requestç»„ä»¶åå‘ä»£ç†çš„å¤´éƒ¨å•¥çš„,æ”¾åˆ°u->request_bufsé‡Œé¢
+FastCGI memcached  uwsgi  scgi proxyéƒ½ä¼šç”¨åˆ°upstreamæ¨¡å—
  */
 static ngx_int_t
-ngx_http_proxy_create_request(ngx_http_request_t *r) //ngx_http_upstream_init_requestÖĞÖ´ĞĞ
+ngx_http_proxy_create_request(ngx_http_request_t *r) //ngx_http_upstream_init_requestä¸­æ‰§è¡Œ
 {
-    size_t                          len, 
-                                    uri_len, 
-                                    loc_len,  //µ±Ç°locationµÄÃû×Ö location xxx {} ÖĞµÄxxxµÄ³¤¶È3
+    size_t                          len,
+                                    uri_len,
+                                    loc_len,  //å½“å‰locationçš„åå­— location xxx {} ä¸­çš„xxxçš„é•¿åº¦3
                                     body_len;
     uintptr_t                     escape;
     ngx_buf_t                    *b;
@@ -1854,9 +1856,9 @@ ngx_http_proxy_create_request(ngx_http_request_t *r) //ngx_http_upstream_init_re
     ngx_http_proxy_loc_conf_t    *plcf;
     ngx_http_script_len_code_pt   lcode;
 
-    u = r->upstream;//µÃµ½ÔÚngx_http_proxy_handlerÇ°Ãæ´´½¨µÄÉÏÓÎ½á¹¹
+    u = r->upstream;//å¾—åˆ°åœ¨ngx_http_proxy_handlerå‰é¢åˆ›å»ºçš„ä¸Šæ¸¸ç»“æ„
 
-    plcf = ngx_http_get_module_loc_conf(r, ngx_http_proxy_module); //»ñÈ¡proxyÄ£¿éµÄÏà¹ØÅäÖÃĞÅÏ¢
+    plcf = ngx_http_get_module_loc_conf(r, ngx_http_proxy_module); //è·å–proxyæ¨¡å—çš„ç›¸å…³é…ç½®ä¿¡æ¯
 
 #if (NGX_HTTP_CACHE)
     headers = u->cacheable ? &plcf->headers_cache : &plcf->headers;
@@ -1865,7 +1867,7 @@ ngx_http_proxy_create_request(ngx_http_request_t *r) //ngx_http_upstream_init_re
 #endif
 
     if (u->method.len) {
-        /* ¿Í»§¶ËheadÇëÇó»á±»×ª»»ÎªGETµ½ºó¶Ë HEAD was changed to GET to cache response */
+        /* å®¢æˆ·ç«¯headè¯·æ±‚ä¼šè¢«è½¬æ¢ä¸ºGETåˆ°åç«¯ HEAD was changed to GET to cache response */
         method = u->method;
         method.len++;
 
@@ -1877,7 +1879,7 @@ ngx_http_proxy_create_request(ngx_http_request_t *r) //ngx_http_upstream_init_re
         method.len++;
     }
 
-    //»ñÈ¡proxyÄ£¿é×´Ì¬µÈÉÏÏÂÎÄĞÅÏ¢£¬
+    //è·å–proxyæ¨¡å—çŠ¶æ€ç­‰ä¸Šä¸‹æ–‡ä¿¡æ¯ï¼Œ
     ctx = ngx_http_get_module_ctx(r, ngx_http_proxy_module);
 
     if (method.len == 5
@@ -1886,15 +1888,15 @@ ngx_http_proxy_create_request(ngx_http_request_t *r) //ngx_http_upstream_init_re
         ctx->head = 1;
     }
 
-    //ÏÂÃæ²»¶ÏµÄ¶ÔÊı¾İ³¤¶È½øĞĞÀÛ¼Ó£¬Ëã³öÒª·¢ËÍµ½ºó¶ËµÄÊı¾İ×Ü¹²ÓĞ¶à³¤£¬´æÔÚlen±äÁ¿ÀïÃæ
-    len = method.len + sizeof(ngx_http_proxy_version) - 1 + sizeof(CRLF) - 1; //Í·²¿ĞĞ³¤¶È
+    //ä¸‹é¢ä¸æ–­çš„å¯¹æ•°æ®é•¿åº¦è¿›è¡Œç´¯åŠ ï¼Œç®—å‡ºè¦å‘é€åˆ°åç«¯çš„æ•°æ®æ€»å…±æœ‰å¤šé•¿ï¼Œå­˜åœ¨lenå˜é‡é‡Œé¢
+    len = method.len + sizeof(ngx_http_proxy_version) - 1 + sizeof(CRLF) - 1; //å¤´éƒ¨è¡Œé•¿åº¦
 
     escape = 0;
     loc_len = 0;
     unparsed_uri = 0;
 
-    //ÏÂÃæ´¦ÀíÒ»ÏÂuri³¤¶ÈÒÔ¼°location
-    if (plcf->proxy_lengths && ctx->vars.uri.len) {//proxy_pass xxxxÅäÖÃ
+    //ä¸‹é¢å¤„ç†ä¸€ä¸‹urié•¿åº¦ä»¥åŠlocation
+    if (plcf->proxy_lengths && ctx->vars.uri.len) {//proxy_pass xxxxé…ç½®
         uri_len = ctx->vars.uri.len;
 
     }  else if (ctx->vars.uri.len == 0 && r->valid_unparsed_uri && r == r->main) {
@@ -1903,7 +1905,7 @@ ngx_http_proxy_create_request(ngx_http_request_t *r) //ngx_http_upstream_init_re
 
     } else {
         loc_len = (r->valid_location && ctx->vars.uri.len) ?
-                      plcf->location.len : 0;  //µ±Ç°locationµÄÃû×Ö location xxx {} ÖĞµÄxxxµÄ³¤¶È3
+                      plcf->location.len : 0;  //å½“å‰locationçš„åå­— location xxx {} ä¸­çš„xxxçš„é•¿åº¦3
 
         if (r->quoted_uri || r->space_in_uri || r->internal) {
             escape = 2 * ngx_escape_uri(NULL, r->uri.data + loc_len,
@@ -1911,13 +1913,13 @@ ngx_http_proxy_create_request(ngx_http_request_t *r) //ngx_http_upstream_init_re
         }
 
         /*
-           proxy_pass  http://10.10.0.103:8080/tttxxsss; 
-           ä¯ÀÀÆ÷ÊäÈë:http://10.2.13.167/proxy1111/yangtest
-           Êµ¼ÊÉÏµ½ºó¶ËµÄuri»á±äÎª/tttxxsss/yangtest
+           proxy_pass  http://10.10.0.103:8080/tttxxsss;
+           æµè§ˆå™¨è¾“å…¥:http://10.2.13.167/proxy1111/yangtest
+           å®é™…ä¸Šåˆ°åç«¯çš„uriä¼šå˜ä¸º/tttxxsss/yangtest
            plcf->location:/proxy1111, ctx->vars.uri:/tttxxsss,  r->uri:/proxy1111/yangtest, r->args:, urilen:19
           */
         uri_len = ctx->vars.uri.len + r->uri.len - loc_len + escape
-                  + sizeof("?") - 1 + r->args.len; //×¢Òâsizeof("?")ÊÇ2×Ö½Ú
+                  + sizeof("?") - 1 + r->args.len; //æ³¨æ„sizeof("?")æ˜¯2å­—èŠ‚
     }
 
     if (uri_len == 0) {
@@ -1926,14 +1928,14 @@ ngx_http_proxy_create_request(ngx_http_request_t *r) //ngx_http_upstream_init_re
         return NGX_ERROR;
     }
 
-    len += uri_len;//ÀÛ¼ÓµÚÒ»ĞĞ£¬Èç: GET /XXX/Y.html HTTP/1.0
+    len += uri_len;//ç´¯åŠ ç¬¬ä¸€è¡Œï¼Œå¦‚: GET /XXX/Y.html HTTP/1.0
 
     ngx_memzero(&le, sizeof(ngx_http_script_engine_t));
 
     ngx_http_script_flush_no_cacheable_variables(r, plcf->body_flushes);
     ngx_http_script_flush_no_cacheable_variables(r, headers->flushes);
 
-    if (plcf->body_lengths) { //¼ÆËãproxy_set_body ÉèÖÃµÄbody×Ö·û´®³¤¶È
+    if (plcf->body_lengths) { //è®¡ç®—proxy_set_body è®¾ç½®çš„bodyå­—ç¬¦ä¸²é•¿åº¦
         le.ip = plcf->body_lengths->elts;
         le.request = r;
         le.flushed = 1;
@@ -1944,7 +1946,7 @@ ngx_http_proxy_create_request(ngx_http_request_t *r) //ngx_http_upstream_init_re
             body_len += lcode(&le);
         }
 
-        ctx->internal_body_length = body_len; //Èç¹ûÅäÖÃÁËproxy_set_body£¬Ôòinternal_body_lengthÎªproxy_set_bodyÉèÖÃµÄ°üÌå³¤¶È£¬·ñÔòÎª¿Í»§¶ËÇëÇó°üÌå³¤¶È
+        ctx->internal_body_length = body_len; //å¦‚æœé…ç½®äº†proxy_set_bodyï¼Œåˆ™internal_body_lengthä¸ºproxy_set_bodyè®¾ç½®çš„åŒ…ä½“é•¿åº¦ï¼Œå¦åˆ™ä¸ºå®¢æˆ·ç«¯è¯·æ±‚åŒ…ä½“é•¿åº¦
         len += body_len;
 
     } else if (r->headers_in.chunked && r->reading_body) {
@@ -1952,11 +1954,11 @@ ngx_http_proxy_create_request(ngx_http_request_t *r) //ngx_http_upstream_init_re
         ctx->internal_chunked = 1;
 
     } else {
-        //Èç¹ûÅäÖÃÁËproxy_set_body£¬Ôòinternal_body_lengthÎªproxy_set_bodyÉèÖÃµÄ°üÌå³¤¶È£¬·ñÔòÎª¿Í»§¶ËÇëÇó°üÌå³¤¶È
+        //å¦‚æœé…ç½®äº†proxy_set_bodyï¼Œåˆ™internal_body_lengthä¸ºproxy_set_bodyè®¾ç½®çš„åŒ…ä½“é•¿åº¦ï¼Œå¦åˆ™ä¸ºå®¢æˆ·ç«¯è¯·æ±‚åŒ…ä½“é•¿åº¦
         ctx->internal_body_length = r->headers_in.content_length_n;
     }
 
-    //ngx_http_proxy_headersºÍproxy_set_headerÉèÖÃµÄÍ·²¿ĞÅÏ¢ÀïÃæµÄËùÓĞkey:valueÖµ³¤¶ÈºÍ
+    //ngx_http_proxy_headerså’Œproxy_set_headerè®¾ç½®çš„å¤´éƒ¨ä¿¡æ¯é‡Œé¢çš„æ‰€æœ‰key:valueå€¼é•¿åº¦å’Œ
     le.ip = headers->lengths->elts;
     le.request = r;
     le.flushed = 1;
@@ -1969,8 +1971,8 @@ ngx_http_proxy_create_request(ngx_http_request_t *r) //ngx_http_upstream_init_re
         le.ip += sizeof(uintptr_t);
     }
 
-    //°Ñ¿Í»§¶Ë·¢ËÍ¹ıÀ´µÄÍ·²¿ĞĞkey:valueÒ²¼ÆËã½øÀ´£¬×¢Òâ±ÜÃâºÍÇ°ÃæµÄngx_http_proxy_headersºÍproxy_set_headerÌí¼ÓµÄÖØ¸´
-    if (plcf->upstream.pass_request_headers) {//ÊÇ·ñÒª½«HTTPÇëÇóÍ·²¿µÄHEADER·¢ËÍ¸øºó¶Ë£¬ÒÑHTTP_ÎªÇ°×º
+    //æŠŠå®¢æˆ·ç«¯å‘é€è¿‡æ¥çš„å¤´éƒ¨è¡Œkey:valueä¹Ÿè®¡ç®—è¿›æ¥ï¼Œæ³¨æ„é¿å…å’Œå‰é¢çš„ngx_http_proxy_headerså’Œproxy_set_headeræ·»åŠ çš„é‡å¤
+    if (plcf->upstream.pass_request_headers) {//æ˜¯å¦è¦å°†HTTPè¯·æ±‚å¤´éƒ¨çš„HEADERå‘é€ç»™åç«¯ï¼Œå·²HTTP_ä¸ºå‰ç¼€
         part = &r->headers_in.headers.part;
         header = part->elts;
 
@@ -1986,7 +1988,7 @@ ngx_http_proxy_create_request(ngx_http_request_t *r) //ngx_http_upstream_init_re
                 i = 0;
             }
 
-            /* ÔÚngx_http_proxy_loc_conf_t->headersÖĞ²éÕÒÊÇ·ñ´æÔÚ¿Í»§¶ËÇëÇóĞĞÖĞµÄÍ·²¿ĞĞĞÅÏ¢r->headers_in.headers£¬ ÕÒµ½ËµÃ÷ÓĞÖØ¸´£¬²»¼ÌĞølen*/
+            /* åœ¨ngx_http_proxy_loc_conf_t->headersä¸­æŸ¥æ‰¾æ˜¯å¦å­˜åœ¨å®¢æˆ·ç«¯è¯·æ±‚è¡Œä¸­çš„å¤´éƒ¨è¡Œä¿¡æ¯r->headers_in.headersï¼Œ æ‰¾åˆ°è¯´æ˜æœ‰é‡å¤ï¼Œä¸ç»§ç»­len*/
             if (ngx_hash_find(&headers->hash, header[i].hash,
                               header[i].lowcase_key, header[i].key.len))
             {
@@ -1994,7 +1996,7 @@ ngx_http_proxy_create_request(ngx_http_request_t *r) //ngx_http_upstream_init_re
             }
 
             len += header[i].key.len + sizeof(": ") - 1
-                + header[i].value.len + sizeof(CRLF) - 1; //¼ÆËãngx_http_proxy_headers proxy_set_headerÉèÖÃµÄÍ·²¿ĞĞÒÔ¼°¿Í»§¶Ë·¢ËÍ¹ıÀ´µÄÍ·²¿ĞĞµÄkey:value×Ü³¤¶È
+                + header[i].value.len + sizeof(CRLF) - 1; //è®¡ç®—ngx_http_proxy_headers proxy_set_headerè®¾ç½®çš„å¤´éƒ¨è¡Œä»¥åŠå®¢æˆ·ç«¯å‘é€è¿‡æ¥çš„å¤´éƒ¨è¡Œçš„key:valueæ€»é•¿åº¦
         }
     }
 
@@ -2008,12 +2010,12 @@ ngx_http_proxy_create_request(ngx_http_request_t *r) //ngx_http_upstream_init_re
         return NGX_ERROR;
     }
 
-    cl->buf = b;//ÀÏ°ì·¨£¬½«Õâ¿é»º³å·ÅÈëÁ¬½Ó±íÍ·²¿
+    cl->buf = b;//è€åŠæ³•ï¼Œå°†è¿™å—ç¼“å†²æ”¾å…¥è¿æ¥è¡¨å¤´éƒ¨
 
 
-    /* ÏÂÃæÕâ²¿·Ö°ÑGET /XXX/Y.html HTTP/1.0¿½±´µ½bufÄÚ´æ */
+    /* ä¸‹é¢è¿™éƒ¨åˆ†æŠŠGET /XXX/Y.html HTTP/1.0æ‹·è´åˆ°bufå†…å­˜ */
     /* the request line */
-    b->last = ngx_copy(b->last, method.data, method.len); //ÏÈ°ÑÇëÇóĞĞÖĞµÄGET POST HEADµÈ·½·¨¿½±´µÄbÄÚ´æ¿Õ¼ä
+    b->last = ngx_copy(b->last, method.data, method.len); //å…ˆæŠŠè¯·æ±‚è¡Œä¸­çš„GET POST HEADç­‰æ–¹æ³•æ‹·è´çš„bå†…å­˜ç©ºé—´
 
     u->uri.data = b->last;
 
@@ -2028,7 +2030,7 @@ ngx_http_proxy_create_request(ngx_http_request_t *r) //ngx_http_upstream_init_re
             b->last = ngx_copy(b->last, ctx->vars.uri.data, ctx->vars.uri.len);
         }
 
-        if (escape) { //½«¿Õ¸ñ½øĞĞ×ªÒÆ£¬
+        if (escape) { //å°†ç©ºæ ¼è¿›è¡Œè½¬ç§»ï¼Œ
             ngx_escape_uri(b->last, r->uri.data + loc_len,
                            r->uri.len - loc_len, NGX_ESCAPE_URI);
             b->last += r->uri.len - loc_len + escape;
@@ -2056,7 +2058,7 @@ ngx_http_proxy_create_request(ngx_http_request_t *r) //ngx_http_upstream_init_re
     }
 
 
-    /* ¿½±´ngx_http_proxy_headers  proxy_set_headerÖĞÉèÖÃµÄÍ·²¿ĞÅÏ¢key:valueµ½bÄÚ´æÖĞ */
+    /* æ‹·è´ngx_http_proxy_headers  proxy_set_headerä¸­è®¾ç½®çš„å¤´éƒ¨ä¿¡æ¯key:valueåˆ°bå†…å­˜ä¸­ */
     ngx_memzero(&e, sizeof(ngx_http_script_engine_t));
 
     e.ip = headers->values->elts;
@@ -2096,7 +2098,7 @@ ngx_http_proxy_create_request(ngx_http_request_t *r) //ngx_http_upstream_init_re
     b->last = e.pos;
 
 
-     /* ¿½±´¿Í»§¶ËÇëÇóÖĞÍ·²¿ĞĞĞÅÏ¢key:valueµ½bÄÚ´æÖĞ */
+     /* æ‹·è´å®¢æˆ·ç«¯è¯·æ±‚ä¸­å¤´éƒ¨è¡Œä¿¡æ¯key:valueåˆ°bå†…å­˜ä¸­ */
     if (plcf->upstream.pass_request_headers) {
         part = &r->headers_in.headers.part;
         header = part->elts;
@@ -2113,7 +2115,7 @@ ngx_http_proxy_create_request(ngx_http_request_t *r) //ngx_http_upstream_init_re
                 i = 0;
             }
 
-            //ngx_http_proxy_headers  proxy_set_headerÖĞÉèÖÃµÄÍ·²¿ĞÅÏ¢ºÍ¿Í»§¶Ë·¢ËÍ¹ıÀ´µÄÖØ¸´£¬¾Í²»ĞèÒª¿½±´ÁË
+            //ngx_http_proxy_headers  proxy_set_headerä¸­è®¾ç½®çš„å¤´éƒ¨ä¿¡æ¯å’Œå®¢æˆ·ç«¯å‘é€è¿‡æ¥çš„é‡å¤ï¼Œå°±ä¸éœ€è¦æ‹·è´äº†
             if (ngx_hash_find(&headers->hash, header[i].hash,
                               header[i].lowcase_key, header[i].key.len))
             {
@@ -2137,9 +2139,9 @@ ngx_http_proxy_create_request(ngx_http_request_t *r) //ngx_http_upstream_init_re
 
 
     /* add "\r\n" at the header end */
-    *b->last++ = CR; *b->last++ = LF;//ÒÔÒ»¸ö¿ÕĞĞ½áÊø
+    *b->last++ = CR; *b->last++ = LF;//ä»¥ä¸€ä¸ªç©ºè¡Œç»“æŸ
 
-    //ÕâÀïÊÇÖ¸proxy_set_body¶îÍâÔö¼ÓµÄbodyÊı¾İÌí¼Óµ½bÄÚ´æÖĞ
+    //è¿™é‡Œæ˜¯æŒ‡proxy_set_bodyé¢å¤–å¢åŠ çš„bodyæ•°æ®æ·»åŠ åˆ°bå†…å­˜ä¸­
     if (plcf->body_values) {
         e.ip = plcf->body_values->elts;
         e.pos = b->last;
@@ -2153,12 +2155,12 @@ ngx_http_proxy_create_request(ngx_http_request_t *r) //ngx_http_upstream_init_re
         b->last = e.pos;
     }
 
-    //°ÑheaderĞÅÏ¢È«²¿´òÓ¡³öÀ´
+    //æŠŠheaderä¿¡æ¯å…¨éƒ¨æ‰“å°å‡ºæ¥
     ngx_log_debug2(NGX_LOG_DEBUG_HTTP, r->connection->log, 0,
                    "http proxy header:%N\"%*s\"",
                    (size_t) (b->last - b->pos), b->pos);
 
-    if (r->request_body_no_buffering) { //²»ĞèÒª»º´æ£¬ÕâÖ±½Ó°ÑÍ·²¿ĞĞ²¿·Ö·¢ËÍ³öÈ¥
+    if (r->request_body_no_buffering) { //ä¸éœ€è¦ç¼“å­˜ï¼Œè¿™ç›´æ¥æŠŠå¤´éƒ¨è¡Œéƒ¨åˆ†å‘é€å‡ºå»
 
         u->request_bufs = cl;
 
@@ -2167,8 +2169,8 @@ ngx_http_proxy_create_request(ngx_http_request_t *r) //ngx_http_upstream_init_re
             u->output.filter_ctx = r;
         }
 
-    } else if (plcf->body_values == NULL && plcf->upstream.pass_request_body) { 
-    //Èç¹ûÃ»ÓĞÉèÖÃproxy_set_body°üÌå£¬²¢ÇÒĞèÒª´«ËÍ°üÌå£¬Ôò°Ñ¿Í»§¶Ë°üÌåÒ²¿½±´µ½ÄÚ´æÖĞ
+    } else if (plcf->body_values == NULL && plcf->upstream.pass_request_body) {
+    //å¦‚æœæ²¡æœ‰è®¾ç½®proxy_set_bodyåŒ…ä½“ï¼Œå¹¶ä¸”éœ€è¦ä¼ é€åŒ…ä½“ï¼Œåˆ™æŠŠå®¢æˆ·ç«¯åŒ…ä½“ä¹Ÿæ‹·è´åˆ°å†…å­˜ä¸­
 
         body = u->request_bufs;
         u->request_bufs = cl;
@@ -2192,7 +2194,7 @@ ngx_http_proxy_create_request(ngx_http_request_t *r) //ngx_http_upstream_init_re
             body = body->next;
         }
 
-    } else { //ËµÃ÷Í¨¹ıproxy_set_bodyÉèÖÃÁËµ¥¶ÀµÄ°üÌå
+    } else { //è¯´æ˜é€šè¿‡proxy_set_bodyè®¾ç½®äº†å•ç‹¬çš„åŒ…ä½“
         u->request_bufs = cl;
     }
 
@@ -2396,7 +2398,7 @@ out:
 }
 
 
-static ngx_int_t //ngx_http_upstream_process_headerÖĞÖ´ĞĞ
+static ngx_int_t //ngx_http_upstream_process_headerä¸­æ‰§è¡Œ
 ngx_http_proxy_process_status_line(ngx_http_request_t *r)
 {
     size_t                 len;
@@ -2412,9 +2414,9 @@ ngx_http_proxy_process_status_line(ngx_http_request_t *r)
 
     u = r->upstream;
 
-    rc = ngx_http_parse_status_line(r, &u->buffer, &ctx->status);//½âÎö×´Ì¬ĞĞ(ÏìÓ¦ĞĞ)£¬Ò²¾ÍÊÇµÚÒ»ĞĞ
+    rc = ngx_http_parse_status_line(r, &u->buffer, &ctx->status);//è§£æçŠ¶æ€è¡Œ(å“åº”è¡Œ)ï¼Œä¹Ÿå°±æ˜¯ç¬¬ä¸€è¡Œ
 
-    if (rc == NGX_AGAIN) {//Èç¹ûÊı¾İ»¹Ã»ÓĞÄÇÃ´¶à
+    if (rc == NGX_AGAIN) {//å¦‚æœæ•°æ®è¿˜æ²¡æœ‰é‚£ä¹ˆå¤š
         return rc;
     }
 
@@ -2445,7 +2447,7 @@ ngx_http_proxy_process_status_line(ngx_http_request_t *r)
         return NGX_OK;
     }
 
-    if (u->state && u->state->status == 0) {//ÓĞ×´Ì¬×Ö¶Î£¬¾Í±£´æ×´Ì¬Âë
+    if (u->state && u->state->status == 0) {//æœ‰çŠ¶æ€å­—æ®µï¼Œå°±ä¿å­˜çŠ¶æ€ç 
         u->state->status = ctx->status.code;
     }
 
@@ -2476,11 +2478,11 @@ ngx_http_proxy_process_status_line(ngx_http_request_t *r)
 
 
 /*
-//ÉÏÓÎºó¶Ë·şÎñÆ÷Ä£¿éµÄ¿É¶ÁÊÂ¼ş»Øµ÷»áµ÷ÓÃngx_http_upstream_process_header£¬È»ºóµ÷ÓÃprocess_header½øĞĞÍ·²¿Êı¾İµÄ½âÎöÁË¡£
-//×¢ÒâÕâÀïÖ»¶ÁÈ¡Í·²¿×Ö¶Î(¶ÁÈ¡Í·²¿×Ö¶ÎÓĞ¿ÉÄÜ»á¶ÁÈ¡µ½Ò»²¿·Ö°üÌå)£¬Ã»ÓĞ¶ÁÈ¡body²¿·Ö£¬ÄÇbody²¿·ÖÔÙÉêÃ÷µØ·½¶ÁÈ¡µÄÄØ,Èç:
-//²»¹ÜbufferingÊÇ·ñ´ò¿ª£¬ºó¶Ë·¢ËÍµÄÍ·¶¼²»»á±»buffer£¬Ê×ÏÈ»á·¢ËÍheader£¬È»ºó²ÅÊÇbodyµÄ·¢ËÍ£¬¶øbodyµÄ·¢ËÍ¾ÍĞèÒªÇø·ÖbufferingÑ¡ÏîÁË¡£
+//ä¸Šæ¸¸åç«¯æœåŠ¡å™¨æ¨¡å—çš„å¯è¯»äº‹ä»¶å›è°ƒä¼šè°ƒç”¨ngx_http_upstream_process_headerï¼Œç„¶åè°ƒç”¨process_headerè¿›è¡Œå¤´éƒ¨æ•°æ®çš„è§£æäº†ã€‚
+//æ³¨æ„è¿™é‡Œåªè¯»å–å¤´éƒ¨å­—æ®µ(è¯»å–å¤´éƒ¨å­—æ®µæœ‰å¯èƒ½ä¼šè¯»å–åˆ°ä¸€éƒ¨åˆ†åŒ…ä½“)ï¼Œæ²¡æœ‰è¯»å–bodyéƒ¨åˆ†ï¼Œé‚£bodyéƒ¨åˆ†å†ç”³æ˜åœ°æ–¹è¯»å–çš„å‘¢,å¦‚:
+//ä¸ç®¡bufferingæ˜¯å¦æ‰“å¼€ï¼Œåç«¯å‘é€çš„å¤´éƒ½ä¸ä¼šè¢«bufferï¼Œé¦–å…ˆä¼šå‘é€headerï¼Œç„¶åæ‰æ˜¯bodyçš„å‘é€ï¼Œè€Œbodyçš„å‘é€å°±éœ€è¦åŒºåˆ†bufferingé€‰é¡¹äº†ã€‚
 */
-static ngx_int_t //ngx_http_upstream_process_headerÖĞÖ´ĞĞ¸Ãº¯Êı
+static ngx_int_t //ngx_http_upstream_process_headerä¸­æ‰§è¡Œè¯¥å‡½æ•°
 ngx_http_proxy_process_header(ngx_http_request_t *r)
 {
     ngx_int_t                       rc;
@@ -2492,11 +2494,11 @@ ngx_http_proxy_process_header(ngx_http_request_t *r)
 
     umcf = ngx_http_get_module_main_conf(r, ngx_http_upstream_module);
 
-    for ( ;; ) {//ÆôÓÃcacheµÄÇé¿öÏÂ£¬×¢ÒâÕâÊ±ºòbufµÄÄÚÈİÊµ¼ÊÉÏÒÑ¾­ÔÚngx_http_upstream_process_headerÖĞ³öÈ¥ÁËÎª»º´æÈçÎÄ¼şÖĞÔ¤ÁôµÄÍ·²¿ÄÚ´æ
+    for ( ;; ) {//å¯ç”¨cacheçš„æƒ…å†µä¸‹ï¼Œæ³¨æ„è¿™æ—¶å€™bufçš„å†…å®¹å®é™…ä¸Šå·²ç»åœ¨ngx_http_upstream_process_headerä¸­å‡ºå»äº†ä¸ºç¼“å­˜å¦‚æ–‡ä»¶ä¸­é¢„ç•™çš„å¤´éƒ¨å†…å­˜
 
         rc = ngx_http_parse_header_line(r, &r->upstream->buffer, 1);
 
-        if (rc == NGX_OK) {//ÏÂÃæ½«Õâ¸öĞÂµÄÍ·²¿×Ö¶Î±£´æÆğÀ´£¬±£´æµ½headers_in.headers
+        if (rc == NGX_OK) {//ä¸‹é¢å°†è¿™ä¸ªæ–°çš„å¤´éƒ¨å­—æ®µä¿å­˜èµ·æ¥ï¼Œä¿å­˜åˆ°headers_in.headers
 
             /* a header line has been parsed successfully */
 
@@ -2517,7 +2519,7 @@ ngx_http_proxy_process_header(ngx_http_request_t *r)
             }
 
             h->value.data = h->key.data + h->key.len + 1;
-            h->lowcase_key = h->key.data + h->key.len + 1 + h->value.len + 1; //key-valueºóÃæÊÇkeyµÄĞ¡Ğ´×Ö·û´®
+            h->lowcase_key = h->key.data + h->key.len + 1 + h->value.len + 1; //key-valueåé¢æ˜¯keyçš„å°å†™å­—ç¬¦ä¸²
 
             ngx_memcpy(h->key.data, r->header_name_start, h->key.len);
             h->key.data[h->key.len] = '\0';
@@ -2532,9 +2534,9 @@ ngx_http_proxy_process_header(ngx_http_request_t *r)
             }
 
             hh = ngx_hash_find(&umcf->headers_in_hash, h->hash,
-                               h->lowcase_key, h->key.len); //ÔÚngx_http_upstream_headers_in²éÕÒÊÇ·ñÓëÆäÖĞµÄ³ÉÔ±Æ¥Åä
+                               h->lowcase_key, h->key.len); //åœ¨ngx_http_upstream_headers_inæŸ¥æ‰¾æ˜¯å¦ä¸å…¶ä¸­çš„æˆå‘˜åŒ¹é…
 
-            //ngx_http_upstream_headers_inÖĞÓĞÆ¥ÅäÏò£¬ÔòÖ´ĞĞ¶ÔÓ¦µÄhandler
+            //ngx_http_upstream_headers_inä¸­æœ‰åŒ¹é…å‘ï¼Œåˆ™æ‰§è¡Œå¯¹åº”çš„handler
             if (hh && hh->handler(r, h, hh->offset) != NGX_OK) {
                 return NGX_ERROR;
             }
@@ -2546,7 +2548,7 @@ ngx_http_proxy_process_header(ngx_http_request_t *r)
             continue;
         }
 
-        if (rc == NGX_HTTP_PARSE_HEADER_DONE) {//È«²¿¶¼ÒÑ¾­½âÎöÍê±ÏÁË£¬¿Ï¶¨ÊÇÅöµ½¿ÕĞĞ\R\NÁË
+        if (rc == NGX_HTTP_PARSE_HEADER_DONE) {//å…¨éƒ¨éƒ½å·²ç»è§£æå®Œæ¯•äº†ï¼Œè‚¯å®šæ˜¯ç¢°åˆ°ç©ºè¡Œ\R\Näº†
 
             /* a whole header has been parsed successfully */
 
@@ -2557,8 +2559,8 @@ ngx_http_proxy_process_header(ngx_http_request_t *r)
              * if no "Server" and "Date" in header line,
              * then add the special empty headers
              */
-            /* ËµÃ÷Ïò¿Í»§¶Ë·¢ËÍµÄÍ·²¿ĞĞÖĞ±ØĞë°üÀ¨server:  date: £¬Èç¹ûºó¶ËÃ»ÓĞ·¢ËÍÕâÁ½¸ö×Ö¶Î£¬Ôònginx»áÌí¼Ó¿Õvalue¸øÕâÁ½¸öÍ·²¿ĞĞ */
-            if (r->upstream->headers_in.server == NULL) { //Èç¹ûºó¶ËÃ»ÓĞ·¢ËÍserver:xxxÍ·²¿ĞĞ£¬ÔòÖ±½ÓÌí¼Óserver: value³¤¶ÈÎª0
+            /* è¯´æ˜å‘å®¢æˆ·ç«¯å‘é€çš„å¤´éƒ¨è¡Œä¸­å¿…é¡»åŒ…æ‹¬server:  date: ï¼Œå¦‚æœåç«¯æ²¡æœ‰å‘é€è¿™ä¸¤ä¸ªå­—æ®µï¼Œåˆ™nginxä¼šæ·»åŠ ç©ºvalueç»™è¿™ä¸¤ä¸ªå¤´éƒ¨è¡Œ */
+            if (r->upstream->headers_in.server == NULL) { //å¦‚æœåç«¯æ²¡æœ‰å‘é€server:xxxå¤´éƒ¨è¡Œï¼Œåˆ™ç›´æ¥æ·»åŠ server: valueé•¿åº¦ä¸º0
                 h = ngx_list_push(&r->upstream->headers_in.headers);
                 if (h == NULL) {
                     return NGX_ERROR;
@@ -2572,7 +2574,7 @@ ngx_http_proxy_process_header(ngx_http_request_t *r)
                 h->lowcase_key = (u_char *) "server";
             }
 
-            if (r->upstream->headers_in.date == NULL) {// Date ·¢ËÍHTTPÏûÏ¢µÄÈÕÆÚ¡£ÀıÈç£ºDate: Mon,10PR 18:42:51 GMT 
+            if (r->upstream->headers_in.date == NULL) {// Date å‘é€HTTPæ¶ˆæ¯çš„æ—¥æœŸã€‚ä¾‹å¦‚ï¼šDate: Mon,10PR 18:42:51 GMT
                 h = ngx_list_push(&r->upstream->headers_in.headers);
                 if (h == NULL) {
                     return NGX_ERROR;
@@ -2589,7 +2591,7 @@ ngx_http_proxy_process_header(ngx_http_request_t *r)
 
             u = r->upstream;
 
-            if (u->headers_in.chunked) { //chunked±àÂë·½Ê½¾Í²»ĞèÒª°üº¬content-length: Í·²¿ĞĞ£¬°üÌå³¤¶ÈÓĞchunked±¨ÎÄ¸ñÊ½Ö¸¶¨°üÌåÄÚÈİ³¤¶È
+            if (u->headers_in.chunked) { //chunkedç¼–ç æ–¹å¼å°±ä¸éœ€è¦åŒ…å«content-length: å¤´éƒ¨è¡Œï¼ŒåŒ…ä½“é•¿åº¦æœ‰chunkedæŠ¥æ–‡æ ¼å¼æŒ‡å®šåŒ…ä½“å†…å®¹é•¿åº¦
                 u->headers_in.content_length_n = -1;
             }
 
@@ -2612,7 +2614,7 @@ ngx_http_proxy_process_header(ngx_http_request_t *r)
             if (u->headers_in.status_n == NGX_HTTP_SWITCHING_PROTOCOLS) {
                 u->keepalive = 0;
 
-                if (r->headers_in.upgrade) {//ºó¶Ë·µ»Ø//HTTP/1.1 101µÄÊ±ºòÖÃ1  
+                if (r->headers_in.upgrade) {//åç«¯è¿”å›//HTTP/1.1 101çš„æ—¶å€™ç½®1
                     u->upgrade = 1;
                 }
             }
@@ -3226,16 +3228,16 @@ ngx_http_proxy_internal_chunked_variable(ngx_http_request_t *r,
 }
 
 /*
-location /proxy1/ {			
-    proxy_pass  http://10.10.0.103:8080/; 		
+location /proxy1/ {
+    proxy_pass  http://10.10.0.103:8080/;
 }
 
-Èç¹ûurlÎªhttp://10.2.13.167/proxy1/£¬Ôòngx_http_upstream_rewrite_location´¦Àíºó£¬
-ºó¶Ë·µ»ØLocation: http://10.10.0.103:8080/secure/MyJiraHome.jspa
-ÔòÊµ¼Ê·¢ËÍ¸øä¯ÀÀÆ÷¿Í»§¶ËµÄheaders_out.headers.locationÎªhttp://10.2.13.167/proxy1/secure/MyJiraHome.jspa
+å¦‚æœurlä¸ºhttp://10.2.13.167/proxy1/ï¼Œåˆ™ngx_http_upstream_rewrite_locationå¤„ç†åï¼Œ
+åç«¯è¿”å›Location: http://10.10.0.103:8080/secure/MyJiraHome.jspa
+åˆ™å®é™…å‘é€ç»™æµè§ˆå™¨å®¢æˆ·ç«¯çš„headers_out.headers.locationä¸ºhttp://10.2.13.167/proxy1/secure/MyJiraHome.jspa
 */
-//ngx_http_upstream_rewrite_location->ngx_http_proxy_rewrite_redirectÖĞÖ´ĞĞ
-//»ñÈ¡ĞÂµÄÖØ¶¨ÏòµÄĞÂµÄuri½âÎö³öÀ´£¬´æÈëh->value(Ò²¾ÍÊÇngx_http_upstream_headers_in_t->locationÖĞ£¬¼û)
+//ngx_http_upstream_rewrite_location->ngx_http_proxy_rewrite_redirectä¸­æ‰§è¡Œ
+//è·å–æ–°çš„é‡å®šå‘çš„æ–°çš„uriè§£æå‡ºæ¥ï¼Œå­˜å…¥h->value(ä¹Ÿå°±æ˜¯ngx_http_upstream_headers_in_t->locationä¸­ï¼Œè§)
 static ngx_int_t
 ngx_http_proxy_rewrite_redirect(ngx_http_request_t *r, ngx_table_elt_t *h,
     size_t prefix)
@@ -3353,24 +3355,24 @@ ngx_http_proxy_rewrite_cookie_value(ngx_http_request_t *r, ngx_table_elt_t *h,
 }
 
 /*
-location /proxy1/ {			
-    proxy_pass  http://10.10.0.103:8080/; 		
+location /proxy1/ {
+    proxy_pass  http://10.10.0.103:8080/;
 }
 
-Èç¹ûurlÎªhttp://10.2.13.167/proxy1/£¬Ôòngx_http_upstream_rewrite_location´¦Àíºó£¬
-ºó¶Ë·µ»ØLocation: http://10.10.0.103:8080/secure/MyJiraHome.jspa
-ÔòÊµ¼Ê·¢ËÍ¸øä¯ÀÀÆ÷¿Í»§¶ËµÄheaders_out.headers.locationÎªhttp://10.2.13.167/proxy1/secure/MyJiraHome.jspa
+å¦‚æœurlä¸ºhttp://10.2.13.167/proxy1/ï¼Œåˆ™ngx_http_upstream_rewrite_locationå¤„ç†åï¼Œ
+åç«¯è¿”å›Location: http://10.10.0.103:8080/secure/MyJiraHome.jspa
+åˆ™å®é™…å‘é€ç»™æµè§ˆå™¨å®¢æˆ·ç«¯çš„headers_out.headers.locationä¸ºhttp://10.2.13.167/proxy1/secure/MyJiraHome.jspa
 */
-//ngx_http_upstream_rewrite_location->ngx_http_proxy_rewrite_redirectÖĞÖ´ĞĞ
-//»ñÈ¡ĞÂµÄÖØ¶¨ÏòµÄĞÂµÄuri½âÎö³öÀ´£¬´æÈëh->value
+//ngx_http_upstream_rewrite_location->ngx_http_proxy_rewrite_redirectä¸­æ‰§è¡Œ
+//è·å–æ–°çš„é‡å®šå‘çš„æ–°çš„uriè§£æå‡ºæ¥ï¼Œå­˜å…¥h->value
 static ngx_int_t
 ngx_http_proxy_rewrite_complex_handler(ngx_http_request_t *r,
     ngx_table_elt_t *h, size_t prefix, size_t len, ngx_http_proxy_rewrite_t *pr)
 {
     ngx_str_t  pattern, replacement;
 
-    //½âÎöproxy_redirect /xxx1/$adfa /xxx2/$dggÖĞµÄ/xxx1/$adfaÎªÍêÕû×Ö·û´®µ½pattern
-    if (ngx_http_complex_value(r, &pr->pattern.complex, &pattern) != NGX_OK) { 
+    //è§£æproxy_redirect /xxx1/$adfa /xxx2/$dggä¸­çš„/xxx1/$adfaä¸ºå®Œæ•´å­—ç¬¦ä¸²åˆ°pattern
+    if (ngx_http_complex_value(r, &pr->pattern.complex, &pattern) != NGX_OK) {
         return NGX_ERROR;
     }
 
@@ -3381,7 +3383,7 @@ ngx_http_proxy_rewrite_complex_handler(ngx_http_request_t *r,
         return NGX_DECLINED;
     }
 
-    //½âÎöproxy_redirect /xxx1/$adfa /xxx2/$dggÖĞµÄ/xxx2/$dggÎªÍêÕû×Ö·û´®µ½replacement
+    //è§£æproxy_redirect /xxx1/$adfa /xxx2/$dggä¸­çš„/xxx2/$dggä¸ºå®Œæ•´å­—ç¬¦ä¸²åˆ°replacement
     if (ngx_http_complex_value(r, &pr->replacement, &replacement) != NGX_OK) {
         return NGX_ERROR;
     }
@@ -3450,7 +3452,7 @@ ngx_http_proxy_rewrite_domain_handler(ngx_http_request_t *r,
     return ngx_http_proxy_rewrite(r, h, prefix, len, &replacement);
 }
 
-//¿½±´replacement
+//æ‹·è´replacement
 static ngx_int_t
 ngx_http_proxy_rewrite(ngx_http_request_t *r, ngx_table_elt_t *h, size_t prefix,
     size_t len, ngx_str_t *replacement)
@@ -3853,7 +3855,7 @@ ngx_http_proxy_merge_loc_conf(ngx_conf_t *cf, void *parent, void *child)
         conf->upstream.cache_value = prev->upstream.cache_value;
     }
 
-    //proxy_cache abc±ØĞëºÍproxy_cache_path xxx keys_zone=abc:10m;Ò»Æğ£¬·ñÔòÔÚngx_http_proxy_merge_loc_conf»áÊ§°Ü£¬ÒòÎªÃ»ÓĞÎª¸Ãabc´´½¨ngx_http_file_cache_t
+    //proxy_cache abcå¿…é¡»å’Œproxy_cache_path xxx keys_zone=abc:10m;ä¸€èµ·ï¼Œå¦åˆ™åœ¨ngx_http_proxy_merge_loc_confä¼šå¤±è´¥ï¼Œå› ä¸ºæ²¡æœ‰ä¸ºè¯¥abcåˆ›å»ºngx_http_file_cache_t
     if (conf->upstream.cache_zone && conf->upstream.cache_zone->data == NULL) {
         ngx_shm_zone_t  *shm_zone;
 
@@ -3979,9 +3981,9 @@ ngx_http_proxy_merge_loc_conf(ngx_conf_t *cf, void *parent, void *child)
             conf->redirects = prev->redirects;
         }
 
-        //ngx_http_proxy_redirectºÍngx_http_proxy_rewrite_redirectÅäºÏÔÄ¶Á£¬ËûÃÇÒ»ÆğÈ·¶¨ÖØ¶¨ÏòºóµÄµØÖ·
+        //ngx_http_proxy_redirectå’Œngx_http_proxy_rewrite_redirecté…åˆé˜…è¯»ï¼Œä»–ä»¬ä¸€èµ·ç¡®å®šé‡å®šå‘åçš„åœ°å€
         if (conf->redirects == NULL && conf->url.data) {
-        //ngx_http_proxy_merge_loc_conf¸ÃifÀïÃæÄÚÈİºÍngx_http_proxy_redirectÀïÃæµÄproxy_redirect defaultÒ»Ñù£¬Ò²¾ÍÊÇËµproxy_redirectÄ¬ÈÏÎªdefault
+        //ngx_http_proxy_merge_loc_confè¯¥ifé‡Œé¢å†…å®¹å’Œngx_http_proxy_redirecté‡Œé¢çš„proxy_redirect defaultä¸€æ ·ï¼Œä¹Ÿå°±æ˜¯è¯´proxy_redirecté»˜è®¤ä¸ºdefault
             conf->redirects = ngx_array_create(cf->pool, 1,
                                              sizeof(ngx_http_proxy_rewrite_t));
             if (conf->redirects == NULL) {
@@ -4001,7 +4003,7 @@ ngx_http_proxy_merge_loc_conf(ngx_conf_t *cf, void *parent, void *child)
             pr->handler = ngx_http_proxy_rewrite_complex_handler;
 
             if (conf->vars.uri.len) {
-                pr->pattern.complex.value = conf->url; 
+                pr->pattern.complex.value = conf->url;
                 pr->replacement.value = conf->location;
 
             } else {
@@ -4126,12 +4128,12 @@ ngx_http_proxy_merge_loc_conf(ngx_conf_t *cf, void *parent, void *child)
     return NGX_CONF_OK;
 }
 
-/* 
-  °Ñproxy_set_headerÓëngx_http_proxy_headersºÏÔÚÒ»Æğ£¬È»ºó°ÑÆäÖĞµÄkey:value×Ö·û´®ºÍ³¤¶ÈĞÅÏ¢Ìí¼Óµ½headers->lengthsºÍheaders->valuesÖĞ
-  °Ñngx_http_proxy_cache_headersºÏÔÚÒ»Æğ£¬È»ºó°ÑÆäÖĞµÄkey:value×Ö·û´®ºÍ³¤¶ÈĞÅÏ¢Ìí¼Óµ½headers->lengthsºÍheaders->valuesÖĞ
+/*
+  æŠŠproxy_set_headerä¸ngx_http_proxy_headersåˆåœ¨ä¸€èµ·ï¼Œç„¶åæŠŠå…¶ä¸­çš„key:valueå­—ç¬¦ä¸²å’Œé•¿åº¦ä¿¡æ¯æ·»åŠ åˆ°headers->lengthså’Œheaders->valuesä¸­
+  æŠŠngx_http_proxy_cache_headersåˆåœ¨ä¸€èµ·ï¼Œç„¶åæŠŠå…¶ä¸­çš„key:valueå­—ç¬¦ä¸²å’Œé•¿åº¦ä¿¡æ¯æ·»åŠ åˆ°headers->lengthså’Œheaders->valuesä¸­
 */
-//1. ÀïÃæ´æ´¢µÄÊÇngx_http_proxy_headersºÍproxy_set_headerÉèÖÃµÄÍ·²¿ĞÅÏ¢Í·Ìí¼Óµ½¸ÃlengthsºÍvalues ´æÈëngx_http_proxy_loc_conf_t->headers
-//2. ÀïÃæ´æ´¢µÄÊÇngx_http_proxy_cache_headersÉèÖÃµÄÍ·²¿ĞÅÏ¢Í·Ìí¼Óµ½¸ÃlengthsºÍvalues  ´æÈëngx_http_proxy_loc_conf_t->headers_cache
+//1. é‡Œé¢å­˜å‚¨çš„æ˜¯ngx_http_proxy_headerså’Œproxy_set_headerè®¾ç½®çš„å¤´éƒ¨ä¿¡æ¯å¤´æ·»åŠ åˆ°è¯¥lengthså’Œvalues å­˜å…¥ngx_http_proxy_loc_conf_t->headers
+//2. é‡Œé¢å­˜å‚¨çš„æ˜¯ngx_http_proxy_cache_headersè®¾ç½®çš„å¤´éƒ¨ä¿¡æ¯å¤´æ·»åŠ åˆ°è¯¥lengthså’Œvalues  å­˜å…¥ngx_http_proxy_loc_conf_t->headers_cache
 static ngx_int_t
 ngx_http_proxy_init_headers(ngx_conf_t *cf, ngx_http_proxy_loc_conf_t *conf,
     ngx_http_proxy_headers_t *headers, ngx_keyval_t *default_headers)
@@ -4147,7 +4149,7 @@ ngx_http_proxy_init_headers(ngx_conf_t *cf, ngx_http_proxy_loc_conf_t *conf,
     ngx_http_script_compile_t     sc;
     ngx_http_script_copy_code_t  *copy;
 
-    if (headers->hash.buckets) { //Èç¹û²»Îª¿Õ£¬·µ»Ø£¬Èç¹ûÊÇµÚÒ»´Î½øÈë¸Ãº¯Êı£¬Ôò×ßÏÂÃæµÄÁ÷³Ì´´½¨¿Õ¼ä³õÊ¼»¯
+    if (headers->hash.buckets) { //å¦‚æœä¸ä¸ºç©ºï¼Œè¿”å›ï¼Œå¦‚æœæ˜¯ç¬¬ä¸€æ¬¡è¿›å…¥è¯¥å‡½æ•°ï¼Œåˆ™èµ°ä¸‹é¢çš„æµç¨‹åˆ›å»ºç©ºé—´åˆå§‹åŒ–
         return NGX_OK;
     }
 
@@ -4171,18 +4173,18 @@ ngx_http_proxy_init_headers(ngx_conf_t *cf, ngx_http_proxy_loc_conf_t *conf,
         }
     }
 
-    headers->lengths = ngx_array_create(cf->pool, 64, 1); //64¸ö1×Ö½ÚµÄÊı×é
+    headers->lengths = ngx_array_create(cf->pool, 64, 1); //64ä¸ª1å­—èŠ‚çš„æ•°ç»„
     if (headers->lengths == NULL) {
         return NGX_ERROR;
     }
 
-    headers->values = ngx_array_create(cf->pool, 512, 1); //512¸ö1×Ö½ÚµÄÊı×é
+    headers->values = ngx_array_create(cf->pool, 512, 1); //512ä¸ª1å­—èŠ‚çš„æ•°ç»„
     if (headers->values == NULL) {
         return NGX_ERROR;
     }
 
     src = conf->headers_source->elts;
-    for (i = 0; i < conf->headers_source->nelts; i++) { //°Ñproxy_set_headerÉèÖÃµÄÍ·²¿ĞÅÏ¢Ìí¼Óµ½headers_mergedÊı×éÖĞ
+    for (i = 0; i < conf->headers_source->nelts; i++) { //æŠŠproxy_set_headerè®¾ç½®çš„å¤´éƒ¨ä¿¡æ¯æ·»åŠ åˆ°headers_mergedæ•°ç»„ä¸­
 
         s = ngx_array_push(&headers_merged);
         if (s == NULL) {
@@ -4192,9 +4194,9 @@ ngx_http_proxy_init_headers(ngx_conf_t *cf, ngx_http_proxy_loc_conf_t *conf,
         *s = src[i];
     }
 
-    h = default_headers; //ngx_http_proxy_headers»òÕßngx_http_proxy_cache_headers
+    h = default_headers; //ngx_http_proxy_headersæˆ–è€…ngx_http_proxy_cache_headers
 
-    while (h->key.len) { //°Ñdefault_headers(ngx_http_proxy_headers»òÕßngx_http_proxy_cache_headers)ÖĞ²»ÖØ¸´µÄÔªËØÌí¼Óµ½headers_mergedÖĞ
+    while (h->key.len) { //æŠŠdefault_headers(ngx_http_proxy_headersæˆ–è€…ngx_http_proxy_cache_headers)ä¸­ä¸é‡å¤çš„å…ƒç´ æ·»åŠ åˆ°headers_mergedä¸­
 
         src = headers_merged.elts;
         for (i = 0; i < headers_merged.nelts; i++) {
@@ -4216,14 +4218,14 @@ ngx_http_proxy_init_headers(ngx_conf_t *cf, ngx_http_proxy_loc_conf_t *conf,
     }
 
 
-    /* 
-    °Ñproxy_set_headerÓëngx_http_proxy_headersºÏÔÚÒ»Æğ£¬È»ºó°ÑÆäÖĞµÄkey:value×Ö·û´®ºÍ³¤¶ÈĞÅÏ¢Ìí¼Óµ½headers->lengthsºÍheaders->valuesÖĞ
-    °Ñngx_http_proxy_cache_headersºÏÔÚÒ»Æğ£¬È»ºó°ÑÆäÖĞµÄkey:value×Ö·û´®ºÍ³¤¶ÈĞÅÏ¢Ìí¼Óµ½headers->lengthsºÍheaders->valuesÖĞ
+    /*
+    æŠŠproxy_set_headerä¸ngx_http_proxy_headersåˆåœ¨ä¸€èµ·ï¼Œç„¶åæŠŠå…¶ä¸­çš„key:valueå­—ç¬¦ä¸²å’Œé•¿åº¦ä¿¡æ¯æ·»åŠ åˆ°headers->lengthså’Œheaders->valuesä¸­
+    æŠŠngx_http_proxy_cache_headersåˆåœ¨ä¸€èµ·ï¼Œç„¶åæŠŠå…¶ä¸­çš„key:valueå­—ç¬¦ä¸²å’Œé•¿åº¦ä¿¡æ¯æ·»åŠ åˆ°headers->lengthså’Œheaders->valuesä¸­
      */
     src = headers_merged.elts;
     for (i = 0; i < headers_merged.nelts; i++) {
 
-        /* ¿½±´headers_mergedÖĞµÄ³ÉÔ±ĞÅÏ¢µ½headers_namesÊı×éÖĞ */
+        /* æ‹·è´headers_mergedä¸­çš„æˆå‘˜ä¿¡æ¯åˆ°headers_namesæ•°ç»„ä¸­ */
         hk = ngx_array_push(&headers_names);
         if (hk == NULL) {
             return NGX_ERROR;
@@ -4233,7 +4235,7 @@ ngx_http_proxy_init_headers(ngx_conf_t *cf, ngx_http_proxy_loc_conf_t *conf,
         hk->key_hash = ngx_hash_key_lc(src[i].key.data, src[i].key.len);
         hk->value = (void *) 1;
 
-        if (src[i].value.len == 0) { //valueÎª¿ÕµÄ£¬²»ÓÃÌí¼Óµ½headers->lengthsÖĞ
+        if (src[i].value.len == 0) { //valueä¸ºç©ºçš„ï¼Œä¸ç”¨æ·»åŠ åˆ°headers->lengthsä¸­
             continue;
         }
 
@@ -4244,20 +4246,20 @@ ngx_http_proxy_init_headers(ngx_conf_t *cf, ngx_http_proxy_loc_conf_t *conf,
                 return NGX_ERROR;
             }
 
-            //key:value×Ö·û´®³¤¶Ècode
+            //key:valueå­—ç¬¦ä¸²é•¿åº¦code
             copy->code = (ngx_http_script_code_pt)
                                                  ngx_http_script_copy_len_code;
             copy->len = src[i].key.len + sizeof(": ") - 1
-                        + src[i].value.len + sizeof(CRLF) - 1; //key:value×Ö·û´®³¤¶È   
-                        //Õâ¸ö³¤¶È×îºóÔÚ½âÎökey:valueÖµµÄÊ±ºò´Óngx_http_script_copy_len_code»ñÈ¡
+                        + src[i].value.len + sizeof(CRLF) - 1; //key:valueå­—ç¬¦ä¸²é•¿åº¦
+                        //è¿™ä¸ªé•¿åº¦æœ€ååœ¨è§£ækey:valueå€¼çš„æ—¶å€™ä»ngx_http_script_copy_len_codeè·å–
 
 
-            //key:value×Ö·û´®code
+            //key:valueå­—ç¬¦ä¸²code
             size = (sizeof(ngx_http_script_copy_code_t)
                        + src[i].key.len + sizeof(": ") - 1
                        + src[i].value.len + sizeof(CRLF) - 1
                        + sizeof(uintptr_t) - 1)
-                    & ~(sizeof(uintptr_t) - 1); //4×Ö½Ú¶ÔÆë
+                    & ~(sizeof(uintptr_t) - 1); //4å­—èŠ‚å¯¹é½
 
 
             copy = ngx_array_push_n(headers->values, size);
@@ -4269,7 +4271,7 @@ ngx_http_proxy_init_headers(ngx_conf_t *cf, ngx_http_proxy_loc_conf_t *conf,
             copy->len = src[i].key.len + sizeof(": ") - 1
                         + src[i].value.len + sizeof(CRLF) - 1;
 
-            p = (u_char *) copy + sizeof(ngx_http_script_copy_code_t); //Ö¸Ïò¿ª±Ù¿Õ¼äÊµ¼ÊµÄ´æ´¢key:valueµÄµØ·½
+            p = (u_char *) copy + sizeof(ngx_http_script_copy_code_t); //æŒ‡å‘å¼€è¾Ÿç©ºé—´å®é™…çš„å­˜å‚¨key:valueçš„åœ°æ–¹
 
             p = ngx_cpymem(p, src[i].key.data, src[i].key.len);
             *p++ = ':'; *p++ = ' ';
@@ -4278,7 +4280,7 @@ ngx_http_proxy_init_headers(ngx_conf_t *cf, ngx_http_proxy_loc_conf_t *conf,
 
         } else {
             /*
-                ngx_http_proxy_cache_headersºÍngx_http_proxy_cache_headersÉèÖÃµÄÍ·²¿ÀïÃæ´æÔÚ±äÁ¿
+                ngx_http_proxy_cache_headerså’Œngx_http_proxy_cache_headersè®¾ç½®çš„å¤´éƒ¨é‡Œé¢å­˜åœ¨å˜é‡
                */
             copy = ngx_array_push_n(headers->lengths,
                                     sizeof(ngx_http_script_copy_code_t));
@@ -4348,14 +4350,14 @@ ngx_http_proxy_init_headers(ngx_conf_t *cf, ngx_http_proxy_loc_conf_t *conf,
             *p++ = CR; *p = LF;
         }
 
-        code = ngx_array_push_n(headers->lengths, sizeof(uintptr_t)); //headers->lengthsÄ©Î²´¦Ìí¼Ó¿ÕÖ¸Õë±íÊ¾½áÊø±ê¼Ç
+        code = ngx_array_push_n(headers->lengths, sizeof(uintptr_t)); //headers->lengthsæœ«å°¾å¤„æ·»åŠ ç©ºæŒ‡é’ˆè¡¨ç¤ºç»“æŸæ ‡è®°
         if (code == NULL) {
             return NGX_ERROR;
         }
 
         *code = (uintptr_t) NULL;
 
-        code = ngx_array_push_n(headers->values, sizeof(uintptr_t));//headers->valuesÄ©Î²´¦Ìí¼Ó¿ÕÖ¸Õë±íÊ¾½áÊø±ê¼Ç
+        code = ngx_array_push_n(headers->values, sizeof(uintptr_t));//headers->valuesæœ«å°¾å¤„æ·»åŠ ç©ºæŒ‡é’ˆè¡¨ç¤ºç»“æŸæ ‡è®°
         if (code == NULL) {
             return NGX_ERROR;
         }
@@ -4384,55 +4386,55 @@ ngx_http_proxy_init_headers(ngx_conf_t *cf, ngx_http_proxy_loc_conf_t *conf,
 }
 
 /*
-Óï·¨£ºproxy_pass URL 
-Ä¬ÈÏÖµ£ºno 
-Ê¹ÓÃ×Ö¶Î£ºlocation, locationÖĞµÄif×Ö¶Î 
-Õâ¸öÖ¸ÁîÉèÖÃ±»´úÀí·şÎñÆ÷µÄµØÖ·ºÍ±»Ó³ÉäµÄURI£¬µØÖ·¿ÉÒÔÊ¹ÓÃÖ÷»úÃû»òIP¼Ó¶Ë¿ÚºÅµÄĞÎÊ½£¬ÀıÈç£º
-proxy_pass http://localhost:8000/uri/;»òÕßÒ»¸öunix socket£º
-proxy_pass http://unix:/path/to/backend.socket:/uri/;Â·¾¶ÔÚunix¹Ø¼ü×ÖµÄºóÃæÖ¸¶¨£¬Î»ÓÚÁ½¸öÃ°ºÅÖ®¼ä¡£
-×¢Òâ£ºHTTP HostÍ·Ã»ÓĞ×ª·¢£¬Ëü½«ÉèÖÃÎª»ùÓÚproxy_passÉùÃ÷£¬ÀıÈç£¬Èç¹ûÄãÒÆ¶¯ĞéÄâÖ÷»úexample.comµ½ÁíÍâÒ»Ì¨»úÆ÷£¬È»ºóÖØĞÂÅäÖÃÕı³£
-£¨¼àÌıexample.comµ½Ò»¸öĞÂµÄIP£©£¬Í¬Ê±ÔÚ¾É»úÆ÷ÉÏÊÖ¶¯½«ĞÂµÄexample.comIPĞ´Èë/etc/hosts£¬Í¬Ê±Ê¹ÓÃproxy_passÖØ¶¨Ïòµ½http://example.com, 
-È»ºóĞŞ¸ÄDNSµ½ĞÂµÄIP¡£
-µ±´«µİÇëÇóÊ±£¬Nginx½«location¶ÔÓ¦µÄURI²¿·ÖÌæ»»³Éproxy_passÖ¸ÁîÖĞËùÖ¸¶¨µÄ²¿·Ö£¬µ«ÊÇÓĞÁ½¸öÀıÍâ»áÊ¹ÆäÎŞ·¨È·¶¨ÈçºÎÈ¥Ìæ»»£º
+è¯­æ³•ï¼šproxy_pass URL
+é»˜è®¤å€¼ï¼šno
+ä½¿ç”¨å­—æ®µï¼šlocation, locationä¸­çš„ifå­—æ®µ
+è¿™ä¸ªæŒ‡ä»¤è®¾ç½®è¢«ä»£ç†æœåŠ¡å™¨çš„åœ°å€å’Œè¢«æ˜ å°„çš„URIï¼Œåœ°å€å¯ä»¥ä½¿ç”¨ä¸»æœºåæˆ–IPåŠ ç«¯å£å·çš„å½¢å¼ï¼Œä¾‹å¦‚ï¼š
+proxy_pass http://localhost:8000/uri/;æˆ–è€…ä¸€ä¸ªunix socketï¼š
+proxy_pass http://unix:/path/to/backend.socket:/uri/;è·¯å¾„åœ¨unixå…³é”®å­—çš„åé¢æŒ‡å®šï¼Œä½äºä¸¤ä¸ªå†’å·ä¹‹é—´ã€‚
+æ³¨æ„ï¼šHTTP Hostå¤´æ²¡æœ‰è½¬å‘ï¼Œå®ƒå°†è®¾ç½®ä¸ºåŸºäºproxy_passå£°æ˜ï¼Œä¾‹å¦‚ï¼Œå¦‚æœä½ ç§»åŠ¨è™šæ‹Ÿä¸»æœºexample.comåˆ°å¦å¤–ä¸€å°æœºå™¨ï¼Œç„¶åé‡æ–°é…ç½®æ­£å¸¸
+ï¼ˆç›‘å¬example.comåˆ°ä¸€ä¸ªæ–°çš„IPï¼‰ï¼ŒåŒæ—¶åœ¨æ—§æœºå™¨ä¸Šæ‰‹åŠ¨å°†æ–°çš„example.comIPå†™å…¥/etc/hostsï¼ŒåŒæ—¶ä½¿ç”¨proxy_passé‡å®šå‘åˆ°http://example.com,
+ç„¶åä¿®æ”¹DNSåˆ°æ–°çš„IPã€‚
+å½“ä¼ é€’è¯·æ±‚æ—¶ï¼ŒNginxå°†locationå¯¹åº”çš„URIéƒ¨åˆ†æ›¿æ¢æˆproxy_passæŒ‡ä»¤ä¸­æ‰€æŒ‡å®šçš„éƒ¨åˆ†ï¼Œä½†æ˜¯æœ‰ä¸¤ä¸ªä¾‹å¤–ä¼šä½¿å…¶æ— æ³•ç¡®å®šå¦‚ä½•å»æ›¿æ¢ï¼š
 
-¡ölocationÍ¨¹ıÕıÔò±í´ïÊ½Ö¸¶¨£»
-¡öÔÚÊ¹ÓÃ´úÀíµÄlocationÖĞÀûÓÃrewriteÖ¸Áî¸Ä±äURI£¬Ê¹ÓÃÕâ¸öÅäÖÃ¿ÉÒÔ¸ü¼Ó¾«È·µÄ´¦ÀíÇëÇó£¨break£©£º
+â– locationé€šè¿‡æ­£åˆ™è¡¨è¾¾å¼æŒ‡å®šï¼›
+â– åœ¨ä½¿ç”¨ä»£ç†çš„locationä¸­åˆ©ç”¨rewriteæŒ‡ä»¤æ”¹å˜URIï¼Œä½¿ç”¨è¿™ä¸ªé…ç½®å¯ä»¥æ›´åŠ ç²¾ç¡®çš„å¤„ç†è¯·æ±‚ï¼ˆbreakï¼‰ï¼š
 
 location  /name/ {
   rewrite      /name/([^/] +)  /users?name=$1  break;
   proxy_pass   http://127.0.0.1;
-}ÕâĞ©Çé¿öÏÂURI²¢Ã»ÓĞ±»Ó³Éä´«µİ¡£
-´ËÍâ£¬ĞèÒª±êÃ÷Ò»Ğ©±ê¼ÇÒÔ±ãURI½«ÒÔºÍ¿Í»§¶ËÏàÍ¬µÄ·¢ËÍĞÎÊ½×ª·¢£¬¶ø²»ÊÇ´¦Àí¹ıµÄĞÎÊ½£¬ÔÚÆä´¦ÀíÆÚ¼ä£º
+}è¿™äº›æƒ…å†µä¸‹URIå¹¶æ²¡æœ‰è¢«æ˜ å°„ä¼ é€’ã€‚
+æ­¤å¤–ï¼Œéœ€è¦æ ‡æ˜ä¸€äº›æ ‡è®°ä»¥ä¾¿URIå°†ä»¥å’Œå®¢æˆ·ç«¯ç›¸åŒçš„å‘é€å½¢å¼è½¬å‘ï¼Œè€Œä¸æ˜¯å¤„ç†è¿‡çš„å½¢å¼ï¼Œåœ¨å…¶å¤„ç†æœŸé—´ï¼š
 
 
-¡öÁ½¸öÒÔÉÏµÄĞ±¸Ü½«±»Ìæ»»ÎªÒ»¸ö£º ¡±//¡± ¨C ¡±/¡±; 
+â– ä¸¤ä¸ªä»¥ä¸Šçš„æ–œæ å°†è¢«æ›¿æ¢ä¸ºä¸€ä¸ªï¼š â€//â€ â€“ â€/â€;
 
-¡öÉ¾³ıÒıÓÃµÄµ±Ç°Ä¿Â¼£º¡±/./¡± ¨C ¡±/¡±; 
+â– åˆ é™¤å¼•ç”¨çš„å½“å‰ç›®å½•ï¼šâ€/./â€ â€“ â€/â€;
 
-¡öÉ¾³ıÒıÓÃµÄÏÈÇ°Ä¿Â¼£º¡±/dir /../¡± ¨C ¡±/¡°¡£
-Èç¹ûÔÚ·şÎñÆ÷ÉÏ±ØĞëÒÔÎ´¾­ÈÎºÎ´¦ÀíµÄĞÎÊ½·¢ËÍURI£¬ÄÇÃ´ÔÚproxy_passÖ¸ÁîÖĞ±ØĞëÊ¹ÓÃÎ´Ö¸¶¨URIµÄ²¿·Ö£º
+â– åˆ é™¤å¼•ç”¨çš„å…ˆå‰ç›®å½•ï¼šâ€/dir /../â€ â€“ â€/â€œã€‚
+å¦‚æœåœ¨æœåŠ¡å™¨ä¸Šå¿…é¡»ä»¥æœªç»ä»»ä½•å¤„ç†çš„å½¢å¼å‘é€URIï¼Œé‚£ä¹ˆåœ¨proxy_passæŒ‡ä»¤ä¸­å¿…é¡»ä½¿ç”¨æœªæŒ‡å®šURIçš„éƒ¨åˆ†ï¼š
 
 location  /some/path/ {
   proxy_pass   http://127.0.0.1;
-}ÔÚÖ¸ÁîÖĞÊ¹ÓÃ±äÁ¿ÊÇÒ»ÖÖ±È½ÏÌØÊâµÄÇé¿ö£º±»ÇëÇóµÄURL²»»áÊ¹ÓÃ²¢ÇÒÄã±ØĞëÍêÈ«ÊÖ¹¤±ê¼ÇURL¡£
-ÕâÒâÎ¶×ÅÏÂÁĞµÄÅäÖÃ²¢²»ÄÜÈÃÄã·½±ãµÄ½øÈëÄ³¸öÄãÏëÒªµÄĞéÄâÖ÷»úÄ¿Â¼£¬´úÀí×ÜÊÇ½«Ëü×ª·¢µ½ÏàÍ¬µÄURL£¨ÔÚÒ»¸öserver×Ö¶ÎµÄÅäÖÃ£©£º
+}åœ¨æŒ‡ä»¤ä¸­ä½¿ç”¨å˜é‡æ˜¯ä¸€ç§æ¯”è¾ƒç‰¹æ®Šçš„æƒ…å†µï¼šè¢«è¯·æ±‚çš„URLä¸ä¼šä½¿ç”¨å¹¶ä¸”ä½ å¿…é¡»å®Œå…¨æ‰‹å·¥æ ‡è®°URLã€‚
+è¿™æ„å‘³ç€ä¸‹åˆ—çš„é…ç½®å¹¶ä¸èƒ½è®©ä½ æ–¹ä¾¿çš„è¿›å…¥æŸä¸ªä½ æƒ³è¦çš„è™šæ‹Ÿä¸»æœºç›®å½•ï¼Œä»£ç†æ€»æ˜¯å°†å®ƒè½¬å‘åˆ°ç›¸åŒçš„URLï¼ˆåœ¨ä¸€ä¸ªserverå­—æ®µçš„é…ç½®ï¼‰ï¼š
 
 
 location / {
   proxy_pass   http://127.0.0.1:8080/VirtualHostBase/https/$server_name:443/some/path/VirtualHostRoot;
-}½â¾ö·½·¨ÊÇÊ¹ÓÃrewriteºÍproxy_passµÄ×éºÏ£º
+}è§£å†³æ–¹æ³•æ˜¯ä½¿ç”¨rewriteå’Œproxy_passçš„ç»„åˆï¼š
 
 location / {
   rewrite ^(.*)$ /VirtualHostBase/https/$server_name:443/some/path/VirtualHostRoot$1 break;
   proxy_pass   http://127.0.0.1:8080;
-}ÕâÖÖÇé¿öÏÂÇëÇóµÄURL½«±»ÖØĞ´£¬ proxy_passÖĞµÄÍÏÎ²Ğ±¸Ü²¢Ã»ÓĞÊµ¼ÊÒâÒå¡£
-Èç¹ûĞèÒªÍ¨¹ısslĞÅÈÎÁ¬½Óµ½Ò»¸öÉÏÓÎ·şÎñÆ÷×é£¬proxy_passÇ°×ºÎª https://£¬²¢ÇÒÍ¬Ê±Ö¸¶¨sslµÄ¶Ë¿Ú£¬Èç£º
+}è¿™ç§æƒ…å†µä¸‹è¯·æ±‚çš„URLå°†è¢«é‡å†™ï¼Œ proxy_passä¸­çš„æ‹–å°¾æ–œæ å¹¶æ²¡æœ‰å®é™…æ„ä¹‰ã€‚
+å¦‚æœéœ€è¦é€šè¿‡sslä¿¡ä»»è¿æ¥åˆ°ä¸€ä¸ªä¸Šæ¸¸æœåŠ¡å™¨ç»„ï¼Œproxy_passå‰ç¼€ä¸º https://ï¼Œå¹¶ä¸”åŒæ—¶æŒ‡å®šsslçš„ç«¯å£ï¼Œå¦‚ï¼š
 
 
 upstream backend-secure {
   server 10.0.0.20:443;
 }
- 
+
 server {
   listen 10.0.0.1:443;
   location / {
@@ -4440,10 +4442,10 @@ server {
   }
 }
 */
-//proxy_pass½âÎö //Õâ¸öº¯Êı»áÔÚnginxÅöµ½proxy_passÖ¸ÁîµÄÊ±ºò£¬¾Íµ÷ÓÃ£¬È»ºóÉèÖÃÏà¹ØµÄ»Øµ÷º¯Êıµ½¶ÔÓ¦µÄÄ£¿éÖĞÈ¥
+//proxy_passè§£æ //è¿™ä¸ªå‡½æ•°ä¼šåœ¨nginxç¢°åˆ°proxy_passæŒ‡ä»¤çš„æ—¶å€™ï¼Œå°±è°ƒç”¨ï¼Œç„¶åè®¾ç½®ç›¸å…³çš„å›è°ƒå‡½æ•°åˆ°å¯¹åº”çš„æ¨¡å—ä¸­å»
 static char *
 ngx_http_proxy_pass(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
-{//ÔÚNGX_HTTP_CONTENT_PHASEÀïÃæµ÷ÓÃÕâ¸öhandler£¬¼´ngx_http_proxy_handler¡£  
+{//åœ¨NGX_HTTP_CONTENT_PHASEé‡Œé¢è°ƒç”¨è¿™ä¸ªhandlerï¼Œå³ngx_http_proxy_handlerã€‚
     ngx_http_proxy_loc_conf_t *plcf = conf;
 
     size_t                      add;
@@ -4458,11 +4460,11 @@ ngx_http_proxy_pass(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
         return "is duplicate";
     }
 
-    //»ñÈ¡µ±Ç°µÄlocation£¬¼´ÔÚÄÄ¸ölocationÅäÖÃµÄ"proxy_pass"Ö¸Áî  
+    //è·å–å½“å‰çš„locationï¼Œå³åœ¨å“ªä¸ªlocationé…ç½®çš„"proxy_pass"æŒ‡ä»¤
     clcf = ngx_http_conf_get_module_loc_conf(cf, ngx_http_core_module);
 
-    //ÉèÖÃlocµÄhandler£¬Õâ¸öclcf->handler»áÔÚngx_http_update_location_config()ÀïÃæ¸³Óèr->content_handler£¬´Ó
-    // ¶øÔÚNGX_HTTP_CONTENT_PHASEÀïÃæµ÷ÓÃÕâ¸öhandler£¬¼´ngx_http_proxy_handler¡£  
+    //è®¾ç½®locçš„handlerï¼Œè¿™ä¸ªclcf->handlerä¼šåœ¨ngx_http_update_location_config()é‡Œé¢èµ‹äºˆr->content_handlerï¼Œä»
+    // è€Œåœ¨NGX_HTTP_CONTENT_PHASEé‡Œé¢è°ƒç”¨è¿™ä¸ªhandlerï¼Œå³ngx_http_proxy_handlerã€‚
     clcf->handler = ngx_http_proxy_handler;
 
     if (clcf->name.data[clcf->name.len - 1] == '/') {
@@ -4475,7 +4477,7 @@ ngx_http_proxy_pass(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
     //
     n = ngx_http_script_variables_count(url);
 
-    if (n) {//proxy_pass xxxxÖĞÊÇ·ñ´øÓĞ±äÁ¿£¬Èç¹ûÓĞ±äÁ¿£¬¾Í½âÎö¶ÔÓ¦µÄ±äÁ¿Öµ
+    if (n) {//proxy_pass xxxxä¸­æ˜¯å¦å¸¦æœ‰å˜é‡ï¼Œå¦‚æœæœ‰å˜é‡ï¼Œå°±è§£æå¯¹åº”çš„å˜é‡å€¼
 
         ngx_memzero(&sc, sizeof(ngx_http_script_compile_t));
 
@@ -4498,7 +4500,7 @@ ngx_http_proxy_pass(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
         return NGX_CONF_OK;
     }
 
-    //proxypassºóÃæµÄ²ÎÊı±ØĞëÒÔhttp://»òÕßhttps://¿ªÍ·
+    //proxypassåé¢çš„å‚æ•°å¿…é¡»ä»¥http://æˆ–è€…https://å¼€å¤´
     if (ngx_strncasecmp(url->data, (u_char *) "http://", 7) == 0) {
         add = 7;
         port = 80;
@@ -4523,15 +4525,15 @@ ngx_http_proxy_pass(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
 
     ngx_memzero(&u, sizeof(ngx_url_t));
 
-    u.url.len = url->len - add; //ÉèÖÃurlµÄ³¤¶È£¬³ıÈ¥http://(https://)  
-    u.url.data = url->data + add; //ÉèÖÃurl£¬³ıÈ¥http://(https://)£¬±ÈÈçÔ­À´ÊÇ"http://backend1"£¬ÏÖÔÚ¾ÍÊÇ"backend1"  
-    u.default_port = port; //Ä¬ÈÏport   80http  443htps Ç°Ãæ¸³Öµ
+    u.url.len = url->len - add; //è®¾ç½®urlçš„é•¿åº¦ï¼Œé™¤å»http://(https://)
+    u.url.data = url->data + add; //è®¾ç½®urlï¼Œé™¤å»http://(https://)ï¼Œæ¯”å¦‚åŸæ¥æ˜¯"http://backend1"ï¼Œç°åœ¨å°±æ˜¯"backend1"
+    u.default_port = port; //é»˜è®¤port   80http  443htps å‰é¢èµ‹å€¼
     u.uri_part = 1;
-    u.no_resolve = 1; //²»ÒªresolveÕâ¸öurlµÄÓòÃû  
+    u.no_resolve = 1; //ä¸è¦resolveè¿™ä¸ªurlçš„åŸŸå
 
-    //µ±×öµ¥¸öserverµÄupstream¼ÓÈëµ½upstreamÀïÃæ,ºÍ upstream {}ÀàËÆ£¬¾ÍÏàµ±ÓÚÒ»¸öupstream{}ÅäÖÃ¿é
-    plcf->upstream.upstream = ngx_http_upstream_add(cf, &u, 0); //upstreamÖĞ±£´æµÄÊÇÈ¡ÁËhttp://Í·²¿µÄĞÅÏ¢
-    if (plcf->upstream.upstream == NULL) { 
+    //å½“åšå•ä¸ªserverçš„upstreamåŠ å…¥åˆ°upstreamé‡Œé¢,å’Œ upstream {}ç±»ä¼¼ï¼Œå°±ç›¸å½“äºä¸€ä¸ªupstream{}é…ç½®å—
+    plcf->upstream.upstream = ngx_http_upstream_add(cf, &u, 0); //upstreamä¸­ä¿å­˜çš„æ˜¯å–äº†http://å¤´éƒ¨çš„ä¿¡æ¯
+    if (plcf->upstream.upstream == NULL) {
         return NGX_CONF_ERROR;
     }
 
@@ -4562,56 +4564,56 @@ ngx_http_proxy_pass(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
         plcf->location.len = 0;
     }
 
-    plcf->url = *url; 
-    
+    plcf->url = *url;
+
     return NGX_CONF_OK;
 }
 
 /*
-Óï·¨£ºproxy_redirect [ default|off|redirect replacement ];
-Ä¬ÈÏÖµ£ºproxy_redirect default;
-Ê¹ÓÃ×Ö¶Î£ºhttp, server, location
-Õâ¸öÖ¸ÁîÎª±»´úÀí·şÎñÆ÷Ó¦´ğÖĞ±ØĞë¸Ä±äµÄÓ¦´ğÍ·£º¡±Location¡±ºÍ¡±Refresh¡±ÉèÖÃÖµ¡£
-ÎÒÃÇ¼ÙÉè±»´úÀíµÄ·şÎñÆ÷·µ»ØµÄÓ¦´ğÍ·×Ö¶ÎÎª£ºLocation: http://localhost:8000/two/some/uri/¡£
-Ö¸Áî£º
+è¯­æ³•ï¼šproxy_redirect [ default|off|redirect replacement ];
+é»˜è®¤å€¼ï¼šproxy_redirect default;
+ä½¿ç”¨å­—æ®µï¼šhttp, server, location
+è¿™ä¸ªæŒ‡ä»¤ä¸ºè¢«ä»£ç†æœåŠ¡å™¨åº”ç­”ä¸­å¿…é¡»æ”¹å˜çš„åº”ç­”å¤´ï¼šâ€Locationâ€å’Œâ€Refreshâ€è®¾ç½®å€¼ã€‚
+æˆ‘ä»¬å‡è®¾è¢«ä»£ç†çš„æœåŠ¡å™¨è¿”å›çš„åº”ç­”å¤´å­—æ®µä¸ºï¼šLocation: http://localhost:8000/two/some/uri/ã€‚
+æŒ‡ä»¤ï¼š
 
 
-proxy_redirect http://localhost:8000/two/ http://frontend/one/;»á½«ÆäÖØĞ´Îª£ºLocation: http://frontend/one/some/uri/¡£
-ÔÚÖØĞ´×Ö¶ÎÀïÃæ¿ÉÒÔ²»Ê¹ÓÃ·şÎñÆ÷Ãû£º
+proxy_redirect http://localhost:8000/two/ http://frontend/one/;ä¼šå°†å…¶é‡å†™ä¸ºï¼šLocation: http://frontend/one/some/uri/ã€‚
+åœ¨é‡å†™å­—æ®µé‡Œé¢å¯ä»¥ä¸ä½¿ç”¨æœåŠ¡å™¨åï¼š
 
-proxy_redirect http://localhost:8000/two/ /;ÕâÑù£¬Ä¬ÈÏµÄ·şÎñÆ÷ÃûºÍ¶Ë¿Ú½«±»ÉèÖÃ£¬¶Ë¿ÚÄ¬ÈÏ80¡£
-Ä¬ÈÏµÄÖØĞ´¿ÉÒÔÊ¹ÓÃ²ÎÊıdefault£¬½«Ê¹ÓÃlocationºÍproxy_passµÄÖµ¡£
-ÏÂÃæÁ½¸öÅäÖÃÊÇµÈ¼ÛµÄ£º
+proxy_redirect http://localhost:8000/two/ /;è¿™æ ·ï¼Œé»˜è®¤çš„æœåŠ¡å™¨åå’Œç«¯å£å°†è¢«è®¾ç½®ï¼Œç«¯å£é»˜è®¤80ã€‚
+é»˜è®¤çš„é‡å†™å¯ä»¥ä½¿ç”¨å‚æ•°defaultï¼Œå°†ä½¿ç”¨locationå’Œproxy_passçš„å€¼ã€‚
+ä¸‹é¢ä¸¤ä¸ªé…ç½®æ˜¯ç­‰ä»·çš„ï¼š
 
 
 location /one/ {
   proxy_pass       http://upstream:port/two/;
   proxy_redirect   default;
 }
- 
+
 location /one/ {
   proxy_pass       http://upstream:port/two/;
   proxy_redirect   http://upstream:port/two/   /one/;
-}Í¬Ñù£¬ÔÚÖØĞ´×Ö¶ÎÖĞ¿ÉÒÔÊ¹ÓÃ±äÁ¿£º
+}åŒæ ·ï¼Œåœ¨é‡å†™å­—æ®µä¸­å¯ä»¥ä½¿ç”¨å˜é‡ï¼š
 
 
-proxy_redirect   http://localhost:8000/    http://$host:$server_port/;Õâ¸öÖ¸Áî¿ÉÒÔÖØ¸´Ê¹ÓÃ£º
+proxy_redirect   http://localhost:8000/    http://$host:$server_port/;è¿™ä¸ªæŒ‡ä»¤å¯ä»¥é‡å¤ä½¿ç”¨ï¼š
 
 
 proxy_redirect   default;
 proxy_redirect   http://localhost:8000/    /;
-proxy_redirect   http://www.example.com/   /;²ÎÊıoffÔÚ±¾¼¶ÖĞ½ûÓÃËùÓĞµÄproxy_redirectÖ¸Áî£º
+proxy_redirect   http://www.example.com/   /;å‚æ•°offåœ¨æœ¬çº§ä¸­ç¦ç”¨æ‰€æœ‰çš„proxy_redirectæŒ‡ä»¤ï¼š
 
 
 proxy_redirect   off;
 proxy_redirect   default;
 proxy_redirect   http://localhost:8000/    /;
-proxy_redirect   http://www.example.com/   /;Õâ¸öÖ¸Áî¿ÉÒÔºÜÈİÒ×µÄ½«±»´úÀí·şÎñÆ÷µÄ·şÎñÆ÷ÃûÖØĞ´Îª´úÀí·şÎñÆ÷µÄ·şÎñÆ÷Ãû£º
+proxy_redirect   http://www.example.com/   /;è¿™ä¸ªæŒ‡ä»¤å¯ä»¥å¾ˆå®¹æ˜“çš„å°†è¢«ä»£ç†æœåŠ¡å™¨çš„æœåŠ¡å™¨åé‡å†™ä¸ºä»£ç†æœåŠ¡å™¨çš„æœåŠ¡å™¨åï¼š
 
 proxy_redirect   /   /;
-*/ 
+*/
 
-//ngx_http_proxy_redirectºÍngx_http_proxy_rewrite_redirectÅäºÏÔÄ¶Á£¬ËûÃÇÒ»ÆğÈ·¶¨ÖØ¶¨ÏòºóµÄµØÖ·
+//ngx_http_proxy_redirectå’Œngx_http_proxy_rewrite_redirecté…åˆé˜…è¯»ï¼Œä»–ä»¬ä¸€èµ·ç¡®å®šé‡å®šå‘åçš„åœ°å€
 static char *
 ngx_http_proxy_redirect(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
 {
@@ -4666,7 +4668,7 @@ ngx_http_proxy_redirect(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
     }
 
     if (ngx_strcmp(value[1].data, "default") == 0) {
-        if (plcf->proxy_lengths) { //default£¬Ôòproxy_pass²»ÄÜĞ¯´ø²ÎÊı
+        if (plcf->proxy_lengths) { //defaultï¼Œåˆ™proxy_passä¸èƒ½æºå¸¦å‚æ•°
             ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                                "\"proxy_redirect default\" cannot be used "
                                "with \"proxy_pass\" directive with variables");
@@ -5022,7 +5024,7 @@ ngx_http_proxy_store(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
 
 
 #if (NGX_HTTP_CACHE)
-//proxy_cache abc±ØĞëºÍproxy_cache_path xxx keys_zone=abc:10m;Ò»Æğ£¬·ñÔòÔÚngx_http_proxy_merge_loc_conf»áÊ§°Ü£¬ÒòÎªÃ»ÓĞÎª¸Ãabc´´½¨ngx_http_file_cache_t
+//proxy_cache abcå¿…é¡»å’Œproxy_cache_path xxx keys_zone=abc:10m;ä¸€èµ·ï¼Œå¦åˆ™åœ¨ngx_http_proxy_merge_loc_confä¼šå¤±è´¥ï¼Œå› ä¸ºæ²¡æœ‰ä¸ºè¯¥abcåˆ›å»ºngx_http_file_cache_t
 static char *
 ngx_http_proxy_cache(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
 {
@@ -5055,12 +5057,12 @@ ngx_http_proxy_cache(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
     ccv.value = &value[1];
     ccv.complex_value = &cv;
 
-    //µ÷ÓÃÕıÔò±í´ïÊ½¿â½âÎöproxy_cache xxx$ss ÖĞµÄ×Ö·û´®£¬½âÎö³öµÄ±äÁ¿lengthºÍvalue´æÔÚÓëcvÖĞ
+    //è°ƒç”¨æ­£åˆ™è¡¨è¾¾å¼åº“è§£æproxy_cache xxx$ss ä¸­çš„å­—ç¬¦ä¸²ï¼Œè§£æå‡ºçš„å˜é‡lengthå’Œvalueå­˜åœ¨ä¸cvä¸­
     if (ngx_http_compile_complex_value(&ccv) != NGX_OK) {
         return NGX_CONF_ERROR;
     }
 
-    if (cv.lengths != NULL) { //ËµÃ÷proxy_cacheÅäÖÃÖĞ´æÔÚ±äÁ¿
+    if (cv.lengths != NULL) { //è¯´æ˜proxy_cacheé…ç½®ä¸­å­˜åœ¨å˜é‡
 
         plcf->upstream.cache_value = ngx_palloc(cf->pool,
                                              sizeof(ngx_http_complex_value_t));
@@ -5252,8 +5254,8 @@ ngx_http_proxy_set_ssl(ngx_conf_t *cf, ngx_http_proxy_loc_conf_t *plcf)
 
 static void
 ngx_http_proxy_set_vars(ngx_url_t *u, ngx_http_proxy_vars_t *v)
-{   //AF_UNIX´ú±íÓòÌ×½Ó×Ö
-    if (u->family != AF_UNIX) {//ngx_http_upstream_add->ngx_parse_inet_urlÀïÃæÉèÖÃÎªAF_INET 
+{   //AF_UNIXä»£è¡¨åŸŸå¥—æ¥å­—
+    if (u->family != AF_UNIX) {//ngx_http_upstream_add->ngx_parse_inet_urlé‡Œé¢è®¾ç½®ä¸ºAF_INET
 
         if (u->no_port || u->port == u->default_port) {
 
@@ -5263,7 +5265,7 @@ ngx_http_proxy_set_vars(ngx_url_t *u, ngx_http_proxy_vars_t *v)
                 ngx_str_set(&v->port, "80");
 
             } else {
-                ngx_str_set(&v->port, "443"); //https¶Ë¿Ú443
+                ngx_str_set(&v->port, "443"); //httpsç«¯å£443
             }
 
         } else {
@@ -5272,11 +5274,11 @@ ngx_http_proxy_set_vars(ngx_url_t *u, ngx_http_proxy_vars_t *v)
             v->port = u->port_text;
         }
 
-        v->key_start.len += v->host_header.len;  
+        v->key_start.len += v->host_header.len;
 
         /*
-            proxy_pass  http://10.10.0.103:8080/tttxx; 
-            printf("yang test ....... no_port:%u, port:%u, default_port:%u, host:%s, key:%s\n", 
+            proxy_pass  http://10.10.0.103:8080/tttxx;
+            printf("yang test ....... no_port:%u, port:%u, default_port:%u, host:%s, key:%s\n",
                 u->no_port, u->port, u->default_port, u->host.data, v->key_start.data);
             yang test ....... no_port:0, port:8080, default_port:80, host:10.10.0.103:8080/tttxx, key:http://10.10.0.103:8080/tttxx
          */
