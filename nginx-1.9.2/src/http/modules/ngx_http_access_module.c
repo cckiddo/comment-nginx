@@ -66,7 +66,7 @@ static ngx_int_t ngx_http_access_init(ngx_conf_t *cf);
 
 
 /*
-HttpAccessÄ£¿é¿ÉÒÔºÍerror_pageÖ¸Áî´îÅäÊ¹ÓÃÀ´ÖØ¶¨ÏòÒ»¸öÎ´¾­ÑéÖ¤µÄ·ÃÎÊÇëÇó¡£ 
+HttpAccessæ¨¡å—å¯ä»¥å’Œerror_pageæŒ‡ä»¤æ­é…ä½¿ç”¨æ¥é‡å®šå‘ä¸€ä¸ªæœªç»éªŒè¯çš„è®¿é—®è¯·æ±‚ã€‚ 
 error_page  403  http://example.com/forbidden.html;
 location / {
   deny    192.168.1.1;
@@ -76,25 +76,25 @@ location / {
 }
 
 
-Õâ¸öÄ£¿éÌá¹©¼òµ¥µÄ»ùÓÚÖ÷»úµÄ·ÃÎÊ¿ØÖÆ¡£
-ngx_http_access_moduleÕâ¸öÄ£¿é¿ÉÒÔÏêÏ¸µÄ¼ì²é¿Í»§¶ËIP£¬²¢ÇÒ°´Ë³ĞòÖ´ĞĞµÚÒ»ÌõÆ¥ÅäµÄ¹æÔò¡£
-ÈçÏÂÀı£º
+è¿™ä¸ªæ¨¡å—æä¾›ç®€å•çš„åŸºäºä¸»æœºçš„è®¿é—®æ§åˆ¶ã€‚
+ngx_http_access_moduleè¿™ä¸ªæ¨¡å—å¯ä»¥è¯¦ç»†çš„æ£€æŸ¥å®¢æˆ·ç«¯IPï¼Œå¹¶ä¸”æŒ‰é¡ºåºæ‰§è¡Œç¬¬ä¸€æ¡åŒ¹é…çš„è§„åˆ™ã€‚
+å¦‚ä¸‹ä¾‹ï¼š
 
 location / {
   deny    192.168.1.1;
   allow   192.168.1.0/24;
   allow   10.1.1.0/16;
   deny    all;
-}ÉÏÃæµÄÀı×ÓÖĞ½öÔÊĞí192.168.1.0/24ºÍ10.1.1.0/16ÍøÂç¶Î·ÃÎÊ£¬µ«192.168.1.1ÊÇ¸öÀıÍâ¡£
-Èç¹ûÒªÊµÊ©ºÜ¶à¸´ÔÓµÄ¹æÔò£¬ÄÇÃ´×îºÃÊ¹ÓÃGeoIP moduleÄ£¿é¡£
+}ä¸Šé¢çš„ä¾‹å­ä¸­ä»…å…è®¸192.168.1.0/24å’Œ10.1.1.0/16ç½‘ç»œæ®µè®¿é—®ï¼Œä½†192.168.1.1æ˜¯ä¸ªä¾‹å¤–ã€‚
+å¦‚æœè¦å®æ–½å¾ˆå¤šå¤æ‚çš„è§„åˆ™ï¼Œé‚£ä¹ˆæœ€å¥½ä½¿ç”¨GeoIP moduleæ¨¡å—ã€‚
 */
 static ngx_command_t  ngx_http_access_commands[] = {
     /*
      allow 
-     Óï·¨£ºallow [ address | CIDR | all ] 
-     Ä¬ÈÏÖµ£ºno 
-     Ê¹ÓÃ×Ö¶Î£ºhttp, server, location, limit_except 
-     Ö¸ÁîÖ¸¶¨ÁËÔÊĞí·ÃÎÊµÄIP»òÍøÂç¶Î¡£
+     è¯­æ³•ï¼šallow [ address | CIDR | all ] 
+     é»˜è®¤å€¼ï¼šno 
+     ä½¿ç”¨å­—æ®µï¼šhttp, server, location, limit_except 
+     æŒ‡ä»¤æŒ‡å®šäº†å…è®¸è®¿é—®çš„IPæˆ–ç½‘ç»œæ®µã€‚
      */
     { ngx_string("allow"), 
       NGX_HTTP_MAIN_CONF|NGX_HTTP_SRV_CONF|NGX_HTTP_LOC_CONF|NGX_HTTP_LMT_CONF
@@ -105,10 +105,10 @@ static ngx_command_t  ngx_http_access_commands[] = {
       NULL },
 
     /*
-    Óï·¨£ºdeny [ address | CIDR | all ] 
-Ä¬ÈÏÖµ£ºno 
-Ê¹ÓÃ×Ö¶Î£ºhttp, server, location, limit_except 
-Ö¸ÁîÖ¸¶¨ÁË¾Ü¾ø·ÃÎÊµÄIP»òÍøÂç¶Î¡£
+    è¯­æ³•ï¼šdeny [ address | CIDR | all ] 
+é»˜è®¤å€¼ï¼šno 
+ä½¿ç”¨å­—æ®µï¼šhttp, server, location, limit_except 
+æŒ‡ä»¤æŒ‡å®šäº†æ‹’ç»è®¿é—®çš„IPæˆ–ç½‘ç»œæ®µã€‚
      */
     { ngx_string("deny"),
       NGX_HTTP_MAIN_CONF|NGX_HTTP_SRV_CONF|NGX_HTTP_LOC_CONF|NGX_HTTP_LMT_CONF
@@ -137,7 +137,7 @@ static ngx_http_module_t  ngx_http_access_module_ctx = {
     ngx_http_access_merge_loc_conf         /* merge location configuration */
 };
 
-//·ÃÎÊÈ¨ÏŞ¿ØÖÆÏà¹ØÄ£¿é:nginx½øĞĞ·ÃÎÊÏŞÖÆµÄÓĞngx_http_access_moduleÄ£¿éºÍ ngx_http_auth_basic_moduleÄ£¿é   ngx_http_secure_link_module
+//è®¿é—®æƒé™æ§åˆ¶ç›¸å…³æ¨¡å—:nginxè¿›è¡Œè®¿é—®é™åˆ¶çš„æœ‰ngx_http_access_moduleæ¨¡å—å’Œ ngx_http_auth_basic_moduleæ¨¡å—   ngx_http_secure_link_module
 ngx_module_t  ngx_http_access_module = {
     NGX_MODULE_V1,
     &ngx_http_access_module_ctx,           /* module context */

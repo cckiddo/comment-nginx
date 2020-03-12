@@ -25,22 +25,22 @@ typedef struct {
     pcre_extra  *extra;
 } ngx_regex_t;
 
-//ngx_http_rewriteÖĞ£¬rewrite aaa bbb break;ÅäÖÃÖĞ£¬aaa½âÎöÊ¹ÓÃngx_regex_compile_t£¬bbb½âÎöÊ¹ÓÃngx_http_script_compile_t
-//¸³Öµ¼ûngx_regex_compile
-typedef struct { //Ïà¹Ø³ÉÔ±ºÍngx_http_regex_tÖĞµÄÒ»Ñù
-    ngx_str_t     pattern; //pcre_compile»ñÈ¡µ½µÄ
+//ngx_http_rewriteä¸­ï¼Œrewrite aaa bbb break;é…ç½®ä¸­ï¼Œaaaè§£æä½¿ç”¨ngx_regex_compile_tï¼Œbbbè§£æä½¿ç”¨ngx_http_script_compile_t
+//èµ‹å€¼è§ngx_regex_compile
+typedef struct { //ç›¸å…³æˆå‘˜å’Œngx_http_regex_tä¸­çš„ä¸€æ ·
+    ngx_str_t     pattern; //pcre_compileè·å–åˆ°çš„
     ngx_pool_t   *pool;
     ngx_int_t     options;
 
     ngx_regex_t  *regex;
     /*
-    ÀıÈçrewrite   ^(?<name1>/download/.*)/media/(?<name2>.*)/(abc)\..*$     $name1/mp3/$name2.mp3  break;
-    prce±àÒë^(?<name1>/download/.*)/media/(?<name2>.*)/(abc)\..*$µÄÊ±ºòµÄ½á¹ûÊÇcapturesÎª3(1¸ö·ÇÃüÃû×ÓÄ£Ê½±äÁ¿ºÍ2¸öÃüÃû×ÓÄ£Ê½±äÁ¿)£¬named_capturesÎª2
+    ä¾‹å¦‚rewrite   ^(?<name1>/download/.*)/media/(?<name2>.*)/(abc)\..*$     $name1/mp3/$name2.mp3  break;
+    prceç¼–è¯‘^(?<name1>/download/.*)/media/(?<name2>.*)/(abc)\..*$çš„æ—¶å€™çš„ç»“æœæ˜¯capturesä¸º3(1ä¸ªéå‘½åå­æ¨¡å¼å˜é‡å’Œ2ä¸ªå‘½åå­æ¨¡å¼å˜é‡)ï¼Œnamed_capturesä¸º2
      */
-    int           captures; //µÃµ½µÄÊÇËùÓĞ×ÓÄ£Ê½µÄ¸öÊı,°üº¬ÃüÃû×ÓÄ£Ê½(?<name>exp) ºÍ·ÇÃüÃû×ÓÄ£Ê½(exp)£¬¸³Öµ¼ûngx_regex_compile
-    int           named_captures; //µÃµ½µÄÊÇÃüÃû×ÓÄ£Ê½µÄ¸öÊı,²»°üÀ¨·ÇÃüÃû×ÓÄ£Ê½µÄ¸öÊı;¸³Öµ¼ûngx_regex_compile
+    int           captures; //å¾—åˆ°çš„æ˜¯æ‰€æœ‰å­æ¨¡å¼çš„ä¸ªæ•°,åŒ…å«å‘½åå­æ¨¡å¼(?<name>exp) å’Œéå‘½åå­æ¨¡å¼(exp)ï¼Œèµ‹å€¼è§ngx_regex_compile
+    int           named_captures; //å¾—åˆ°çš„æ˜¯å‘½åå­æ¨¡å¼çš„ä¸ªæ•°,ä¸åŒ…æ‹¬éå‘½åå­æ¨¡å¼çš„ä¸ªæ•°;èµ‹å€¼è§ngx_regex_compile
 
-    /* ÕâÁ½¸öÊÇÔËÀ´´æÈ¡Ãû³ÆÄ£Ê½×Ö·û´®ÓÃµÄ */    
+    /* è¿™ä¸¤ä¸ªæ˜¯è¿æ¥å­˜å–åç§°æ¨¡å¼å­—ç¬¦ä¸²ç”¨çš„ */    
     int           name_size;
     u_char       *names;
 
@@ -49,8 +49,8 @@ typedef struct { //Ïà¹Ø³ÉÔ±ºÍngx_http_regex_tÖĞµÄÒ»Ñù
 
 
 typedef struct {
-    ngx_regex_t  *regex; //ÕıÔò±í´ïÊ½¾­¹ıngx_regex_compile×ª»»ºóµÄregexĞÅÏ¢
-    u_char       *name; //ÕıÔò±í´ïÊ½Ô­×Ö·û´®
+    ngx_regex_t  *regex; //æ­£åˆ™è¡¨è¾¾å¼ç»è¿‡ngx_regex_compileè½¬æ¢åçš„regexä¿¡æ¯
+    u_char       *name; //æ­£åˆ™è¡¨è¾¾å¼åŸå­—ç¬¦ä¸²
 } ngx_regex_elt_t;
 
 
@@ -58,10 +58,10 @@ void ngx_regex_init(void);
 ngx_int_t ngx_regex_compile(ngx_regex_compile_t *rc);
 
 /*
-¸ù¾İÕıÔò±í´ïÊ½µ½Ö¸¶¨µÄ×Ö·û´®ÖĞ½øĞĞ²éÕÒºÍÆ¥Åä,²¢Êä³öÆ¥ÅäµÄ½á¹û.
-Ê¹ÓÃ±àÒëºÃµÄÄ£Ê½½øĞĞÆ¥Åä£¬²ÉÓÃÓëPerlÏàËÆµÄËã·¨£¬·µ»ØÆ¥Åä´®µÄÆ«ÒÆÎ»ÖÃ¡£¡£
+æ ¹æ®æ­£åˆ™è¡¨è¾¾å¼åˆ°æŒ‡å®šçš„å­—ç¬¦ä¸²ä¸­è¿›è¡ŒæŸ¥æ‰¾å’ŒåŒ¹é…,å¹¶è¾“å‡ºåŒ¹é…çš„ç»“æœ.
+ä½¿ç”¨ç¼–è¯‘å¥½çš„æ¨¡å¼è¿›è¡ŒåŒ¹é…ï¼Œé‡‡ç”¨ä¸Perlç›¸ä¼¼çš„ç®—æ³•ï¼Œè¿”å›åŒ¹é…ä¸²çš„åç§»ä½ç½®ã€‚ã€‚
 
-ÀıÈçÕıÔò±í´ïÊ½Óï¾äre.name= ^(/download/.*)/media/(.*)/tt/(.*)$£¬  s=/download/aa/media/bdb/tt/ad,ÔòËûÃÇ»áÆ¥Åä£¬Í¬Ê±Æ¥ÅäµÄ±äÁ¿ÊıÓĞ3¸ö£¬Ôò·µ»ØÖµÎª3+1=4,Èç¹û²»Æ¥ÅäÔò·µ»Ø-1
+ä¾‹å¦‚æ­£åˆ™è¡¨è¾¾å¼è¯­å¥re.name= ^(/download/.*)/media/(.*)/tt/(.*)$ï¼Œ  s=/download/aa/media/bdb/tt/ad,åˆ™ä»–ä»¬ä¼šåŒ¹é…ï¼ŒåŒæ—¶åŒ¹é…çš„å˜é‡æ•°æœ‰3ä¸ªï¼Œåˆ™è¿”å›å€¼ä¸º3+1=4,å¦‚æœä¸åŒ¹é…åˆ™è¿”å›-1
 */
 #define ngx_regex_exec(re, s, captures, size)                                \
     pcre_exec(re->code, re->extra, (const char *) (s)->data, (s)->len, 0, 0, \

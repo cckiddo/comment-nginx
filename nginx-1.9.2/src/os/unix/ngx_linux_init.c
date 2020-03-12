@@ -16,17 +16,17 @@ u_char  ngx_linux_kern_osrelease[50];
 #define ngx_recv_chain       ngx_io.recv_chain
 #define ngx_udp_recv         ngx_io.udp_recv
 #define ngx_send             ngx_io.send
-#define ngx_send_chain       ngx_io.send_chain //epoll·½Ê½ngx_io = ngx_os_io;
+#define ngx_send_chain       ngx_io.send_chain //epollæ–¹å¼ngx_io = ngx_os_io;
 */
-//Èç¹ûÊÇlinux²¢ÇÒ±àÒë¹ı³ÌÊ¹ÄÜÁËsendfileÕâÀïÃængx_os_specific_init¸³Öµngx_os_io = ngx_linux_io;
+//å¦‚æœæ˜¯linuxå¹¶ä¸”ç¼–è¯‘è¿‡ç¨‹ä½¿èƒ½äº†sendfileè¿™é‡Œé¢ngx_os_specific_initèµ‹å€¼ngx_os_io = ngx_linux_io;
 static ngx_os_io_t ngx_linux_io = {
     ngx_unix_recv, //ngx_recv
-    ngx_readv_chain, //ngx_recv_chain   ->recv_chain(Ïà¹ØÖ¸ÕëµÄµØ·½µ÷ÓÃ
+    ngx_readv_chain, //ngx_recv_chain   ->recv_chain(ç›¸å…³æŒ‡é’ˆçš„åœ°æ–¹è°ƒç”¨
     ngx_udp_unix_recv, //ngx_udp_recv
     ngx_unix_send, //ngx_send
 #if (NGX_HAVE_SENDFILE)
     ngx_linux_sendfile_chain, //ngx_send_chain
-    NGX_IO_SENDFILE  //./configureÅäÖÃÁËsendfile£¬±àÒëµÄÊ±ºò¼ÓÉÏsendfileÑ¡Ïî,£¬¾Í»áÔÚngx_linux_io°ÑflagÖÃÎª¸ÃÖµ
+    NGX_IO_SENDFILE  //./configureé…ç½®äº†sendfileï¼Œç¼–è¯‘çš„æ—¶å€™åŠ ä¸Šsendfileé€‰é¡¹,ï¼Œå°±ä¼šåœ¨ngx_linux_ioæŠŠflagç½®ä¸ºè¯¥å€¼
 #else
     ngx_writev_chain, //ngx_send_chain
     0

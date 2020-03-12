@@ -11,17 +11,17 @@
 #include <nginx.h>
 #include <ngx_http_v2_module.h>
 
-//ÕâÀïµÄngx_http_v2_integer_octets ngx_http_v2_integer_octets indexË÷Òý±àÂë¹ý³ÌºÍngx_http_v2_state_header_blockÖÐµÄ½âÂë¹ý³Ì¶ÔÓ¦
-//ngx_http_v2_integer_octets ngx_http_v2_indexed½øÐÐÕûÊý±àÂë£¬ngx_http_v2_literal_size½øÐÐ×Ö·û´®±àÂë
+//è¿™é‡Œçš„ngx_http_v2_integer_octets ngx_http_v2_integer_octets indexç´¢å¼•ç¼–ç è¿‡ç¨‹å’Œngx_http_v2_state_header_blockä¸­çš„è§£ç è¿‡ç¨‹å¯¹åº”
+//ngx_http_v2_integer_octets ngx_http_v2_indexedè¿›è¡Œæ•´æ•°ç¼–ç ï¼Œngx_http_v2_literal_sizeè¿›è¡Œå­—ç¬¦ä¸²ç¼–ç 
 #define ngx_http_v2_integer_octets(v)  (((v) + 127) / 128)
 #define ngx_http_v2_literal_size(h)                                           \
     (ngx_http_v2_integer_octets(sizeof(h) - 1) + sizeof(h) - 1)
 
-/* 128Ò²¾ÍÊÇÎ»²Ù×÷1000 0000,Ò²¾ÍÊÇ¸ÃindexÔÚË÷Òý±íÖÐ£¬Èç¹ûiÎª1±íÊ¾Ë÷Òý±íµÄ0£¬i=2¶ÔÓ¦Ë÷Òý±íµÄ1£¬i=3¶ÔÓ¦Ë÷Òý±íµÄ2£¬i=4¶ÔÓ¦Ë÷Òý±íµÄ3 */
+/* 128ä¹Ÿå°±æ˜¯ä½æ“ä½œ1000 0000,ä¹Ÿå°±æ˜¯è¯¥indexåœ¨ç´¢å¼•è¡¨ä¸­ï¼Œå¦‚æžœiä¸º1è¡¨ç¤ºç´¢å¼•è¡¨çš„0ï¼Œi=2å¯¹åº”ç´¢å¼•è¡¨çš„1ï¼Œi=3å¯¹åº”ç´¢å¼•è¡¨çš„2ï¼Œi=4å¯¹åº”ç´¢å¼•è¡¨çš„3 */
 #define ngx_http_v2_indexed(i)      (128 + (i))
 #define ngx_http_v2_inc_indexed(i)  (64 + (i))
 
-/* ºÍngx_http_v2_static_tableÊý×éÏÂ±í¶ÔÓ¦£¬Ïà²î1 */
+/* å’Œngx_http_v2_static_tableæ•°ç»„ä¸‹è¡¨å¯¹åº”ï¼Œç›¸å·®1 */
 #define NGX_HTTP_V2_STATUS_INDEX          8
 #define NGX_HTTP_V2_STATUS_200_INDEX      8
 #define NGX_HTTP_V2_STATUS_204_INDEX      9
@@ -131,9 +131,9 @@ static ngx_http_output_header_filter_pt  ngx_http_next_header_filter;
 2017/03/18 17:01:45[               ngx_http_v2_header_filter,   143]  [debug] 30470#30470: *3 http2 header filter
 */
 
-/* NGINXÔÚngx_http_v2_state_header_block¶Ô½ÓÊÕµ½µÄÍ·²¿Ö¡½øÐÐ½âÂë½â°ü£¬ÔÚngx_http_v2_header_filterÖÐ¶ÔÍ·²¿Ö¡½øÐÐ±àÂë×é°ü */
-/* NGINX½ÓÊÕ¿Í»§¶ËµÄheaderÖ¡ÔÚº¯Êýngx_http_v2_header_filter£¬·¢ËÍÏìÓ¦µÄheaderÖ¡ÔÚº¯Êýngx_http_v2_header_filter */
-/* ½ÓÊÕÍêºó¶ËÏìÓ¦µÄÍ·²¿ÐÅÏ¢ºó£¬½âÎö³É¹¦ºó·¢ËÍÕâÐ©Í·²¿ÐÅÏ¢µ½¿Í»§¶Ë£¬ÐèÒª×ß¸Ãheader filterÄ£¿é */
+/* NGINXåœ¨ngx_http_v2_state_header_blockå¯¹æŽ¥æ”¶åˆ°çš„å¤´éƒ¨å¸§è¿›è¡Œè§£ç è§£åŒ…ï¼Œåœ¨ngx_http_v2_header_filterä¸­å¯¹å¤´éƒ¨å¸§è¿›è¡Œç¼–ç ç»„åŒ… */
+/* NGINXæŽ¥æ”¶å®¢æˆ·ç«¯çš„headerå¸§åœ¨å‡½æ•°ngx_http_v2_header_filterï¼Œå‘é€å“åº”çš„headerå¸§åœ¨å‡½æ•°ngx_http_v2_header_filter */
+/* æŽ¥æ”¶å®ŒåŽç«¯å“åº”çš„å¤´éƒ¨ä¿¡æ¯åŽï¼Œè§£æžæˆåŠŸåŽå‘é€è¿™äº›å¤´éƒ¨ä¿¡æ¯åˆ°å®¢æˆ·ç«¯ï¼Œéœ€è¦èµ°è¯¥header filteræ¨¡å— */
 static ngx_int_t
 ngx_http_v2_header_filter(ngx_http_request_t *r)
 {
@@ -158,7 +158,7 @@ ngx_http_v2_header_filter(ngx_http_request_t *r)
     u_char                     addr[NGX_SOCKADDR_STRLEN];
 
 
-    if (!r->stream) { /* Èç¹ûÃ»ÓÐ´´½¨¶ÔÓ¦µÄstream£¬ÔòÖ±½ÓÌøµ½ÏÂÒ»¸öfilter */
+    if (!r->stream) { /* å¦‚æžœæ²¡æœ‰åˆ›å»ºå¯¹åº”çš„streamï¼Œåˆ™ç›´æŽ¥è·³åˆ°ä¸‹ä¸€ä¸ªfilter */
         return ngx_http_next_header_filter(r);
     }
 
@@ -231,17 +231,17 @@ ngx_http_v2_header_filter(ngx_http_request_t *r)
         }
     }
 
-    /* NGINXÔÚngx_http_v2_state_header_block¶Ô½ÓÊÕµ½µÄÍ·²¿Ö¡½øÐÐ½âÂë½â°ü£¬ÔÚngx_http_v2_header_filterÖÐ¶ÔÍ·²¿Ö¡½øÐÐ±àÂë×é°ü
-       ¾²Ì¬Ó³Éä±íÔÚngx_http_v2_static_table
+    /* NGINXåœ¨ngx_http_v2_state_header_blockå¯¹æŽ¥æ”¶åˆ°çš„å¤´éƒ¨å¸§è¿›è¡Œè§£ç è§£åŒ…ï¼Œåœ¨ngx_http_v2_header_filterä¸­å¯¹å¤´éƒ¨å¸§è¿›è¡Œç¼–ç ç»„åŒ…
+       é™æ€æ˜ å°„è¡¨åœ¨ngx_http_v2_static_table
     */
 
-    /* Í·²¿9×Ö½Ú + statusÏìÓ¦³¤¶È(1×Ö½ÚÎªÊ²Ã´¿ÉÒÔ±íÊ¾statusÏìÓ¦Âë£¬ÒòÎªÒ»¸ö×Ö½Ú¾Í¿ÉÒÔ±íÊ¾¾²Ì¬±íµÄÄÇ¸ö³ÉÔ±,¼ûngx_http_v2_static_table) */
+    /* å¤´éƒ¨9å­—èŠ‚ + statuså“åº”é•¿åº¦(1å­—èŠ‚ä¸ºä»€ä¹ˆå¯ä»¥è¡¨ç¤ºstatuså“åº”ç ï¼Œå› ä¸ºä¸€ä¸ªå­—èŠ‚å°±å¯ä»¥è¡¨ç¤ºé™æ€è¡¨çš„é‚£ä¸ªæˆå‘˜,è§ngx_http_v2_static_table) */
     len = NGX_HTTP_V2_FRAME_HEADER_SIZE
           + (status ? 1 : 1 + ngx_http_v2_literal_size("418"));
 
     clcf = ngx_http_get_module_loc_conf(r, ngx_http_core_module);
 
-    //¶Ôserver:½øÐÐ±àÂë
+    //å¯¹server:è¿›è¡Œç¼–ç 
     if (r->headers_out.server == NULL) {
         len += 1 + clcf->server_tokens ? ngx_http_v2_literal_size(NGINX_VER)
                                        : ngx_http_v2_literal_size("nginx");
@@ -382,7 +382,7 @@ ngx_http_v2_header_filter(ngx_http_request_t *r)
     part = &r->headers_out.headers.part;
     header = part->elts;
 
-    /* header_outÊý×éÁÐ±íÖÐµÄËùÓÐNAME:VALUE³¤¶È¼Ó½øÀ´ */
+    /* header_outæ•°ç»„åˆ—è¡¨ä¸­çš„æ‰€æœ‰NAME:VALUEé•¿åº¦åŠ è¿›æ¥ */
     for (i = 0; /* void */; i++) {
 
         if (i >= part->nelts) {
@@ -419,7 +419,7 @@ ngx_http_v2_header_filter(ngx_http_request_t *r)
 
     stream = r->stream;
 
-    /* Èç¹ûÕû¸öÍ·²¿Ö¡ÄÚÈÝ³¬¹ýÁË×î´óframe_size´óÐ¡£¬Ôò¿ÉÄÜÐèÒª²ð·Öµ½¶à¸öÖ¡ */
+    /* å¦‚æžœæ•´ä¸ªå¤´éƒ¨å¸§å†…å®¹è¶…è¿‡äº†æœ€å¤§frame_sizeå¤§å°ï¼Œåˆ™å¯èƒ½éœ€è¦æ‹†åˆ†åˆ°å¤šä¸ªå¸§ */
     len += NGX_HTTP_V2_FRAME_HEADER_SIZE
            * (len / stream->connection->frame_size);
 
@@ -621,7 +621,7 @@ ngx_http_v2_header_filter(ngx_http_request_t *r)
     cl->buf = b;
     cl->next = NULL;
 
-    /* Õë¶ÔÇ°ÃæµÄheaderÖ¡·â°ü£¬×éÒ»¸öframe½á¹¹£¬¹Òµ½h2c->last_out¶ÓÁÐ£¬Í¨¹ýngx_http_v2_filter_send´¥·¢·¢ËÍ³öÈ¥ */
+    /* é’ˆå¯¹å‰é¢çš„headerå¸§å°åŒ…ï¼Œç»„ä¸€ä¸ªframeç»“æž„ï¼ŒæŒ‚åˆ°h2c->last_outé˜Ÿåˆ—ï¼Œé€šè¿‡ngx_http_v2_filter_sendè§¦å‘å‘é€å‡ºåŽ» */
     frame = ngx_palloc(r->pool, sizeof(ngx_http_v2_out_frame_t));
     if (frame == NULL) {
         return NGX_ERROR;
@@ -629,7 +629,7 @@ ngx_http_v2_header_filter(ngx_http_request_t *r)
 
     frame->first = cl;
     frame->last = cl;
-    //¸ÃframeÉÏ¶ÔÓ¦µÄÊý¾Ý·¢ËÍÍê±Ïºó£¬»áµ÷ÓÃngx_http_v2_headers_frame_handler
+    //è¯¥frameä¸Šå¯¹åº”çš„æ•°æ®å‘é€å®Œæ¯•åŽï¼Œä¼šè°ƒç”¨ngx_http_v2_headers_frame_handler
     frame->handler = ngx_http_v2_headers_frame_handler;
     frame->stream = stream;
     frame->length = b->last - b->pos - NGX_HTTP_V2_FRAME_HEADER_SIZE;
@@ -653,8 +653,8 @@ ngx_http_v2_header_filter(ngx_http_request_t *r)
 
     stream->queued = 1;
 
-    //°Ñngx_http_v2_send_chain.send_chain=ngx_http_v2_header_filter,ºóÃæµÄÊý¾ÝÖ¡¾ÍÍ¨¹ý¸Ãº¯Êý·¢ËÍ£¬
-    //ÔÚ¶ÁÈ¡µ½ºó¶ËÊý¾Ýºó¿ªÊ¼×ßout filterÁ÷³Ì£¬È»ºóµ÷ÓÃngx_http_output_filter£¬×îÖÕÖ´ÐÐ¸Ãngx_http_v2_send_chain
+    //æŠŠngx_http_v2_send_chain.send_chain=ngx_http_v2_header_filter,åŽé¢çš„æ•°æ®å¸§å°±é€šè¿‡è¯¥å‡½æ•°å‘é€ï¼Œ
+    //åœ¨è¯»å–åˆ°åŽç«¯æ•°æ®åŽå¼€å§‹èµ°out filteræµç¨‹ï¼Œç„¶åŽè°ƒç”¨ngx_http_output_filterï¼Œæœ€ç»ˆæ‰§è¡Œè¯¥ngx_http_v2_send_chain
     fc->send_chain = ngx_http_v2_send_chain;
     fc->need_last_buf = 1;
 
@@ -721,21 +721,21 @@ ngx_http_v2_write_continuation_head(u_char *pos, size_t length, ngx_uint_t sid,
 }
 
 /*
-¿Í»§¶ËÒ»´ÎuriÇëÇó·¢ËÍ¹ýÀ´headerÖ¡ºó£¬nginxÓ¦´ð¸ø¿Í»§¶ËµÄheaderÖ¡ºÍÊý¾ÝÖ¡µÄstream id¾ÍÊÇ¿Í»§¶ËÇëÇóheaderÖ¡µÄidÐÅÏ¢
+å®¢æˆ·ç«¯ä¸€æ¬¡uriè¯·æ±‚å‘é€è¿‡æ¥headerå¸§åŽï¼Œnginxåº”ç­”ç»™å®¢æˆ·ç«¯çš„headerå¸§å’Œæ•°æ®å¸§çš„stream idå°±æ˜¯å®¢æˆ·ç«¯è¯·æ±‚headerå¸§çš„idä¿¡æ¯
 
-HEADERÖ¡·¢ËÍÁ÷³Ì:ngx_http_v2_filter_send->ngx_http_v2_send_output_queue
-DATAÖ¡·¢ËÍÁ÷³Ì:ngx_http_v2_send_chain->ngx_http_v2_send_output_queue
-Ò»´Î·¢ËÍ²»Íê(ÀýÈçÐ­ÒéÕ»Ð´Âú·µ»ØAGAIN)ÔòÏÂ´ÎÍ¨¹ýngx_http_v2_write_handler->ngx_http_v2_send_output_queueÔÙ´Î·¢ËÍ
+HEADERå¸§å‘é€æµç¨‹:ngx_http_v2_filter_send->ngx_http_v2_send_output_queue
+DATAå¸§å‘é€æµç¨‹:ngx_http_v2_send_chain->ngx_http_v2_send_output_queue
+ä¸€æ¬¡å‘é€ä¸å®Œ(ä¾‹å¦‚åè®®æ ˆå†™æ»¡è¿”å›žAGAIN)åˆ™ä¸‹æ¬¡é€šè¿‡ngx_http_v2_write_handler->ngx_http_v2_send_output_queueå†æ¬¡å‘é€
 
-ÀýÈçÍ¨¹ýÍ¬Ò»¸öconnectÀ´ÏÂÔØÁ½¸öÎÄ¼þ£¬Ôò2¸öÎÄ¼þµÄÏà¹ØÐÅÏ¢»á±»×é³ÉÒ»¸öÒ»¸ö½»ÌæµÄÖ¡¹ÒÔØµ½¸ÃÁ´±íÉÏ£¬Í¨¹ý¸Ãº¯Êý½øÐÐ½»Ìæ·¢ËÍ
-·¢ËÍ¶ÓÁÐlast_outÖÐµÄÊý¾Ý
+ä¾‹å¦‚é€šè¿‡åŒä¸€ä¸ªconnectæ¥ä¸‹è½½ä¸¤ä¸ªæ–‡ä»¶ï¼Œåˆ™2ä¸ªæ–‡ä»¶çš„ç›¸å…³ä¿¡æ¯ä¼šè¢«ç»„æˆä¸€ä¸ªä¸€ä¸ªäº¤æ›¿çš„å¸§æŒ‚è½½åˆ°è¯¥é“¾è¡¨ä¸Šï¼Œé€šè¿‡è¯¥å‡½æ•°è¿›è¡Œäº¤æ›¿å‘é€
+å‘é€é˜Ÿåˆ—last_outä¸­çš„æ•°æ®
 */
 
 /*
-µ±http2Í·²¿Ö¡·¢ËÍµÄÊ±ºò£¬»áÔÚngx_http_v2_header_filter°Ñngx_http_v2_send_chain.send_chain=ngx_http_v2_send_chain
+å½“http2å¤´éƒ¨å¸§å‘é€çš„æ—¶å€™ï¼Œä¼šåœ¨ngx_http_v2_header_filteræŠŠngx_http_v2_send_chain.send_chain=ngx_http_v2_send_chain
 
-¸Ãº¯Êý·¢ËÍÊý¾ÝÖ¡
-ÔÚ¶ÁÈ¡µ½ºó¶ËÊý¾Ýºó¿ªÊ¼×ßout filterÁ÷³Ì£¬È»ºóµ÷ÓÃngx_http_output_filter£¬×îÖÕÖ´ÐÐ¸Ãngx_http_v2_send_chain
+è¯¥å‡½æ•°å‘é€æ•°æ®å¸§
+åœ¨è¯»å–åˆ°åŽç«¯æ•°æ®åŽå¼€å§‹èµ°out filteræµç¨‹ï¼Œç„¶åŽè°ƒç”¨ngx_http_output_filterï¼Œæœ€ç»ˆæ‰§è¡Œè¯¥ngx_http_v2_send_chain
 */
 static ngx_chain_t *
 ngx_http_v2_send_chain(ngx_connection_t *fc, ngx_chain_t *in, off_t limit)
@@ -768,7 +768,7 @@ ngx_http_v2_send_chain(ngx_connection_t *fc, ngx_chain_t *in, off_t limit)
         in = in->next;
     }
 
-    if (in == NULL) { /* chainÁ´ÉÏÃ»ÓÐÒª·¢ËÍµÄÊý¾Ý */
+    if (in == NULL) { /* chainé“¾ä¸Šæ²¡æœ‰è¦å‘é€çš„æ•°æ® */
 
         if (stream->queued) {
             fc->write->delayed = 1;
@@ -781,7 +781,7 @@ ngx_http_v2_send_chain(ngx_connection_t *fc, ngx_chain_t *in, off_t limit)
 
     h2c = stream->connection;
 
-    /* ´°¿Ú */
+    /* çª—å£ */
     if (size && ngx_http_v2_flow_control(h2c, stream) == NGX_DECLINED) {
         fc->write->delayed = 1;
         return in;
@@ -807,7 +807,7 @@ ngx_http_v2_send_chain(ngx_connection_t *fc, ngx_chain_t *in, off_t limit)
         offset = 0;
     }
 
-    /* ·¢ËÍlimit²»ÄÜ³¬¹ýh2c->send_windowºÍstream->send_windowµÄ×îÐ¡Öµ */
+    /* å‘é€limitä¸èƒ½è¶…è¿‡h2c->send_windowå’Œstream->send_windowçš„æœ€å°å€¼ */
     if (limit == 0 || limit > (off_t) h2c->send_window) {
         limit = h2c->send_window;
     }
@@ -817,7 +817,7 @@ ngx_http_v2_send_chain(ngx_connection_t *fc, ngx_chain_t *in, off_t limit)
 
     h2lcf = ngx_http_get_module_loc_conf(r, ngx_http_v2_module);
 
-    /* frame_sizeÎª±¾µØÅäÖÃchunk_sizeºÍ¶Ô¶ËÍ¨ÖªµÄframe_sizeµÄ×îÐ¡Öµ */
+    /* frame_sizeä¸ºæœ¬åœ°é…ç½®chunk_sizeå’Œå¯¹ç«¯é€šçŸ¥çš„frame_sizeçš„æœ€å°å€¼ */
     frame_size = (h2lcf->chunk_size < h2c->frame_size)
                  ? h2lcf->chunk_size : h2c->frame_size;
 
@@ -833,7 +833,7 @@ ngx_http_v2_send_chain(ngx_connection_t *fc, ngx_chain_t *in, off_t limit)
         ln = &out;
         rest = frame_size;
 
-        /* °ÑchainÁ´ÖÐµÄbuf×é°üµ½ÐÂµÄcl chain(¼´outÁ´)Á´ÖÐ,µ«ÊÇÊý¾Ý×Ü´óÐ¡²»ÄÜ³¬¹ýrestÏÞÖÆ */
+        /* æŠŠchainé“¾ä¸­çš„bufç»„åŒ…åˆ°æ–°çš„cl chain(å³outé“¾)é“¾ä¸­,ä½†æ˜¯æ•°æ®æ€»å¤§å°ä¸èƒ½è¶…è¿‡resté™åˆ¶ */
         while ((off_t) rest >= size) {
 
             if (offset) {
@@ -861,8 +861,8 @@ ngx_http_v2_send_chain(ngx_connection_t *fc, ngx_chain_t *in, off_t limit)
             in = in->next;
 
             if (in == NULL) {
-                frame_size -= rest; //inÁ´ÖÐµÄÊý¾ÝÒÑ¾­È«²¿ÒÆµ½outÁ´£¬ÕâÊ±ºòµÄframe_size¾ÍÊÇoutÖÐµÄÊý¾Ý´óÐ¡
-                rest = 0; //Çå0£¬ËµÃ÷ËùÓÐµÄinÁ´ÖÐµÄÊý¾Ý¶¼¿ÉÒÔÈ«²¿·¢ËÍ³öÈ¥
+                frame_size -= rest; //iné“¾ä¸­çš„æ•°æ®å·²ç»å…¨éƒ¨ç§»åˆ°outé“¾ï¼Œè¿™æ—¶å€™çš„frame_sizeå°±æ˜¯outä¸­çš„æ•°æ®å¤§å°
+                rest = 0; //æ¸…0ï¼Œè¯´æ˜Žæ‰€æœ‰çš„iné“¾ä¸­çš„æ•°æ®éƒ½å¯ä»¥å…¨éƒ¨å‘é€å‡ºåŽ»
                 break;
             }
 
@@ -891,7 +891,7 @@ ngx_http_v2_send_chain(ngx_connection_t *fc, ngx_chain_t *in, off_t limit)
 
         ngx_http_v2_queue_frame(h2c, frame);
 
-        /* ·¢ËÍÁËÕâÃ´¶àÊý¾Ý£¬Ôò´°¿Ú¼õÉÙ */
+        /* å‘é€äº†è¿™ä¹ˆå¤šæ•°æ®ï¼Œåˆ™çª—å£å‡å°‘ */
         h2c->send_window -= frame_size;
 
         stream->send_window -= frame_size;
@@ -962,7 +962,7 @@ ngx_http_v2_filter_get_shadow(ngx_http_v2_stream_t *stream, ngx_buf_t *buf,
     return cl;
 }
 
-//»ñÈ¡dataÖ¡frame½á¹¹
+//èŽ·å–dataå¸§frameç»“æž„
 static ngx_http_v2_out_frame_t *
 ngx_http_v2_filter_get_data_frame(ngx_http_v2_stream_t *stream,
     size_t len, ngx_chain_t *first, ngx_chain_t *last)
@@ -972,7 +972,7 @@ ngx_http_v2_filter_get_data_frame(ngx_http_v2_stream_t *stream,
     ngx_chain_t                *cl;
     ngx_http_v2_out_frame_t  *frame;
 
-    //Ö¡½á¹¹stream->free_frames»á½øÐÐÖØ¸´ÀûÓÃ
+    //å¸§ç»“æž„stream->free_framesä¼šè¿›è¡Œé‡å¤åˆ©ç”¨
     frame = stream->free_frames;
 
     if (frame) {
@@ -1039,13 +1039,13 @@ ngx_http_v2_filter_get_data_frame(ngx_http_v2_stream_t *stream,
 }
 
 /*
-¿Í»§¶ËÒ»´ÎuriÇëÇó·¢ËÍ¹ýÀ´headerÖ¡ºó£¬nginxÓ¦´ð¸ø¿Í»§¶ËµÄheaderÖ¡ºÍÊý¾ÝÖ¡µÄstream id¾ÍÊÇ¿Í»§¶ËÇëÇóheaderÖ¡µÄidÐÅÏ¢
-HEADERÖ¡·¢ËÍÁ÷³Ì:ngx_http_v2_filter_send->ngx_http_v2_send_output_queue
-DATAÖ¡·¢ËÍÁ÷³Ì:ngx_http_v2_send_chain->ngx_http_v2_send_output_queue
-Ò»´Î·¢ËÍ²»Íê(ÀýÈçÐ­ÒéÕ»Ð´Âú·µ»ØAGAIN)ÔòÏÂ´ÎÍ¨¹ýngx_http_v2_write_handler->ngx_http_v2_send_output_queueÔÙ´Î·¢ËÍ
+å®¢æˆ·ç«¯ä¸€æ¬¡uriè¯·æ±‚å‘é€è¿‡æ¥headerå¸§åŽï¼Œnginxåº”ç­”ç»™å®¢æˆ·ç«¯çš„headerå¸§å’Œæ•°æ®å¸§çš„stream idå°±æ˜¯å®¢æˆ·ç«¯è¯·æ±‚headerå¸§çš„idä¿¡æ¯
+HEADERå¸§å‘é€æµç¨‹:ngx_http_v2_filter_send->ngx_http_v2_send_output_queue
+DATAå¸§å‘é€æµç¨‹:ngx_http_v2_send_chain->ngx_http_v2_send_output_queue
+ä¸€æ¬¡å‘é€ä¸å®Œ(ä¾‹å¦‚åè®®æ ˆå†™æ»¡è¿”å›žAGAIN)åˆ™ä¸‹æ¬¡é€šè¿‡ngx_http_v2_write_handler->ngx_http_v2_send_output_queueå†æ¬¡å‘é€
 
-ÀýÈçÍ¨¹ýÍ¬Ò»¸öconnectÀ´ÏÂÔØÁ½¸öÎÄ¼þ£¬Ôò2¸öÎÄ¼þµÄÏà¹ØÐÅÏ¢»á±»×é³ÉÒ»¸öÒ»¸ö½»ÌæµÄÖ¡¹ÒÔØµ½¸ÃÁ´±íÉÏ£¬Í¨¹ý¸Ãº¯Êý½øÐÐ½»Ìæ·¢ËÍ
-·¢ËÍ¶ÓÁÐlast_outÖÐµÄÊý¾Ý
+ä¾‹å¦‚é€šè¿‡åŒä¸€ä¸ªconnectæ¥ä¸‹è½½ä¸¤ä¸ªæ–‡ä»¶ï¼Œåˆ™2ä¸ªæ–‡ä»¶çš„ç›¸å…³ä¿¡æ¯ä¼šè¢«ç»„æˆä¸€ä¸ªä¸€ä¸ªäº¤æ›¿çš„å¸§æŒ‚è½½åˆ°è¯¥é“¾è¡¨ä¸Šï¼Œé€šè¿‡è¯¥å‡½æ•°è¿›è¡Œäº¤æ›¿å‘é€
+å‘é€é˜Ÿåˆ—last_outä¸­çš„æ•°æ®
 */
 static ngx_inline ngx_int_t
 ngx_http_v2_filter_send(ngx_connection_t *fc, ngx_http_v2_stream_t *stream)
@@ -1070,7 +1070,7 @@ ngx_http_v2_filter_send(ngx_connection_t *fc, ngx_http_v2_stream_t *stream)
     return NGX_OK;
 }
 
-/* ²é¿´·¢ËÍ´°¿ÚÊÇ²»ÊÇ´óÓÚ0£¬´óÓÚ0Ôò·¢ËÍ */
+/* æŸ¥çœ‹å‘é€çª—å£æ˜¯ä¸æ˜¯å¤§äºŽ0ï¼Œå¤§äºŽ0åˆ™å‘é€ */
 static ngx_inline ngx_int_t
 ngx_http_v2_flow_control(ngx_http_v2_connection_t *h2c,
     ngx_http_v2_stream_t *stream)
@@ -1120,7 +1120,7 @@ ngx_http_v2_waiting_queue(ngx_http_v2_connection_t *h2c,
 }
 
 
-//Ã¿Ò»¸öh2c->last_outÁ´±íÖÐµÄframe·¢ËÍÍê³É¶¼»áµ÷ÓÃ¶ÔÓ¦µÄhandler,ÕâÀïÊÇheaderÖ¡·¢ËÍÍê³ÉµÄhandler
+//æ¯ä¸€ä¸ªh2c->last_outé“¾è¡¨ä¸­çš„frameå‘é€å®Œæˆéƒ½ä¼šè°ƒç”¨å¯¹åº”çš„handler,è¿™é‡Œæ˜¯headerå¸§å‘é€å®Œæˆçš„handler
 static ngx_int_t
 ngx_http_v2_headers_frame_handler(ngx_http_v2_connection_t *h2c,
     ngx_http_v2_out_frame_t *frame)
@@ -1130,7 +1130,7 @@ ngx_http_v2_headers_frame_handler(ngx_http_v2_connection_t *h2c,
 
     buf = frame->first->buf;
 
-    if (buf->pos != buf->last) { /* ËµÃ÷»¹Ã»ÓÐ·¢ËÍÍê³É */
+    if (buf->pos != buf->last) { /* è¯´æ˜Žè¿˜æ²¡æœ‰å‘é€å®Œæˆ */
         return NGX_AGAIN;
     }
 
@@ -1149,7 +1149,7 @@ ngx_http_v2_headers_frame_handler(ngx_http_v2_connection_t *h2c,
     return NGX_OK;
 }
 
-//Ã¿Ò»¸öh2c->last_outÁ´±íÖÐµÄframe·¢ËÍÍê³É¶¼»áµ÷ÓÃ¶ÔÓ¦µÄhandler,ÕâÀïÊÇdataÖ¡·¢ËÍÍê³ÉµÄhandler
+//æ¯ä¸€ä¸ªh2c->last_outé“¾è¡¨ä¸­çš„frameå‘é€å®Œæˆéƒ½ä¼šè°ƒç”¨å¯¹åº”çš„handler,è¿™é‡Œæ˜¯dataå¸§å‘é€å®Œæˆçš„handler
 static ngx_int_t
 ngx_http_v2_data_frame_handler(ngx_http_v2_connection_t *h2c,
     ngx_http_v2_out_frame_t *frame)
@@ -1164,7 +1164,7 @@ ngx_http_v2_data_frame_handler(ngx_http_v2_connection_t *h2c,
 
     if (cl->buf->tag == (ngx_buf_tag_t) &ngx_http_v2_filter_get_data_frame) {
 
-        if (cl->buf->pos != cl->buf->last) { /* ËµÃ÷¸ÃframeÖ»ÓÐ²¿·ÖÊý¾Ý·¢ËÍÁË */
+        if (cl->buf->pos != cl->buf->last) { /* è¯´æ˜Žè¯¥frameåªæœ‰éƒ¨åˆ†æ•°æ®å‘é€äº† */
             ngx_log_debug2(NGX_LOG_DEBUG_HTTP, h2c->connection->log, 0,
                            "http2:%ui DATA frame %p was sent partially",
                            stream->node->id, frame);

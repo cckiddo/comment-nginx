@@ -176,7 +176,7 @@ ngx_inet6_addr(u_char *p, size_t len, u_char *addr)
 
 #endif
 
-//½«socket°ó¶¨µÄµØÖ·×ª»»ÎªÎÄ±¾¸ñÊ½(ipv4ºÍipv6µÄ²»ÏàÍ¬) £¬°ÑsaÖĞµÄipºÍ¶Ë¿Ú×ª»»ÎªA.B.C.D:port¸ñÊ½×Ö·û´®´æÈëtextÖĞ
+//å°†socketç»‘å®šçš„åœ°å€è½¬æ¢ä¸ºæ–‡æœ¬æ ¼å¼(ipv4å’Œipv6çš„ä¸ç›¸åŒ) ï¼ŒæŠŠsaä¸­çš„ipå’Œç«¯å£è½¬æ¢ä¸ºA.B.C.D:portæ ¼å¼å­—ç¬¦ä¸²å­˜å…¥textä¸­
 size_t
 ngx_sock_ntop(struct sockaddr *sa, socklen_t socklen, u_char *text, size_t len,
     ngx_uint_t port)
@@ -525,13 +525,13 @@ ngx_parse_addr(ngx_pool_t *pool, ngx_addr_t *addr, u_char *text, size_t len)
 }
 
 /*
-?ngx_parse_url()µ÷ÓÃngx_parse_inet_url()
-?ngx_parse_inet_url()µ÷ÓÃngx_inet_resolve_host()
-?ngx_inet_resolve_host()µ÷ÓÃgethostbyname()
-?gethostbyname()º¯Êı¾ÍÊÇÍ¨¹ıÓòÃû»ñÈ¡IPµÄº¯Êı
+?ngx_parse_url()è°ƒç”¨ngx_parse_inet_url()
+?ngx_parse_inet_url()è°ƒç”¨ngx_inet_resolve_host()
+?ngx_inet_resolve_host()è°ƒç”¨gethostbyname()
+?gethostbyname()å‡½æ•°å°±æ˜¯é€šè¿‡åŸŸåè·å–IPçš„å‡½æ•°
 */
 ngx_int_t
-ngx_parse_url(ngx_pool_t *pool, ngx_url_t *u)//¶Ôu²ÎÊıÀïÃæµÄurl,unix,inet6µÈµØÖ·½øĞĞ¼òÎö£»
+ngx_parse_url(ngx_pool_t *pool, ngx_url_t *u)//å¯¹uå‚æ•°é‡Œé¢çš„url,unix,inet6ç­‰åœ°å€è¿›è¡Œç®€æï¼›
 {
     u_char  *p;
 
@@ -627,13 +627,13 @@ ngx_parse_unix_domain_url(ngx_pool_t *pool, ngx_url_t *u)
 }
 
 /*
-?ngx_parse_url()µ÷ÓÃngx_parse_inet_url()
-?ngx_parse_inet_url()µ÷ÓÃngx_inet_resolve_host()
-?ngx_inet_resolve_host()µ÷ÓÃgethostbyname()
-?gethostbyname()º¯Êı¾ÍÊÇÍ¨¹ıÓòÃû»ñÈ¡IPµÄº¯Êı
+?ngx_parse_url()è°ƒç”¨ngx_parse_inet_url()
+?ngx_parse_inet_url()è°ƒç”¨ngx_inet_resolve_host()
+?ngx_inet_resolve_host()è°ƒç”¨gethostbyname()
+?gethostbyname()å‡½æ•°å°±æ˜¯é€šè¿‡åŸŸåè·å–IPçš„å‡½æ•°
 */
 static ngx_int_t
-ngx_parse_inet_url(ngx_pool_t *pool, ngx_url_t *u)//½âÎöuri£¬Èç¹ûuriÊÇIP:PORTĞÎÊ½Ôò»ñÈ¡ËûÃÇ£¬Èç¹ûÊÇÓòÃûwww.xxx.comĞÎÊ½£¬Ôò½âÎöÓòÃû
+ngx_parse_inet_url(ngx_pool_t *pool, ngx_url_t *u)//è§£æuriï¼Œå¦‚æœuriæ˜¯IP:PORTå½¢å¼åˆ™è·å–ä»–ä»¬ï¼Œå¦‚æœæ˜¯åŸŸåwww.xxx.comå½¢å¼ï¼Œåˆ™è§£æåŸŸå
 {
     u_char               *p, *host, *port, *last, *uri, *args;
     size_t                len;
@@ -753,7 +753,7 @@ ngx_parse_inet_url(ngx_pool_t *pool, ngx_url_t *u)//½âÎöuri£¬Èç¹ûuriÊÇIP:PORTĞÎÊ
 
     sin->sin_addr.s_addr = ngx_inet_addr(host, len);
 
-    if (sin->sin_addr.s_addr != INADDR_NONE) { //Èç¹ûÊÇIPµØÖ·¸ñÊ½
+    if (sin->sin_addr.s_addr != INADDR_NONE) { //å¦‚æœæ˜¯IPåœ°å€æ ¼å¼
 
         if (sin->sin_addr.s_addr == INADDR_ANY) {
             u->wildcard = 1;
@@ -788,7 +788,7 @@ ngx_parse_inet_url(ngx_pool_t *pool, ngx_url_t *u)//½âÎöuri£¬Èç¹ûuriÊÇIP:PORTĞÎÊ
         return NGX_OK;
     }
 
-    if (u->no_resolve) { //Èç¹ûÖÃ1ÁË£¬Ö±½Ó·µ»Ø£¬Ò²²»»á½âÎöÓòÃû
+    if (u->no_resolve) { //å¦‚æœç½®1äº†ï¼Œç›´æ¥è¿”å›ï¼Œä¹Ÿä¸ä¼šè§£æåŸŸå
         return NGX_OK;
     }
 
@@ -954,10 +954,10 @@ ngx_parse_inet6_url(ngx_pool_t *pool, ngx_url_t *u)
 
 #if (NGX_HAVE_GETADDRINFO && NGX_HAVE_INET6)
 /*
-?ngx_parse_url()µ÷ÓÃngx_parse_inet_url()
-?ngx_parse_inet_url()µ÷ÓÃngx_inet_resolve_host()
-?ngx_inet_resolve_host()µ÷ÓÃgethostbyname()
-?gethostbyname()º¯Êı¾ÍÊÇÍ¨¹ıÓòÃû»ñÈ¡IPµÄº¯Êı
+?ngx_parse_url()è°ƒç”¨ngx_parse_inet_url()
+?ngx_parse_inet_url()è°ƒç”¨ngx_inet_resolve_host()
+?ngx_inet_resolve_host()è°ƒç”¨gethostbyname()
+?gethostbyname()å‡½æ•°å°±æ˜¯é€šè¿‡åŸŸåè·å–IPçš„å‡½æ•°
 */
 ngx_int_t
 ngx_inet_resolve_host(ngx_pool_t *pool, ngx_url_t *u)
@@ -1104,7 +1104,7 @@ failed:
 }
 
 #else /* !NGX_HAVE_GETADDRINFO || !NGX_HAVE_INET6 */
-//ÓòÃû½âÎö¿ÉÒÔ²Î¿¼:http://www.360doc.com/content/14/0102/10/15064667_341883468.shtml  ¸ù¾İÇëÇóÖĞµÄhostÀ´½âÎöÓòÃû¶ÔÓ¦µÄIP
+//åŸŸåè§£æå¯ä»¥å‚è€ƒ:http://www.360doc.com/content/14/0102/10/15064667_341883468.shtml  æ ¹æ®è¯·æ±‚ä¸­çš„hostæ¥è§£æåŸŸåå¯¹åº”çš„IP
 ngx_int_t
 ngx_inet_resolve_host(ngx_pool_t *pool, ngx_url_t *u)
 {
@@ -1130,7 +1130,7 @@ ngx_inet_resolve_host(ngx_pool_t *pool, ngx_url_t *u)
 
         (void) ngx_cpystrn(host, u->host.data, u->host.len + 1);
 
-        h = gethostbyname((char *) host); //ÓòÃû½âÎö
+        h = gethostbyname((char *) host); //åŸŸåè§£æ
 
         ngx_free(host);
 

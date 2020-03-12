@@ -105,20 +105,20 @@ ngx_test_full_name(ngx_str_t *name)
 }
 
 /*
-Èç¹ûÅäÖÃxxx_buffers  XXX_buffer_sizeÖ¸¶¨µÄ¿Õ¼ä¶¼ÓÃÍêÁË£¬Ôò»á°Ñ»º´æÖÐµÄÊý¾ÝÐ´ÈëÁÙÊ±ÎÄ¼þ£¬È»ºó¼ÌÐø¶Á£¬¶Áµ½ngx_event_pipe_write_chain_to_temp_file
-ºóÐ´ÈëÁÙÊ±ÎÄ¼þ£¬Ö±µ½read·µ»ØNGX_AGAIN,È»ºóÔÚngx_event_pipe_write_to_downstream->ngx_output_chain->ngx_output_chain_copy_bufÖÐ¶ÁÈ¡ÁÙÊ±ÎÄ¼þÄÚÈÝ
-·¢ËÍµ½ºó¶Ë£¬µ±Êý¾Ý¼ÌÐøµ½À´£¬Í¨¹ýepoll read¼ÌÐøÑ­»·¸ÃÁ÷³Ì
+å¦‚æžœé…ç½®xxx_buffers  XXX_buffer_sizeæŒ‡å®šçš„ç©ºé—´éƒ½ç”¨å®Œäº†ï¼Œåˆ™ä¼šæŠŠç¼“å­˜ä¸­çš„æ•°æ®å†™å…¥ä¸´æ—¶æ–‡ä»¶ï¼Œç„¶åŽç»§ç»­è¯»ï¼Œè¯»åˆ°ngx_event_pipe_write_chain_to_temp_file
+åŽå†™å…¥ä¸´æ—¶æ–‡ä»¶ï¼Œç›´åˆ°readè¿”å›žNGX_AGAIN,ç„¶åŽåœ¨ngx_event_pipe_write_to_downstream->ngx_output_chain->ngx_output_chain_copy_bufä¸­è¯»å–ä¸´æ—¶æ–‡ä»¶å†…å®¹
+å‘é€åˆ°åŽç«¯ï¼Œå½“æ•°æ®ç»§ç»­åˆ°æ¥ï¼Œé€šè¿‡epoll readç»§ç»­å¾ªçŽ¯è¯¥æµç¨‹
 */
 
-/*ngx_http_upstream_init_request->ngx_http_upstream_cache ¿Í»§¶Ë»ñÈ¡»º´æ ºó¶ËÓ¦´ð»ØÀ´Êý¾ÝºóÔÚngx_http_upstream_send_response->ngx_http_file_cache_create
-ÖÐ´´½¨ÁÙÊ±ÎÄ¼þ£¬È»ºóÔÚngx_event_pipe_write_chain_to_temp_file°Ñ¶ÁÈ¡µÄºó¶ËÊý¾ÝÐ´ÈëÁÙÊ±ÎÄ¼þ£¬×îºóÔÚ
-ngx_http_upstream_send_response->ngx_http_upstream_process_request->ngx_http_file_cache_updateÖÐ°ÑÁÙÊ±ÎÄ¼þÄÚÈÝrename(Ïàµ±ÓÚmv)µ½proxy_cache_pathÖ¸¶¨
-µÄcacheÄ¿Â¼ÏÂÃæ
+/*ngx_http_upstream_init_request->ngx_http_upstream_cache å®¢æˆ·ç«¯èŽ·å–ç¼“å­˜ åŽç«¯åº”ç­”å›žæ¥æ•°æ®åŽåœ¨ngx_http_upstream_send_response->ngx_http_file_cache_create
+ä¸­åˆ›å»ºä¸´æ—¶æ–‡ä»¶ï¼Œç„¶åŽåœ¨ngx_event_pipe_write_chain_to_temp_fileæŠŠè¯»å–çš„åŽç«¯æ•°æ®å†™å…¥ä¸´æ—¶æ–‡ä»¶ï¼Œæœ€åŽåœ¨
+ngx_http_upstream_send_response->ngx_http_upstream_process_request->ngx_http_file_cache_updateä¸­æŠŠä¸´æ—¶æ–‡ä»¶å†…å®¹rename(ç›¸å½“äºŽmv)åˆ°proxy_cache_pathæŒ‡å®š
+çš„cacheç›®å½•ä¸‹é¢
 */
 
 
-//´´½¨temp_fileÁÙÊ±ÎÄ¼þ£¬²¢°ÑchainÁ´±íÖÐµÄÊý¾ÝÐ´ÈëÎÄ¼þ£¬·µ»ØÖµÎªÐ´Èëµ½ÎÄ¼þÖÐµÄ×Ö½ÚÊý
-//Èç¹ûÅäÖÃxxx_buffers  XXX_buffer_sizeÖ¸¶¨µÄ¿Õ¼ä¶¼ÓÃÍêÁË£¬Ôò»á°Ñ»º´æÖÐµÄÊý¾ÝÐ´ÈëÁÙÊ±ÎÄ¼þ£¬È»ºó¼ÌÐø¶Á£¬¶Áµ½ºóÐ´ÈëÁÙÊ±ÎÄ¼þ£¬Ö±µ½read·µ»ØNGX_AGAIN
+//åˆ›å»ºtemp_fileä¸´æ—¶æ–‡ä»¶ï¼Œå¹¶æŠŠchainé“¾è¡¨ä¸­çš„æ•°æ®å†™å…¥æ–‡ä»¶ï¼Œè¿”å›žå€¼ä¸ºå†™å…¥åˆ°æ–‡ä»¶ä¸­çš„å­—èŠ‚æ•°
+//å¦‚æžœé…ç½®xxx_buffers  XXX_buffer_sizeæŒ‡å®šçš„ç©ºé—´éƒ½ç”¨å®Œäº†ï¼Œåˆ™ä¼šæŠŠç¼“å­˜ä¸­çš„æ•°æ®å†™å…¥ä¸´æ—¶æ–‡ä»¶ï¼Œç„¶åŽç»§ç»­è¯»ï¼Œè¯»åˆ°åŽå†™å…¥ä¸´æ—¶æ–‡ä»¶ï¼Œç›´åˆ°readè¿”å›žNGX_AGAIN
 ssize_t
 ngx_write_chain_to_temp_file(ngx_temp_file_t *tf, ngx_chain_t *chain)
 {
@@ -126,7 +126,7 @@ ngx_write_chain_to_temp_file(ngx_temp_file_t *tf, ngx_chain_t *chain)
 
     if (tf->file.fd == NGX_INVALID_FILE) {
         rc = ngx_create_temp_file(&tf->file, tf->path, tf->pool,
-                                  tf->persistent, tf->clean, tf->access); //´´½¨ÁÙÊ±ÎÄ¼þ
+                                  tf->persistent, tf->clean, tf->access); //åˆ›å»ºä¸´æ—¶æ–‡ä»¶
 
         if (rc != NGX_OK) {
             return rc;
@@ -138,13 +138,13 @@ ngx_write_chain_to_temp_file(ngx_temp_file_t *tf, ngx_chain_t *chain)
         }
     }
 
-    //Ð´ÁÙÊ±ÎÄ¼þµÄÊ±ºò¸üÐÂtf->file->offset  tf->file->sys_offset(Ò²¾ÍÊÇngx_file_tÖÐµÄ³ÉÔ±)  tf->offset(ÕâÀïÊÇngx_temp_file_t->offset)ÔÚ¸Ãº¯ÊýÍâ²ã¸üÐÂ
+    //å†™ä¸´æ—¶æ–‡ä»¶çš„æ—¶å€™æ›´æ–°tf->file->offset  tf->file->sys_offset(ä¹Ÿå°±æ˜¯ngx_file_tä¸­çš„æˆå‘˜)  tf->offset(è¿™é‡Œæ˜¯ngx_temp_file_t->offset)åœ¨è¯¥å‡½æ•°å¤–å±‚æ›´æ–°
     return ngx_write_chain_to_file(&tf->file, chain, tf->offset, tf->pool);
 }
 
 
 /*
-ÅäÖÃfastcgi_cache_path /var/yyz/cache_xxx levels=1:2 keys_zone=fcgi:1m inactive=30m max_size=64 use_temp_path=off;´òÓ¡ÈçÏÂ:
+é…ç½®fastcgi_cache_path /var/yyz/cache_xxx levels=1:2 keys_zone=fcgi:1m inactive=30m max_size=64 use_temp_path=off;æ‰“å°å¦‚ä¸‹:
 
 2015/12/16 04:25:19[               ngx_create_temp_file,   169]  [debug] 19348#19348: *3 hashed path: /var/yyz/cache_xxx/temp/2/00/0000000002
 2015/12/16 04:25:19[               ngx_create_temp_file,   174]  [debug] 19348#19348: *3 temp fd:-1
@@ -175,7 +175,7 @@ ngx_create_temp_file(ngx_file_t *file, ngx_path_t *path, ngx_pool_t *pool,
     }
 #endif
 
-    ngx_memcpy(file->name.data, path->name.data, path->name.len);  //°Ñpath->name¿½±´µ½file->name
+    ngx_memcpy(file->name.data, path->name.data, path->name.len);  //æŠŠpath->nameæ‹·è´åˆ°file->name
 
     n = (uint32_t) ngx_next_temp_number(0);
 
@@ -186,9 +186,9 @@ ngx_create_temp_file(ngx_file_t *file, ngx_path_t *path, ngx_pool_t *pool,
 
     for ( ;; ) {
         (void) ngx_sprintf(file->name.data + path->name.len + 1 + path->len,
-                           "%010uD%Z", n); //ÕâÀï±£Ö¤Ã¿´Î´´½¨µÄÁÙÊ±ÎÄ¼þ²»Ò»Ñù
+                           "%010uD%Z", n); //è¿™é‡Œä¿è¯æ¯æ¬¡åˆ›å»ºçš„ä¸´æ—¶æ–‡ä»¶ä¸ä¸€æ ·
 
-        //×¢ÒâÇ°ÃæÒÑ¾­°Ñpath->name¿½±´µ½file->name
+        //æ³¨æ„å‰é¢å·²ç»æŠŠpath->nameæ‹·è´åˆ°file->name
         ngx_create_hashed_filename(path, file->name.data, file->name.len);
 
         ngx_log_debug3(NGX_LOG_DEBUG_CORE, file->log, 0,
@@ -200,7 +200,7 @@ ngx_create_temp_file(ngx_file_t *file, ngx_path_t *path, ngx_pool_t *pool,
         ngx_log_debug1(NGX_LOG_DEBUG_CORE, file->log, 0,
                        "temp fd:%d", file->fd);
 
-        if (file->fd != NGX_INVALID_FILE) { //ËµÃ÷ÒÑ¾­´æÔÚ¸ÃÎÄ¼þ,Èç¹ûÃ»ÓÐÔò¼ÌÐøºóÃæµÄ´´½¨£¬È»ºó´ÓÕâÀïÍË³ö
+        if (file->fd != NGX_INVALID_FILE) { //è¯´æ˜Žå·²ç»å­˜åœ¨è¯¥æ–‡ä»¶,å¦‚æžœæ²¡æœ‰åˆ™ç»§ç»­åŽé¢çš„åˆ›å»ºï¼Œç„¶åŽä»Žè¿™é‡Œé€€å‡º
 
             cln->handler = clean ? ngx_pool_delete_file : ngx_pool_cleanup_file;
             clnf = cln->data;
@@ -214,7 +214,7 @@ ngx_create_temp_file(ngx_file_t *file, ngx_path_t *path, ngx_pool_t *pool,
 
         err = ngx_errno;
 
-        if (err == NGX_EEXIST) { //ËµÃ÷¸ÃÎÄ¼þÒÑ¾­´æÔÚ£¬ÔòÖØÐÂ»ñÈ¡Ò»¸öÊý×Ö
+        if (err == NGX_EEXIST) { //è¯´æ˜Žè¯¥æ–‡ä»¶å·²ç»å­˜åœ¨ï¼Œåˆ™é‡æ–°èŽ·å–ä¸€ä¸ªæ•°å­—
             n = (uint32_t) ngx_next_temp_number(1);
             continue;
         }
@@ -226,14 +226,14 @@ ngx_create_temp_file(ngx_file_t *file, ngx_path_t *path, ngx_pool_t *pool,
             return NGX_ERROR;
         }
 
-        if (ngx_create_path(file, path) == NGX_ERROR) { //´´½¨¶ÔÓ¦µÄÎÄ¼þ
+        if (ngx_create_path(file, path) == NGX_ERROR) { //åˆ›å»ºå¯¹åº”çš„æ–‡ä»¶
             return NGX_ERROR;
         }
     }
 }
 
 /*
-ngx_create_hashed_filename ÊÇÍ¨¹ýlevelÉèÖÃ¶ÔÓ¦µÄÎÄ¼þ¼ÐÂ·¾¶£¬ÊÇ¸ù¾Ýmd5Öµ¹ýÀ´µÄºóÃæµÄÎ»Êý¶¨ÒåµÄÎÄ¼þ¼Ð¡£
+ngx_create_hashed_filename æ˜¯é€šè¿‡levelè®¾ç½®å¯¹åº”çš„æ–‡ä»¶å¤¹è·¯å¾„ï¼Œæ˜¯æ ¹æ®md5å€¼è¿‡æ¥çš„åŽé¢çš„ä½æ•°å®šä¹‰çš„æ–‡ä»¶å¤¹ã€‚
 */
 void
 ngx_create_hashed_filename(ngx_path_t *path, u_char *file, size_t len)
@@ -246,12 +246,12 @@ ngx_create_hashed_filename(ngx_path_t *path, u_char *file, size_t len)
     file[path->name.len + path->len]  = '/';
 
     /*
-     levels=1:2£¬ÒâË¼ÊÇËµÊ¹ÓÃÁ½¼¶Ä¿Â¼£¬µÚÒ»¼¶Ä¿Â¼ÃûÊÇÒ»¸ö×Ö·û£¬µÚ¶þ¼¶ÓÃÁ½¸ö×Ö·û¡£µ«ÊÇnginx×î´óÖ§³Ö3¼¶Ä¿Â¼£¬¼´levels=xxx:xxx:xxx¡£
-     ÄÇÃ´¹¹³ÉÄ¿Â¼Ãû×ÖµÄ×Ö·ûÄÄÀ´µÄÄØ£¿¼ÙÉèÎÒÃÇµÄ´æ´¢Ä¿Â¼Îª/cache£¬levels=1:2£¬ÄÇÃ´¶ÔÓÚÉÏÃæµÄÎÄ¼þ ¾ÍÊÇÕâÑù´æ´¢µÄ£º
-     /cache/0/8d/8ef9229f02c5672c747dc7a324d658d0  ×¢ÒâºóÃæµÄ8d0ºÍcacheºóÃæµÄ/0/8dÒ»ÖÂ
+     levels=1:2ï¼Œæ„æ€æ˜¯è¯´ä½¿ç”¨ä¸¤çº§ç›®å½•ï¼Œç¬¬ä¸€çº§ç›®å½•åæ˜¯ä¸€ä¸ªå­—ç¬¦ï¼Œç¬¬äºŒçº§ç”¨ä¸¤ä¸ªå­—ç¬¦ã€‚ä½†æ˜¯nginxæœ€å¤§æ”¯æŒ3çº§ç›®å½•ï¼Œå³levels=xxx:xxx:xxxã€‚
+     é‚£ä¹ˆæž„æˆç›®å½•åå­—çš„å­—ç¬¦å“ªæ¥çš„å‘¢ï¼Ÿå‡è®¾æˆ‘ä»¬çš„å­˜å‚¨ç›®å½•ä¸º/cacheï¼Œlevels=1:2ï¼Œé‚£ä¹ˆå¯¹äºŽä¸Šé¢çš„æ–‡ä»¶ å°±æ˜¯è¿™æ ·å­˜å‚¨çš„ï¼š
+     /cache/0/8d/8ef9229f02c5672c747dc7a324d658d0  æ³¨æ„åŽé¢çš„8d0å’ŒcacheåŽé¢çš„/0/8dä¸€è‡´
     */
 
-    for (n = 0; n < 3; n++) { //¿½±´×îºóÃæµÄMD5Öµ×Ö·û´®ÖÐµÄ×îºólevel[i]¸ö×Ö½Úµ½levelËù´¦Î»ÖÃ
+    for (n = 0; n < 3; n++) { //æ‹·è´æœ€åŽé¢çš„MD5å€¼å­—ç¬¦ä¸²ä¸­çš„æœ€åŽlevel[i]ä¸ªå­—èŠ‚åˆ°levelæ‰€å¤„ä½ç½®
         level = path->level[n];
 
         if (level == 0) {
@@ -266,7 +266,7 @@ ngx_create_hashed_filename(ngx_path_t *path, u_char *file, size_t len)
 }
 
 /*
-ÅäÖÃfastcgi_cache_path /var/yyz/cache_xxx levels=1:2 keys_zone=fcgi:1m inactive=30m max_size=64 use_temp_path=off;´òÓ¡ÈçÏÂ:
+é…ç½®fastcgi_cache_path /var/yyz/cache_xxx levels=1:2 keys_zone=fcgi:1m inactive=30m max_size=64 use_temp_path=off;æ‰“å°å¦‚ä¸‹:
 
 2015/12/16 04:25:19[                    ngx_create_path,   260]  [debug] 19348#19348: *3 temp file: "/var/yyz/cache_xxx/temp/2"
 2015/12/16 04:25:19[                    ngx_create_path,   260]  [debug] 19348#19348: *3 temp file: "/var/yyz/cache_xxx/temp/2/00"
@@ -352,9 +352,9 @@ ngx_create_full_path(u_char *dir, ngx_uint_t access)
     return err;
 }
 
-//Ïàµ±ÓÚ»ñÈ¡Ò»¸öËæ»úÊý
+//ç›¸å½“äºŽèŽ·å–ä¸€ä¸ªéšæœºæ•°
 ngx_atomic_uint_t
-ngx_next_temp_number(ngx_uint_t collision) //collisionÖÃ1£¬Ôò
+ngx_next_temp_number(ngx_uint_t collision) //collisionç½®1ï¼Œåˆ™
 {
     ngx_atomic_uint_t  n, add;
 
@@ -367,102 +367,102 @@ ngx_next_temp_number(ngx_uint_t collision) //collisionÖÃ1£¬Ôò
 
 /*
 char*(*set)(ngx_conf_t *cf, ngx_command_t 'vcmd,void *conf)
-    ¹ØÓÚset»Øµ÷·½·¨£¬ÔÚ´¦ÀímytestÅäÖÃÏîÊ±ÒÑ¾­Ê¹ÓÃ¹ý£¬ÆäÖÐmytestÅäÖÃÏîÊÇ
-²»´ø²ÎÊýµÄ¡£Èç¹û´¦ÀíÅäÖÃÏî£¬ÎÒÃÇ¼È¿ÉÒÔ×Ô¼ºÊµÏÖÒ»¸ö»Øµ÷·½·¨À´´¦ÀíÅäÖÃÏî£¨£©£¬Ò²¿ÉÒÔÊ¹ÓÃNginxÔ¤ÉèµÄ14¸ö½âÎöÅäÖÃÏî·½·¨£¬Õâ»áÉÙ
-Ð´Ðí¶à´úÂë£¬
-©³©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©×©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©·
-©§    Ô¤Éè·½·¨Ãû              ©§    ÐÐÎª                                                                      ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§                            ©§  Èç¹ûnginx£®confÎÄ¼þÖÐÄ³¸öÅäÖÃÏîµÄ²ÎÊýÊÇon»òÕßoff£¨¼´Ï£ÍûÅäÖÃÏî±í´ï´ò¿ª      ©§
-©§                            ©§»òÕß¹Ø±ÕÄ³¸ö¹¦ÄÜµÄÒâË¼£©£¬¶øÇÒÔÚNginxÄ£¿éµÄ´úÂëÖÐÊ¹ÓÃngx_flag_t±äÁ¿À´±£       ©§
-©§ngx_conf_set_flag_slot      ©§´æÕâ¸öÅäÖÃÏîµÄ²ÎÊý£¬¾Í¿ÉÒÔ½«set»Øµ÷·½·¨ÉèÎªngx_conf_set_flag_slot¡£µ±nginx.   ©§
-©§                            ©§confÎÄ¼þÖÐ²ÎÊýÊÇonÊ±£¬´úÂëÖÐµÄngx_flag_tÀàÐÍ±äÁ¿½«ÉèÎª1£¬²ÎÊýÎªoffÊ±Ôò        ©§
-©§                            ©§ÉèÎªO                                                                         ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§                            ©§  Èç¹ûÅäÖÃÏîºóÖ»ÓÐ1¸ö²ÎÊý£¬Í¬Ê±ÔÚ´úÂëÖÐÎÒÃÇÏ£ÍûÓÃngx_str_tÀàÐÍµÄ±äÁ¿À´±£      ©§
-©§ngx_conf_set_str_slot       ©§                                                                              ©§
-©§                            ©§´æÕâ¸öÅäÖÃÏîµÄ²ÎÊý£¬Ôò¿ÉÒÔÊ¹ÓÃngx_conf_set_ str slot·½·¨                      ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§                            ©§  Èç¹ûÕâ¸öÅäÖÃÏî»á³öÏÖ¶à´Î£¬Ã¿¸öÅäÖÃÏîºóÃæ¶¼¸ú×Å1¸ö²ÎÊý£¬¶øÔÚ³ÌÐòÖÐÎÒÃÇ       ©§
-©§                            ©§Ï£Íû½öÓÃÒ»¸öngx_array_t¶¯Ì¬Êý×é£¨           £©À´´æ´¢ËùÓÐµÄ²ÎÊý£¬ÇÒÊý×éÖÐ      ©§
-©§ngx_conf_set_str_array_slot ©§                                                                              ©§
-©§                            ©§µÄÃ¿¸ö²ÎÊý¶¼ÒÔngx_str_tÀ´´æ´¢£¬ÄÇÃ´Ô¤ÉèµÄngx_conf_set_str_array_slotÓÐ·¨¿É    ©§
-©§                            ©§ÒÔ°ïÎÒÃÇ×öµ½                                                                  ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§                            ©§  Óëngx_conf_set_str_array_slotÀàËÆ£¬Ò²ÊÇÓÃÒ»¸öngx_array_tÊý×éÀ´´æ´¢ËùÓÐÍ¬    ©§
-©§                            ©§ÃûÅäÖÃÏîµÄ²ÎÊý¡£Ö»ÊÇÃ¿¸öÅäÖÃÏîµÄ²ÎÊý²»ÔÙÖ»ÊÇ1¸ö£¬¶ø±ØÐëÊÇÁ½¸ö£¬ÇÒÒÔ¡°Åä       ©§
-©§ngx_conf_set_keyval_slot    ©§                                                                              ©§
-©§                            ©§ÖÃÏîÃû¹Ø¼ü×ÖÖµ£»¡±µÄÐÎÊ½³öÏÖÔÚnginx£®confÎÄ¼þÖÐ£¬Í¬Ê±£¬ngx_conf_set_keyval    ©§
-©§                            ©§ slot½«°ÑÕâòçÅäÖÃÏî×ª»¯ÎªÊý×é£¬ÆäÖÐÃ¿¸öÔªËØ¶¼´æ´¢×Åkey/value¼üÖµ¶Ô            ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§ngx_conf_set_num_slot       ©§  ÅäÖÃÏîºó±ØÐëÐ¯´ø1¸ö²ÎÊý£¬ÇÒÖ»ÄÜÊÇÊý×Ö¡£´æ´¢Õâ¸ö²ÎÊýµÄ±äÁ¿±ØÐëÊÇÕûÐÍ         ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§                            ©§  ÅäÖÃÏîºó±ØÐëÐ¯´ø1¸ö²ÎÊý£¬±íÊ¾¿Õ¼ä´óÐ¡£¬¿ÉÒÔÊÇÒ»¸öÊý×Ö£¬ÕâÊ±±íÊ¾×Ö½ÚÊý       ©§
-©§                            ©§(Byte)¡£Èç¹ûÊý×Öºó¸ú×Åk»òÕßK£¬¾Í±íÊ¾Kilobyt£¬IKB=1024B£»Èç¹ûÊý×Öºó¸ú          ©§
-©§ngx_conf_set_size_slot      ©§                                                                              ©§
-©§                            ©§×Åm»òÕßM£¬¾Í±íÊ¾Megabyte£¬1MB=1024KB¡£ngx_conf_set_ size slot½âÎöºó½«         ©§
-©§                            ©§°ÑÅäÖÃÏîºóµÄ²ÎÊý×ª»¯³ÉÒÔ×Ö½ÚÊýÎªµ¥Î»µÄÊý×Ö                                    ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§                            ©§  ÅäÖÃÏîºó±ØÐëÐ¯´ø1¸ö²ÎÊý£¬±íÊ¾¿Õ¼äÉÏµÄÆ«ÒÆÁ¿¡£ËüÓëÉèÖÃµÄ²ÎÊý·Ç³£ÀàËÆ£¬       ©§
-©§                            ©§Æä²ÎÊýÊÇÒ»¸öÊý×ÖÊ±±íÊ¾Byte£¬Ò²¿ÉÒÔÔÚºóÃæ¼Óµ¥Î»£¬µ«Óëngx_conf_set_size slot    ©§
-©§ngx_conf_set_off_slot       ©§²»Í¬µÄÊÇ£¬Êý×ÖºóÃæµÄµ¥Î»²»½ö¿ÉÒÔÊÇk»òÕßK¡¢m»òÕßM£¬»¹¿ÉÒÔÊÇg»òÕßG£¬            ©§
-©§                            ©§ÕâÊ±±íÊ¾Gigabyte£¬IGB=1024MB¡£ngx_conf_set_off_slot½âÎöºó½«°ÑÅäÖÃÏîºóµÄ       ©§
-©§                            ©§²ÎÊý×ª»¯³ÉÒÔ×Ö½ÚÊýÎªµ¥Î»µÄÊý×Ö                                                ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§                            ©§  ÅäÖÃÏîºó±ØÐëÐ¯´ø1¸ö²ÎÊý£¬±íÊ¾Ê±¼ä¡£Õâ¸ö²ÎÊý¿ÉÒÔÔÚÊý×ÖºóÃæ¼Óµ¥Î»£¬Èç         ©§
-©§                            ©§¹ûµ¥Î»Îªs»òÕßÃ»ÓÐÈÎºÎµ¥Î»£¬ÄÇÃ´Õâ¸öÊý×Ö±íÊ¾Ãë£»Èç¹ûµ¥Î»Îªm£¬Ôò±íÊ¾·Ö          ©§
-©§                            ©§ÖÓ£¬Im=60s£ºÈç¹ûµ¥Î»Îªh£¬Ôò±íÊ¾Ð¡Ê±£¬th=60m£ºÈç¹ûµ¥Î»Îªd£¬Ôò±íÊ¾Ìì£¬          ©§
-©§ngx_conf_set_msec_slot      ©§                                                                              ©§
-©§                            ©§ld=24h£ºÈç¹ûµ¥Î»Îªw£¬Ôò±íÊ¾ÖÜ£¬lw=7d£»Èç¹ûµ¥Î»ÎªM£¬Ôò±íÊ¾ÔÂ£¬1M=30d£»         ©§
-©§                            ©§Èç¹ûµ¥Î»Îªy£¬Ôò±íÊ¾Äê£¬ly=365d¡£ngx_conf_set_msec_slot½âÎöºó½«°ÑÅäÖÃÏîºó     ©§
-©§                            ©§µÄ²ÎÊý×ª»¯³ÉÒÔºÁÃëÎªµ¥Î»µÄÊý×Ö                                                ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§                            ©§  Óëngx_conf_set_msec slot·Ç³£ÀàËÆ£¬Î¨Ò»µÄÇø±ðÊÇngx_conf_set msec¡ªslot½âÎö   ©§
-©§ngx_conf_set_sec_slot       ©§ºó½«°ÑÅäÖÃÏîºóµÄ²ÎÊý×ª»¯³ÉÒÔºÁÃëÎªµ¥Î»µÄÊý×Ö£¬¶øngx_conf_set_secÒ»slot½âÎö    ©§
-©§                            ©§ºó»á°ÑÅäÖÃÏîºóµÄ²ÎÊý×ª»¯³ÉÒÔÃëÎªµ¥Î»µÄÊý×Ö                                    ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§                            ©§  ÅäÖÃÏîºó±ØÐëÐ¯´øÒ»Á½¸ö²ÎÊý£¬µÚ1¸ö²ÎÊýÊÇÊý×Ö£¬µÚ2¸ö²ÎÊý±íÊ¾¿Õ¼ä´óÐ¡¡£        ©§
-©§                            ©§ÀýÈç£¬¡°gzip_buffers 4 8k;¡±£¨Í¨³£ÓÃÀ´±íÊ¾ÓÐ¶àÉÙ¸öngx_buf_t»º³åÇø£©£¬ÆäÖÐµÚ1  ©§
-©§                            ©§¸ö²ÎÊý²»¿ÉÒÔÐ¯´øÈÎºÎµ¥Î»£¬µÚ2¸ö²ÎÊý²»´øÈÎºÎµ¥Î»Ê±±íÊ¾Byte£¬Èç¹ûÒÔk»ò          ©§
-©§ngx_conf_set_bufs_slot      ©§ÕßK×÷Îªµ¥Î»£¬Ôò±íÊ¾Kilobyte£¬Èç¹ûÒÔm»òÕßM×÷Îªµ¥Î»£¬Ôò±íÊ¾Megabyte¡£           ©§
-©§                            ©§ngx_conf_set- bufs¡ªslot½âÎöºó»á°ÑÅäÖÃÏîºóµÄÁ½¸ö²ÎÊý×ª»¯³Éngx_bufs_t½á¹¹ÌåÏÂ  ©§
-©§                            ©§µÄÁ½¸ö³ÉÔ±¡£Õâ¸öÅäÖÃÏî¶ÔÓ¦ÓÚNginx×îÏ²»¶ÓÃµÄ¶à»º³åÇøµÄ½â¾ö·½°¸£¨Èç½ÓÊÕÁ¬       ©§
-©§                            ©§½Ó¶Ô¶Ë·¢À´µÄTCPÁ÷£©                                                           ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§                            ©§  ÅäÖÃÏîºó±ØÐëÐ¯´ø1¸ö²ÎÊý£¬ÆäÈ¡Öµ·¶Î§±ØÐëÊÇÎÒÃÇÉè¶¨ºÃµÄ×Ö·û´®Ö®Ò»£¨¾ÍÏñ       ©§
-©§                            ©§CÓïÑÔÖÐµÄÃ¶¾ÙÒ»Ñù£©¡£Ê×ÏÈ£¬ÎÒÃÇÒªÓÃngx_conf_enum_t½á¹¹¶¨ÒåÅäÖÃÏîµÄÈ¡Öµ·¶      ©§
-©§ngx_conf_set_enum_slot      ©§                                                                              ©§
-©§                            ©§Î§£¬²¢Éè¶¨Ã¿¸öÖµ¶ÔÓ¦µÄÐòÁÐºÅ¡£È»ºó£¬ngx_conf_set enum slot½«»á°ÑÅäÖÃÏî²Î      ©§
-©§                            ©§Êý×ª»¯Îª¶ÔÓ¦µÄÐòÁÐºÅ                                                          ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§                            ©§  Ð´ngx_conf_set bitmask slotÀàËÆ£¬ÅäÖÃÏîºó±ØÐëÐ¯´ø1¸ö²ÎÊý£¬ÆäÈ¡Öµ·¶Î§±Ø      ©§
-©§                            ©§ÐëÊÇÉè¶¨ºÃµÄ×Ö·û´®Ö®Ò»¡£Ê×ÏÈ£¬ÎÒÃÇÒªÓÃngx_conf_bitmask_t½á¹¹¶¨ÒåÅäÖÃÏîµÄ      ©§
-©§ngx_conf_set_bitmask_slot   ©§                                                                              ©§
-©§                            ©§È¡Öµ·¶Î§£¬²¢Éè¶¨Ã¿¸öÖµ¶ÔÓ¦µÄ±ÈÌØÎ»¡£×¢Òâ£¬Ã¿¸öÖµËù¶ÔÓ¦µÄ±ÈÌØÎ»¶¼Òª²»Í¬¡£      ©§
-©§                            ©§È»ºóngx_conf_set_bitmask_ slot½«»á°ÑÅäÖÃÏî²ÎÊý×ª»¯Îª¶ÔÓ¦µÄ±ÈÌØÎ»              ©§
-©»©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ß©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¿
+    å…³äºŽsetå›žè°ƒæ–¹æ³•ï¼Œåœ¨å¤„ç†mytesté…ç½®é¡¹æ—¶å·²ç»ä½¿ç”¨è¿‡ï¼Œå…¶ä¸­mytesté…ç½®é¡¹æ˜¯
+ä¸å¸¦å‚æ•°çš„ã€‚å¦‚æžœå¤„ç†é…ç½®é¡¹ï¼Œæˆ‘ä»¬æ—¢å¯ä»¥è‡ªå·±å®žçŽ°ä¸€ä¸ªå›žè°ƒæ–¹æ³•æ¥å¤„ç†é…ç½®é¡¹ï¼ˆï¼‰ï¼Œä¹Ÿå¯ä»¥ä½¿ç”¨Nginxé¢„è®¾çš„14ä¸ªè§£æžé…ç½®é¡¹æ–¹æ³•ï¼Œè¿™ä¼šå°‘
+å†™è®¸å¤šä»£ç ï¼Œ
+â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”³â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”“
+â”ƒ    é¢„è®¾æ–¹æ³•å              â”ƒ    è¡Œä¸º                                                                      â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ                            â”ƒ  å¦‚æžœnginxï¼Žconfæ–‡ä»¶ä¸­æŸä¸ªé…ç½®é¡¹çš„å‚æ•°æ˜¯onæˆ–è€…offï¼ˆå³å¸Œæœ›é…ç½®é¡¹è¡¨è¾¾æ‰“å¼€      â”ƒ
+â”ƒ                            â”ƒæˆ–è€…å…³é—­æŸä¸ªåŠŸèƒ½çš„æ„æ€ï¼‰ï¼Œè€Œä¸”åœ¨Nginxæ¨¡å—çš„ä»£ç ä¸­ä½¿ç”¨ngx_flag_tå˜é‡æ¥ä¿       â”ƒ
+â”ƒngx_conf_set_flag_slot      â”ƒå­˜è¿™ä¸ªé…ç½®é¡¹çš„å‚æ•°ï¼Œå°±å¯ä»¥å°†setå›žè°ƒæ–¹æ³•è®¾ä¸ºngx_conf_set_flag_slotã€‚å½“nginx.   â”ƒ
+â”ƒ                            â”ƒconfæ–‡ä»¶ä¸­å‚æ•°æ˜¯onæ—¶ï¼Œä»£ç ä¸­çš„ngx_flag_tç±»åž‹å˜é‡å°†è®¾ä¸º1ï¼Œå‚æ•°ä¸ºoffæ—¶åˆ™        â”ƒ
+â”ƒ                            â”ƒè®¾ä¸ºO                                                                         â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ                            â”ƒ  å¦‚æžœé…ç½®é¡¹åŽåªæœ‰1ä¸ªå‚æ•°ï¼ŒåŒæ—¶åœ¨ä»£ç ä¸­æˆ‘ä»¬å¸Œæœ›ç”¨ngx_str_tç±»åž‹çš„å˜é‡æ¥ä¿      â”ƒ
+â”ƒngx_conf_set_str_slot       â”ƒ                                                                              â”ƒ
+â”ƒ                            â”ƒå­˜è¿™ä¸ªé…ç½®é¡¹çš„å‚æ•°ï¼Œåˆ™å¯ä»¥ä½¿ç”¨ngx_conf_set_ str slotæ–¹æ³•                      â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ                            â”ƒ  å¦‚æžœè¿™ä¸ªé…ç½®é¡¹ä¼šå‡ºçŽ°å¤šæ¬¡ï¼Œæ¯ä¸ªé…ç½®é¡¹åŽé¢éƒ½è·Ÿç€1ä¸ªå‚æ•°ï¼Œè€Œåœ¨ç¨‹åºä¸­æˆ‘ä»¬       â”ƒ
+â”ƒ                            â”ƒå¸Œæœ›ä»…ç”¨ä¸€ä¸ªngx_array_tåŠ¨æ€æ•°ç»„ï¼ˆ           ï¼‰æ¥å­˜å‚¨æ‰€æœ‰çš„å‚æ•°ï¼Œä¸”æ•°ç»„ä¸­      â”ƒ
+â”ƒngx_conf_set_str_array_slot â”ƒ                                                                              â”ƒ
+â”ƒ                            â”ƒçš„æ¯ä¸ªå‚æ•°éƒ½ä»¥ngx_str_tæ¥å­˜å‚¨ï¼Œé‚£ä¹ˆé¢„è®¾çš„ngx_conf_set_str_array_slotæœ‰æ³•å¯    â”ƒ
+â”ƒ                            â”ƒä»¥å¸®æˆ‘ä»¬åšåˆ°                                                                  â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ                            â”ƒ  ä¸Žngx_conf_set_str_array_slotç±»ä¼¼ï¼Œä¹Ÿæ˜¯ç”¨ä¸€ä¸ªngx_array_tæ•°ç»„æ¥å­˜å‚¨æ‰€æœ‰åŒ    â”ƒ
+â”ƒ                            â”ƒåé…ç½®é¡¹çš„å‚æ•°ã€‚åªæ˜¯æ¯ä¸ªé…ç½®é¡¹çš„å‚æ•°ä¸å†åªæ˜¯1ä¸ªï¼Œè€Œå¿…é¡»æ˜¯ä¸¤ä¸ªï¼Œä¸”ä»¥â€œé…       â”ƒ
+â”ƒngx_conf_set_keyval_slot    â”ƒ                                                                              â”ƒ
+â”ƒ                            â”ƒç½®é¡¹åå…³é”®å­—å€¼ï¼›â€çš„å½¢å¼å‡ºçŽ°åœ¨nginxï¼Žconfæ–‡ä»¶ä¸­ï¼ŒåŒæ—¶ï¼Œngx_conf_set_keyval    â”ƒ
+â”ƒ                            â”ƒ slotå°†æŠŠè¿™èœ±é…ç½®é¡¹è½¬åŒ–ä¸ºæ•°ç»„ï¼Œå…¶ä¸­æ¯ä¸ªå…ƒç´ éƒ½å­˜å‚¨ç€key/valueé”®å€¼å¯¹            â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒngx_conf_set_num_slot       â”ƒ  é…ç½®é¡¹åŽå¿…é¡»æºå¸¦1ä¸ªå‚æ•°ï¼Œä¸”åªèƒ½æ˜¯æ•°å­—ã€‚å­˜å‚¨è¿™ä¸ªå‚æ•°çš„å˜é‡å¿…é¡»æ˜¯æ•´åž‹         â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ                            â”ƒ  é…ç½®é¡¹åŽå¿…é¡»æºå¸¦1ä¸ªå‚æ•°ï¼Œè¡¨ç¤ºç©ºé—´å¤§å°ï¼Œå¯ä»¥æ˜¯ä¸€ä¸ªæ•°å­—ï¼Œè¿™æ—¶è¡¨ç¤ºå­—èŠ‚æ•°       â”ƒ
+â”ƒ                            â”ƒ(Byte)ã€‚å¦‚æžœæ•°å­—åŽè·Ÿç€kæˆ–è€…Kï¼Œå°±è¡¨ç¤ºKilobytï¼ŒIKB=1024Bï¼›å¦‚æžœæ•°å­—åŽè·Ÿ          â”ƒ
+â”ƒngx_conf_set_size_slot      â”ƒ                                                                              â”ƒ
+â”ƒ                            â”ƒç€mæˆ–è€…Mï¼Œå°±è¡¨ç¤ºMegabyteï¼Œ1MB=1024KBã€‚ngx_conf_set_ size slotè§£æžåŽå°†         â”ƒ
+â”ƒ                            â”ƒæŠŠé…ç½®é¡¹åŽçš„å‚æ•°è½¬åŒ–æˆä»¥å­—èŠ‚æ•°ä¸ºå•ä½çš„æ•°å­—                                    â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ                            â”ƒ  é…ç½®é¡¹åŽå¿…é¡»æºå¸¦1ä¸ªå‚æ•°ï¼Œè¡¨ç¤ºç©ºé—´ä¸Šçš„åç§»é‡ã€‚å®ƒä¸Žè®¾ç½®çš„å‚æ•°éžå¸¸ç±»ä¼¼ï¼Œ       â”ƒ
+â”ƒ                            â”ƒå…¶å‚æ•°æ˜¯ä¸€ä¸ªæ•°å­—æ—¶è¡¨ç¤ºByteï¼Œä¹Ÿå¯ä»¥åœ¨åŽé¢åŠ å•ä½ï¼Œä½†ä¸Žngx_conf_set_size slot    â”ƒ
+â”ƒngx_conf_set_off_slot       â”ƒä¸åŒçš„æ˜¯ï¼Œæ•°å­—åŽé¢çš„å•ä½ä¸ä»…å¯ä»¥æ˜¯kæˆ–è€…Kã€mæˆ–è€…Mï¼Œè¿˜å¯ä»¥æ˜¯gæˆ–è€…Gï¼Œ            â”ƒ
+â”ƒ                            â”ƒè¿™æ—¶è¡¨ç¤ºGigabyteï¼ŒIGB=1024MBã€‚ngx_conf_set_off_slotè§£æžåŽå°†æŠŠé…ç½®é¡¹åŽçš„       â”ƒ
+â”ƒ                            â”ƒå‚æ•°è½¬åŒ–æˆä»¥å­—èŠ‚æ•°ä¸ºå•ä½çš„æ•°å­—                                                â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ                            â”ƒ  é…ç½®é¡¹åŽå¿…é¡»æºå¸¦1ä¸ªå‚æ•°ï¼Œè¡¨ç¤ºæ—¶é—´ã€‚è¿™ä¸ªå‚æ•°å¯ä»¥åœ¨æ•°å­—åŽé¢åŠ å•ä½ï¼Œå¦‚         â”ƒ
+â”ƒ                            â”ƒæžœå•ä½ä¸ºsæˆ–è€…æ²¡æœ‰ä»»ä½•å•ä½ï¼Œé‚£ä¹ˆè¿™ä¸ªæ•°å­—è¡¨ç¤ºç§’ï¼›å¦‚æžœå•ä½ä¸ºmï¼Œåˆ™è¡¨ç¤ºåˆ†          â”ƒ
+â”ƒ                            â”ƒé’Ÿï¼ŒIm=60sï¼šå¦‚æžœå•ä½ä¸ºhï¼Œåˆ™è¡¨ç¤ºå°æ—¶ï¼Œth=60mï¼šå¦‚æžœå•ä½ä¸ºdï¼Œåˆ™è¡¨ç¤ºå¤©ï¼Œ          â”ƒ
+â”ƒngx_conf_set_msec_slot      â”ƒ                                                                              â”ƒ
+â”ƒ                            â”ƒld=24hï¼šå¦‚æžœå•ä½ä¸ºwï¼Œåˆ™è¡¨ç¤ºå‘¨ï¼Œlw=7dï¼›å¦‚æžœå•ä½ä¸ºMï¼Œåˆ™è¡¨ç¤ºæœˆï¼Œ1M=30dï¼›         â”ƒ
+â”ƒ                            â”ƒå¦‚æžœå•ä½ä¸ºyï¼Œåˆ™è¡¨ç¤ºå¹´ï¼Œly=365dã€‚ngx_conf_set_msec_slotè§£æžåŽå°†æŠŠé…ç½®é¡¹åŽ     â”ƒ
+â”ƒ                            â”ƒçš„å‚æ•°è½¬åŒ–æˆä»¥æ¯«ç§’ä¸ºå•ä½çš„æ•°å­—                                                â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ                            â”ƒ  ä¸Žngx_conf_set_msec slotéžå¸¸ç±»ä¼¼ï¼Œå”¯ä¸€çš„åŒºåˆ«æ˜¯ngx_conf_set msecâ€•slotè§£æž   â”ƒ
+â”ƒngx_conf_set_sec_slot       â”ƒåŽå°†æŠŠé…ç½®é¡¹åŽçš„å‚æ•°è½¬åŒ–æˆä»¥æ¯«ç§’ä¸ºå•ä½çš„æ•°å­—ï¼Œè€Œngx_conf_set_secä¸€slotè§£æž    â”ƒ
+â”ƒ                            â”ƒåŽä¼šæŠŠé…ç½®é¡¹åŽçš„å‚æ•°è½¬åŒ–æˆä»¥ç§’ä¸ºå•ä½çš„æ•°å­—                                    â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ                            â”ƒ  é…ç½®é¡¹åŽå¿…é¡»æºå¸¦ä¸€ä¸¤ä¸ªå‚æ•°ï¼Œç¬¬1ä¸ªå‚æ•°æ˜¯æ•°å­—ï¼Œç¬¬2ä¸ªå‚æ•°è¡¨ç¤ºç©ºé—´å¤§å°ã€‚        â”ƒ
+â”ƒ                            â”ƒä¾‹å¦‚ï¼Œâ€œgzip_buffers 4 8k;â€ï¼ˆé€šå¸¸ç”¨æ¥è¡¨ç¤ºæœ‰å¤šå°‘ä¸ªngx_buf_tç¼“å†²åŒºï¼‰ï¼Œå…¶ä¸­ç¬¬1  â”ƒ
+â”ƒ                            â”ƒä¸ªå‚æ•°ä¸å¯ä»¥æºå¸¦ä»»ä½•å•ä½ï¼Œç¬¬2ä¸ªå‚æ•°ä¸å¸¦ä»»ä½•å•ä½æ—¶è¡¨ç¤ºByteï¼Œå¦‚æžœä»¥kæˆ–          â”ƒ
+â”ƒngx_conf_set_bufs_slot      â”ƒè€…Kä½œä¸ºå•ä½ï¼Œåˆ™è¡¨ç¤ºKilobyteï¼Œå¦‚æžœä»¥mæˆ–è€…Mä½œä¸ºå•ä½ï¼Œåˆ™è¡¨ç¤ºMegabyteã€‚           â”ƒ
+â”ƒ                            â”ƒngx_conf_set- bufsâ€•slotè§£æžåŽä¼šæŠŠé…ç½®é¡¹åŽçš„ä¸¤ä¸ªå‚æ•°è½¬åŒ–æˆngx_bufs_tç»“æž„ä½“ä¸‹  â”ƒ
+â”ƒ                            â”ƒçš„ä¸¤ä¸ªæˆå‘˜ã€‚è¿™ä¸ªé…ç½®é¡¹å¯¹åº”äºŽNginxæœ€å–œæ¬¢ç”¨çš„å¤šç¼“å†²åŒºçš„è§£å†³æ–¹æ¡ˆï¼ˆå¦‚æŽ¥æ”¶è¿ž       â”ƒ
+â”ƒ                            â”ƒæŽ¥å¯¹ç«¯å‘æ¥çš„TCPæµï¼‰                                                           â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ                            â”ƒ  é…ç½®é¡¹åŽå¿…é¡»æºå¸¦1ä¸ªå‚æ•°ï¼Œå…¶å–å€¼èŒƒå›´å¿…é¡»æ˜¯æˆ‘ä»¬è®¾å®šå¥½çš„å­—ç¬¦ä¸²ä¹‹ä¸€ï¼ˆå°±åƒ       â”ƒ
+â”ƒ                            â”ƒCè¯­è¨€ä¸­çš„æžšä¸¾ä¸€æ ·ï¼‰ã€‚é¦–å…ˆï¼Œæˆ‘ä»¬è¦ç”¨ngx_conf_enum_tç»“æž„å®šä¹‰é…ç½®é¡¹çš„å–å€¼èŒƒ      â”ƒ
+â”ƒngx_conf_set_enum_slot      â”ƒ                                                                              â”ƒ
+â”ƒ                            â”ƒå›´ï¼Œå¹¶è®¾å®šæ¯ä¸ªå€¼å¯¹åº”çš„åºåˆ—å·ã€‚ç„¶åŽï¼Œngx_conf_set enum slotå°†ä¼šæŠŠé…ç½®é¡¹å‚      â”ƒ
+â”ƒ                            â”ƒæ•°è½¬åŒ–ä¸ºå¯¹åº”çš„åºåˆ—å·                                                          â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ                            â”ƒ  å†™ngx_conf_set bitmask slotç±»ä¼¼ï¼Œé…ç½®é¡¹åŽå¿…é¡»æºå¸¦1ä¸ªå‚æ•°ï¼Œå…¶å–å€¼èŒƒå›´å¿…      â”ƒ
+â”ƒ                            â”ƒé¡»æ˜¯è®¾å®šå¥½çš„å­—ç¬¦ä¸²ä¹‹ä¸€ã€‚é¦–å…ˆï¼Œæˆ‘ä»¬è¦ç”¨ngx_conf_bitmask_tç»“æž„å®šä¹‰é…ç½®é¡¹çš„      â”ƒ
+â”ƒngx_conf_set_bitmask_slot   â”ƒ                                                                              â”ƒ
+â”ƒ                            â”ƒå–å€¼èŒƒå›´ï¼Œå¹¶è®¾å®šæ¯ä¸ªå€¼å¯¹åº”çš„æ¯”ç‰¹ä½ã€‚æ³¨æ„ï¼Œæ¯ä¸ªå€¼æ‰€å¯¹åº”çš„æ¯”ç‰¹ä½éƒ½è¦ä¸åŒã€‚      â”ƒ
+â”ƒ                            â”ƒç„¶åŽngx_conf_set_bitmask_ slotå°†ä¼šæŠŠé…ç½®é¡¹å‚æ•°è½¬åŒ–ä¸ºå¯¹åº”çš„æ¯”ç‰¹ä½              â”ƒ
+â”—â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”»â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”›
 
-©³©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©×©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©·
-©§    Ô¤Éè·½·¨Ãû            ©§    ÐÐÎª                                                                    ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§                          ©§  Õâ¸ö·½·¨ÓÃÓÚÉèÖÃÄ¿Â¼»òÕßÎÄ¼þµÄ¶ÁÐ´È¨ÏÞ¡£ÅäÖÃÏîºó¿ÉÒÔÐ¯´ø1¡«3¸ö²ÎÊý£¬      ©§
-©§                          ©§¿ÉÒÔÊÇÈçÏÂÐÎÊ½£ºuser:rw group:rw all:rw¡£×¢Òâ£¬ËüµÄÒâÒåÓëLinuxÉÏÎÄ¼þ»òÕßÄ¿  ©§
-©§ngx_conf_set_access_slot  ©§Â¼µÄÈ¨ÏÞÒâÒåÊÇÒ»ÖÂµÄ£¬µ«ÊÇuser/group/allºóÃæµÄÈ¨ÏÞÖ»¿ÉÒÔÉèÎªrw£¨¶Á£¯Ð´£©»ò  ©§
-©§                          ©§Õßr£¨Ö»¶Á£©£¬²»¿ÉÒÔÓÐÆäËûÈÎºÎÐÎÊ½£¬Èçw»òÕßrxµÈ¡£ngx_conf_set- access slot   ©§
-©§                          ©§½«»á°ÑãëÇú²ÎÊý×ª»¯ÎªÒ»¸öÕûÐÍ                                                ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§                          ©§  Õâ¸ö·½·¨ÓÃÓÚÉèÖÃÂ·¾¶£¬ÅäÖÃÏîºó±ØÐëÐ¯´ø1¸ö²ÎÊý£¬±íÊ¾1¸öÓÐÒâÒåµÄÂ·¾¶¡£      ©§
-©§ngx_conf_set_path_slot    ©§                                                                            ©§
-©§                          ©§ngx_conf_set_path_slot½«»á°Ñ²ÎÊý×ª»¯Îªngx_path_t½á¹¹                        ©§
-©»©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ß©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¿
+â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”³â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”“
+â”ƒ    é¢„è®¾æ–¹æ³•å            â”ƒ    è¡Œä¸º                                                                    â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ                          â”ƒ  è¿™ä¸ªæ–¹æ³•ç”¨äºŽè®¾ç½®ç›®å½•æˆ–è€…æ–‡ä»¶çš„è¯»å†™æƒé™ã€‚é…ç½®é¡¹åŽå¯ä»¥æºå¸¦1ï½ž3ä¸ªå‚æ•°ï¼Œ      â”ƒ
+â”ƒ                          â”ƒå¯ä»¥æ˜¯å¦‚ä¸‹å½¢å¼ï¼šuser:rw group:rw all:rwã€‚æ³¨æ„ï¼Œå®ƒçš„æ„ä¹‰ä¸ŽLinuxä¸Šæ–‡ä»¶æˆ–è€…ç›®  â”ƒ
+â”ƒngx_conf_set_access_slot  â”ƒå½•çš„æƒé™æ„ä¹‰æ˜¯ä¸€è‡´çš„ï¼Œä½†æ˜¯user/group/allåŽé¢çš„æƒé™åªå¯ä»¥è®¾ä¸ºrwï¼ˆè¯»ï¼å†™ï¼‰æˆ–  â”ƒ
+â”ƒ                          â”ƒè€…rï¼ˆåªè¯»ï¼‰ï¼Œä¸å¯ä»¥æœ‰å…¶ä»–ä»»ä½•å½¢å¼ï¼Œå¦‚wæˆ–è€…rxç­‰ã€‚ngx_conf_set- access slot   â”ƒ
+â”ƒ                          â”ƒå°†ä¼šæŠŠæ±¶æ›²å‚æ•°è½¬åŒ–ä¸ºä¸€ä¸ªæ•´åž‹                                                â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ                          â”ƒ  è¿™ä¸ªæ–¹æ³•ç”¨äºŽè®¾ç½®è·¯å¾„ï¼Œé…ç½®é¡¹åŽå¿…é¡»æºå¸¦1ä¸ªå‚æ•°ï¼Œè¡¨ç¤º1ä¸ªæœ‰æ„ä¹‰çš„è·¯å¾„ã€‚      â”ƒ
+â”ƒngx_conf_set_path_slot    â”ƒ                                                                            â”ƒ
+â”ƒ                          â”ƒngx_conf_set_path_slotå°†ä¼šæŠŠå‚æ•°è½¬åŒ–ä¸ºngx_path_tç»“æž„                        â”ƒ
+â”—â”â”â”â”â”â”â”â”â”â”â”â”â”â”»â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”›
 */
 
 /*
-ngx_conf_set_path_slot¿ÉÒÔÐ¯´ø1¡«4¸ö²ÎÊý£¬ÆäÖÐµÚ1¸ö²ÎÊý±ØÐëÊÇÂ·¾¶£¬µÚ2¡«4
-¸ö²ÎÊý±ØÐëÊÇÕûÊý£¨´ó²¿·ÖÇéÐÎÏÂ¿ÉÒÔ²»Ê¹ÓÃ£©£¬¿ÉÒÔ²Î¼ûclient_body_temp_path
-ÅäÖÃÏîµÄÓÃ·¨£¬client_body_temp_pathÅäÖÃÏî¾ÍÊÇÓÃngx_conf_set_path_slotÔ¤Éè·½·¨À´½âÎö
-²ÎÊýµÄ¡£
-    ngx_conf_set_path_slot»á°ÑÅäÖÃÏîÖÐµÄÂ·¾¶²ÎÊý×ª»¯Îªngx_path_t½á¹¹£¬¿´Ò»ÏÂngx_path_tµÄ¶¨Òå¡£
+ngx_conf_set_path_slotå¯ä»¥æºå¸¦1ï½ž4ä¸ªå‚æ•°ï¼Œå…¶ä¸­ç¬¬1ä¸ªå‚æ•°å¿…é¡»æ˜¯è·¯å¾„ï¼Œç¬¬2ï½ž4
+ä¸ªå‚æ•°å¿…é¡»æ˜¯æ•´æ•°ï¼ˆå¤§éƒ¨åˆ†æƒ…å½¢ä¸‹å¯ä»¥ä¸ä½¿ç”¨ï¼‰ï¼Œå¯ä»¥å‚è§client_body_temp_path
+é…ç½®é¡¹çš„ç”¨æ³•ï¼Œclient_body_temp_pathé…ç½®é¡¹å°±æ˜¯ç”¨ngx_conf_set_path_sloté¢„è®¾æ–¹æ³•æ¥è§£æž
+å‚æ•°çš„ã€‚
+    ngx_conf_set_path_slotä¼šæŠŠé…ç½®é¡¹ä¸­çš„è·¯å¾„å‚æ•°è½¬åŒ–ä¸ºngx_path_tç»“æž„ï¼Œçœ‹ä¸€ä¸‹ngx_path_tçš„å®šä¹‰ã€‚
 typedef struct {
      ngx_str_t name;
      size_t len;
@@ -473,9 +473,9 @@ typedef struct {
      u_char *conf_file;
      ngx_uint_t line;
  } ngx_path_t ;
-ÆäÖÐ£¬name³ÉÔ±´æ´¢×Å×Ö·û´®ÐÎÊ½µÄÂ·¾¶£¬¶ølevelÊý×é¾ÍÉá´æ´¢×ÅµÚ2¡¢µÚ3¡¢µÚ4
-¸ö²ÎÊý£¨Èç¹û´æÔÚµÄ»°£©¡£ÕâÀïÓÃngx_http_mytest_conf_t½á¹¹ÖÐµÄngx_path_t* my_path;À´
-´æ´¢ÅäÖÃÏî¡°test_path¡±ºóµÄ²ÎÊýÖµ¡£
+å…¶ä¸­ï¼Œnameæˆå‘˜å­˜å‚¨ç€å­—ç¬¦ä¸²å½¢å¼çš„è·¯å¾„ï¼Œè€Œlevelæ•°ç»„å°±èˆå­˜å‚¨ç€ç¬¬2ã€ç¬¬3ã€ç¬¬4
+ä¸ªå‚æ•°ï¼ˆå¦‚æžœå­˜åœ¨çš„è¯ï¼‰ã€‚è¿™é‡Œç”¨ngx_http_mytest_conf_tç»“æž„ä¸­çš„ngx_path_t* my_path;æ¥
+å­˜å‚¨é…ç½®é¡¹â€œtest_pathâ€åŽçš„å‚æ•°å€¼ã€‚
 static ngx_command_t  ngx_http_mytest_commands []  =
    {   ngx_string ( " test_path" ) ,
               NGX_HTTP_LOC_CONF I NGX_CONF_TAKE1234,  '
@@ -486,9 +486,9 @@ static ngx_command_t  ngx_http_mytest_commands []  =
     },
     ngx null_Command
   }
-   Èç¹ûnginx.confÖÐ´æÔÚÅäÖÃÏîtest_path /usr/local/nginx/ 1 2 3, my_pathÖ¸ÏòµÄngx_
-path_t½á¹¹ÖÐ£¬nameµÄÄÚÈÝÊÇ/usr/local/nginx/£¬¶ølevel[0]Îª1£¬level[l]Îª2£¬level[2]Îª3¡£
-Èç¹ûÅäÖÃÏîÊÇtest_path /usr/local/nginx/;£¬ÄÇÃ´levelÊý×éµÄ3¸ö³ÉÔ±¶¼ÊÇO¡£
+   å¦‚æžœnginx.confä¸­å­˜åœ¨é…ç½®é¡¹test_path /usr/local/nginx/ 1 2 3, my_pathæŒ‡å‘çš„ngx_
+path_tç»“æž„ä¸­ï¼Œnameçš„å†…å®¹æ˜¯/usr/local/nginx/ï¼Œè€Œlevel[0]ä¸º1ï¼Œlevel[l]ä¸º2ï¼Œlevel[2]ä¸º3ã€‚
+å¦‚æžœé…ç½®é¡¹æ˜¯test_path /usr/local/nginx/;ï¼Œé‚£ä¹ˆlevelæ•°ç»„çš„3ä¸ªæˆå‘˜éƒ½æ˜¯Oã€‚
 */
 char *
 ngx_conf_set_path_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
@@ -515,7 +515,7 @@ ngx_conf_set_path_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
 
     path->name = value[1];
 
-    if (path->name.data[path->name.len - 1] == '/') {  //°ÑÂ·¾¶×îºóÃæµÄ/È¥µô
+    if (path->name.data[path->name.len - 1] == '/') {  //æŠŠè·¯å¾„æœ€åŽé¢çš„/åŽ»æŽ‰
         path->name.len--;
     }
 
@@ -591,101 +591,101 @@ ngx_conf_merge_path_value(ngx_conf_t *cf, ngx_path_t **path, ngx_path_t *prev,
 
 /*
 char*(*set)(ngx_conf_t *cf, ngx_commandj 'vcmd,void *conf)
-    ¹ØÓÚset»Øµ÷·½·¨£¬ÔÚ´¦ÀímytestÅäÖÃÏîÊ±ÒÑ¾­Ê¹ÓÃ¹ý£¬ÆäÖÐmytestÅäÖÃÏîÊÇ
-    ²»´ø²ÎÊýµÄ¡£Èç¹û´¦ÀíÅäÖÃÏî£¬ÎÒÃÇ¼È¿ÉÒÔ×Ô¼ºÊµÏÖÒ»¸ö»Øµ÷·½·¨À´´¦ÀíÅäÖÃÏî£¨£©£¬Ò²¿ÉÒÔÊ¹ÓÃNginxÔ¤ÉèµÄ14¸ö½âÎöÅäÖÃÏî·½·¨£¬Õâ»áÉÙ
-Ð´Ðí¶à´úÂë
-©³©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©×©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©·
-©§    Ô¤Éè·½·¨Ãû              ©§    ÐÐÎª                                                                      ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§                            ©§  Èç¹ûnginx£®confÎÄ¼þÖÐÄ³¸öÅäÖÃÏîµÄ²ÎÊýÊÇon»òÕßoff£¨¼´Ï£ÍûÅäÖÃÏî±í´ï´ò¿ª      ©§
-©§                            ©§»òÕß¹Ø±ÕÄ³¸ö¹¦ÄÜµÄÒâË¼£©£¬¶øÇÒÔÚNginxÄ£¿éµÄ´úÂëÖÐÊ¹ÓÃngx_flag_t±äÁ¿À´±£       ©§
-©§ngx_conf_set_flag_slot      ©§´æÕâ¸öÅäÖÃÏîµÄ²ÎÊý£¬¾Í¿ÉÒÔ½«set»Øµ÷·½·¨ÉèÎªngx_conf_set_flag_slot¡£µ±nginx.   ©§
-©§                            ©§confÎÄ¼þÖÐ²ÎÊýÊÇonÊ±£¬´úÂëÖÐµÄngx_flag_tÀàÐÍ±äÁ¿½«ÉèÎª1£¬²ÎÊýÎªoffÊ±Ôò        ©§
-©§                            ©§ÉèÎªO                                                                         ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§                            ©§  Èç¹ûÅäÖÃÏîºóÖ»ÓÐ1¸ö²ÎÊý£¬Í¬Ê±ÔÚ´úÂëÖÐÎÒÃÇÏ£ÍûÓÃngx_str_tÀàÐÍµÄ±äÁ¿À´±£      ©§
-©§ngx_conf_set_str_slot       ©§                                                                              ©§
-©§                            ©§´æÕâ¸öÅäÖÃÏîµÄ²ÎÊý£¬Ôò¿ÉÒÔÊ¹ÓÃngx_conf_set_ str slot·½·¨                      ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§                            ©§  Èç¹ûÕâ¸öÅäÖÃÏî»á³öÏÖ¶à´Î£¬Ã¿¸öÅäÖÃÏîºóÃæ¶¼¸ú×Å1¸ö²ÎÊý£¬¶øÔÚ³ÌÐòÖÐÎÒÃÇ       ©§
-©§                            ©§Ï£Íû½öÓÃÒ»¸öngx_array_t¶¯Ì¬Êý×é£¨           £©À´´æ´¢ËùÓÐµÄ²ÎÊý£¬ÇÒÊý×éÖÐ      ©§
-©§ngx_conf_set_str_array_slot ©§                                                                              ©§
-©§                            ©§µÄÃ¿¸ö²ÎÊý¶¼ÒÔngx_str_tÀ´´æ´¢£¬ÄÇÃ´Ô¤ÉèµÄngx_conf_set_str_array_slotÓÐ·¨¿É    ©§
-©§                            ©§ÒÔ°ïÎÒÃÇ×öµ½                                                                  ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§                            ©§  Óëngx_conf_set_str_array_slotÀàËÆ£¬Ò²ÊÇÓÃÒ»¸öngx_array_tÊý×éÀ´´æ´¢ËùÓÐÍ¬    ©§
-©§                            ©§ÃûÅäÖÃÏîµÄ²ÎÊý¡£Ö»ÊÇÃ¿¸öÅäÖÃÏîµÄ²ÎÊý²»ÔÙÖ»ÊÇ1¸ö£¬¶ø±ØÐëÊÇÁ½¸ö£¬ÇÒÒÔ¡°Åä       ©§
-©§ngx_conf_set_keyval_slot    ©§                                                                              ©§
-©§                            ©§ÖÃÏîÃû¹Ø¼ü×ÖÖµ£»¡±µÄÐÎÊ½³öÏÖÔÚnginx£®confÎÄ¼þÖÐ£¬Í¬Ê±£¬ngx_conf_set_keyval    ©§
-©§                            ©§ slot½«°ÑÕâòçÅäÖÃÏî×ª»¯ÎªÊý×é£¬ÆäÖÐÃ¿¸öÔªËØ¶¼´æ´¢×Åkey/value¼üÖµ¶Ô            ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§ngx_conf_set_num_slot       ©§  ÅäÖÃÏîºó±ØÐëÐ¯´ø1¸ö²ÎÊý£¬ÇÒÖ»ÄÜÊÇÊý×Ö¡£´æ´¢Õâ¸ö²ÎÊýµÄ±äÁ¿±ØÐëÊÇÕûÐÍ         ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§                            ©§  ÅäÖÃÏîºó±ØÐëÐ¯´ø1¸ö²ÎÊý£¬±íÊ¾¿Õ¼ä´óÐ¡£¬¿ÉÒÔÊÇÒ»¸öÊý×Ö£¬ÕâÊ±±íÊ¾×Ö½ÚÊý       ©§
-©§                            ©§(Byte)¡£Èç¹ûÊý×Öºó¸ú×Åk»òÕßK£¬¾Í±íÊ¾Kilobyt£¬IKB=1024B£»Èç¹ûÊý×Öºó¸ú          ©§
-©§ngx_conf_set_size_slot      ©§                                                                              ©§
-©§                            ©§×Åm»òÕßM£¬¾Í±íÊ¾Megabyte£¬1MB=1024KB¡£ngx_conf_set_ size slot½âÎöºó½«         ©§
-©§                            ©§°ÑÅäÖÃÏîºóµÄ²ÎÊý×ª»¯³ÉÒÔ×Ö½ÚÊýÎªµ¥Î»µÄÊý×Ö                                    ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§                            ©§  ÅäÖÃÏîºó±ØÐëÐ¯´ø1¸ö²ÎÊý£¬±íÊ¾¿Õ¼äÉÏµÄÆ«ÒÆÁ¿¡£ËüÓëÉèÖÃµÄ²ÎÊý·Ç³£ÀàËÆ£¬       ©§
-©§                            ©§Æä²ÎÊýÊÇÒ»¸öÊý×ÖÊ±±íÊ¾Byte£¬Ò²¿ÉÒÔÔÚºóÃæ¼Óµ¥Î»£¬µ«Óëngx_conf_set_size slot    ©§
-©§ngx_conf_set_off_slot       ©§²»Í¬µÄÊÇ£¬Êý×ÖºóÃæµÄµ¥Î»²»½ö¿ÉÒÔÊÇk»òÕßK¡¢m»òÕßM£¬»¹¿ÉÒÔÊÇg»òÕßG£¬            ©§
-©§                            ©§ÕâÊ±±íÊ¾Gigabyte£¬IGB=1024MB¡£ngx_conf_set_off_slot½âÎöºó½«°ÑÅäÖÃÏîºóµÄ       ©§
-©§                            ©§²ÎÊý×ª»¯³ÉÒÔ×Ö½ÚÊýÎªµ¥Î»µÄÊý×Ö                                                ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§                            ©§  ÅäÖÃÏîºó±ØÐëÐ¯´ø1¸ö²ÎÊý£¬±íÊ¾Ê±¼ä¡£Õâ¸ö²ÎÊý¿ÉÒÔÔÚÊý×ÖºóÃæ¼Óµ¥Î»£¬Èç         ©§
-©§                            ©§¹ûµ¥Î»Îªs»òÕßÃ»ÓÐÈÎºÎµ¥Î»£¬ÄÇÃ´Õâ¸öÊý×Ö±íÊ¾Ãë£»Èç¹ûµ¥Î»Îªm£¬Ôò±íÊ¾·Ö          ©§
-©§                            ©§ÖÓ£¬Im=60s£ºÈç¹ûµ¥Î»Îªh£¬Ôò±íÊ¾Ð¡Ê±£¬th=60m£ºÈç¹ûµ¥Î»Îªd£¬Ôò±íÊ¾Ìì£¬          ©§
-©§ngx_conf_set_msec_slot      ©§                                                                              ©§
-©§                            ©§ld=24h£ºÈç¹ûµ¥Î»Îªw£¬Ôò±íÊ¾ÖÜ£¬lw=7d£»Èç¹ûµ¥Î»ÎªM£¬Ôò±íÊ¾ÔÂ£¬1M=30d£»         ©§
-©§                            ©§Èç¹ûµ¥Î»Îªy£¬Ôò±íÊ¾Äê£¬ly=365d¡£ngx_conf_set_msec_slot½âÎöºó½«°ÑÅäÖÃÏîºó     ©§
-©§                            ©§µÄ²ÎÊý×ª»¯³ÉÒÔºÁÃëÎªµ¥Î»µÄÊý×Ö                                                ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§                            ©§  Óëngx_conf_set_msec slot·Ç³£ÀàËÆ£¬Î¨Ò»µÄÇø±ðÊÇngx_conf_set msec¡ªslot½âÎö   ©§
-©§ngx_conf_set_sec_slot       ©§ºó½«°ÑÅäÖÃÏîºóµÄ²ÎÊý×ª»¯³ÉÒÔºÁÃëÎªµ¥Î»µÄÊý×Ö£¬¶øngx_conf_set_secÒ»slot½âÎö    ©§
-©§                            ©§ºó»á°ÑÅäÖÃÏîºóµÄ²ÎÊý×ª»¯³ÉÒÔÃëÎªµ¥Î»µÄÊý×Ö                                    ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§                            ©§  ÅäÖÃÏîºó±ØÐëÐ¯´øÒ»Á½¸ö²ÎÊý£¬µÚ1¸ö²ÎÊýÊÇÊý×Ö£¬µÚ2¸ö²ÎÊý±íÊ¾¿Õ¼ä´óÐ¡¡£        ©§
-©§                            ©§ÀýÈç£¬¡°gzip_buffers 4 8k;¡±£¨Í¨³£ÓÃÀ´±íÊ¾ÓÐ¶àÉÙ¸öngx_buf_t»º³åÇø£©£¬ÆäÖÐµÚ1  ©§
-©§                            ©§¸ö²ÎÊý²»¿ÉÒÔÐ¯´øÈÎºÎµ¥Î»£¬µÚ2¸ö²ÎÊý²»´øÈÎºÎµ¥Î»Ê±±íÊ¾Byte£¬Èç¹ûÒÔk»ò          ©§
-©§ngx_conf_set_bufs_slot      ©§ÕßK×÷Îªµ¥Î»£¬Ôò±íÊ¾Kilobyte£¬Èç¹ûÒÔm»òÕßM×÷Îªµ¥Î»£¬Ôò±íÊ¾Megabyte¡£           ©§
-©§                            ©§ngx_conf_set- bufs¡ªslot½âÎöºó»á°ÑÅäÖÃÏîºóµÄÁ½¸ö²ÎÊý×ª»¯³Éngx_bufs_t½á¹¹ÌåÏÂ  ©§
-©§                            ©§µÄÁ½¸ö³ÉÔ±¡£Õâ¸öÅäÖÃÏî¶ÔÓ¦ÓÚNginx×îÏ²»¶ÓÃµÄ¶à»º³åÇøµÄ½â¾ö·½°¸£¨Èç½ÓÊÕÁ¬       ©§
-©§                            ©§½Ó¶Ô¶Ë·¢À´µÄTCPÁ÷£©                                                           ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§                            ©§  ÅäÖÃÏîºó±ØÐëÐ¯´ø1¸ö²ÎÊý£¬ÆäÈ¡Öµ·¶Î§±ØÐëÊÇÎÒÃÇÉè¶¨ºÃµÄ×Ö·û´®Ö®Ò»£¨¾ÍÏñ       ©§
-©§                            ©§CÓïÑÔÖÐµÄÃ¶¾ÙÒ»Ñù£©¡£Ê×ÏÈ£¬ÎÒÃÇÒªÓÃngx_conf_enum_t½á¹¹¶¨ÒåÅäÖÃÏîµÄÈ¡Öµ·¶      ©§
-©§ngx_conf_set_enum_slot      ©§                                                                              ©§
-©§                            ©§Î§£¬²¢Éè¶¨Ã¿¸öÖµ¶ÔÓ¦µÄÐòÁÐºÅ¡£È»ºó£¬ngx_conf_set enum slot½«»á°ÑÅäÖÃÏî²Î      ©§
-©§                            ©§Êý×ª»¯Îª¶ÔÓ¦µÄÐòÁÐºÅ                                                          ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§                            ©§  Ð´ngx_conf_set bitmask slotÀàËÆ£¬ÅäÖÃÏîºó±ØÐëÐ¯´ø1¸ö²ÎÊý£¬ÆäÈ¡Öµ·¶Î§±Ø      ©§
-©§                            ©§ÐëÊÇÉè¶¨ºÃµÄ×Ö·û´®Ö®Ò»¡£Ê×ÏÈ£¬ÎÒÃÇÒªÓÃngx_conf_bitmask_t½á¹¹¶¨ÒåÅäÖÃÏîµÄ      ©§
-©§ngx_conf_set_bitmask_slot   ©§                                                                              ©§
-©§                            ©§È¡Öµ·¶Î§£¬²¢Éè¶¨Ã¿¸öÖµ¶ÔÓ¦µÄ±ÈÌØÎ»¡£×¢Òâ£¬Ã¿¸öÖµËù¶ÔÓ¦µÄ±ÈÌØÎ»¶¼Òª²»Í¬¡£      ©§
-©§                            ©§È»ºóngx_conf_set_bitmask_ slot½«»á°ÑÅäÖÃÏî²ÎÊý×ª»¯Îª¶ÔÓ¦µÄ±ÈÌØÎ»              ©§
-©»©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ß©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¿
+    å…³äºŽsetå›žè°ƒæ–¹æ³•ï¼Œåœ¨å¤„ç†mytesté…ç½®é¡¹æ—¶å·²ç»ä½¿ç”¨è¿‡ï¼Œå…¶ä¸­mytesté…ç½®é¡¹æ˜¯
+    ä¸å¸¦å‚æ•°çš„ã€‚å¦‚æžœå¤„ç†é…ç½®é¡¹ï¼Œæˆ‘ä»¬æ—¢å¯ä»¥è‡ªå·±å®žçŽ°ä¸€ä¸ªå›žè°ƒæ–¹æ³•æ¥å¤„ç†é…ç½®é¡¹ï¼ˆï¼‰ï¼Œä¹Ÿå¯ä»¥ä½¿ç”¨Nginxé¢„è®¾çš„14ä¸ªè§£æžé…ç½®é¡¹æ–¹æ³•ï¼Œè¿™ä¼šå°‘
+å†™è®¸å¤šä»£ç 
+â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”³â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”“
+â”ƒ    é¢„è®¾æ–¹æ³•å              â”ƒ    è¡Œä¸º                                                                      â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ                            â”ƒ  å¦‚æžœnginxï¼Žconfæ–‡ä»¶ä¸­æŸä¸ªé…ç½®é¡¹çš„å‚æ•°æ˜¯onæˆ–è€…offï¼ˆå³å¸Œæœ›é…ç½®é¡¹è¡¨è¾¾æ‰“å¼€      â”ƒ
+â”ƒ                            â”ƒæˆ–è€…å…³é—­æŸä¸ªåŠŸèƒ½çš„æ„æ€ï¼‰ï¼Œè€Œä¸”åœ¨Nginxæ¨¡å—çš„ä»£ç ä¸­ä½¿ç”¨ngx_flag_tå˜é‡æ¥ä¿       â”ƒ
+â”ƒngx_conf_set_flag_slot      â”ƒå­˜è¿™ä¸ªé…ç½®é¡¹çš„å‚æ•°ï¼Œå°±å¯ä»¥å°†setå›žè°ƒæ–¹æ³•è®¾ä¸ºngx_conf_set_flag_slotã€‚å½“nginx.   â”ƒ
+â”ƒ                            â”ƒconfæ–‡ä»¶ä¸­å‚æ•°æ˜¯onæ—¶ï¼Œä»£ç ä¸­çš„ngx_flag_tç±»åž‹å˜é‡å°†è®¾ä¸º1ï¼Œå‚æ•°ä¸ºoffæ—¶åˆ™        â”ƒ
+â”ƒ                            â”ƒè®¾ä¸ºO                                                                         â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ                            â”ƒ  å¦‚æžœé…ç½®é¡¹åŽåªæœ‰1ä¸ªå‚æ•°ï¼ŒåŒæ—¶åœ¨ä»£ç ä¸­æˆ‘ä»¬å¸Œæœ›ç”¨ngx_str_tç±»åž‹çš„å˜é‡æ¥ä¿      â”ƒ
+â”ƒngx_conf_set_str_slot       â”ƒ                                                                              â”ƒ
+â”ƒ                            â”ƒå­˜è¿™ä¸ªé…ç½®é¡¹çš„å‚æ•°ï¼Œåˆ™å¯ä»¥ä½¿ç”¨ngx_conf_set_ str slotæ–¹æ³•                      â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ                            â”ƒ  å¦‚æžœè¿™ä¸ªé…ç½®é¡¹ä¼šå‡ºçŽ°å¤šæ¬¡ï¼Œæ¯ä¸ªé…ç½®é¡¹åŽé¢éƒ½è·Ÿç€1ä¸ªå‚æ•°ï¼Œè€Œåœ¨ç¨‹åºä¸­æˆ‘ä»¬       â”ƒ
+â”ƒ                            â”ƒå¸Œæœ›ä»…ç”¨ä¸€ä¸ªngx_array_tåŠ¨æ€æ•°ç»„ï¼ˆ           ï¼‰æ¥å­˜å‚¨æ‰€æœ‰çš„å‚æ•°ï¼Œä¸”æ•°ç»„ä¸­      â”ƒ
+â”ƒngx_conf_set_str_array_slot â”ƒ                                                                              â”ƒ
+â”ƒ                            â”ƒçš„æ¯ä¸ªå‚æ•°éƒ½ä»¥ngx_str_tæ¥å­˜å‚¨ï¼Œé‚£ä¹ˆé¢„è®¾çš„ngx_conf_set_str_array_slotæœ‰æ³•å¯    â”ƒ
+â”ƒ                            â”ƒä»¥å¸®æˆ‘ä»¬åšåˆ°                                                                  â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ                            â”ƒ  ä¸Žngx_conf_set_str_array_slotç±»ä¼¼ï¼Œä¹Ÿæ˜¯ç”¨ä¸€ä¸ªngx_array_tæ•°ç»„æ¥å­˜å‚¨æ‰€æœ‰åŒ    â”ƒ
+â”ƒ                            â”ƒåé…ç½®é¡¹çš„å‚æ•°ã€‚åªæ˜¯æ¯ä¸ªé…ç½®é¡¹çš„å‚æ•°ä¸å†åªæ˜¯1ä¸ªï¼Œè€Œå¿…é¡»æ˜¯ä¸¤ä¸ªï¼Œä¸”ä»¥â€œé…       â”ƒ
+â”ƒngx_conf_set_keyval_slot    â”ƒ                                                                              â”ƒ
+â”ƒ                            â”ƒç½®é¡¹åå…³é”®å­—å€¼ï¼›â€çš„å½¢å¼å‡ºçŽ°åœ¨nginxï¼Žconfæ–‡ä»¶ä¸­ï¼ŒåŒæ—¶ï¼Œngx_conf_set_keyval    â”ƒ
+â”ƒ                            â”ƒ slotå°†æŠŠè¿™èœ±é…ç½®é¡¹è½¬åŒ–ä¸ºæ•°ç»„ï¼Œå…¶ä¸­æ¯ä¸ªå…ƒç´ éƒ½å­˜å‚¨ç€key/valueé”®å€¼å¯¹            â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒngx_conf_set_num_slot       â”ƒ  é…ç½®é¡¹åŽå¿…é¡»æºå¸¦1ä¸ªå‚æ•°ï¼Œä¸”åªèƒ½æ˜¯æ•°å­—ã€‚å­˜å‚¨è¿™ä¸ªå‚æ•°çš„å˜é‡å¿…é¡»æ˜¯æ•´åž‹         â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ                            â”ƒ  é…ç½®é¡¹åŽå¿…é¡»æºå¸¦1ä¸ªå‚æ•°ï¼Œè¡¨ç¤ºç©ºé—´å¤§å°ï¼Œå¯ä»¥æ˜¯ä¸€ä¸ªæ•°å­—ï¼Œè¿™æ—¶è¡¨ç¤ºå­—èŠ‚æ•°       â”ƒ
+â”ƒ                            â”ƒ(Byte)ã€‚å¦‚æžœæ•°å­—åŽè·Ÿç€kæˆ–è€…Kï¼Œå°±è¡¨ç¤ºKilobytï¼ŒIKB=1024Bï¼›å¦‚æžœæ•°å­—åŽè·Ÿ          â”ƒ
+â”ƒngx_conf_set_size_slot      â”ƒ                                                                              â”ƒ
+â”ƒ                            â”ƒç€mæˆ–è€…Mï¼Œå°±è¡¨ç¤ºMegabyteï¼Œ1MB=1024KBã€‚ngx_conf_set_ size slotè§£æžåŽå°†         â”ƒ
+â”ƒ                            â”ƒæŠŠé…ç½®é¡¹åŽçš„å‚æ•°è½¬åŒ–æˆä»¥å­—èŠ‚æ•°ä¸ºå•ä½çš„æ•°å­—                                    â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ                            â”ƒ  é…ç½®é¡¹åŽå¿…é¡»æºå¸¦1ä¸ªå‚æ•°ï¼Œè¡¨ç¤ºç©ºé—´ä¸Šçš„åç§»é‡ã€‚å®ƒä¸Žè®¾ç½®çš„å‚æ•°éžå¸¸ç±»ä¼¼ï¼Œ       â”ƒ
+â”ƒ                            â”ƒå…¶å‚æ•°æ˜¯ä¸€ä¸ªæ•°å­—æ—¶è¡¨ç¤ºByteï¼Œä¹Ÿå¯ä»¥åœ¨åŽé¢åŠ å•ä½ï¼Œä½†ä¸Žngx_conf_set_size slot    â”ƒ
+â”ƒngx_conf_set_off_slot       â”ƒä¸åŒçš„æ˜¯ï¼Œæ•°å­—åŽé¢çš„å•ä½ä¸ä»…å¯ä»¥æ˜¯kæˆ–è€…Kã€mæˆ–è€…Mï¼Œè¿˜å¯ä»¥æ˜¯gæˆ–è€…Gï¼Œ            â”ƒ
+â”ƒ                            â”ƒè¿™æ—¶è¡¨ç¤ºGigabyteï¼ŒIGB=1024MBã€‚ngx_conf_set_off_slotè§£æžåŽå°†æŠŠé…ç½®é¡¹åŽçš„       â”ƒ
+â”ƒ                            â”ƒå‚æ•°è½¬åŒ–æˆä»¥å­—èŠ‚æ•°ä¸ºå•ä½çš„æ•°å­—                                                â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ                            â”ƒ  é…ç½®é¡¹åŽå¿…é¡»æºå¸¦1ä¸ªå‚æ•°ï¼Œè¡¨ç¤ºæ—¶é—´ã€‚è¿™ä¸ªå‚æ•°å¯ä»¥åœ¨æ•°å­—åŽé¢åŠ å•ä½ï¼Œå¦‚         â”ƒ
+â”ƒ                            â”ƒæžœå•ä½ä¸ºsæˆ–è€…æ²¡æœ‰ä»»ä½•å•ä½ï¼Œé‚£ä¹ˆè¿™ä¸ªæ•°å­—è¡¨ç¤ºç§’ï¼›å¦‚æžœå•ä½ä¸ºmï¼Œåˆ™è¡¨ç¤ºåˆ†          â”ƒ
+â”ƒ                            â”ƒé’Ÿï¼ŒIm=60sï¼šå¦‚æžœå•ä½ä¸ºhï¼Œåˆ™è¡¨ç¤ºå°æ—¶ï¼Œth=60mï¼šå¦‚æžœå•ä½ä¸ºdï¼Œåˆ™è¡¨ç¤ºå¤©ï¼Œ          â”ƒ
+â”ƒngx_conf_set_msec_slot      â”ƒ                                                                              â”ƒ
+â”ƒ                            â”ƒld=24hï¼šå¦‚æžœå•ä½ä¸ºwï¼Œåˆ™è¡¨ç¤ºå‘¨ï¼Œlw=7dï¼›å¦‚æžœå•ä½ä¸ºMï¼Œåˆ™è¡¨ç¤ºæœˆï¼Œ1M=30dï¼›         â”ƒ
+â”ƒ                            â”ƒå¦‚æžœå•ä½ä¸ºyï¼Œåˆ™è¡¨ç¤ºå¹´ï¼Œly=365dã€‚ngx_conf_set_msec_slotè§£æžåŽå°†æŠŠé…ç½®é¡¹åŽ     â”ƒ
+â”ƒ                            â”ƒçš„å‚æ•°è½¬åŒ–æˆä»¥æ¯«ç§’ä¸ºå•ä½çš„æ•°å­—                                                â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ                            â”ƒ  ä¸Žngx_conf_set_msec slotéžå¸¸ç±»ä¼¼ï¼Œå”¯ä¸€çš„åŒºåˆ«æ˜¯ngx_conf_set msecâ€•slotè§£æž   â”ƒ
+â”ƒngx_conf_set_sec_slot       â”ƒåŽå°†æŠŠé…ç½®é¡¹åŽçš„å‚æ•°è½¬åŒ–æˆä»¥æ¯«ç§’ä¸ºå•ä½çš„æ•°å­—ï¼Œè€Œngx_conf_set_secä¸€slotè§£æž    â”ƒ
+â”ƒ                            â”ƒåŽä¼šæŠŠé…ç½®é¡¹åŽçš„å‚æ•°è½¬åŒ–æˆä»¥ç§’ä¸ºå•ä½çš„æ•°å­—                                    â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ                            â”ƒ  é…ç½®é¡¹åŽå¿…é¡»æºå¸¦ä¸€ä¸¤ä¸ªå‚æ•°ï¼Œç¬¬1ä¸ªå‚æ•°æ˜¯æ•°å­—ï¼Œç¬¬2ä¸ªå‚æ•°è¡¨ç¤ºç©ºé—´å¤§å°ã€‚        â”ƒ
+â”ƒ                            â”ƒä¾‹å¦‚ï¼Œâ€œgzip_buffers 4 8k;â€ï¼ˆé€šå¸¸ç”¨æ¥è¡¨ç¤ºæœ‰å¤šå°‘ä¸ªngx_buf_tç¼“å†²åŒºï¼‰ï¼Œå…¶ä¸­ç¬¬1  â”ƒ
+â”ƒ                            â”ƒä¸ªå‚æ•°ä¸å¯ä»¥æºå¸¦ä»»ä½•å•ä½ï¼Œç¬¬2ä¸ªå‚æ•°ä¸å¸¦ä»»ä½•å•ä½æ—¶è¡¨ç¤ºByteï¼Œå¦‚æžœä»¥kæˆ–          â”ƒ
+â”ƒngx_conf_set_bufs_slot      â”ƒè€…Kä½œä¸ºå•ä½ï¼Œåˆ™è¡¨ç¤ºKilobyteï¼Œå¦‚æžœä»¥mæˆ–è€…Mä½œä¸ºå•ä½ï¼Œåˆ™è¡¨ç¤ºMegabyteã€‚           â”ƒ
+â”ƒ                            â”ƒngx_conf_set- bufsâ€•slotè§£æžåŽä¼šæŠŠé…ç½®é¡¹åŽçš„ä¸¤ä¸ªå‚æ•°è½¬åŒ–æˆngx_bufs_tç»“æž„ä½“ä¸‹  â”ƒ
+â”ƒ                            â”ƒçš„ä¸¤ä¸ªæˆå‘˜ã€‚è¿™ä¸ªé…ç½®é¡¹å¯¹åº”äºŽNginxæœ€å–œæ¬¢ç”¨çš„å¤šç¼“å†²åŒºçš„è§£å†³æ–¹æ¡ˆï¼ˆå¦‚æŽ¥æ”¶è¿ž       â”ƒ
+â”ƒ                            â”ƒæŽ¥å¯¹ç«¯å‘æ¥çš„TCPæµï¼‰                                                           â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ                            â”ƒ  é…ç½®é¡¹åŽå¿…é¡»æºå¸¦1ä¸ªå‚æ•°ï¼Œå…¶å–å€¼èŒƒå›´å¿…é¡»æ˜¯æˆ‘ä»¬è®¾å®šå¥½çš„å­—ç¬¦ä¸²ä¹‹ä¸€ï¼ˆå°±åƒ       â”ƒ
+â”ƒ                            â”ƒCè¯­è¨€ä¸­çš„æžšä¸¾ä¸€æ ·ï¼‰ã€‚é¦–å…ˆï¼Œæˆ‘ä»¬è¦ç”¨ngx_conf_enum_tç»“æž„å®šä¹‰é…ç½®é¡¹çš„å–å€¼èŒƒ      â”ƒ
+â”ƒngx_conf_set_enum_slot      â”ƒ                                                                              â”ƒ
+â”ƒ                            â”ƒå›´ï¼Œå¹¶è®¾å®šæ¯ä¸ªå€¼å¯¹åº”çš„åºåˆ—å·ã€‚ç„¶åŽï¼Œngx_conf_set enum slotå°†ä¼šæŠŠé…ç½®é¡¹å‚      â”ƒ
+â”ƒ                            â”ƒæ•°è½¬åŒ–ä¸ºå¯¹åº”çš„åºåˆ—å·                                                          â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ                            â”ƒ  å†™ngx_conf_set bitmask slotç±»ä¼¼ï¼Œé…ç½®é¡¹åŽå¿…é¡»æºå¸¦1ä¸ªå‚æ•°ï¼Œå…¶å–å€¼èŒƒå›´å¿…      â”ƒ
+â”ƒ                            â”ƒé¡»æ˜¯è®¾å®šå¥½çš„å­—ç¬¦ä¸²ä¹‹ä¸€ã€‚é¦–å…ˆï¼Œæˆ‘ä»¬è¦ç”¨ngx_conf_bitmask_tç»“æž„å®šä¹‰é…ç½®é¡¹çš„      â”ƒ
+â”ƒngx_conf_set_bitmask_slot   â”ƒ                                                                              â”ƒ
+â”ƒ                            â”ƒå–å€¼èŒƒå›´ï¼Œå¹¶è®¾å®šæ¯ä¸ªå€¼å¯¹åº”çš„æ¯”ç‰¹ä½ã€‚æ³¨æ„ï¼Œæ¯ä¸ªå€¼æ‰€å¯¹åº”çš„æ¯”ç‰¹ä½éƒ½è¦ä¸åŒã€‚      â”ƒ
+â”ƒ                            â”ƒç„¶åŽngx_conf_set_bitmask_ slotå°†ä¼šæŠŠé…ç½®é¡¹å‚æ•°è½¬åŒ–ä¸ºå¯¹åº”çš„æ¯”ç‰¹ä½              â”ƒ
+â”—â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”»â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”›
 
-©³©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©×©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©·
-©§    Ô¤Éè·½·¨Ãû            ©§    ÐÐÎª                                                                    ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§                          ©§  Õâ¸ö·½·¨ÓÃÓÚÉèÖÃÄ¿Â¼»òÕßÎÄ¼þµÄ¶ÁÐ´È¨ÏÞ¡£ÅäÖÃÏîºó¿ÉÒÔÐ¯´ø1¡«3¸ö²ÎÊý£¬      ©§
-©§                          ©§¿ÉÒÔÊÇÈçÏÂÐÎÊ½£ºuser:rw group:rw all:rw¡£×¢Òâ£¬ËüµÄÒâÒåÓëLinuxÉÏÎÄ¼þ»òÕßÄ¿  ©§
-©§ngx_conf_set_access slot  ©§Â¼µÄÈ¨ÏÞÒâÒåÊÇÒ»ÖÂµÄ£¬µ«ÊÇuser/group/allºóÃæµÄÈ¨ÏÞÖ»¿ÉÒÔÉèÎªrw£¨¶Á£¯Ð´£©»ò  ©§
-©§                          ©§Õßr£¨Ö»¶Á£©£¬²»¿ÉÒÔÓÐÆäËûÈÎºÎÐÎÊ½£¬Èçw»òÕßrxµÈ¡£ngx_conf_set- access slot   ©§
-©§                          ©§½«»á°ÑãëÇú²ÎÊý×ª»¯ÎªÒ»¸öÕûÐÍ                                                ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§                          ©§  Õâ¸ö·½·¨ÓÃÓÚÉèÖÃÂ·¾¶£¬ÅäÖÃÏîºó±ØÐëÐ¯´ø1¸ö²ÎÊý£¬±íÊ¾1¸öÓÐÒâÒåµÄÂ·¾¶¡£      ©§
-©§ngx_conf_set_path_slot    ©§                                                                            ©§
-©§                          ©§ngx_conf_set_path_slot½«»á°Ñ²ÎÊý×ª»¯Îªngx_path_t½á¹¹                        ©§
-©»©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ß©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¿
+â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”³â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”“
+â”ƒ    é¢„è®¾æ–¹æ³•å            â”ƒ    è¡Œä¸º                                                                    â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ                          â”ƒ  è¿™ä¸ªæ–¹æ³•ç”¨äºŽè®¾ç½®ç›®å½•æˆ–è€…æ–‡ä»¶çš„è¯»å†™æƒé™ã€‚é…ç½®é¡¹åŽå¯ä»¥æºå¸¦1ï½ž3ä¸ªå‚æ•°ï¼Œ      â”ƒ
+â”ƒ                          â”ƒå¯ä»¥æ˜¯å¦‚ä¸‹å½¢å¼ï¼šuser:rw group:rw all:rwã€‚æ³¨æ„ï¼Œå®ƒçš„æ„ä¹‰ä¸ŽLinuxä¸Šæ–‡ä»¶æˆ–è€…ç›®  â”ƒ
+â”ƒngx_conf_set_access slot  â”ƒå½•çš„æƒé™æ„ä¹‰æ˜¯ä¸€è‡´çš„ï¼Œä½†æ˜¯user/group/allåŽé¢çš„æƒé™åªå¯ä»¥è®¾ä¸ºrwï¼ˆè¯»ï¼å†™ï¼‰æˆ–  â”ƒ
+â”ƒ                          â”ƒè€…rï¼ˆåªè¯»ï¼‰ï¼Œä¸å¯ä»¥æœ‰å…¶ä»–ä»»ä½•å½¢å¼ï¼Œå¦‚wæˆ–è€…rxç­‰ã€‚ngx_conf_set- access slot   â”ƒ
+â”ƒ                          â”ƒå°†ä¼šæŠŠæ±¶æ›²å‚æ•°è½¬åŒ–ä¸ºä¸€ä¸ªæ•´åž‹                                                â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ                          â”ƒ  è¿™ä¸ªæ–¹æ³•ç”¨äºŽè®¾ç½®è·¯å¾„ï¼Œé…ç½®é¡¹åŽå¿…é¡»æºå¸¦1ä¸ªå‚æ•°ï¼Œè¡¨ç¤º1ä¸ªæœ‰æ„ä¹‰çš„è·¯å¾„ã€‚      â”ƒ
+â”ƒngx_conf_set_path_slot    â”ƒ                                                                            â”ƒ
+â”ƒ                          â”ƒngx_conf_set_path_slotå°†ä¼šæŠŠå‚æ•°è½¬åŒ–ä¸ºngx_path_tç»“æž„                        â”ƒ
+â”—â”â”â”â”â”â”â”â”â”â”â”â”â”â”»â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”›
 */
 
 /*
-ngx_conf_set_access_slot ÓÃÓÚÉèÖÃ¶Á£¯Ð´È¨ÏÞ£¬ÅäÖÃÏîºó¿ÉÒÔÂ°´ø1¡«3¸ö²ÎÊý£¬Òò´Ë£¬
-ÔÚngx_command_tÖÐµÄtype³ÉÔ±Òª°üº¬NGX¡ªCONF TAKE123¡£²ÎÊýµÄÈ¡Öµ¿É²Î¼û±í4-2¡£
-ÕâÀïÓÃngx_http_mytest_conf_t½á¹¹ÖÐµÄngx_uint_t my_access;À´´æ´¢ÅäÖÃÏî¡°test_access¡±
-ºóµÄ²ÎÊýÖµ£¬ÈçÏÂËùÊ¾¡£
+ngx_conf_set_access_slot ç”¨äºŽè®¾ç½®è¯»ï¼å†™æƒé™ï¼Œé…ç½®é¡¹åŽå¯ä»¥æŽ³å¸¦1ï½ž3ä¸ªå‚æ•°ï¼Œå› æ­¤ï¼Œ
+åœ¨ngx_command_tä¸­çš„typeæˆå‘˜è¦åŒ…å«NGXâ€•CONF TAKE123ã€‚å‚æ•°çš„å–å€¼å¯å‚è§è¡¨4-2ã€‚
+è¿™é‡Œç”¨ngx_http_mytest_conf_tç»“æž„ä¸­çš„ngx_uint_t my_access;æ¥å­˜å‚¨é…ç½®é¡¹â€œtest_accessâ€
+åŽçš„å‚æ•°å€¼ï¼Œå¦‚ä¸‹æ‰€ç¤ºã€‚
 static: ngx_command_t  ngx_http_mytest_commands []  = {
     {   ngx_string ( " test_access " ) ,
               NGX_HTTP_LOC_CONF  I  NGX_CONF_TAKE123 ,
@@ -696,12 +696,12 @@ static: ngx_command_t  ngx_http_mytest_commands []  = {
 		},
 		ngx_null_command
 	}
-    ÕâÑù£¬ngx_conf_set access slot¾Í¿ÉÒÔ½âÎö¶Á£¯Ð´È¨ÏÞµÄÅäÖÃÏîÁË¡£ÀýÈç£¬µ±nginx
-confÖÐ³öÏÖÅäÖÃÏîtest access user:rw group:rw all:r;Ê±£¬my_accessµÄÖµ½«ÊÇ436¡£
-    ×¢Òâ  ÔÚngx_http_mytest_create loc conf´´½¨½á¹¹ÌåÊ±£¬Èç¹ûÏëÊ¹ÓÃngx_conf_set_
-access slot£¬ÄÇÃ´±ØÐë°Ñmy_access³õÊ¼»¯ÎªNGX CONF UNSET UINTºê£¬Ò²¾ÍÊÇ4.2.1
-½ÚÖÐµÄÓï¾ämycf->my_access=NGX_CONF_UNSET_UINT;£®·ñÔòngx_conf_set_access_slot
-½âÎöÊ±»á±¨´í¡£
+    è¿™æ ·ï¼Œngx_conf_set access slotå°±å¯ä»¥è§£æžè¯»ï¼å†™æƒé™çš„é…ç½®é¡¹äº†ã€‚ä¾‹å¦‚ï¼Œå½“nginx
+confä¸­å‡ºçŽ°é…ç½®é¡¹test access user:rw group:rw all:r;æ—¶ï¼Œmy_accessçš„å€¼å°†æ˜¯436ã€‚
+    æ³¨æ„  åœ¨ngx_http_mytest_create loc confåˆ›å»ºç»“æž„ä½“æ—¶ï¼Œå¦‚æžœæƒ³ä½¿ç”¨ngx_conf_set_
+access slotï¼Œé‚£ä¹ˆå¿…é¡»æŠŠmy_accessåˆå§‹åŒ–ä¸ºNGX CONF UNSET UINTå®ï¼Œä¹Ÿå°±æ˜¯4.2.1
+èŠ‚ä¸­çš„è¯­å¥mycf->my_access=NGX_CONF_UNSET_UINT;ï¼Žå¦åˆ™ngx_conf_set_access_slot
+è§£æžæ—¶ä¼šæŠ¥é”™ã€‚
 */
 char *
 ngx_conf_set_access_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
@@ -722,7 +722,7 @@ ngx_conf_set_access_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
 
     *access = 0600;
 
-    for (i = 1; i < cf->args->nelts; i++) { //µÍÈýÎ»±íÊ¾allµÄÈ¨ÏÞ£¬ÖÐ¼äÈýÎ»ÎªgroupÈ¨ÏÞ£¬¸ßÈýÎ»ÎªuserÈ¨ÏÞ
+    for (i = 1; i < cf->args->nelts; i++) { //ä½Žä¸‰ä½è¡¨ç¤ºallçš„æƒé™ï¼Œä¸­é—´ä¸‰ä½ä¸ºgroupæƒé™ï¼Œé«˜ä¸‰ä½ä¸ºuseræƒé™
 
         p = value[i].data;
 
@@ -764,8 +764,8 @@ invalid:
 }
 
 /*
-¼ì²éslotÊÇ·ñÒÑ¾­´æÔÚ  Èç¹û²»´æÔÚ£¬ÔòÌí¼Óµ½cf->cycle->pathes  
-¼ì²écache->pathÊÇ·ñÒÑ¾­´æÔÚ Èç¹û²»´æÔÚ£¬ÔòÌí¼Óµ½cf->cycle->pathes  
+æ£€æŸ¥slotæ˜¯å¦å·²ç»å­˜åœ¨  å¦‚æžœä¸å­˜åœ¨ï¼Œåˆ™æ·»åŠ åˆ°cf->cycle->pathes  
+æ£€æŸ¥cache->pathæ˜¯å¦å·²ç»å­˜åœ¨ å¦‚æžœä¸å­˜åœ¨ï¼Œåˆ™æ·»åŠ åˆ°cf->cycle->pathes  
 */
 ngx_int_t
 ngx_add_path(ngx_conf_t *cf, ngx_path_t **slot)
@@ -780,7 +780,7 @@ ngx_add_path(ngx_conf_t *cf, ngx_path_t **slot)
         if (p[i]->name.len == path->name.len
             && ngx_strcmp(p[i]->name.data, path->name.data) == 0)
         {
-            if (p[i]->data != path->data) { //Ö¸ÏòÍ¬Ò»¿éÄÚ´æµÄname
+            if (p[i]->data != path->data) { //æŒ‡å‘åŒä¸€å—å†…å­˜çš„name
                 ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                                    "the same path name \"%V\" "
                                    "used in %s:%ui and",
@@ -789,7 +789,7 @@ ngx_add_path(ngx_conf_t *cf, ngx_path_t **slot)
             }
 
             for (n = 0; n < 3; n++) { 
-                if (p[i]->level[n] != path->level[n]) {//nameÏàÍ¬£¬µ«ÊÇlevel²»Í¬£¬ËµÃ÷ÓÐ³åÍ»£¬»áÒÔµÚÒ»¸öÎª×¼
+                if (p[i]->level[n] != path->level[n]) {//nameç›¸åŒï¼Œä½†æ˜¯levelä¸åŒï¼Œè¯´æ˜Žæœ‰å†²çªï¼Œä¼šä»¥ç¬¬ä¸€ä¸ªä¸ºå‡†
                     if (path->conf_file == NULL) {
                         if (p[i]->conf_file == NULL) {
                             ngx_log_error(NGX_LOG_EMERG, cf->log, 0,
@@ -833,7 +833,7 @@ ngx_add_path(ngx_conf_t *cf, ngx_path_t **slot)
         return NGX_ERROR;
     }
 
-    *p = path; //°ÑÐÂÀ´µÄslotÌí¼Óµ½cf->cycle->paths
+    *p = path; //æŠŠæ–°æ¥çš„slotæ·»åŠ åˆ°cf->cycle->paths
 
     return NGX_OK;
 }
@@ -913,7 +913,7 @@ ngx_ext_rename_file(ngx_str_t *src, ngx_str_t *to, ngx_ext_rename_file_t *ext)
 #if !(NGX_WIN32)
 
     if (ext->access) {
-        if (ngx_change_file_access(src->data, ext->access) == NGX_FILE_ERROR) { //°´ÕÕext->accessÐÞ¸ÄÎÄ¼þÈ¨ÏÞ
+        if (ngx_change_file_access(src->data, ext->access) == NGX_FILE_ERROR) { //æŒ‰ç…§ext->accessä¿®æ”¹æ–‡ä»¶æƒé™
             ngx_log_error(NGX_LOG_CRIT, ext->log, ngx_errno,
                           ngx_change_file_access_n " \"%s\" failed", src->data);
             err = 0;
@@ -932,13 +932,13 @@ ngx_ext_rename_file(ngx_str_t *src, ngx_str_t *to, ngx_ext_rename_file_t *ext)
         }
     }
 
-    if (ngx_rename_file(src->data, to->data) != NGX_FILE_ERROR) { //³É¹¦Ö±½Ó·µ»Ø
+    if (ngx_rename_file(src->data, to->data) != NGX_FILE_ERROR) { //æˆåŠŸç›´æŽ¥è¿”å›ž
         return NGX_OK;
     }
 
     err = ngx_errno;
 
-    if (err == NGX_ENOPATH) { //ËµÃ÷toÄ¿Â¼ÎÄ¼þ²»´æÔÚ£¬Ôò´´½¨£¬È»ºóÖØÐÂrename
+    if (err == NGX_ENOPATH) { //è¯´æ˜Žtoç›®å½•æ–‡ä»¶ä¸å­˜åœ¨ï¼Œåˆ™åˆ›å»ºï¼Œç„¶åŽé‡æ–°rename
 
         if (!ext->create_path) {
             goto failed;
@@ -954,7 +954,7 @@ ngx_ext_rename_file(ngx_str_t *src, ngx_str_t *to, ngx_ext_rename_file_t *ext)
         }
 
         if (ngx_rename_file(src->data, to->data) != NGX_FILE_ERROR) {
-            return NGX_OK;//³É¹¦Ö±½Ó·µ»Ø
+            return NGX_OK;//æˆåŠŸç›´æŽ¥è¿”å›ž
         }
 
         err = ngx_errno;
@@ -1187,8 +1187,8 @@ failed:
  */
 
 /*
-ngx_walk_treeÊÇµÝ¹éº¯Êý£¬´ò¿ªÃ¿²ãÂ·¾¶(dir)Ö±µ½Ã¿¸öÎÄ¼þ(file)£¬¸ù¾ÝÆäÂ·¾¶ºÍÎÄ¼þÃûµÃµ½key£¬ÔÚ»º´æµÄrbtree(ºìºÚÊ÷)ÀïÃæÕÒÕâ¸ökey(²¿·Ö)£¬
- Èç¹ûÃ»ÓÐÕÒµ½µÄ»°£¬¾ÍÔÚÄÚ´æÖÐ·ÖÅäÒ»¸öÓ³ÉäÕâ¸öÎÄ¼þµÄnode(µ«ÊÇ²»»á°ÑÎÄ¼þµÄÄÚÈÝ½øÐÐ»º´æ)£¬È»ºó²åÈëµ½ºìºÚÊ÷ÖÐºÍ¼ÓÈë¶ÓÁÐ¡£  
+ngx_walk_treeæ˜¯é€’å½’å‡½æ•°ï¼Œæ‰“å¼€æ¯å±‚è·¯å¾„(dir)ç›´åˆ°æ¯ä¸ªæ–‡ä»¶(file)ï¼Œæ ¹æ®å…¶è·¯å¾„å’Œæ–‡ä»¶åå¾—åˆ°keyï¼Œåœ¨ç¼“å­˜çš„rbtree(çº¢é»‘æ ‘)é‡Œé¢æ‰¾è¿™ä¸ªkey(éƒ¨åˆ†)ï¼Œ
+ å¦‚æžœæ²¡æœ‰æ‰¾åˆ°çš„è¯ï¼Œå°±åœ¨å†…å­˜ä¸­åˆ†é…ä¸€ä¸ªæ˜ å°„è¿™ä¸ªæ–‡ä»¶çš„node(ä½†æ˜¯ä¸ä¼šæŠŠæ–‡ä»¶çš„å†…å®¹è¿›è¡Œç¼“å­˜)ï¼Œç„¶åŽæ’å…¥åˆ°çº¢é»‘æ ‘ä¸­å’ŒåŠ å…¥é˜Ÿåˆ—ã€‚  
 */
 
 /*
@@ -1198,8 +1198,8 @@ ngx_http_file_cache_add_file=>
 ngx_http_file_cache_add  
 */
 
-//Ê¹ÓÃ ngx_walk_tree µÝ¹é±éÀú»º´æÄ¿Â¼£¬²¢¶Ô²»Í¬ÀàÐÍµÄÎÄ¼þ¸ù¾Ý»Øµ÷º¯Êý×ö²»Í¬µÄ´¦Àí¡£
-//ngx_walk_treeÕâ¸öº¯ÊýÖ÷ÒªÊÇ±éÀúËùÓÐµÄcacheÄ¿Â¼£¬È»ºó¶ÔÓÚÃ¿Ò»¸öcacheÎÄ¼þµ÷ÓÃfile_handler»Øµ÷¡£
+//ä½¿ç”¨ ngx_walk_tree é€’å½’éåŽ†ç¼“å­˜ç›®å½•ï¼Œå¹¶å¯¹ä¸åŒç±»åž‹çš„æ–‡ä»¶æ ¹æ®å›žè°ƒå‡½æ•°åšä¸åŒçš„å¤„ç†ã€‚
+//ngx_walk_treeè¿™ä¸ªå‡½æ•°ä¸»è¦æ˜¯éåŽ†æ‰€æœ‰çš„cacheç›®å½•ï¼Œç„¶åŽå¯¹äºŽæ¯ä¸€ä¸ªcacheæ–‡ä»¶è°ƒç”¨file_handlerå›žè°ƒã€‚
 ngx_int_t
 ngx_walk_tree(ngx_tree_ctx_t *ctx, ngx_str_t *tree)
 {

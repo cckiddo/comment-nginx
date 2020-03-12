@@ -20,7 +20,7 @@
  *
  * Solaris does not test /etc/TIMEZONE change too and no workaround available.
  */
-//更新服务器时区和时间：ngx_timezone_update(); ngx_time_update();
+//鏇存柊鏈嶅姟鍣ㄦ椂鍖哄拰鏃堕棿锛歯gx_timezone_update(); ngx_time_update();
 void
 ngx_timezone_update(void)
 {

@@ -29,29 +29,29 @@ typedef struct ngx_thread_task_s  ngx_thread_task_t;
 #endif
 
 /*
-Ã¿Ò»¸öÊÂ¼þ×îºËÐÄµÄ²¿·ÖÊÇhandler»Øµ÷·½·¨£¬Ëü½«ÓÉÃ¿Ò»¸öÊÂ¼þÏû·ÑÄ£¿éÊµÏÖ£¬ÒÔ´Ë¾ö¶¨Õâ¸öÊÂ¼þ¾¿¾¹ÈçºÎ¡°Ïû·Ñ¡±
-*/ /* ×¢Òângx_http_event_handler_ptºÍngx_event_handler_ptµÄÇø±ð */
+æ¯ä¸€ä¸ªäº‹ä»¶æœ€æ ¸å¿ƒçš„éƒ¨åˆ†æ˜¯handlerå›žè°ƒæ–¹æ³•ï¼Œå®ƒå°†ç”±æ¯ä¸€ä¸ªäº‹ä»¶æ¶ˆè´¹æ¨¡å—å®žçŽ°ï¼Œä»¥æ­¤å†³å®šè¿™ä¸ªäº‹ä»¶ç©¶ç«Ÿå¦‚ä½•â€œæ¶ˆè´¹â€
+*/ /* æ³¨æ„ngx_http_event_handler_ptå’Œngx_event_handler_ptçš„åŒºåˆ« */
 typedef void (*ngx_event_handler_pt)(ngx_event_t *ev);
 
-//ngx_connection_handler_pt·àÐÍµÄhandler³ÉÔ±±íÊ¾ÔÚÕâ¸ö¼àÌý¶Ë¿ÚÉÏ³É¹¦½¨Á¢ÐÂµÄTCPÁ¬½Óºó£¬¾Í»á»Øµ÷handler·½·¨
+//ngx_connection_handler_ptç²ªåž‹çš„handleræˆå‘˜è¡¨ç¤ºåœ¨è¿™ä¸ªç›‘å¬ç«¯å£ä¸ŠæˆåŠŸå»ºç«‹æ–°çš„TCPè¿žæŽ¥åŽï¼Œå°±ä¼šå›žè°ƒhandleræ–¹æ³•
 typedef void (*ngx_connection_handler_pt)(ngx_connection_t *c);
 
 /*
-Õâ4¸ö·µ»ØÂëÒý·¢µÄNginxÒ»ÏµÁÐ¶¯×÷¡£
+è¿™4ä¸ªè¿”å›žç å¼•å‘çš„Nginxä¸€ç³»åˆ—åŠ¨ä½œã€‚
 
-NGX_OK£º±íÊ¾³É¹¦¡£Nginx½«»á¼ÌÐøÖ´ÐÐ¸ÃÇëÇóµÄºóÐø¶¯×÷£¨ÈçÖ´ÐÐsubrequest»ò³·ÏúÕâ¸öÇëÇó£©¡£
+NGX_OKï¼šè¡¨ç¤ºæˆåŠŸã€‚Nginxå°†ä¼šç»§ç»­æ‰§è¡Œè¯¥è¯·æ±‚çš„åŽç»­åŠ¨ä½œï¼ˆå¦‚æ‰§è¡Œsubrequestæˆ–æ’¤é”€è¿™ä¸ªè¯·æ±‚ï¼‰ã€‚
 
-NGX_DECLINED£º¼ÌÐøÔÚNGX_HTTP_CONTENT_PHASE½×¶ÎÑ°ÕÒÏÂÒ»¸ö¶ÔÓÚ¸ÃÇëÇó¸ÐÐËÈ¤µÄHTTPÄ£¿éÀ´ÔÙ´Î´¦ÀíÕâ¸öÇëÇó¡£
+NGX_DECLINEDï¼šç»§ç»­åœ¨NGX_HTTP_CONTENT_PHASEé˜¶æ®µå¯»æ‰¾ä¸‹ä¸€ä¸ªå¯¹äºŽè¯¥è¯·æ±‚æ„Ÿå…´è¶£çš„HTTPæ¨¡å—æ¥å†æ¬¡å¤„ç†è¿™ä¸ªè¯·æ±‚ã€‚
 
-NGX_DONE£º±íÊ¾µ½´ËÎªÖ¹£¬Í¬Ê±HTTP¿ò¼Ü½«ÔÝÊ±²»ÔÙ¼ÌÐøÖ´ÐÐÕâ¸öÇëÇóµÄºóÐø²¿·Ö¡£ÊÂÊµÉÏ£¬ÕâÊ±»á¼ì²éÁ¬½ÓµÄÀàÐÍ£¬Èç¹ûÊÇkeepaliveÀàÐÍµÄÓÃ»§ÇëÇó£¬
-    ¾Í»á±£³Ö×¡HTTPÁ¬½Ó£¬È»ºó°Ñ¿ØÖÆÈ¨½»¸øNginx¡£Õâ¸ö·µ»ØÂëºÜÓÐÓÃ£¬¿¼ÂÇÒÔÏÂ³¡¾°£ºÔÚÒ»¸öÇëÇóÖÐÎÒÃÇ±ØÐë·ÃÎÊÒ»¸öºÄÊ±¼«³¤µÄ²Ù×÷£¨±ÈÈçÄ³¸öÍøÂçµ÷ÓÃ£©£¬
-    ÕâÑù»á×èÈû×¡Nginx£¬ÓÖÒòÎªÎÒÃÇÃ»ÓÐ°Ñ¿ØÖÆÈ¨½»»¹¸øNginx£¬¶øÊÇÔÚngx_http_mytest_handlerÖÐÈÃNginx worker½ø³ÌÐÝÃßÁË£¨ÈçµÈ´ýÍøÂçµÄ»Ø°ü£©£¬
-    ËùÒÔ£¬Õâ¾Í»áµ¼ÖÂNginx³öÏÖÐÔÄÜÎÊÌâ£¬¸Ã½ø³ÌÉÏµÄÆäËûÓÃ»§ÇëÇóÒ²µÃ²»µ½ÏìÓ¦¡£¿ÉÈç¹ûÎÒÃÇ°ÑÕâ¸öºÄÊ±¼«³¤µÄ²Ù×÷·ÖÎªÉÏÏÂÁ½¸ö²¿·Ö£¨¾ÍÏñLinuxÄÚºË
-    ÖÐ¶ÔÖÐ¶Ï´¦ÀíµÄ»®·Ö£©£¬ÉÏ°ë²¿·ÖºÍÏÂ°ë²¿·Ö¶¼ÊÇÎÞ×èÈûµÄ£¨ºÄÊ±ºÜÉÙµÄ²Ù×÷£©£¬ÕâÑù£¬ÔÚngx_http_mytest_handler½øÈëÊ±µ÷ÓÃÉÏ°ë²¿·Ö£¬È»ºó·µ»ØNGX_DONE£¬
-    °Ñ¿ØÖÆ½»»¹¸øNginx£¬´Ó¶øÈÃNginx¼ÌÐø´¦ÀíÆäËûÇëÇó¡£ÔÚÏÂ°ë²¿·Ö±»´¥·¢Ê±£¨ÕâÀï²»Ì½ÌÖ¾ßÌåµÄÊµÏÖ·½Ê½£¬ÊÂÊµÉÏÊ¹ÓÃupstream·½Ê½×ö·´Ïò´úÀíÊ±ÓÃµÄ¾ÍÊÇ
-    ÕâÖÖË¼Ïë£©£¬ÔÙ»Øµ÷ÏÂ°ë²¿·Ö´¦Àí·½·¨£¬ÕâÑù¾Í¿ÉÒÔ±£Ö¤NginxµÄ¸ßÐÔÄÜÌØÐÔÁË¡£
+NGX_DONEï¼šè¡¨ç¤ºåˆ°æ­¤ä¸ºæ­¢ï¼ŒåŒæ—¶HTTPæ¡†æž¶å°†æš‚æ—¶ä¸å†ç»§ç»­æ‰§è¡Œè¿™ä¸ªè¯·æ±‚çš„åŽç»­éƒ¨åˆ†ã€‚äº‹å®žä¸Šï¼Œè¿™æ—¶ä¼šæ£€æŸ¥è¿žæŽ¥çš„ç±»åž‹ï¼Œå¦‚æžœæ˜¯keepaliveç±»åž‹çš„ç”¨æˆ·è¯·æ±‚ï¼Œ
+    å°±ä¼šä¿æŒä½HTTPè¿žæŽ¥ï¼Œç„¶åŽæŠŠæŽ§åˆ¶æƒäº¤ç»™Nginxã€‚è¿™ä¸ªè¿”å›žç å¾ˆæœ‰ç”¨ï¼Œè€ƒè™‘ä»¥ä¸‹åœºæ™¯ï¼šåœ¨ä¸€ä¸ªè¯·æ±‚ä¸­æˆ‘ä»¬å¿…é¡»è®¿é—®ä¸€ä¸ªè€—æ—¶æžé•¿çš„æ“ä½œï¼ˆæ¯”å¦‚æŸä¸ªç½‘ç»œè°ƒç”¨ï¼‰ï¼Œ
+    è¿™æ ·ä¼šé˜»å¡žä½Nginxï¼Œåˆå› ä¸ºæˆ‘ä»¬æ²¡æœ‰æŠŠæŽ§åˆ¶æƒäº¤è¿˜ç»™Nginxï¼Œè€Œæ˜¯åœ¨ngx_http_mytest_handlerä¸­è®©Nginx workerè¿›ç¨‹ä¼‘çœ äº†ï¼ˆå¦‚ç­‰å¾…ç½‘ç»œçš„å›žåŒ…ï¼‰ï¼Œ
+    æ‰€ä»¥ï¼Œè¿™å°±ä¼šå¯¼è‡´Nginxå‡ºçŽ°æ€§èƒ½é—®é¢˜ï¼Œè¯¥è¿›ç¨‹ä¸Šçš„å…¶ä»–ç”¨æˆ·è¯·æ±‚ä¹Ÿå¾—ä¸åˆ°å“åº”ã€‚å¯å¦‚æžœæˆ‘ä»¬æŠŠè¿™ä¸ªè€—æ—¶æžé•¿çš„æ“ä½œåˆ†ä¸ºä¸Šä¸‹ä¸¤ä¸ªéƒ¨åˆ†ï¼ˆå°±åƒLinuxå†…æ ¸
+    ä¸­å¯¹ä¸­æ–­å¤„ç†çš„åˆ’åˆ†ï¼‰ï¼Œä¸ŠåŠéƒ¨åˆ†å’Œä¸‹åŠéƒ¨åˆ†éƒ½æ˜¯æ— é˜»å¡žçš„ï¼ˆè€—æ—¶å¾ˆå°‘çš„æ“ä½œï¼‰ï¼Œè¿™æ ·ï¼Œåœ¨ngx_http_mytest_handlerè¿›å…¥æ—¶è°ƒç”¨ä¸ŠåŠéƒ¨åˆ†ï¼Œç„¶åŽè¿”å›žNGX_DONEï¼Œ
+    æŠŠæŽ§åˆ¶äº¤è¿˜ç»™Nginxï¼Œä»Žè€Œè®©Nginxç»§ç»­å¤„ç†å…¶ä»–è¯·æ±‚ã€‚åœ¨ä¸‹åŠéƒ¨åˆ†è¢«è§¦å‘æ—¶ï¼ˆè¿™é‡Œä¸æŽ¢è®¨å…·ä½“çš„å®žçŽ°æ–¹å¼ï¼Œäº‹å®žä¸Šä½¿ç”¨upstreamæ–¹å¼åšåå‘ä»£ç†æ—¶ç”¨çš„å°±æ˜¯
+    è¿™ç§æ€æƒ³ï¼‰ï¼Œå†å›žè°ƒä¸‹åŠéƒ¨åˆ†å¤„ç†æ–¹æ³•ï¼Œè¿™æ ·å°±å¯ä»¥ä¿è¯Nginxçš„é«˜æ€§èƒ½ç‰¹æ€§äº†ã€‚
 
-NGX_ERROR£º±íÊ¾´íÎó¡£ÕâÊ±»áµ÷ÓÃngx_http_terminate_requestÖÕÖ¹ÇëÇó¡£Èç¹û»¹ÓÐPOST×ÓÇëÇó£¬ÄÇÃ´½«»áÔÚÖ´ÐÐÍêPOSTÇëÇóºóÔÙÖÕÖ¹±¾´ÎÇëÇó¡£
+NGX_ERRORï¼šè¡¨ç¤ºé”™è¯¯ã€‚è¿™æ—¶ä¼šè°ƒç”¨ngx_http_terminate_requestç»ˆæ­¢è¯·æ±‚ã€‚å¦‚æžœè¿˜æœ‰POSTå­è¯·æ±‚ï¼Œé‚£ä¹ˆå°†ä¼šåœ¨æ‰§è¡Œå®ŒPOSTè¯·æ±‚åŽå†ç»ˆæ­¢æœ¬æ¬¡è¯·æ±‚ã€‚
 */
 #define  NGX_OK          0
 #define  NGX_ERROR      -1

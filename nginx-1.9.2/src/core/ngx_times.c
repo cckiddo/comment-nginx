@@ -21,23 +21,23 @@
 #define NGX_TIME_SLOTS   64
 
 /*
-nginxÕâÀï²ÉÓÃÁË64¸öslotÊ±¼ä£¬Ò²¾ÍÊÇÃ¿´Î¸üÐÂÊ±¼äµÄÊ±ºò¶¼ÊÇ¸üÐÂÏÂÒ»¸ö
-slot£¬Èç¹û¶Á²Ù×÷Í¬Ê±½øÐÐ£¬¶Áµ½µÄ»¹ÊÇÖ®Ç°µÄslot£¬²¢Ã»ÓÐ±»¸Ä±ä£¬µ±È»ÕâÀïÖ»ÄÜÊÇ¾¡Á¿¼õÉÙÁËÊ±¼ä»ìÂÒµÄ¼¸ÂÊ£¬ÒòÎªslotµÄ¸öÊý²»ÊÇÎÞÏÞµÄ£¬slotÊÇÑ­»·µÄ£¬
-Ð´²Ù×÷×ÜÓÐ¼¸ÂÊ»áÐ´µ½¶Á²Ù×÷µÄslotÉÏ¡£²»¹ýnginxÏÖÔÚÊµ¼ÊÉÏ²¢Ã»ÓÐ²ÉÓÃ¶àÏß³ÌµÄ·½Ê½£¬¶øÇÒÔÚÐÅºÅ´¦ÀíÖÐÖ»ÊÇ¸üÐÂcached_err_log_time£¬ËùÒÔ¶ÔÆäËûÊ±¼ä±äÁ¿
-µÄ¶Á·ÃÎÊÊÇ²»»á·¢Éú»ìÂÒµÄ 
+nginxè¿™é‡Œé‡‡ç”¨äº†64ä¸ªslotæ—¶é—´ï¼Œä¹Ÿå°±æ˜¯æ¯æ¬¡æ›´æ–°æ—¶é—´çš„æ—¶å€™éƒ½æ˜¯æ›´æ–°ä¸‹ä¸€ä¸ª
+slotï¼Œå¦‚æžœè¯»æ“ä½œåŒæ—¶è¿›è¡Œï¼Œè¯»åˆ°çš„è¿˜æ˜¯ä¹‹å‰çš„slotï¼Œå¹¶æ²¡æœ‰è¢«æ”¹å˜ï¼Œå½“ç„¶è¿™é‡Œåªèƒ½æ˜¯å°½é‡å‡å°‘äº†æ—¶é—´æ··ä¹±çš„å‡ çŽ‡ï¼Œå› ä¸ºslotçš„ä¸ªæ•°ä¸æ˜¯æ— é™çš„ï¼Œslotæ˜¯å¾ªçŽ¯çš„ï¼Œ
+å†™æ“ä½œæ€»æœ‰å‡ çŽ‡ä¼šå†™åˆ°è¯»æ“ä½œçš„slotä¸Šã€‚ä¸è¿‡nginxçŽ°åœ¨å®žé™…ä¸Šå¹¶æ²¡æœ‰é‡‡ç”¨å¤šçº¿ç¨‹çš„æ–¹å¼ï¼Œè€Œä¸”åœ¨ä¿¡å·å¤„ç†ä¸­åªæ˜¯æ›´æ–°cached_err_log_timeï¼Œæ‰€ä»¥å¯¹å…¶ä»–æ—¶é—´å˜é‡
+çš„è¯»è®¿é—®æ˜¯ä¸ä¼šå‘ç”Ÿæ··ä¹±çš„ 
 */
 static ngx_uint_t        slot;
 static ngx_atomic_t      ngx_time_lock;
 
-volatile ngx_msec_t      ngx_current_msec; //¸ñÁÖÍþÖÎÊ±¼ä1970Äê1ÔÂ1ÈÕÁè³¿0µã0·Ö0Ãëµ½µ±Ç°Ê±¼äµÄºÁÃëÊý
-volatile ngx_time_t     *ngx_cached_time; //ngx_time_t½á¹¹ÌåÐÎÊ½µÄµ±Ç°Ê±¼ä
-volatile ngx_str_t       ngx_cached_err_log_time; //ÓÃÓÚ¼ÇÂ¼error_logµÄµ±Ç°Ê±¼ä×Ö·û´®£¬ËüµÄ¸ñÊ½ÀàËÆÓÚ£º¡±1970/09/28  12£ºOO£ºOO¡±
+volatile ngx_msec_t      ngx_current_msec; //æ ¼æž—å¨æ²»æ—¶é—´1970å¹´1æœˆ1æ—¥å‡Œæ™¨0ç‚¹0åˆ†0ç§’åˆ°å½“å‰æ—¶é—´çš„æ¯«ç§’æ•°
+volatile ngx_time_t     *ngx_cached_time; //ngx_time_tç»“æž„ä½“å½¢å¼çš„å½“å‰æ—¶é—´
+volatile ngx_str_t       ngx_cached_err_log_time; //ç”¨äºŽè®°å½•error_logçš„å½“å‰æ—¶é—´å­—ç¬¦ä¸²ï¼Œå®ƒçš„æ ¼å¼ç±»ä¼¼äºŽï¼šâ€1970/09/28  12ï¼šOOï¼šOOâ€
 
-//ÓÃÓÚHTTPÏà¹ØµÄµ±Ç°Ê±¼ä×Ö·û´®£¬ËüµÄ¸ñÊ½ÀàËÆÓÚ£º¡±Mon£¬28  Sep  1970  06£ºOO£ºOO  GMT¡±
+//ç”¨äºŽHTTPç›¸å…³çš„å½“å‰æ—¶é—´å­—ç¬¦ä¸²ï¼Œå®ƒçš„æ ¼å¼ç±»ä¼¼äºŽï¼šâ€Monï¼Œ28  Sep  1970  06ï¼šOOï¼šOO  GMTâ€
 volatile ngx_str_t       ngx_cached_http_time;
-//ÓÃÓÚ¼ÇÂ¼HTTPÔ»Ö¾µÄµ±Ç°Ê±¼ä×Ö·û´®£¬ËüµÄ¸ñÊ½ÀàËÆÓÚ£º¡±28/Sep/1970£º12£ºOO£º00  +0600n"
+//ç”¨äºŽè®°å½•HTTPæ›°å¿—çš„å½“å‰æ—¶é—´å­—ç¬¦ä¸²ï¼Œå®ƒçš„æ ¼å¼ç±»ä¼¼äºŽï¼šâ€28/Sep/1970ï¼š12ï¼šOOï¼š00  +0600n"
 volatile ngx_str_t       ngx_cached_http_log_time;
-//ÒÔIS0 8601±ê×¼¸ñÊ½¼ÇÂ¼ÏÂµÄ×Ö·û´®ÐÎÊ½µÄµ±Ç°Ê±¼ä
+//ä»¥IS0 8601æ ‡å‡†æ ¼å¼è®°å½•ä¸‹çš„å­—ç¬¦ä¸²å½¢å¼çš„å½“å‰æ—¶é—´
 volatile ngx_str_t       ngx_cached_http_log_iso8601;
 volatile ngx_str_t       ngx_cached_syslog_time;
 
@@ -52,11 +52,11 @@ volatile ngx_str_t       ngx_cached_syslog_time;
 static ngx_int_t         cached_gmtoff;
 #endif
 
-static ngx_time_t        cached_time[NGX_TIME_SLOTS]; //ÏµÍ³µ±Ç°Ê±¼ä£¬¼ûngx_time_update
+static ngx_time_t        cached_time[NGX_TIME_SLOTS]; //ç³»ç»Ÿå½“å‰æ—¶é—´ï¼Œè§ngx_time_update
 static u_char            cached_err_log_time[NGX_TIME_SLOTS]
                                     [sizeof("1970/09/28 12:00:00")];
 static u_char            cached_http_time[NGX_TIME_SLOTS]
-                                    [sizeof("Mon, 28 Sep 1970 06:00:00 GMT")]; //ÄêÔÂÈÕ Ê±·ÖÃë ÐÇÆÚ ¸ñÊ½
+                                    [sizeof("Mon, 28 Sep 1970 06:00:00 GMT")]; //å¹´æœˆæ—¥ æ—¶åˆ†ç§’ æ˜ŸæœŸ æ ¼å¼
 static u_char            cached_http_log_time[NGX_TIME_SLOTS]
                                     [sizeof("28/Sep/1970:12:00:00 +0600")];
 static u_char            cached_http_log_iso8601[NGX_TIME_SLOTS]
@@ -69,63 +69,63 @@ static char  *week[] = { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" };
 static char  *months[] = { "Jan", "Feb", "Mar", "Apr", "May", "Jun",
                            "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
 /*
-±í9-4 Nginx»º´æÊ±¼äµÄ²Ù×÷·½·¨
-©³©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©×©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©×©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©·
-©§    Ê±¼ä·½·¨Ãû                  ©§    ²ÎÊýº¬Òå                      ©§    Ö´ÐÐÒâÒå                                  ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§void ngx_time_init(void);       ©§    ÎÞ                            ©§    ³õÊ¼»¯µ±Ç°½ø³ÌÖÐ»º´æµÄÊ±¼ä±äÁ¿£¬Í¬        ©§
-©§                                ©§                                  ©§Ê±»áµÚÒ»´Î¸ù¾Ýgettimeofdayµ÷ÓÃË¢ÐÂ»º          ©§
-©§                                ©§                                  ©§´æÊ±¼ä                                        ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§void ngx_time_update(void)      ©§    ÎÞ                            ©§    Ê¹ÓÃgettimeofdayµ÷ÓÃÒÔÏµÍ³Ê±¼ä            ©§
-©§                                ©§                                  ©§¸üÐÂ»º´æµÄÊ±¼ä£¬ÉÏÊöµÄngx_current_            ©§
-©§                                ©§                                  ©§msec. ngx_cached time. ngx_cached err         ©§
-©§                                ©§                                  ©§ log_time. ngx_cached_http_time. ngx_         ©§
-©§                                ©§                                  ©§cached_http_log_time. ngx_cached_http         ©§
-©§                                ©§                                  ©§ log_is08601Õâ6¸öÈ«¾Ö±äÁ¿¶¼»áµÃµ½¸üÐÂ         ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§                                ©§    tÊÇÐèÒª×ª»»µÄÊ±¼ä£¬ËüÊÇ¸ñ     ©§                                              ©§
-©§u_char *ngx_http_time           ©§ÁÖÍþÖÎÊ±¼ä1970Äê1ÔÂ1ÈÕÁè³¿        ©§    ½«Ê±¼ät×ª»»³É¡°Mon, 28 Sep 1970 06:00:00  ©§
-©§                                ©§0µãO·ÖOÃëµ½Ä³Ò»Ê±¼äµÄÃëÊý£¬       ©§ GMT¡±ÐÎÊ½µÄÊ±¼ä£¬·µ»ØÖµÓëbufÊÇÏàÍ¬           ©§
-©§(u_char *buf, time_t t)         ©§                                  ©§µÄ£¬¶¼ÊÇÖ¸Ïò´æ·ÅÊ±¼äµÄ×Ö·û´®                  ©§
-©§                                ©§bufÊÇtÊ±¼ä×ª»»³É×Ö·û´®ÐÎÊ½µÄ      ©§                                              ©§
-©§                                ©§r-rrIPÊ±¼äºóÓÃÀ´´æ·Å×Ö·û´®µÄÄÚ´æ  ©§                                              ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§                                ©§    tÐüÐèÒª×ª»»µÄÊ±¼ä£¬ËüÊÇ¸ñ     ©§                                              ©§
-©§                                ©§ÁÖÍþÖÎÊ±¼ä1970Äê1ÔÂ1ÈÕÁè³¿        ©§    ½«Ê±¼ät×ª»»³É¡°Mon. 28-Sep-70 06:00:00    ©§
-©§u_char *ngx_http_cookie_time    ©§0µã0·Ö0Ãëµ½Ä³Ò»Ê±¼äµÄÃëÊý£¬       ©§ GMT¡±ÐÎÊ½ÊÊÓÃÓÚcookieµÄÊ±¼ä£¬·µ»ØÖµ          ©§
-©§(u_char *buf, time_t t)         ©§bufÊÇtÊ±¼ä×ª»»³É×Ö·û´®ÐÎÊ½ÊÊ      ©§ÓëbufÊÇÏàÍ¬µÄ£¬¶¼ÊÇÖ¸Ïò´æ·ÅÊ±¼äµÄ×Ö           ©§
-©§                                ©§ÓÃÓÚcookieµÄÊ±¼äºóÓÃÀ´´æ·Å×Ö      ©§·û´®                                          ©§
-©§                                ©§·û´®µÄÄÚ´æ                        ©§                                              ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§                                ©§    tÊÇÐèÒª×ª»»µÄÊ±¼ä£¬ËüÊÇ¸ñÁÖ   ©§                                              ©§
-©§void ngx_gmtime                 ©§ÍþÖÎÊ±¼ä1970Äê1ÔÂ1ÈÕÁè³¿O         ©§    ½«Ê±¼ät×ª»»³Éngx_tm_tÀàÐÍµÄÊ±¼ä¡£         ©§
-©§                                ©§µã0·Ö0Ãëµ½Ä³Ò»Ê±¼äµÄÃëÊý£¬tp      ©§                                              ©§
-©§(time_t t, ngx_tm_t *tp)        ©§                                  ©§ÏÂÃæ»áËµÃ÷ngx_tm_tÀàÐÍ                        ©§
-©§                                ©§ÊÇngx_tm_tÀàÐÍµÄÊ±¼ä£¬Êµ¼ÊÉÏ      ©§                                              ©§
-©§                                ©§¾ÍÊÇ±ê×¼µÄtmÀàÐÍÊ±¼ä              ©§                                              ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§                                ©§                                  ©§    ·µ»ØÒ»1±íÊ¾Ê§°Ü£¬·ñÔò»á·µ»Ø£º¢ÙÈç         ©§
-©§                                ©§                                  ©§¹ûwhen±íÊ¾µ±ÌìÊ±¼äÃëÊý£¬µ±ËüºÏ²¢µ½            ©§
-©§                                ©§                                  ©§Êµ¼ÊÊ±¼äºó£¬ÒÑ¾­³¬¹ýµ±Ç°Ê±¼ä£¬ÄÇÃ´¾Í          ©§
-©§                                ©§                                  ©§·µ»ØwhenºÏ²¢µ½Êµ¼ÊÊ±¼äºóµÄÃëÊý£¨Ïà            ©§
-©§time_t ngx_next_time            ©§    when±í²»ÆÚ´ý¹ýÆÚµÄÊ±¼ä£¬Ëü    ©§¶ÔÓÚ¸ñÁÖÍþÖÎÊ±¼ä1970Äê1ÔÂ1ÈÕÁè³¿O             ©§
-©§(time_t when)    :              ©§½ö±íÊ¾Ò»ÌìÄÚµÄÃëÊý                ©§µãO·ÖOÃëµ½Ä³Ò»Ê±¼äµÄñéÊý£©£»                  ©§
-©§                                ©§                                  ©§  ¢Ú·´Ö®£¬Èç¹ûºÏ²¢ºóµÄÊ±¼äÔçÓÚµ±Ç°            ©§
-©§                                ©§                                  ©§Ê±¼ä£¬Ôò·µ»ØÏÂÒ»ÌìµÄÍ¬Ò»Ê±¿Ì£¨µ±ÌìÊ±          ©§
-©§                                ©§                                  ©§¿Ì£©µÄÊ±¼ä¡£ËüÄ¿Ç°½ö¾ßÓÐÓëexpiresÅäÖÃ         ©§
-©§                                ©§                                  ©§ÏîÏà¹ØµÄ»º´æ¹ýÆÚ¹¦ÄÜ                          ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§#define ngx_time                ©§    ÎÞ                            ©§    »ñÈ¡µ½¸ñÁÖÍþÖÎÊ±¼ä1970Äê1ÔÂ1ÈÕ            ©§
-©§ngx_cached_time->sec            ©§                                  ©§Áè³¿0µã0·Ö0Ãëµ½µ±Ç°Ê±¼äµÄÃëÊý                 ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§#define ngx_timeofday           ©§    ÎÞ                            ©§    »ñÈ¡»º´æµÄngx_time_tÀàÐÍÊ±¼ä              ©§
-©§(ngx_time_t *) ngxLcached_time  ©§                                  ©§                                              ©§
-©»©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ß©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ß©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¿
+è¡¨9-4 Nginxç¼“å­˜æ—¶é—´çš„æ“ä½œæ–¹æ³•
+â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”³â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”³â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”“
+â”ƒ    æ—¶é—´æ–¹æ³•å                  â”ƒ    å‚æ•°å«ä¹‰                      â”ƒ    æ‰§è¡Œæ„ä¹‰                                  â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒvoid ngx_time_init(void);       â”ƒ    æ—                             â”ƒ    åˆå§‹åŒ–å½“å‰è¿›ç¨‹ä¸­ç¼“å­˜çš„æ—¶é—´å˜é‡ï¼ŒåŒ        â”ƒ
+â”ƒ                                â”ƒ                                  â”ƒæ—¶ä¼šç¬¬ä¸€æ¬¡æ ¹æ®gettimeofdayè°ƒç”¨åˆ·æ–°ç¼“          â”ƒ
+â”ƒ                                â”ƒ                                  â”ƒå­˜æ—¶é—´                                        â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒvoid ngx_time_update(void)      â”ƒ    æ—                             â”ƒ    ä½¿ç”¨gettimeofdayè°ƒç”¨ä»¥ç³»ç»Ÿæ—¶é—´            â”ƒ
+â”ƒ                                â”ƒ                                  â”ƒæ›´æ–°ç¼“å­˜çš„æ—¶é—´ï¼Œä¸Šè¿°çš„ngx_current_            â”ƒ
+â”ƒ                                â”ƒ                                  â”ƒmsec. ngx_cached time. ngx_cached err         â”ƒ
+â”ƒ                                â”ƒ                                  â”ƒ log_time. ngx_cached_http_time. ngx_         â”ƒ
+â”ƒ                                â”ƒ                                  â”ƒcached_http_log_time. ngx_cached_http         â”ƒ
+â”ƒ                                â”ƒ                                  â”ƒ log_is08601è¿™6ä¸ªå…¨å±€å˜é‡éƒ½ä¼šå¾—åˆ°æ›´æ–°         â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ                                â”ƒ    tæ˜¯éœ€è¦è½¬æ¢çš„æ—¶é—´ï¼Œå®ƒæ˜¯æ ¼     â”ƒ                                              â”ƒ
+â”ƒu_char *ngx_http_time           â”ƒæž—å¨æ²»æ—¶é—´1970å¹´1æœˆ1æ—¥å‡Œæ™¨        â”ƒ    å°†æ—¶é—´tè½¬æ¢æˆâ€œMon, 28 Sep 1970 06:00:00  â”ƒ
+â”ƒ                                â”ƒ0ç‚¹Oåˆ†Oç§’åˆ°æŸä¸€æ—¶é—´çš„ç§’æ•°ï¼Œ       â”ƒ GMTâ€å½¢å¼çš„æ—¶é—´ï¼Œè¿”å›žå€¼ä¸Žbufæ˜¯ç›¸åŒ           â”ƒ
+â”ƒ(u_char *buf, time_t t)         â”ƒ                                  â”ƒçš„ï¼Œéƒ½æ˜¯æŒ‡å‘å­˜æ”¾æ—¶é—´çš„å­—ç¬¦ä¸²                  â”ƒ
+â”ƒ                                â”ƒbufæ˜¯tæ—¶é—´è½¬æ¢æˆå­—ç¬¦ä¸²å½¢å¼çš„      â”ƒ                                              â”ƒ
+â”ƒ                                â”ƒr-rrIPæ—¶é—´åŽç”¨æ¥å­˜æ”¾å­—ç¬¦ä¸²çš„å†…å­˜  â”ƒ                                              â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ                                â”ƒ    tæ‚¬éœ€è¦è½¬æ¢çš„æ—¶é—´ï¼Œå®ƒæ˜¯æ ¼     â”ƒ                                              â”ƒ
+â”ƒ                                â”ƒæž—å¨æ²»æ—¶é—´1970å¹´1æœˆ1æ—¥å‡Œæ™¨        â”ƒ    å°†æ—¶é—´tè½¬æ¢æˆâ€œMon. 28-Sep-70 06:00:00    â”ƒ
+â”ƒu_char *ngx_http_cookie_time    â”ƒ0ç‚¹0åˆ†0ç§’åˆ°æŸä¸€æ—¶é—´çš„ç§’æ•°ï¼Œ       â”ƒ GMTâ€å½¢å¼é€‚ç”¨äºŽcookieçš„æ—¶é—´ï¼Œè¿”å›žå€¼          â”ƒ
+â”ƒ(u_char *buf, time_t t)         â”ƒbufæ˜¯tæ—¶é—´è½¬æ¢æˆå­—ç¬¦ä¸²å½¢å¼é€‚      â”ƒä¸Žbufæ˜¯ç›¸åŒçš„ï¼Œéƒ½æ˜¯æŒ‡å‘å­˜æ”¾æ—¶é—´çš„å­—           â”ƒ
+â”ƒ                                â”ƒç”¨äºŽcookieçš„æ—¶é—´åŽç”¨æ¥å­˜æ”¾å­—      â”ƒç¬¦ä¸²                                          â”ƒ
+â”ƒ                                â”ƒç¬¦ä¸²çš„å†…å­˜                        â”ƒ                                              â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ                                â”ƒ    tæ˜¯éœ€è¦è½¬æ¢çš„æ—¶é—´ï¼Œå®ƒæ˜¯æ ¼æž—   â”ƒ                                              â”ƒ
+â”ƒvoid ngx_gmtime                 â”ƒå¨æ²»æ—¶é—´1970å¹´1æœˆ1æ—¥å‡Œæ™¨O         â”ƒ    å°†æ—¶é—´tè½¬æ¢æˆngx_tm_tç±»åž‹çš„æ—¶é—´ã€‚         â”ƒ
+â”ƒ                                â”ƒç‚¹0åˆ†0ç§’åˆ°æŸä¸€æ—¶é—´çš„ç§’æ•°ï¼Œtp      â”ƒ                                              â”ƒ
+â”ƒ(time_t t, ngx_tm_t *tp)        â”ƒ                                  â”ƒä¸‹é¢ä¼šè¯´æ˜Žngx_tm_tç±»åž‹                        â”ƒ
+â”ƒ                                â”ƒæ˜¯ngx_tm_tç±»åž‹çš„æ—¶é—´ï¼Œå®žé™…ä¸Š      â”ƒ                                              â”ƒ
+â”ƒ                                â”ƒå°±æ˜¯æ ‡å‡†çš„tmç±»åž‹æ—¶é—´              â”ƒ                                              â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ                                â”ƒ                                  â”ƒ    è¿”å›žä¸€1è¡¨ç¤ºå¤±è´¥ï¼Œå¦åˆ™ä¼šè¿”å›žï¼šâ‘ å¦‚         â”ƒ
+â”ƒ                                â”ƒ                                  â”ƒæžœwhenè¡¨ç¤ºå½“å¤©æ—¶é—´ç§’æ•°ï¼Œå½“å®ƒåˆå¹¶åˆ°            â”ƒ
+â”ƒ                                â”ƒ                                  â”ƒå®žé™…æ—¶é—´åŽï¼Œå·²ç»è¶…è¿‡å½“å‰æ—¶é—´ï¼Œé‚£ä¹ˆå°±          â”ƒ
+â”ƒ                                â”ƒ                                  â”ƒè¿”å›žwhenåˆå¹¶åˆ°å®žé™…æ—¶é—´åŽçš„ç§’æ•°ï¼ˆç›¸            â”ƒ
+â”ƒtime_t ngx_next_time            â”ƒ    whenè¡¨ä¸æœŸå¾…è¿‡æœŸçš„æ—¶é—´ï¼Œå®ƒ    â”ƒå¯¹äºŽæ ¼æž—å¨æ²»æ—¶é—´1970å¹´1æœˆ1æ—¥å‡Œæ™¨O             â”ƒ
+â”ƒ(time_t when)    :              â”ƒä»…è¡¨ç¤ºä¸€å¤©å†…çš„ç§’æ•°                â”ƒç‚¹Oåˆ†Oç§’åˆ°æŸä¸€æ—¶é—´çš„è€–æ•°ï¼‰ï¼›                  â”ƒ
+â”ƒ                                â”ƒ                                  â”ƒ  â‘¡åä¹‹ï¼Œå¦‚æžœåˆå¹¶åŽçš„æ—¶é—´æ—©äºŽå½“å‰            â”ƒ
+â”ƒ                                â”ƒ                                  â”ƒæ—¶é—´ï¼Œåˆ™è¿”å›žä¸‹ä¸€å¤©çš„åŒä¸€æ—¶åˆ»ï¼ˆå½“å¤©æ—¶          â”ƒ
+â”ƒ                                â”ƒ                                  â”ƒåˆ»ï¼‰çš„æ—¶é—´ã€‚å®ƒç›®å‰ä»…å…·æœ‰ä¸Žexpiresé…ç½®         â”ƒ
+â”ƒ                                â”ƒ                                  â”ƒé¡¹ç›¸å…³çš„ç¼“å­˜è¿‡æœŸåŠŸèƒ½                          â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ#define ngx_time                â”ƒ    æ—                             â”ƒ    èŽ·å–åˆ°æ ¼æž—å¨æ²»æ—¶é—´1970å¹´1æœˆ1æ—¥            â”ƒ
+â”ƒngx_cached_time->sec            â”ƒ                                  â”ƒå‡Œæ™¨0ç‚¹0åˆ†0ç§’åˆ°å½“å‰æ—¶é—´çš„ç§’æ•°                 â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ#define ngx_timeofday           â”ƒ    æ—                             â”ƒ    èŽ·å–ç¼“å­˜çš„ngx_time_tç±»åž‹æ—¶é—´              â”ƒ
+â”ƒ(ngx_time_t *) ngxLcached_time  â”ƒ                                  â”ƒ                                              â”ƒ
+â”—â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”»â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”»â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”›
 */
 
 void
-ngx_time_init(void) //³õÊ¼»¯nginx»·¾³µÄµ±Ç°Ê±¼ä
+ngx_time_init(void) //åˆå§‹åŒ–nginxçŽ¯å¢ƒçš„å½“å‰æ—¶é—´
 {
     ngx_cached_err_log_time.len = sizeof("1970/09/28 12:00:00") - 1;
     ngx_cached_http_time.len = sizeof("Mon, 28 Sep 1970 06:00:00 GMT") - 1;
@@ -138,71 +138,71 @@ ngx_time_init(void) //³õÊ¼»¯nginx»·¾³µÄµ±Ç°Ê±¼ä
     ngx_time_update();
 }
 /*
-±í9-4 Nginx»º´æÊ±¼äµÄ²Ù×÷·½·¨
-©³©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©×©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©×©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©·
-©§    Ê±¼ä·½·¨Ãû                  ©§    ²ÎÊýº¬Òå                      ©§    Ö´ÐÐÒâÒå                                  ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§void ngx_time_init(void);       ©§    ÎÞ                            ©§    ³õÊ¼»¯µ±Ç°½ø³ÌÖÐ»º´æµÄÊ±¼ä±äÁ¿£¬Í¬        ©§
-©§                                ©§                                  ©§Ê±»áµÚÒ»´Î¸ù¾Ýgettimeofdayµ÷ÓÃË¢ÐÂ»º          ©§
-©§                                ©§                                  ©§´æÊ±¼ä                                        ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§void ngx_time_update(void)      ©§    ÎÞ                            ©§    Ê¹ÓÃgettimeofdayµ÷ÓÃÒÔÏµÍ³Ê±¼ä            ©§
-©§                                ©§                                  ©§¸üÐÂ»º´æµÄÊ±¼ä£¬ÉÏÊöµÄngx_current_            ©§
-©§                                ©§                                  ©§msec. ngx_cached time. ngx_cached err         ©§
-©§                                ©§                                  ©§ log_time. ngx_cached_http_time. ngx_         ©§
-©§                                ©§                                  ©§cached_http_log_time. ngx_cached_http         ©§
-©§                                ©§                                  ©§ log_is08601Õâ6¸öÈ«¾Ö±äÁ¿¶¼»áµÃµ½¸üÐÂ         ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§                                ©§    tÊÇÐèÒª×ª»»µÄÊ±¼ä£¬ËüÊÇ¸ñ     ©§                                              ©§
-©§u_char *ngx_http_time           ©§ÁÖÍþÖÎÊ±¼ä1970Äê1ÔÂ1ÈÕÁè³¿        ©§    ½«Ê±¼ät×ª»»³É¡°Mon, 28 Sep 1970 06:00:00  ©§
-©§                                ©§0µãO·ÖOÃëµ½Ä³Ò»Ê±¼äµÄÃëÊý£¬       ©§ GMT¡±ÐÎÊ½µÄÊ±¼ä£¬·µ»ØÖµÓëbufÊÇÏàÍ¬           ©§
-©§(u_char *buf, time_t t)         ©§                                  ©§µÄ£¬¶¼ÊÇÖ¸Ïò´æ·ÅÊ±¼äµÄ×Ö·û´®                  ©§
-©§                                ©§bufÊÇtÊ±¼ä×ª»»³É×Ö·û´®ÐÎÊ½µÄ      ©§                                              ©§
-©§                                ©§r-rrIPÊ±¼äºóÓÃÀ´´æ·Å×Ö·û´®µÄÄÚ´æ  ©§                                              ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§                                ©§    tÐüÐèÒª×ª»»µÄÊ±¼ä£¬ËüÊÇ¸ñ     ©§                                              ©§
-©§                                ©§ÁÖÍþÖÎÊ±¼ä1970Äê1ÔÂ1ÈÕÁè³¿        ©§    ½«Ê±¼ät×ª»»³É¡°Mon. 28-Sep-70 06:00:00    ©§
-©§u_char *ngx_http_cookie_time    ©§0µã0·Ö0Ãëµ½Ä³Ò»Ê±¼äµÄÃëÊý£¬       ©§ GMT¡±ÐÎÊ½ÊÊÓÃÓÚcookieµÄÊ±¼ä£¬·µ»ØÖµ          ©§
-©§(u_char *buf, time_t t)         ©§bufÊÇtÊ±¼ä×ª»»³É×Ö·û´®ÐÎÊ½ÊÊ      ©§ÓëbufÊÇÏàÍ¬µÄ£¬¶¼ÊÇÖ¸Ïò´æ·ÅÊ±¼äµÄ×Ö           ©§
-©§                                ©§ÓÃÓÚcookieµÄÊ±¼äºóÓÃÀ´´æ·Å×Ö      ©§·û´®                                          ©§
-©§                                ©§·û´®µÄÄÚ´æ                        ©§                                              ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§                                ©§    tÊÇÐèÒª×ª»»µÄÊ±¼ä£¬ËüÊÇ¸ñÁÖ   ©§                                              ©§
-©§void ngx_gmtime                 ©§ÍþÖÎÊ±¼ä1970Äê1ÔÂ1ÈÕÁè³¿O         ©§    ½«Ê±¼ät×ª»»³Éngx_tm_tÀàÐÍµÄÊ±¼ä¡£         ©§
-©§                                ©§µã0·Ö0Ãëµ½Ä³Ò»Ê±¼äµÄÃëÊý£¬tp      ©§                                              ©§
-©§(time_t t, ngx_tm_t *tp)        ©§                                  ©§ÏÂÃæ»áËµÃ÷ngx_tm_tÀàÐÍ                        ©§
-©§                                ©§ÊÇngx_tm_tÀàÐÍµÄÊ±¼ä£¬Êµ¼ÊÉÏ      ©§                                              ©§
-©§                                ©§¾ÍÊÇ±ê×¼µÄtmÀàÐÍÊ±¼ä              ©§                                              ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§                                ©§                                  ©§    ·µ»ØÒ»1±íÊ¾Ê§°Ü£¬·ñÔò»á·µ»Ø£º¢ÙÈç         ©§
-©§                                ©§                                  ©§¹ûwhen±íÊ¾µ±ÌìÊ±¼äÃëÊý£¬µ±ËüºÏ²¢µ½            ©§
-©§                                ©§                                  ©§Êµ¼ÊÊ±¼äºó£¬ÒÑ¾­³¬¹ýµ±Ç°Ê±¼ä£¬ÄÇÃ´¾Í          ©§
-©§                                ©§                                  ©§·µ»ØwhenºÏ²¢µ½Êµ¼ÊÊ±¼äºóµÄÃëÊý£¨Ïà            ©§
-©§time_t ngx_next_time            ©§    when±í²»ÆÚ´ý¹ýÆÚµÄÊ±¼ä£¬Ëü    ©§¶ÔÓÚ¸ñÁÖÍþÖÎÊ±¼ä1970Äê1ÔÂ1ÈÕÁè³¿O             ©§
-©§(time_t when)    :              ©§½ö±íÊ¾Ò»ÌìÄÚµÄÃëÊý                ©§µãO·ÖOÃëµ½Ä³Ò»Ê±¼äµÄñéÊý£©£»                  ©§
-©§                                ©§                                  ©§  ¢Ú·´Ö®£¬Èç¹ûºÏ²¢ºóµÄÊ±¼äÔçÓÚµ±Ç°            ©§
-©§                                ©§                                  ©§Ê±¼ä£¬Ôò·µ»ØÏÂÒ»ÌìµÄÍ¬Ò»Ê±¿Ì£¨µ±ÌìÊ±          ©§
-©§                                ©§                                  ©§¿Ì£©µÄÊ±¼ä¡£ËüÄ¿Ç°½ö¾ßÓÐÓëexpiresÅäÖÃ         ©§
-©§                                ©§                                  ©§ÏîÏà¹ØµÄ»º´æ¹ýÆÚ¹¦ÄÜ                          ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§#define ngx_time                ©§    ÎÞ                            ©§    »ñÈ¡µ½¸ñÁÖÍþÖÎÊ±¼ä1970Äê1ÔÂ1ÈÕ            ©§
-©§ngx_cached_time->sec            ©§                                  ©§Áè³¿0µã0·Ö0Ãëµ½µ±Ç°Ê±¼äµÄÃëÊý                 ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§#define ngx_timeofday           ©§    ÎÞ                            ©§    »ñÈ¡»º´æµÄngx_time_tÀàÐÍÊ±¼ä              ©§
-©§(ngx_time_t *) ngxLcached_time  ©§                                  ©§                                              ©§
-©»©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ß©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ß©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¿
+è¡¨9-4 Nginxç¼“å­˜æ—¶é—´çš„æ“ä½œæ–¹æ³•
+â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”³â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”³â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”“
+â”ƒ    æ—¶é—´æ–¹æ³•å                  â”ƒ    å‚æ•°å«ä¹‰                      â”ƒ    æ‰§è¡Œæ„ä¹‰                                  â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒvoid ngx_time_init(void);       â”ƒ    æ—                             â”ƒ    åˆå§‹åŒ–å½“å‰è¿›ç¨‹ä¸­ç¼“å­˜çš„æ—¶é—´å˜é‡ï¼ŒåŒ        â”ƒ
+â”ƒ                                â”ƒ                                  â”ƒæ—¶ä¼šç¬¬ä¸€æ¬¡æ ¹æ®gettimeofdayè°ƒç”¨åˆ·æ–°ç¼“          â”ƒ
+â”ƒ                                â”ƒ                                  â”ƒå­˜æ—¶é—´                                        â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒvoid ngx_time_update(void)      â”ƒ    æ—                             â”ƒ    ä½¿ç”¨gettimeofdayè°ƒç”¨ä»¥ç³»ç»Ÿæ—¶é—´            â”ƒ
+â”ƒ                                â”ƒ                                  â”ƒæ›´æ–°ç¼“å­˜çš„æ—¶é—´ï¼Œä¸Šè¿°çš„ngx_current_            â”ƒ
+â”ƒ                                â”ƒ                                  â”ƒmsec. ngx_cached time. ngx_cached err         â”ƒ
+â”ƒ                                â”ƒ                                  â”ƒ log_time. ngx_cached_http_time. ngx_         â”ƒ
+â”ƒ                                â”ƒ                                  â”ƒcached_http_log_time. ngx_cached_http         â”ƒ
+â”ƒ                                â”ƒ                                  â”ƒ log_is08601è¿™6ä¸ªå…¨å±€å˜é‡éƒ½ä¼šå¾—åˆ°æ›´æ–°         â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ                                â”ƒ    tæ˜¯éœ€è¦è½¬æ¢çš„æ—¶é—´ï¼Œå®ƒæ˜¯æ ¼     â”ƒ                                              â”ƒ
+â”ƒu_char *ngx_http_time           â”ƒæž—å¨æ²»æ—¶é—´1970å¹´1æœˆ1æ—¥å‡Œæ™¨        â”ƒ    å°†æ—¶é—´tè½¬æ¢æˆâ€œMon, 28 Sep 1970 06:00:00  â”ƒ
+â”ƒ                                â”ƒ0ç‚¹Oåˆ†Oç§’åˆ°æŸä¸€æ—¶é—´çš„ç§’æ•°ï¼Œ       â”ƒ GMTâ€å½¢å¼çš„æ—¶é—´ï¼Œè¿”å›žå€¼ä¸Žbufæ˜¯ç›¸åŒ           â”ƒ
+â”ƒ(u_char *buf, time_t t)         â”ƒ                                  â”ƒçš„ï¼Œéƒ½æ˜¯æŒ‡å‘å­˜æ”¾æ—¶é—´çš„å­—ç¬¦ä¸²                  â”ƒ
+â”ƒ                                â”ƒbufæ˜¯tæ—¶é—´è½¬æ¢æˆå­—ç¬¦ä¸²å½¢å¼çš„      â”ƒ                                              â”ƒ
+â”ƒ                                â”ƒr-rrIPæ—¶é—´åŽç”¨æ¥å­˜æ”¾å­—ç¬¦ä¸²çš„å†…å­˜  â”ƒ                                              â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ                                â”ƒ    tæ‚¬éœ€è¦è½¬æ¢çš„æ—¶é—´ï¼Œå®ƒæ˜¯æ ¼     â”ƒ                                              â”ƒ
+â”ƒ                                â”ƒæž—å¨æ²»æ—¶é—´1970å¹´1æœˆ1æ—¥å‡Œæ™¨        â”ƒ    å°†æ—¶é—´tè½¬æ¢æˆâ€œMon. 28-Sep-70 06:00:00    â”ƒ
+â”ƒu_char *ngx_http_cookie_time    â”ƒ0ç‚¹0åˆ†0ç§’åˆ°æŸä¸€æ—¶é—´çš„ç§’æ•°ï¼Œ       â”ƒ GMTâ€å½¢å¼é€‚ç”¨äºŽcookieçš„æ—¶é—´ï¼Œè¿”å›žå€¼          â”ƒ
+â”ƒ(u_char *buf, time_t t)         â”ƒbufæ˜¯tæ—¶é—´è½¬æ¢æˆå­—ç¬¦ä¸²å½¢å¼é€‚      â”ƒä¸Žbufæ˜¯ç›¸åŒçš„ï¼Œéƒ½æ˜¯æŒ‡å‘å­˜æ”¾æ—¶é—´çš„å­—           â”ƒ
+â”ƒ                                â”ƒç”¨äºŽcookieçš„æ—¶é—´åŽç”¨æ¥å­˜æ”¾å­—      â”ƒç¬¦ä¸²                                          â”ƒ
+â”ƒ                                â”ƒç¬¦ä¸²çš„å†…å­˜                        â”ƒ                                              â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ                                â”ƒ    tæ˜¯éœ€è¦è½¬æ¢çš„æ—¶é—´ï¼Œå®ƒæ˜¯æ ¼æž—   â”ƒ                                              â”ƒ
+â”ƒvoid ngx_gmtime                 â”ƒå¨æ²»æ—¶é—´1970å¹´1æœˆ1æ—¥å‡Œæ™¨O         â”ƒ    å°†æ—¶é—´tè½¬æ¢æˆngx_tm_tç±»åž‹çš„æ—¶é—´ã€‚         â”ƒ
+â”ƒ                                â”ƒç‚¹0åˆ†0ç§’åˆ°æŸä¸€æ—¶é—´çš„ç§’æ•°ï¼Œtp      â”ƒ                                              â”ƒ
+â”ƒ(time_t t, ngx_tm_t *tp)        â”ƒ                                  â”ƒä¸‹é¢ä¼šè¯´æ˜Žngx_tm_tç±»åž‹                        â”ƒ
+â”ƒ                                â”ƒæ˜¯ngx_tm_tç±»åž‹çš„æ—¶é—´ï¼Œå®žé™…ä¸Š      â”ƒ                                              â”ƒ
+â”ƒ                                â”ƒå°±æ˜¯æ ‡å‡†çš„tmç±»åž‹æ—¶é—´              â”ƒ                                              â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ                                â”ƒ                                  â”ƒ    è¿”å›žä¸€1è¡¨ç¤ºå¤±è´¥ï¼Œå¦åˆ™ä¼šè¿”å›žï¼šâ‘ å¦‚         â”ƒ
+â”ƒ                                â”ƒ                                  â”ƒæžœwhenè¡¨ç¤ºå½“å¤©æ—¶é—´ç§’æ•°ï¼Œå½“å®ƒåˆå¹¶åˆ°            â”ƒ
+â”ƒ                                â”ƒ                                  â”ƒå®žé™…æ—¶é—´åŽï¼Œå·²ç»è¶…è¿‡å½“å‰æ—¶é—´ï¼Œé‚£ä¹ˆå°±          â”ƒ
+â”ƒ                                â”ƒ                                  â”ƒè¿”å›žwhenåˆå¹¶åˆ°å®žé™…æ—¶é—´åŽçš„ç§’æ•°ï¼ˆç›¸            â”ƒ
+â”ƒtime_t ngx_next_time            â”ƒ    whenè¡¨ä¸æœŸå¾…è¿‡æœŸçš„æ—¶é—´ï¼Œå®ƒ    â”ƒå¯¹äºŽæ ¼æž—å¨æ²»æ—¶é—´1970å¹´1æœˆ1æ—¥å‡Œæ™¨O             â”ƒ
+â”ƒ(time_t when)    :              â”ƒä»…è¡¨ç¤ºä¸€å¤©å†…çš„ç§’æ•°                â”ƒç‚¹Oåˆ†Oç§’åˆ°æŸä¸€æ—¶é—´çš„è€–æ•°ï¼‰ï¼›                  â”ƒ
+â”ƒ                                â”ƒ                                  â”ƒ  â‘¡åä¹‹ï¼Œå¦‚æžœåˆå¹¶åŽçš„æ—¶é—´æ—©äºŽå½“å‰            â”ƒ
+â”ƒ                                â”ƒ                                  â”ƒæ—¶é—´ï¼Œåˆ™è¿”å›žä¸‹ä¸€å¤©çš„åŒä¸€æ—¶åˆ»ï¼ˆå½“å¤©æ—¶          â”ƒ
+â”ƒ                                â”ƒ                                  â”ƒåˆ»ï¼‰çš„æ—¶é—´ã€‚å®ƒç›®å‰ä»…å…·æœ‰ä¸Žexpiresé…ç½®         â”ƒ
+â”ƒ                                â”ƒ                                  â”ƒé¡¹ç›¸å…³çš„ç¼“å­˜è¿‡æœŸåŠŸèƒ½                          â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ#define ngx_time                â”ƒ    æ—                             â”ƒ    èŽ·å–åˆ°æ ¼æž—å¨æ²»æ—¶é—´1970å¹´1æœˆ1æ—¥            â”ƒ
+â”ƒngx_cached_time->sec            â”ƒ                                  â”ƒå‡Œæ™¨0ç‚¹0åˆ†0ç§’åˆ°å½“å‰æ—¶é—´çš„ç§’æ•°                 â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ#define ngx_timeofday           â”ƒ    æ—                             â”ƒ    èŽ·å–ç¼“å­˜çš„ngx_time_tç±»åž‹æ—¶é—´              â”ƒ
+â”ƒ(ngx_time_t *) ngxLcached_time  â”ƒ                                  â”ƒ                                              â”ƒ
+â”—â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”»â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”»â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”›
 */
 
-//ngx_time_update£¨£©º¯ÊýÔÚmaster½ø³ÌÖÐµÄngx_master_process_cycle£¨£©Ö÷Ñ­»·ÖÐ±»µ÷ÓÃ£¬¾ßÌåÎ»ÖÃÎªsigsuspend£¨£©º¯ÊýÖ®ºó£¬Ò²¾ÍÊÇËµmaster½ø³Ì²¶×½µ½²¢´¦ÀíÍêÒ»¸öÐÅºÅ·µ»ØµÄÊ±ºò»á¸üÐÂÊ±¼ä»º´æ
+//ngx_time_updateï¼ˆï¼‰å‡½æ•°åœ¨masterè¿›ç¨‹ä¸­çš„ngx_master_process_cycleï¼ˆï¼‰ä¸»å¾ªçŽ¯ä¸­è¢«è°ƒç”¨ï¼Œå…·ä½“ä½ç½®ä¸ºsigsuspendï¼ˆï¼‰å‡½æ•°ä¹‹åŽï¼Œä¹Ÿå°±æ˜¯è¯´masterè¿›ç¨‹æ•æ‰åˆ°å¹¶å¤„ç†å®Œä¸€ä¸ªä¿¡å·è¿”å›žçš„æ—¶å€™ä¼šæ›´æ–°æ—¶é—´ç¼“å­˜
 /*
-¸üÐÂÊ±¼ä»º´æ
-Îª±ÜÃâÃ¿´Î¶¼µ÷ÓÃOSµÄgettimeofday£¬nginx²ÉÓÃÊ±¼ä»º´æ£¬Ã¿¸öworker½ø³Ì¶¼ÄÜ×ÔÐÐÎ¬»¤£»Îª¿ØÖÆ²¢·¢·ÃÎÊ£¬Ã¿´Î¸üÐÂÊ±¼ä»º´æÇ°ÐèÉêÇëËø£¬¶ø¶ÁÊ±¼ä»º´æÎÞÐë¼ÓËø£»
-Îª±ÜÃâ·ÖÁÑ¶Á£¬¼´Ä³worker½ø³Ì¶ÁÊ±¼ä»º´æ¹ý³ÌÖÐ½ÓÊÜÖÐ¶ÏÇëÇó£¬ÆÚ¼äÊ±¼ä»º´æ±»ÆäËûworker¸üÐÂ£¬µ¼ÖÂÇ°ºó¶ÁÈ¡Ê±¼ä²»Ò»ÖÂ£»nginxÒýÈëÊ±¼ä»º´æÊý×é(¹²64¸ö³ÉÔ±)£¬Ã¿´Î¶¼¸üÐÂÊý×éÖÐµÄÏÂÒ»¸öÔªËØ£»
-¸üÐÂÊ±¼äÍ¨¹ýngx_time_update()ÊµÏÖ
-ngx_time_update()µ÷ÓÃ×îÆµ·±µÄÊÇÔÚworker½ø³Ì´¦ÀíÊÂ¼þÊ±
+æ›´æ–°æ—¶é—´ç¼“å­˜
+ä¸ºé¿å…æ¯æ¬¡éƒ½è°ƒç”¨OSçš„gettimeofdayï¼Œnginxé‡‡ç”¨æ—¶é—´ç¼“å­˜ï¼Œæ¯ä¸ªworkerè¿›ç¨‹éƒ½èƒ½è‡ªè¡Œç»´æŠ¤ï¼›ä¸ºæŽ§åˆ¶å¹¶å‘è®¿é—®ï¼Œæ¯æ¬¡æ›´æ–°æ—¶é—´ç¼“å­˜å‰éœ€ç”³è¯·é”ï¼Œè€Œè¯»æ—¶é—´ç¼“å­˜æ— é¡»åŠ é”ï¼›
+ä¸ºé¿å…åˆ†è£‚è¯»ï¼Œå³æŸworkerè¿›ç¨‹è¯»æ—¶é—´ç¼“å­˜è¿‡ç¨‹ä¸­æŽ¥å—ä¸­æ–­è¯·æ±‚ï¼ŒæœŸé—´æ—¶é—´ç¼“å­˜è¢«å…¶ä»–workeræ›´æ–°ï¼Œå¯¼è‡´å‰åŽè¯»å–æ—¶é—´ä¸ä¸€è‡´ï¼›nginxå¼•å…¥æ—¶é—´ç¼“å­˜æ•°ç»„(å…±64ä¸ªæˆå‘˜)ï¼Œæ¯æ¬¡éƒ½æ›´æ–°æ•°ç»„ä¸­çš„ä¸‹ä¸€ä¸ªå…ƒç´ ï¼›
+æ›´æ–°æ—¶é—´é€šè¿‡ngx_time_update()å®žçŽ°
+ngx_time_update()è°ƒç”¨æœ€é¢‘ç¹çš„æ˜¯åœ¨workerè¿›ç¨‹å¤„ç†äº‹ä»¶æ—¶
 ngx_worker_process_cycle -- ngx_process_events_and_timers -- ngx_process_events
 #define ngx_process_events  ngx_event_actions.process_events
-ÒÔepollÎªÀý£¬Æä¶ÔÓ¦APIÎªngx_epoll_process_events
+ä»¥epollä¸ºä¾‹ï¼Œå…¶å¯¹åº”APIä¸ºngx_epoll_process_events
 ngx_epoll_process_events(ngx_cycle_t *cycle, ngx_msec_t timer, ngx_uint_t flags)
     events = epoll_wait(ep, event_list, (int) nevents, timer); 
     err = (events == -1) ? ngx_errno : 0;
@@ -210,23 +210,23 @@ ngx_epoll_process_events(ngx_cycle_t *cycle, ngx_msec_t timer, ngx_uint_t flags)
         ngx_time_update();
     }
 
-nginxÊ¹ÓÃÁËÔ­×Ó±äÁ¿ngx_time_lockÀ´¶ÔÊ±¼ä±äÁ¿½øÐÐÐ´¼ÓËø£¬¶øÇÒnginx¿¼ÂÇµ½¶ÁÊ±¼äµÄ²Ù×÷±È½Ï¶à£¬³öÓÚÐÔÄÜµÄÔ­ÒòÃ»ÓÐ¶Ô¶Á½øÐÐ¼ÓËø£¬¶øÊÇ²ÉÓÃÎ¬»¤¶à¸öÊ±¼ä
-slotµÄ·½Ê½À´¾¡Á¿¼õÉÙ¶Á·ÃÎÊ³åÍ»£¬»ù±¾Ô­Àí¾ÍÊÇ£¬µ±¶Á²Ù×÷ºÍÐ´²Ù×÷Í¬Ê±·¢ÉúÊ±£¨1£¬¶àÏß³ÌÊ±¿ÉÄÜ·¢Éú£»2£¬µ±½ø³ÌÕýÔÚ¶ÁÊ±¼ä»º´æÊ±£¬±»Ò»ÐÅºÅÖÐ¶ÏÈ¥Ö´ÐÐ
-ÐÅºÅ´¦Àíº¯Êý£¬ÐÅºÅ´¦Àíº¯ÊýÖÐ»á¸üÐÂÊ±¼ä»º´æ£©£¬Ò²¾ÍÊÇ¶Á²Ù×÷ÕýÔÚ½øÐÐÊ±£¨±ÈÈç¸Õ¿½±´Íêngx_cached_time->sec£¬»òÕß¿½±´ngx_cached_http_time.data½øÐÐ
-µ½Ò»°ëÊ±£©£¬Èç¹ûÐ´²Ù×÷¸Ä±äÁË¶Á²Ù×÷µÄÊ±¼ä£¬¶Á²Ù×÷×îÖÕµÃµ½µÄÊ±¼ä¾Í±ä»ìÂÒÁË¡£nginxÕâÀï²ÉÓÃÁË64¸öslotÊ±¼ä£¬Ò²¾ÍÊÇÃ¿´Î¸üÐÂÊ±¼äµÄÊ±ºò¶¼ÊÇ¸üÐÂÏÂÒ»¸ö
-slot£¬Èç¹û¶Á²Ù×÷Í¬Ê±½øÐÐ£¬¶Áµ½µÄ»¹ÊÇÖ®Ç°µÄslot£¬²¢Ã»ÓÐ±»¸Ä±ä£¬µ±È»ÕâÀïÖ»ÄÜÊÇ¾¡Á¿¼õÉÙÁËÊ±¼ä»ìÂÒµÄ¼¸ÂÊ£¬ÒòÎªslotµÄ¸öÊý²»ÊÇÎÞÏÞµÄ£¬slotÊÇÑ­»·µÄ£¬
-Ð´²Ù×÷×ÜÓÐ¼¸ÂÊ»áÐ´µ½¶Á²Ù×÷µÄslotÉÏ¡£²»¹ýnginxÏÖÔÚÊµ¼ÊÉÏ²¢Ã»ÓÐ²ÉÓÃ¶àÏß³ÌµÄ·½Ê½£¬¶øÇÒÔÚÐÅºÅ´¦ÀíÖÐÖ»ÊÇ¸üÐÂcached_err_log_time£¬ËùÒÔ¶ÔÆäËûÊ±¼ä±äÁ¿
-µÄ¶Á·ÃÎÊÊÇ²»»á·¢Éú»ìÂÒµÄ¡£ ÁíÒ»¸öµØ·½ÊÇÁ½¸öº¯ÊýÖÐ¶¼µ÷ÓÃÁË ngx_memory_barrier() £¬Êµ¼ÊÉÏÕâ¸öÒ²ÊÇÒ»¸öºê£¬ËüµÄ¾ßÌå¶¨ÒåºÍ±àÒëÆ÷¼°ÌåÏµ½á¹¹ÓÐ¹Ø£¬gcc
-ºÍx86»·¾³ÏÂ£¬¶¨ÒåÈçÏÂ£º
+nginxä½¿ç”¨äº†åŽŸå­å˜é‡ngx_time_lockæ¥å¯¹æ—¶é—´å˜é‡è¿›è¡Œå†™åŠ é”ï¼Œè€Œä¸”nginxè€ƒè™‘åˆ°è¯»æ—¶é—´çš„æ“ä½œæ¯”è¾ƒå¤šï¼Œå‡ºäºŽæ€§èƒ½çš„åŽŸå› æ²¡æœ‰å¯¹è¯»è¿›è¡ŒåŠ é”ï¼Œè€Œæ˜¯é‡‡ç”¨ç»´æŠ¤å¤šä¸ªæ—¶é—´
+slotçš„æ–¹å¼æ¥å°½é‡å‡å°‘è¯»è®¿é—®å†²çªï¼ŒåŸºæœ¬åŽŸç†å°±æ˜¯ï¼Œå½“è¯»æ“ä½œå’Œå†™æ“ä½œåŒæ—¶å‘ç”Ÿæ—¶ï¼ˆ1ï¼Œå¤šçº¿ç¨‹æ—¶å¯èƒ½å‘ç”Ÿï¼›2ï¼Œå½“è¿›ç¨‹æ­£åœ¨è¯»æ—¶é—´ç¼“å­˜æ—¶ï¼Œè¢«ä¸€ä¿¡å·ä¸­æ–­åŽ»æ‰§è¡Œ
+ä¿¡å·å¤„ç†å‡½æ•°ï¼Œä¿¡å·å¤„ç†å‡½æ•°ä¸­ä¼šæ›´æ–°æ—¶é—´ç¼“å­˜ï¼‰ï¼Œä¹Ÿå°±æ˜¯è¯»æ“ä½œæ­£åœ¨è¿›è¡Œæ—¶ï¼ˆæ¯”å¦‚åˆšæ‹·è´å®Œngx_cached_time->secï¼Œæˆ–è€…æ‹·è´ngx_cached_http_time.dataè¿›è¡Œ
+åˆ°ä¸€åŠæ—¶ï¼‰ï¼Œå¦‚æžœå†™æ“ä½œæ”¹å˜äº†è¯»æ“ä½œçš„æ—¶é—´ï¼Œè¯»æ“ä½œæœ€ç»ˆå¾—åˆ°çš„æ—¶é—´å°±å˜æ··ä¹±äº†ã€‚nginxè¿™é‡Œé‡‡ç”¨äº†64ä¸ªslotæ—¶é—´ï¼Œä¹Ÿå°±æ˜¯æ¯æ¬¡æ›´æ–°æ—¶é—´çš„æ—¶å€™éƒ½æ˜¯æ›´æ–°ä¸‹ä¸€ä¸ª
+slotï¼Œå¦‚æžœè¯»æ“ä½œåŒæ—¶è¿›è¡Œï¼Œè¯»åˆ°çš„è¿˜æ˜¯ä¹‹å‰çš„slotï¼Œå¹¶æ²¡æœ‰è¢«æ”¹å˜ï¼Œå½“ç„¶è¿™é‡Œåªèƒ½æ˜¯å°½é‡å‡å°‘äº†æ—¶é—´æ··ä¹±çš„å‡ çŽ‡ï¼Œå› ä¸ºslotçš„ä¸ªæ•°ä¸æ˜¯æ— é™çš„ï¼Œslotæ˜¯å¾ªçŽ¯çš„ï¼Œ
+å†™æ“ä½œæ€»æœ‰å‡ çŽ‡ä¼šå†™åˆ°è¯»æ“ä½œçš„slotä¸Šã€‚ä¸è¿‡nginxçŽ°åœ¨å®žé™…ä¸Šå¹¶æ²¡æœ‰é‡‡ç”¨å¤šçº¿ç¨‹çš„æ–¹å¼ï¼Œè€Œä¸”åœ¨ä¿¡å·å¤„ç†ä¸­åªæ˜¯æ›´æ–°cached_err_log_timeï¼Œæ‰€ä»¥å¯¹å…¶ä»–æ—¶é—´å˜é‡
+çš„è¯»è®¿é—®æ˜¯ä¸ä¼šå‘ç”Ÿæ··ä¹±çš„ã€‚ å¦ä¸€ä¸ªåœ°æ–¹æ˜¯ä¸¤ä¸ªå‡½æ•°ä¸­éƒ½è°ƒç”¨äº† ngx_memory_barrier() ï¼Œå®žé™…ä¸Šè¿™ä¸ªä¹Ÿæ˜¯ä¸€ä¸ªå®ï¼Œå®ƒçš„å…·ä½“å®šä¹‰å’Œç¼–è¯‘å™¨åŠä½“ç³»ç»“æž„æœ‰å…³ï¼Œgcc
+å’Œx86çŽ¯å¢ƒä¸‹ï¼Œå®šä¹‰å¦‚ä¸‹ï¼š
 #define ngx_memory_barrier()    __asm__ volatile ("" ::: "memory")
-ËüµÄ×÷ÓÃÊµ¼ÊÉÏ»¹ÊÇºÍ·ÀÖ¹¶Á²Ù×÷»ìÂÒÓÐ¹Ø£¬Ëü¸æËß±àÒëÆ÷²»Òª½«ÆäºóÃæµÄÓï¾ä½øÐÐÓÅ»¯£¬²»Òª´òÂÒÆäÖ´ÐÐË³Ðò
+å®ƒçš„ä½œç”¨å®žé™…ä¸Šè¿˜æ˜¯å’Œé˜²æ­¢è¯»æ“ä½œæ··ä¹±æœ‰å…³ï¼Œå®ƒå‘Šè¯‰ç¼–è¯‘å™¨ä¸è¦å°†å…¶åŽé¢çš„è¯­å¥è¿›è¡Œä¼˜åŒ–ï¼Œä¸è¦æ‰“ä¹±å…¶æ‰§è¡Œé¡ºåº
 */
 
 /*
-Õâ¸ö»º´æÊ±¼äÊ²Ã´Ê±ºò»á¸üÐÂÄØ£¿¶ÔÓÚworker½ø³Ì¶øÑÔ£¬³ýÁËNginxÆô¶¯Ê±¸üÐÂÒ»´ÎÊ±¼äÍâ£¬ÈÎºÎ¸üÐÂÊ±¼äµÄ²Ù×÷¶¼Ö»ÄÜÓÉngx_epoll_process_events·½·¨
-Ö´ÐÐ¡£»Ø¹ËÒ»ÏÂngx_epoll_process_events·½·¨µÄ´úÂë£¬µ±flags²ÎÊýÖÐÓÐNGX_UPDATE_TIME±êÖ¾Î»£¬»òÕßngx_event_timer_alarm±êÖ¾
-Î»Îª1Ê±£¬¾Í»áµ÷ÓÃngx_time_update·½·¨¸üÐÂ»º´æÊ±¼ä¡£
-*/ //Èç¹ûÃ»ÓÐÉèÖÃtimer_resolutionÔò¶¨Ê±Æ÷¿ÉÄÜÓÀÔ¶²»³¬Ê±£¬ÒòÎªepoll_wait²»·µ»Ø£¬ÎÞ·¨¸üÐÂÊ±¼ä
+è¿™ä¸ªç¼“å­˜æ—¶é—´ä»€ä¹ˆæ—¶å€™ä¼šæ›´æ–°å‘¢ï¼Ÿå¯¹äºŽworkerè¿›ç¨‹è€Œè¨€ï¼Œé™¤äº†Nginxå¯åŠ¨æ—¶æ›´æ–°ä¸€æ¬¡æ—¶é—´å¤–ï¼Œä»»ä½•æ›´æ–°æ—¶é—´çš„æ“ä½œéƒ½åªèƒ½ç”±ngx_epoll_process_eventsæ–¹æ³•
+æ‰§è¡Œã€‚å›žé¡¾ä¸€ä¸‹ngx_epoll_process_eventsæ–¹æ³•çš„ä»£ç ï¼Œå½“flagså‚æ•°ä¸­æœ‰NGX_UPDATE_TIMEæ ‡å¿—ä½ï¼Œæˆ–è€…ngx_event_timer_alarmæ ‡å¿—
+ä½ä¸º1æ—¶ï¼Œå°±ä¼šè°ƒç”¨ngx_time_updateæ–¹æ³•æ›´æ–°ç¼“å­˜æ—¶é—´ã€‚
+*/ //å¦‚æžœæ²¡æœ‰è®¾ç½®timer_resolutionåˆ™å®šæ—¶å™¨å¯èƒ½æ°¸è¿œä¸è¶…æ—¶ï¼Œå› ä¸ºepoll_waitä¸è¿”å›žï¼Œæ— æ³•æ›´æ–°æ—¶é—´
 void
 ngx_time_update(void)
 {
@@ -248,9 +248,9 @@ ngx_time_update(void)
 
     ngx_current_msec = (ngx_msec_t) sec * 1000 + msec;
 
-    tp = &cached_time[slot];//¶Áµ±Ç°Ê±¼ä»º´æ 
+    tp = &cached_time[slot];//è¯»å½“å‰æ—¶é—´ç¼“å­˜ 
 
-    if (tp->sec == sec) {//Èç¹û»º´æµÄÊ±¼äÃë=µ±Ç°Ê±¼äÃë£¬Ö±½Ó¸üÐÂµ±Ç°slotÔªËØµÄmsec²¢·µ»Ø£¬·ñÔò¸üÐÂÏÂÒ»¸öslotÊý×éÔªËØ£»
+    if (tp->sec == sec) {//å¦‚æžœç¼“å­˜çš„æ—¶é—´ç§’=å½“å‰æ—¶é—´ç§’ï¼Œç›´æŽ¥æ›´æ–°å½“å‰slotå…ƒç´ çš„msecå¹¶è¿”å›žï¼Œå¦åˆ™æ›´æ–°ä¸‹ä¸€ä¸ªslotæ•°ç»„å…ƒç´ ï¼›
         tp->msec = msec;
         ngx_unlock(&ngx_time_lock);
         return;
@@ -331,15 +331,15 @@ ngx_time_update(void)
 
 
       /*
-    ¿ÉÒÔ¿´µ½ngx_memory_barrier()Ö®ºóÊÇËÄÌõ¸³ÖµÓï¾ä£¬Èç¹ûÃ»ÓÐ ngx_memory_barrier()£¬±àÒëÆ÷¿ÉÄÜ»á½« ngx_cached_time = tp £¬
-    ngx_cached_http_time.data = p0£¬ngx_cached_err_log_time.data = p1£¬ ngx_cached_http_log_time.data = p2 ·Ö±ðºÍÖ®Ç°µÄ 
+    å¯ä»¥çœ‹åˆ°ngx_memory_barrier()ä¹‹åŽæ˜¯å››æ¡èµ‹å€¼è¯­å¥ï¼Œå¦‚æžœæ²¡æœ‰ ngx_memory_barrier()ï¼Œç¼–è¯‘å™¨å¯èƒ½ä¼šå°† ngx_cached_time = tp ï¼Œ
+    ngx_cached_http_time.data = p0ï¼Œngx_cached_err_log_time.data = p1ï¼Œ ngx_cached_http_log_time.data = p2 åˆ†åˆ«å’Œä¹‹å‰çš„ 
     tp = &cached_time[slot] , p0 = &cached_http_time[slot][0] , p1 = &cached_err_log_time[slot][0] , p2 = &cached_http_log_time[slot][0] 
-    ºÏ²¢ÓÅ»¯µô£¬ÕâÑùµÄºó¹ûÊÇ ngx_cached_time£¬ngx_cached_http_time£¬ngx_cached_err_log_time£¬ ngx_cached_http_log_timeÕâËÄ¸öÊ±¼ä»º´æµÄ
-    ²»Ò»ÖÂÐÔÊ±³¤Ôö´óÁË£¬ÒòÎªÔÚ×îºóÒ»¸öngx_sprintfÖ´ÐÐÍêºóÕâËÄ¸öÊ±¼ä»º´æ²ÅÒ»ÖÂ£¬ÔÚÕâÖ®Ç°Èç¹ûÓÐÆäËûµØ·½ÕýÔÚ¶ÁÊ±¼ä»º´æ¾Í¿ÉÄÜµ¼ÖÂ¶Áµ½µÄÊ±¼ä
-    ²»ÕýÈ·»òÕß²»Ò»ÖÂ£¬¶ø²ÉÓÃngx_memory_barrier() ºó£¬Ê±¼ä»º´æ¸üÐÂµ½Ò»ÖÂµÄ ×´Ì¬Ö»ÐèÒª¼¸¸öÊ±ÖÓÖÜÆÚ£¬ÒòÎªÖ»ÓÐËÄÌõ¸³ÖµÖ¸Áî£¬ÏÔÈ»ÔÚÕâÃ´¶ÌµÄÊ±
-    ¼äÄÚ·¢Éú¶ÁÊ±¼ä»º´æµÄ¸ÅÂÊ»áÐ¡µÄ¶àÁË¡£´ÓÕâÀï¿ÉÒÔ¿´³öIgor¿¼ÂÇÊÇ·Ç³£Ï¸ÖÂµÄ¡£ 
+    åˆå¹¶ä¼˜åŒ–æŽ‰ï¼Œè¿™æ ·çš„åŽæžœæ˜¯ ngx_cached_timeï¼Œngx_cached_http_timeï¼Œngx_cached_err_log_timeï¼Œ ngx_cached_http_log_timeè¿™å››ä¸ªæ—¶é—´ç¼“å­˜çš„
+    ä¸ä¸€è‡´æ€§æ—¶é•¿å¢žå¤§äº†ï¼Œå› ä¸ºåœ¨æœ€åŽä¸€ä¸ªngx_sprintfæ‰§è¡Œå®ŒåŽè¿™å››ä¸ªæ—¶é—´ç¼“å­˜æ‰ä¸€è‡´ï¼Œåœ¨è¿™ä¹‹å‰å¦‚æžœæœ‰å…¶ä»–åœ°æ–¹æ­£åœ¨è¯»æ—¶é—´ç¼“å­˜å°±å¯èƒ½å¯¼è‡´è¯»åˆ°çš„æ—¶é—´
+    ä¸æ­£ç¡®æˆ–è€…ä¸ä¸€è‡´ï¼Œè€Œé‡‡ç”¨ngx_memory_barrier() åŽï¼Œæ—¶é—´ç¼“å­˜æ›´æ–°åˆ°ä¸€è‡´çš„ çŠ¶æ€åªéœ€è¦å‡ ä¸ªæ—¶é’Ÿå‘¨æœŸï¼Œå› ä¸ºåªæœ‰å››æ¡èµ‹å€¼æŒ‡ä»¤ï¼Œæ˜¾ç„¶åœ¨è¿™ä¹ˆçŸ­çš„æ—¶
+    é—´å†…å‘ç”Ÿè¯»æ—¶é—´ç¼“å­˜çš„æ¦‚çŽ‡ä¼šå°çš„å¤šäº†ã€‚ä»Žè¿™é‡Œå¯ä»¥çœ‹å‡ºIgorè€ƒè™‘æ˜¯éžå¸¸ç»†è‡´çš„ã€‚ 
     */
-    ngx_memory_barrier();//½ûÖ¹±àÒëÆ÷¶ÔºóÃæµÄÓï¾äÓÅ»¯£¬Èç¹ûÃ»ÓÐÕâ¸öÏÞÖÆ£¬±àÒëÆ÷¿ÉÄÜ½«Ç°ºóÁ½²¿·Ö´úÂëºÏ²¢£¬¿ÉÄÜµ¼ÖÂÕâ6¸öÊ±¼ä¸üÐÂ³öÏÖ¼ä¸ô£¬ÆÚ¼äÈô±»¶ÁÈ¡»á³öÏÖÊ±¼ä²»Ò»ÖÂµÄÇé¿ö 
+    ngx_memory_barrier();//ç¦æ­¢ç¼–è¯‘å™¨å¯¹åŽé¢çš„è¯­å¥ä¼˜åŒ–ï¼Œå¦‚æžœæ²¡æœ‰è¿™ä¸ªé™åˆ¶ï¼Œç¼–è¯‘å™¨å¯èƒ½å°†å‰åŽä¸¤éƒ¨åˆ†ä»£ç åˆå¹¶ï¼Œå¯èƒ½å¯¼è‡´è¿™6ä¸ªæ—¶é—´æ›´æ–°å‡ºçŽ°é—´éš”ï¼ŒæœŸé—´è‹¥è¢«è¯»å–ä¼šå‡ºçŽ°æ—¶é—´ä¸ä¸€è‡´çš„æƒ…å†µ 
 
     ngx_cached_time = tp;
     ngx_cached_http_time.data = p0;
@@ -352,23 +352,23 @@ ngx_time_update(void)
 }
 
 /*
-nginx³öÓÚÐÔÄÜ¿¼ÂÇ²ÉÓÃÀàËÆlib_eventµÄ·½Ê½£¬×Ô¼º¶ÔÊ±¼ä½øÐÐÁËcache£¬ÓÃÀ´¼õÉÙ¶Ôgettimeofday£¨£©µÄµ÷ÓÃ£¬ÒòÎªÒ»°ãÀ´Ëµ·þÎñ
-Æ÷¶ÔÊ±¼äµÄ¾«¶ÈÒªÇó²»ÊÇÌØ±ðµÄ¸ß£¬²»¹ýÈç¹ûÐèÒª±È½Ï¾«È·µÄtimer£¬nginx»¹Ìá¹©ÁËÒ»¸ötimer_resolutionÖ¸ÁîÓÃÀ´ÉèÖÃÊ±¼ä¾«¶È£¬
-¾ßÌåµÄ»úÖÆÔÙºóÃæ»á×ö½éÉÜ
+nginxå‡ºäºŽæ€§èƒ½è€ƒè™‘é‡‡ç”¨ç±»ä¼¼lib_eventçš„æ–¹å¼ï¼Œè‡ªå·±å¯¹æ—¶é—´è¿›è¡Œäº†cacheï¼Œç”¨æ¥å‡å°‘å¯¹gettimeofdayï¼ˆï¼‰çš„è°ƒç”¨ï¼Œå› ä¸ºä¸€èˆ¬æ¥è¯´æœåŠ¡
+å™¨å¯¹æ—¶é—´çš„ç²¾åº¦è¦æ±‚ä¸æ˜¯ç‰¹åˆ«çš„é«˜ï¼Œä¸è¿‡å¦‚æžœéœ€è¦æ¯”è¾ƒç²¾ç¡®çš„timerï¼Œnginxè¿˜æä¾›äº†ä¸€ä¸ªtimer_resolutionæŒ‡ä»¤ç”¨æ¥è®¾ç½®æ—¶é—´ç²¾åº¦ï¼Œ
+å…·ä½“çš„æœºåˆ¶å†åŽé¢ä¼šåšä»‹ç»
 */
 /*
-ngx_time_update£¨£©ºÍngx_time_sigsafe_update£¨£©ÕâÁ½¸öº¯ÊýµÄÊµÏÖ±È½Ï¼òµ¥£¬µ«ÊÇ»¹ÊÇÓÐ¼¸¸öÖµµÃ×¢ÒâµÄµØ·½£¬Ê×ÏÈÓÉÓÚÊ±¼ä¿ÉÄÜÔÚÐÅºÅ´¦ÀíÖÐ±»¸üÐÂ£¬
-ÁíÍâ¶àÏß³ÌµÄÊ±ºòÒ²¿ÉÄÜÍ¬Ê±¸üÐÂÊ±¼ä£¨nginxÏÖÔÚËäÈ»Ã»ÓÐ¿ª·Å¶àÏß³Ì£¬µ«ÊÇ´úÂëÖÐÓÐ¿¼ÂÇ£©£¬nginxÊ¹ÓÃÁËÔ­×Ó±äÁ¿ngx_time_lockÀ´¶ÔÊ±¼ä±äÁ¿½øÐÐÐ´¼ÓËø£¬
-¶øÇÒnginx¿¼ÂÇµ½¶ÁÊ±¼äµÄ²Ù×÷±È½Ï¶à£¬³öÓÚÐÔÄÜµÄÔ­ÒòÃ»ÓÐ¶Ô¶Á½øÐÐ¼ÓËø£¬¶øÊÇ²ÉÓÃÎ¬»¤¶à¸öÊ±¼äslotµÄ·½Ê½À´¾¡Á¿¼õÉÙ¶Á·ÃÎÊ³åÍ»£¬»ù±¾Ô­Àí¾ÍÊÇ£¬µ±¶Á²Ù×÷
-ºÍÐ´²Ù×÷Í¬Ê±·¢ÉúÊ±£¨1£¬¶àÏß³ÌÊ±¿ÉÄÜ·¢Éú£»2£¬µ±½ø³ÌÕýÔÚ¶ÁÊ±¼ä»º´æÊ±£¬±»Ò»ÐÅºÅÖÐ¶ÏÈ¥Ö´ÐÐÐÅºÅ´¦Àíº¯Êý£¬ÐÅºÅ´¦Àíº¯ÊýÖÐ»á¸üÐÂÊ±¼ä»º´æ£©£¬Ò²¾ÍÊÇ¶Á
-²Ù×÷ÕýÔÚ½øÐÐÊ±£¨±ÈÈç¸Õ¿½±´Íêngx_cached_time->sec£¬»òÕß¿½±´ngx_cached_http_time.data½øÐÐµ½Ò»°ëÊ±£©£¬Èç¹ûÐ´²Ù×÷¸Ä±äÁË¶Á²Ù×÷µÄÊ±¼ä£¬¶Á²Ù×÷×îÖÕµÃ
-µ½µÄÊ±¼ä¾Í±ä»ìÂÒÁË¡£nginxÕâÀï²ÉÓÃÁË64¸öslotÊ±¼ä£¬Ò²¾ÍÊÇÃ¿´Î¸üÐÂÊ±¼äµÄÊ±ºò¶¼ÊÇ¸üÐÂÏÂÒ»¸öslot£¬Èç¹û¶Á²Ù×÷Í¬Ê±½øÐÐ£¬¶Áµ½µÄ»¹ÊÇÖ®Ç°µÄslot£¬²¢Ã»ÓÐ
-±»¸Ä±ä£¬µ±È»ÕâÀïÖ»ÄÜÊÇ¾¡Á¿¼õÉÙÁËÊ±¼ä»ìÂÒµÄ¼¸ÂÊ£¬ÒòÎªslotµÄ¸öÊý²»ÊÇÎÞÏÞµÄ£¬slotÊÇÑ­»·µÄ£¬Ð´²Ù×÷×ÜÓÐ¼¸ÂÊ»áÐ´µ½¶Á²Ù×÷µÄslotÉÏ¡£²»¹ýnginxÏÖÔÚÊµ¼Ê
-ÉÏ²¢Ã»ÓÐ²ÉÓÃ¶àÏß³ÌµÄ·½Ê½£¬¶øÇÒÔÚÐÅºÅ´¦ÀíÖÐÖ»ÊÇ¸üÐÂcached_err_log_time£¬ËùÒÔ¶ÔÆäËûÊ±¼ä±äÁ¿µÄ¶Á·ÃÎÊÊÇ²»»á·¢Éú»ìÂÒµÄ¡£ ÁíÒ»¸öµØ·½ÊÇÁ½¸öº¯ÊýÖÐ¶¼
-µ÷ÓÃÁË ngx_memory_barrier() £¬Êµ¼ÊÉÏÕâ¸öÒ²ÊÇÒ»¸öºê£¬ËüµÄ¾ßÌå¶¨ÒåºÍ±àÒëÆ÷¼°ÌåÏµ½á¹¹ÓÐ¹Ø£¬gccºÍx86»·¾³ÏÂ£¬¶¨ÒåÈçÏÂ£º
+ngx_time_updateï¼ˆï¼‰å’Œngx_time_sigsafe_updateï¼ˆï¼‰è¿™ä¸¤ä¸ªå‡½æ•°çš„å®žçŽ°æ¯”è¾ƒç®€å•ï¼Œä½†æ˜¯è¿˜æ˜¯æœ‰å‡ ä¸ªå€¼å¾—æ³¨æ„çš„åœ°æ–¹ï¼Œé¦–å…ˆç”±äºŽæ—¶é—´å¯èƒ½åœ¨ä¿¡å·å¤„ç†ä¸­è¢«æ›´æ–°ï¼Œ
+å¦å¤–å¤šçº¿ç¨‹çš„æ—¶å€™ä¹Ÿå¯èƒ½åŒæ—¶æ›´æ–°æ—¶é—´ï¼ˆnginxçŽ°åœ¨è™½ç„¶æ²¡æœ‰å¼€æ”¾å¤šçº¿ç¨‹ï¼Œä½†æ˜¯ä»£ç ä¸­æœ‰è€ƒè™‘ï¼‰ï¼Œnginxä½¿ç”¨äº†åŽŸå­å˜é‡ngx_time_lockæ¥å¯¹æ—¶é—´å˜é‡è¿›è¡Œå†™åŠ é”ï¼Œ
+è€Œä¸”nginxè€ƒè™‘åˆ°è¯»æ—¶é—´çš„æ“ä½œæ¯”è¾ƒå¤šï¼Œå‡ºäºŽæ€§èƒ½çš„åŽŸå› æ²¡æœ‰å¯¹è¯»è¿›è¡ŒåŠ é”ï¼Œè€Œæ˜¯é‡‡ç”¨ç»´æŠ¤å¤šä¸ªæ—¶é—´slotçš„æ–¹å¼æ¥å°½é‡å‡å°‘è¯»è®¿é—®å†²çªï¼ŒåŸºæœ¬åŽŸç†å°±æ˜¯ï¼Œå½“è¯»æ“ä½œ
+å’Œå†™æ“ä½œåŒæ—¶å‘ç”Ÿæ—¶ï¼ˆ1ï¼Œå¤šçº¿ç¨‹æ—¶å¯èƒ½å‘ç”Ÿï¼›2ï¼Œå½“è¿›ç¨‹æ­£åœ¨è¯»æ—¶é—´ç¼“å­˜æ—¶ï¼Œè¢«ä¸€ä¿¡å·ä¸­æ–­åŽ»æ‰§è¡Œä¿¡å·å¤„ç†å‡½æ•°ï¼Œä¿¡å·å¤„ç†å‡½æ•°ä¸­ä¼šæ›´æ–°æ—¶é—´ç¼“å­˜ï¼‰ï¼Œä¹Ÿå°±æ˜¯è¯»
+æ“ä½œæ­£åœ¨è¿›è¡Œæ—¶ï¼ˆæ¯”å¦‚åˆšæ‹·è´å®Œngx_cached_time->secï¼Œæˆ–è€…æ‹·è´ngx_cached_http_time.dataè¿›è¡Œåˆ°ä¸€åŠæ—¶ï¼‰ï¼Œå¦‚æžœå†™æ“ä½œæ”¹å˜äº†è¯»æ“ä½œçš„æ—¶é—´ï¼Œè¯»æ“ä½œæœ€ç»ˆå¾—
+åˆ°çš„æ—¶é—´å°±å˜æ··ä¹±äº†ã€‚nginxè¿™é‡Œé‡‡ç”¨äº†64ä¸ªslotæ—¶é—´ï¼Œä¹Ÿå°±æ˜¯æ¯æ¬¡æ›´æ–°æ—¶é—´çš„æ—¶å€™éƒ½æ˜¯æ›´æ–°ä¸‹ä¸€ä¸ªslotï¼Œå¦‚æžœè¯»æ“ä½œåŒæ—¶è¿›è¡Œï¼Œè¯»åˆ°çš„è¿˜æ˜¯ä¹‹å‰çš„slotï¼Œå¹¶æ²¡æœ‰
+è¢«æ”¹å˜ï¼Œå½“ç„¶è¿™é‡Œåªèƒ½æ˜¯å°½é‡å‡å°‘äº†æ—¶é—´æ··ä¹±çš„å‡ çŽ‡ï¼Œå› ä¸ºslotçš„ä¸ªæ•°ä¸æ˜¯æ— é™çš„ï¼Œslotæ˜¯å¾ªçŽ¯çš„ï¼Œå†™æ“ä½œæ€»æœ‰å‡ çŽ‡ä¼šå†™åˆ°è¯»æ“ä½œçš„slotä¸Šã€‚ä¸è¿‡nginxçŽ°åœ¨å®žé™…
+ä¸Šå¹¶æ²¡æœ‰é‡‡ç”¨å¤šçº¿ç¨‹çš„æ–¹å¼ï¼Œè€Œä¸”åœ¨ä¿¡å·å¤„ç†ä¸­åªæ˜¯æ›´æ–°cached_err_log_timeï¼Œæ‰€ä»¥å¯¹å…¶ä»–æ—¶é—´å˜é‡çš„è¯»è®¿é—®æ˜¯ä¸ä¼šå‘ç”Ÿæ··ä¹±çš„ã€‚ å¦ä¸€ä¸ªåœ°æ–¹æ˜¯ä¸¤ä¸ªå‡½æ•°ä¸­éƒ½
+è°ƒç”¨äº† ngx_memory_barrier() ï¼Œå®žé™…ä¸Šè¿™ä¸ªä¹Ÿæ˜¯ä¸€ä¸ªå®ï¼Œå®ƒçš„å…·ä½“å®šä¹‰å’Œç¼–è¯‘å™¨åŠä½“ç³»ç»“æž„æœ‰å…³ï¼Œgccå’Œx86çŽ¯å¢ƒä¸‹ï¼Œå®šä¹‰å¦‚ä¸‹ï¼š
 */
 #if !(NGX_WIN32)
-//Ëü»áÔÚÃ¿´ÎÖ´ÐÐÐÅºÅ´¦Àíº¯ÊýµÄÊ±ºò±»µ÷ÓÃ£¬Ò²¾ÍÊÇÔÚngx_signal_handler£¨£©º¯ÊýÖÐ¡£
+//å®ƒä¼šåœ¨æ¯æ¬¡æ‰§è¡Œä¿¡å·å¤„ç†å‡½æ•°çš„æ—¶å€™è¢«è°ƒç”¨ï¼Œä¹Ÿå°±æ˜¯åœ¨ngx_signal_handlerï¼ˆï¼‰å‡½æ•°ä¸­ã€‚
 void
 ngx_time_sigsafe_update(void)
 {
@@ -420,17 +420,17 @@ ngx_time_sigsafe_update(void)
 
 
     /*
-    ¿ÉÒÔ¿´µ½ngx_memory_barrier()Ö®ºóÊÇËÄÌõ¸³ÖµÓï¾ä£¬Èç¹ûÃ»ÓÐ ngx_memory_barrier()£¬±àÒëÆ÷¿ÉÄÜ»á½« ngx_cached_time = tp £¬
-    ngx_cached_http_time.data = p0£¬ngx_cached_err_log_time.data = p1£¬ ngx_cached_http_log_time.data = p2 ·Ö±ðºÍÖ®Ç°µÄ 
+    å¯ä»¥çœ‹åˆ°ngx_memory_barrier()ä¹‹åŽæ˜¯å››æ¡èµ‹å€¼è¯­å¥ï¼Œå¦‚æžœæ²¡æœ‰ ngx_memory_barrier()ï¼Œç¼–è¯‘å™¨å¯èƒ½ä¼šå°† ngx_cached_time = tp ï¼Œ
+    ngx_cached_http_time.data = p0ï¼Œngx_cached_err_log_time.data = p1ï¼Œ ngx_cached_http_log_time.data = p2 åˆ†åˆ«å’Œä¹‹å‰çš„ 
     tp = &cached_time[slot] , p0 = &cached_http_time[slot][0] , p1 = &cached_err_log_time[slot][0] , p2 = &cached_http_log_time[slot][0] 
-    ºÏ²¢ÓÅ»¯µô£¬ÕâÑùµÄºó¹ûÊÇ ngx_cached_time£¬ngx_cached_http_time£¬ngx_cached_err_log_time£¬ ngx_cached_http_log_timeÕâËÄ¸öÊ±¼ä»º´æµÄ
-    ²»Ò»ÖÂÐÔÊ±³¤Ôö´óÁË£¬ÒòÎªÔÚ×îºóÒ»¸öngx_sprintfÖ´ÐÐÍêºóÕâËÄ¸öÊ±¼ä»º´æ²ÅÒ»ÖÂ£¬ÔÚÕâÖ®Ç°Èç¹ûÓÐÆäËûµØ·½ÕýÔÚ¶ÁÊ±¼ä»º´æ¾Í¿ÉÄÜµ¼ÖÂ¶Áµ½µÄÊ±¼ä
-    ²»ÕýÈ·»òÕß²»Ò»ÖÂ£¬¶ø²ÉÓÃngx_memory_barrier() ºó£¬Ê±¼ä»º´æ¸üÐÂµ½Ò»ÖÂµÄ ×´Ì¬Ö»ÐèÒª¼¸¸öÊ±ÖÓÖÜÆÚ£¬ÒòÎªÖ»ÓÐËÄÌõ¸³ÖµÖ¸Áî£¬ÏÔÈ»ÔÚÕâÃ´¶ÌµÄÊ±
-    ¼äÄÚ·¢Éú¶ÁÊ±¼ä»º´æµÄ¸ÅÂÊ»áÐ¡µÄ¶àÁË¡£´ÓÕâÀï¿ÉÒÔ¿´³öIgor¿¼ÂÇÊÇ·Ç³£Ï¸ÖÂµÄ¡£ 
+    åˆå¹¶ä¼˜åŒ–æŽ‰ï¼Œè¿™æ ·çš„åŽæžœæ˜¯ ngx_cached_timeï¼Œngx_cached_http_timeï¼Œngx_cached_err_log_timeï¼Œ ngx_cached_http_log_timeè¿™å››ä¸ªæ—¶é—´ç¼“å­˜çš„
+    ä¸ä¸€è‡´æ€§æ—¶é•¿å¢žå¤§äº†ï¼Œå› ä¸ºåœ¨æœ€åŽä¸€ä¸ªngx_sprintfæ‰§è¡Œå®ŒåŽè¿™å››ä¸ªæ—¶é—´ç¼“å­˜æ‰ä¸€è‡´ï¼Œåœ¨è¿™ä¹‹å‰å¦‚æžœæœ‰å…¶ä»–åœ°æ–¹æ­£åœ¨è¯»æ—¶é—´ç¼“å­˜å°±å¯èƒ½å¯¼è‡´è¯»åˆ°çš„æ—¶é—´
+    ä¸æ­£ç¡®æˆ–è€…ä¸ä¸€è‡´ï¼Œè€Œé‡‡ç”¨ngx_memory_barrier() åŽï¼Œæ—¶é—´ç¼“å­˜æ›´æ–°åˆ°ä¸€è‡´çš„ çŠ¶æ€åªéœ€è¦å‡ ä¸ªæ—¶é’Ÿå‘¨æœŸï¼Œå› ä¸ºåªæœ‰å››æ¡èµ‹å€¼æŒ‡ä»¤ï¼Œæ˜¾ç„¶åœ¨è¿™ä¹ˆçŸ­çš„æ—¶
+    é—´å†…å‘ç”Ÿè¯»æ—¶é—´ç¼“å­˜çš„æ¦‚çŽ‡ä¼šå°çš„å¤šäº†ã€‚ä»Žè¿™é‡Œå¯ä»¥çœ‹å‡ºIgorè€ƒè™‘æ˜¯éžå¸¸ç»†è‡´çš„ã€‚ 
     */
     ngx_memory_barrier();
 
-    //ÔÚÐÅºÅ´¦ÀíÖÐÖ»ÊÇ¸üÐÂcached_err_log_time ngx_cached_syslog_time£¬ËùÒÔ¶ÔÆäËûÊ±¼ä±äÁ¿µÄ¶Á·ÃÎÊÊÇ²»»á·¢Éú»ìÂÒµÄ
+    //åœ¨ä¿¡å·å¤„ç†ä¸­åªæ˜¯æ›´æ–°cached_err_log_time ngx_cached_syslog_timeï¼Œæ‰€ä»¥å¯¹å…¶ä»–æ—¶é—´å˜é‡çš„è¯»è®¿é—®æ˜¯ä¸ä¼šå‘ç”Ÿæ··ä¹±çš„
     ngx_cached_err_log_time.data = p;
     ngx_cached_syslog_time.data = p2;
 
@@ -440,59 +440,59 @@ ngx_time_sigsafe_update(void)
 #endif
 
 /*
-±í9-4 Nginx»º´æÊ±¼äµÄ²Ù×÷·½·¨
-©³©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©×©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©×©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©·
-©§    Ê±¼ä·½·¨Ãû                  ©§    ²ÎÊýº¬Òå                      ©§    Ö´ÐÐÒâÒå                                  ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§void ngx_time_init(void);       ©§    ÎÞ                            ©§    ³õÊ¼»¯µ±Ç°½ø³ÌÖÐ»º´æµÄÊ±¼ä±äÁ¿£¬Í¬        ©§
-©§                                ©§                                  ©§Ê±»áµÚÒ»´Î¸ù¾Ýgettimeofdayµ÷ÓÃË¢ÐÂ»º          ©§
-©§                                ©§                                  ©§´æÊ±¼ä                                        ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§void ngx_time_update(void)      ©§    ÎÞ                            ©§    Ê¹ÓÃgettimeofdayµ÷ÓÃÒÔÏµÍ³Ê±¼ä            ©§
-©§                                ©§                                  ©§¸üÐÂ»º´æµÄÊ±¼ä£¬ÉÏÊöµÄngx_current_            ©§
-©§                                ©§                                  ©§msec. ngx_cached time. ngx_cached err         ©§
-©§                                ©§                                  ©§ log_time. ngx_cached_http_time. ngx_         ©§
-©§                                ©§                                  ©§cached_http_log_time. ngx_cached_http         ©§
-©§                                ©§                                  ©§ log_is08601Õâ6¸öÈ«¾Ö±äÁ¿¶¼»áµÃµ½¸üÐÂ         ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§                                ©§    tÊÇÐèÒª×ª»»µÄÊ±¼ä£¬ËüÊÇ¸ñ     ©§                                              ©§
-©§u_char *ngx_http_time           ©§ÁÖÍþÖÎÊ±¼ä1970Äê1ÔÂ1ÈÕÁè³¿        ©§    ½«Ê±¼ät×ª»»³É¡°Mon, 28 Sep 1970 06:00:00  ©§
-©§                                ©§0µãO·ÖOÃëµ½Ä³Ò»Ê±¼äµÄÃëÊý£¬       ©§ GMT¡±ÐÎÊ½µÄÊ±¼ä£¬·µ»ØÖµÓëbufÊÇÏàÍ¬           ©§
-©§(u_char *buf, time_t t)         ©§                                  ©§µÄ£¬¶¼ÊÇÖ¸Ïò´æ·ÅÊ±¼äµÄ×Ö·û´®                  ©§
-©§                                ©§bufÊÇtÊ±¼ä×ª»»³É×Ö·û´®ÐÎÊ½µÄ      ©§                                              ©§
-©§                                ©§r-rrIPÊ±¼äºóÓÃÀ´´æ·Å×Ö·û´®µÄÄÚ´æ  ©§                                              ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§                                ©§    tÐüÐèÒª×ª»»µÄÊ±¼ä£¬ËüÊÇ¸ñ     ©§                                              ©§
-©§                                ©§ÁÖÍþÖÎÊ±¼ä1970Äê1ÔÂ1ÈÕÁè³¿        ©§    ½«Ê±¼ät×ª»»³É¡°Mon. 28-Sep-70 06:00:00    ©§
-©§u_char *ngx_http_cookie_time    ©§0µã0·Ö0Ãëµ½Ä³Ò»Ê±¼äµÄÃëÊý£¬       ©§ GMT¡±ÐÎÊ½ÊÊÓÃÓÚcookieµÄÊ±¼ä£¬·µ»ØÖµ          ©§
-©§(u_char *buf, time_t t)         ©§bufÊÇtÊ±¼ä×ª»»³É×Ö·û´®ÐÎÊ½ÊÊ      ©§ÓëbufÊÇÏàÍ¬µÄ£¬¶¼ÊÇÖ¸Ïò´æ·ÅÊ±¼äµÄ×Ö           ©§
-©§                                ©§ÓÃÓÚcookieµÄÊ±¼äºóÓÃÀ´´æ·Å×Ö      ©§·û´®                                          ©§
-©§                                ©§·û´®µÄÄÚ´æ                        ©§                                              ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§                                ©§    tÊÇÐèÒª×ª»»µÄÊ±¼ä£¬ËüÊÇ¸ñÁÖ   ©§                                              ©§
-©§void ngx_gmtime                 ©§ÍþÖÎÊ±¼ä1970Äê1ÔÂ1ÈÕÁè³¿O         ©§    ½«Ê±¼ät×ª»»³Éngx_tm_tÀàÐÍµÄÊ±¼ä¡£         ©§
-©§                                ©§µã0·Ö0Ãëµ½Ä³Ò»Ê±¼äµÄÃëÊý£¬tp      ©§                                              ©§
-©§(time_t t, ngx_tm_t *tp)        ©§                                  ©§ÏÂÃæ»áËµÃ÷ngx_tm_tÀàÐÍ                        ©§
-©§                                ©§ÊÇngx_tm_tÀàÐÍµÄÊ±¼ä£¬Êµ¼ÊÉÏ      ©§                                              ©§
-©§                                ©§¾ÍÊÇ±ê×¼µÄtmÀàÐÍÊ±¼ä              ©§                                              ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§                                ©§                                  ©§    ·µ»ØÒ»1±íÊ¾Ê§°Ü£¬·ñÔò»á·µ»Ø£º¢ÙÈç         ©§
-©§                                ©§                                  ©§¹ûwhen±íÊ¾µ±ÌìÊ±¼äÃëÊý£¬µ±ËüºÏ²¢µ½            ©§
-©§                                ©§                                  ©§Êµ¼ÊÊ±¼äºó£¬ÒÑ¾­³¬¹ýµ±Ç°Ê±¼ä£¬ÄÇÃ´¾Í          ©§
-©§                                ©§                                  ©§·µ»ØwhenºÏ²¢µ½Êµ¼ÊÊ±¼äºóµÄÃëÊý£¨Ïà            ©§
-©§time_t ngx_next_time            ©§    when±í²»ÆÚ´ý¹ýÆÚµÄÊ±¼ä£¬Ëü    ©§¶ÔÓÚ¸ñÁÖÍþÖÎÊ±¼ä1970Äê1ÔÂ1ÈÕÁè³¿O             ©§
-©§(time_t when)    :              ©§½ö±íÊ¾Ò»ÌìÄÚµÄÃëÊý                ©§µãO·ÖOÃëµ½Ä³Ò»Ê±¼äµÄñéÊý£©£»                  ©§
-©§                                ©§                                  ©§  ¢Ú·´Ö®£¬Èç¹ûºÏ²¢ºóµÄÊ±¼äÔçÓÚµ±Ç°            ©§
-©§                                ©§                                  ©§Ê±¼ä£¬Ôò·µ»ØÏÂÒ»ÌìµÄÍ¬Ò»Ê±¿Ì£¨µ±ÌìÊ±          ©§
-©§                                ©§                                  ©§¿Ì£©µÄÊ±¼ä¡£ËüÄ¿Ç°½ö¾ßÓÐÓëexpiresÅäÖÃ         ©§
-©§                                ©§                                  ©§ÏîÏà¹ØµÄ»º´æ¹ýÆÚ¹¦ÄÜ                          ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§#define ngx_time                ©§    ÎÞ                            ©§    »ñÈ¡µ½¸ñÁÖÍþÖÎÊ±¼ä1970Äê1ÔÂ1ÈÕ            ©§
-©§ngx_cached_time->sec            ©§                                  ©§Áè³¿0µã0·Ö0Ãëµ½µ±Ç°Ê±¼äµÄÃëÊý                 ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§#define ngx_timeofday           ©§    ÎÞ                            ©§    »ñÈ¡»º´æµÄngx_time_tÀàÐÍÊ±¼ä              ©§
-©§(ngx_time_t *) ngxLcached_time  ©§                                  ©§                                              ©§
-©»©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ß©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ß©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¿
+è¡¨9-4 Nginxç¼“å­˜æ—¶é—´çš„æ“ä½œæ–¹æ³•
+â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”³â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”³â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”“
+â”ƒ    æ—¶é—´æ–¹æ³•å                  â”ƒ    å‚æ•°å«ä¹‰                      â”ƒ    æ‰§è¡Œæ„ä¹‰                                  â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒvoid ngx_time_init(void);       â”ƒ    æ—                             â”ƒ    åˆå§‹åŒ–å½“å‰è¿›ç¨‹ä¸­ç¼“å­˜çš„æ—¶é—´å˜é‡ï¼ŒåŒ        â”ƒ
+â”ƒ                                â”ƒ                                  â”ƒæ—¶ä¼šç¬¬ä¸€æ¬¡æ ¹æ®gettimeofdayè°ƒç”¨åˆ·æ–°ç¼“          â”ƒ
+â”ƒ                                â”ƒ                                  â”ƒå­˜æ—¶é—´                                        â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒvoid ngx_time_update(void)      â”ƒ    æ—                             â”ƒ    ä½¿ç”¨gettimeofdayè°ƒç”¨ä»¥ç³»ç»Ÿæ—¶é—´            â”ƒ
+â”ƒ                                â”ƒ                                  â”ƒæ›´æ–°ç¼“å­˜çš„æ—¶é—´ï¼Œä¸Šè¿°çš„ngx_current_            â”ƒ
+â”ƒ                                â”ƒ                                  â”ƒmsec. ngx_cached time. ngx_cached err         â”ƒ
+â”ƒ                                â”ƒ                                  â”ƒ log_time. ngx_cached_http_time. ngx_         â”ƒ
+â”ƒ                                â”ƒ                                  â”ƒcached_http_log_time. ngx_cached_http         â”ƒ
+â”ƒ                                â”ƒ                                  â”ƒ log_is08601è¿™6ä¸ªå…¨å±€å˜é‡éƒ½ä¼šå¾—åˆ°æ›´æ–°         â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ                                â”ƒ    tæ˜¯éœ€è¦è½¬æ¢çš„æ—¶é—´ï¼Œå®ƒæ˜¯æ ¼     â”ƒ                                              â”ƒ
+â”ƒu_char *ngx_http_time           â”ƒæž—å¨æ²»æ—¶é—´1970å¹´1æœˆ1æ—¥å‡Œæ™¨        â”ƒ    å°†æ—¶é—´tè½¬æ¢æˆâ€œMon, 28 Sep 1970 06:00:00  â”ƒ
+â”ƒ                                â”ƒ0ç‚¹Oåˆ†Oç§’åˆ°æŸä¸€æ—¶é—´çš„ç§’æ•°ï¼Œ       â”ƒ GMTâ€å½¢å¼çš„æ—¶é—´ï¼Œè¿”å›žå€¼ä¸Žbufæ˜¯ç›¸åŒ           â”ƒ
+â”ƒ(u_char *buf, time_t t)         â”ƒ                                  â”ƒçš„ï¼Œéƒ½æ˜¯æŒ‡å‘å­˜æ”¾æ—¶é—´çš„å­—ç¬¦ä¸²                  â”ƒ
+â”ƒ                                â”ƒbufæ˜¯tæ—¶é—´è½¬æ¢æˆå­—ç¬¦ä¸²å½¢å¼çš„      â”ƒ                                              â”ƒ
+â”ƒ                                â”ƒr-rrIPæ—¶é—´åŽç”¨æ¥å­˜æ”¾å­—ç¬¦ä¸²çš„å†…å­˜  â”ƒ                                              â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ                                â”ƒ    tæ‚¬éœ€è¦è½¬æ¢çš„æ—¶é—´ï¼Œå®ƒæ˜¯æ ¼     â”ƒ                                              â”ƒ
+â”ƒ                                â”ƒæž—å¨æ²»æ—¶é—´1970å¹´1æœˆ1æ—¥å‡Œæ™¨        â”ƒ    å°†æ—¶é—´tè½¬æ¢æˆâ€œMon. 28-Sep-70 06:00:00    â”ƒ
+â”ƒu_char *ngx_http_cookie_time    â”ƒ0ç‚¹0åˆ†0ç§’åˆ°æŸä¸€æ—¶é—´çš„ç§’æ•°ï¼Œ       â”ƒ GMTâ€å½¢å¼é€‚ç”¨äºŽcookieçš„æ—¶é—´ï¼Œè¿”å›žå€¼          â”ƒ
+â”ƒ(u_char *buf, time_t t)         â”ƒbufæ˜¯tæ—¶é—´è½¬æ¢æˆå­—ç¬¦ä¸²å½¢å¼é€‚      â”ƒä¸Žbufæ˜¯ç›¸åŒçš„ï¼Œéƒ½æ˜¯æŒ‡å‘å­˜æ”¾æ—¶é—´çš„å­—           â”ƒ
+â”ƒ                                â”ƒç”¨äºŽcookieçš„æ—¶é—´åŽç”¨æ¥å­˜æ”¾å­—      â”ƒç¬¦ä¸²                                          â”ƒ
+â”ƒ                                â”ƒç¬¦ä¸²çš„å†…å­˜                        â”ƒ                                              â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ                                â”ƒ    tæ˜¯éœ€è¦è½¬æ¢çš„æ—¶é—´ï¼Œå®ƒæ˜¯æ ¼æž—   â”ƒ                                              â”ƒ
+â”ƒvoid ngx_gmtime                 â”ƒå¨æ²»æ—¶é—´1970å¹´1æœˆ1æ—¥å‡Œæ™¨O         â”ƒ    å°†æ—¶é—´tè½¬æ¢æˆngx_tm_tç±»åž‹çš„æ—¶é—´ã€‚         â”ƒ
+â”ƒ                                â”ƒç‚¹0åˆ†0ç§’åˆ°æŸä¸€æ—¶é—´çš„ç§’æ•°ï¼Œtp      â”ƒ                                              â”ƒ
+â”ƒ(time_t t, ngx_tm_t *tp)        â”ƒ                                  â”ƒä¸‹é¢ä¼šè¯´æ˜Žngx_tm_tç±»åž‹                        â”ƒ
+â”ƒ                                â”ƒæ˜¯ngx_tm_tç±»åž‹çš„æ—¶é—´ï¼Œå®žé™…ä¸Š      â”ƒ                                              â”ƒ
+â”ƒ                                â”ƒå°±æ˜¯æ ‡å‡†çš„tmç±»åž‹æ—¶é—´              â”ƒ                                              â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ                                â”ƒ                                  â”ƒ    è¿”å›žä¸€1è¡¨ç¤ºå¤±è´¥ï¼Œå¦åˆ™ä¼šè¿”å›žï¼šâ‘ å¦‚         â”ƒ
+â”ƒ                                â”ƒ                                  â”ƒæžœwhenè¡¨ç¤ºå½“å¤©æ—¶é—´ç§’æ•°ï¼Œå½“å®ƒåˆå¹¶åˆ°            â”ƒ
+â”ƒ                                â”ƒ                                  â”ƒå®žé™…æ—¶é—´åŽï¼Œå·²ç»è¶…è¿‡å½“å‰æ—¶é—´ï¼Œé‚£ä¹ˆå°±          â”ƒ
+â”ƒ                                â”ƒ                                  â”ƒè¿”å›žwhenåˆå¹¶åˆ°å®žé™…æ—¶é—´åŽçš„ç§’æ•°ï¼ˆç›¸            â”ƒ
+â”ƒtime_t ngx_next_time            â”ƒ    whenè¡¨ä¸æœŸå¾…è¿‡æœŸçš„æ—¶é—´ï¼Œå®ƒ    â”ƒå¯¹äºŽæ ¼æž—å¨æ²»æ—¶é—´1970å¹´1æœˆ1æ—¥å‡Œæ™¨O             â”ƒ
+â”ƒ(time_t when)    :              â”ƒä»…è¡¨ç¤ºä¸€å¤©å†…çš„ç§’æ•°                â”ƒç‚¹Oåˆ†Oç§’åˆ°æŸä¸€æ—¶é—´çš„è€–æ•°ï¼‰ï¼›                  â”ƒ
+â”ƒ                                â”ƒ                                  â”ƒ  â‘¡åä¹‹ï¼Œå¦‚æžœåˆå¹¶åŽçš„æ—¶é—´æ—©äºŽå½“å‰            â”ƒ
+â”ƒ                                â”ƒ                                  â”ƒæ—¶é—´ï¼Œåˆ™è¿”å›žä¸‹ä¸€å¤©çš„åŒä¸€æ—¶åˆ»ï¼ˆå½“å¤©æ—¶          â”ƒ
+â”ƒ                                â”ƒ                                  â”ƒåˆ»ï¼‰çš„æ—¶é—´ã€‚å®ƒç›®å‰ä»…å…·æœ‰ä¸Žexpiresé…ç½®         â”ƒ
+â”ƒ                                â”ƒ                                  â”ƒé¡¹ç›¸å…³çš„ç¼“å­˜è¿‡æœŸåŠŸèƒ½                          â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ#define ngx_time                â”ƒ    æ—                             â”ƒ    èŽ·å–åˆ°æ ¼æž—å¨æ²»æ—¶é—´1970å¹´1æœˆ1æ—¥            â”ƒ
+â”ƒngx_cached_time->sec            â”ƒ                                  â”ƒå‡Œæ™¨0ç‚¹0åˆ†0ç§’åˆ°å½“å‰æ—¶é—´çš„ç§’æ•°                 â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ#define ngx_timeofday           â”ƒ    æ—                             â”ƒ    èŽ·å–ç¼“å­˜çš„ngx_time_tç±»åž‹æ—¶é—´              â”ƒ
+â”ƒ(ngx_time_t *) ngxLcached_time  â”ƒ                                  â”ƒ                                              â”ƒ
+â”—â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”»â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”»â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”›
 */
 
 u_char *
@@ -513,59 +513,59 @@ ngx_http_time(u_char *buf, time_t t)
 }
 
 /*
-±í9-4 Nginx»º´æÊ±¼äµÄ²Ù×÷·½·¨
-©³©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©×©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©×©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©·
-©§    Ê±¼ä·½·¨Ãû                  ©§    ²ÎÊýº¬Òå                      ©§    Ö´ÐÐÒâÒå                                  ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§void ngx_time_init(void);       ©§    ÎÞ                            ©§    ³õÊ¼»¯µ±Ç°½ø³ÌÖÐ»º´æµÄÊ±¼ä±äÁ¿£¬Í¬        ©§
-©§                                ©§                                  ©§Ê±»áµÚÒ»´Î¸ù¾Ýgettimeofdayµ÷ÓÃË¢ÐÂ»º          ©§
-©§                                ©§                                  ©§´æÊ±¼ä                                        ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§void ngx_time_update(void)      ©§    ÎÞ                            ©§    Ê¹ÓÃgettimeofdayµ÷ÓÃÒÔÏµÍ³Ê±¼ä            ©§
-©§                                ©§                                  ©§¸üÐÂ»º´æµÄÊ±¼ä£¬ÉÏÊöµÄngx_current_            ©§
-©§                                ©§                                  ©§msec. ngx_cached time. ngx_cached err         ©§
-©§                                ©§                                  ©§ log_time. ngx_cached_http_time. ngx_         ©§
-©§                                ©§                                  ©§cached_http_log_time. ngx_cached_http         ©§
-©§                                ©§                                  ©§ log_is08601Õâ6¸öÈ«¾Ö±äÁ¿¶¼»áµÃµ½¸üÐÂ         ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§                                ©§    tÊÇÐèÒª×ª»»µÄÊ±¼ä£¬ËüÊÇ¸ñ     ©§                                              ©§
-©§u_char *ngx_http_time           ©§ÁÖÍþÖÎÊ±¼ä1970Äê1ÔÂ1ÈÕÁè³¿        ©§    ½«Ê±¼ät×ª»»³É¡°Mon, 28 Sep 1970 06:00:00  ©§
-©§                                ©§0µãO·ÖOÃëµ½Ä³Ò»Ê±¼äµÄÃëÊý£¬       ©§ GMT¡±ÐÎÊ½µÄÊ±¼ä£¬·µ»ØÖµÓëbufÊÇÏàÍ¬           ©§
-©§(u_char *buf, time_t t)         ©§                                  ©§µÄ£¬¶¼ÊÇÖ¸Ïò´æ·ÅÊ±¼äµÄ×Ö·û´®                  ©§
-©§                                ©§bufÊÇtÊ±¼ä×ª»»³É×Ö·û´®ÐÎÊ½µÄ      ©§                                              ©§
-©§                                ©§r-rrIPÊ±¼äºóÓÃÀ´´æ·Å×Ö·û´®µÄÄÚ´æ  ©§                                              ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§                                ©§    tÐüÐèÒª×ª»»µÄÊ±¼ä£¬ËüÊÇ¸ñ     ©§                                              ©§
-©§                                ©§ÁÖÍþÖÎÊ±¼ä1970Äê1ÔÂ1ÈÕÁè³¿        ©§    ½«Ê±¼ät×ª»»³É¡°Mon. 28-Sep-70 06:00:00    ©§
-©§u_char *ngx_http_cookie_time    ©§0µã0·Ö0Ãëµ½Ä³Ò»Ê±¼äµÄÃëÊý£¬       ©§ GMT¡±ÐÎÊ½ÊÊÓÃÓÚcookieµÄÊ±¼ä£¬·µ»ØÖµ          ©§
-©§(u_char *buf, time_t t)         ©§bufÊÇtÊ±¼ä×ª»»³É×Ö·û´®ÐÎÊ½ÊÊ      ©§ÓëbufÊÇÏàÍ¬µÄ£¬¶¼ÊÇÖ¸Ïò´æ·ÅÊ±¼äµÄ×Ö           ©§
-©§                                ©§ÓÃÓÚcookieµÄÊ±¼äºóÓÃÀ´´æ·Å×Ö      ©§·û´®                                          ©§
-©§                                ©§·û´®µÄÄÚ´æ                        ©§                                              ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§                                ©§    tÊÇÐèÒª×ª»»µÄÊ±¼ä£¬ËüÊÇ¸ñÁÖ   ©§                                              ©§
-©§void ngx_gmtime                 ©§ÍþÖÎÊ±¼ä1970Äê1ÔÂ1ÈÕÁè³¿O         ©§    ½«Ê±¼ät×ª»»³Éngx_tm_tÀàÐÍµÄÊ±¼ä¡£         ©§
-©§                                ©§µã0·Ö0Ãëµ½Ä³Ò»Ê±¼äµÄÃëÊý£¬tp      ©§                                              ©§
-©§(time_t t, ngx_tm_t *tp)        ©§                                  ©§ÏÂÃæ»áËµÃ÷ngx_tm_tÀàÐÍ                        ©§
-©§                                ©§ÊÇngx_tm_tÀàÐÍµÄÊ±¼ä£¬Êµ¼ÊÉÏ      ©§                                              ©§
-©§                                ©§¾ÍÊÇ±ê×¼µÄtmÀàÐÍÊ±¼ä              ©§                                              ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§                                ©§                                  ©§    ·µ»ØÒ»1±íÊ¾Ê§°Ü£¬·ñÔò»á·µ»Ø£º¢ÙÈç         ©§
-©§                                ©§                                  ©§¹ûwhen±íÊ¾µ±ÌìÊ±¼äÃëÊý£¬µ±ËüºÏ²¢µ½            ©§
-©§                                ©§                                  ©§Êµ¼ÊÊ±¼äºó£¬ÒÑ¾­³¬¹ýµ±Ç°Ê±¼ä£¬ÄÇÃ´¾Í          ©§
-©§                                ©§                                  ©§·µ»ØwhenºÏ²¢µ½Êµ¼ÊÊ±¼äºóµÄÃëÊý£¨Ïà            ©§
-©§time_t ngx_next_time            ©§    when±í²»ÆÚ´ý¹ýÆÚµÄÊ±¼ä£¬Ëü    ©§¶ÔÓÚ¸ñÁÖÍþÖÎÊ±¼ä1970Äê1ÔÂ1ÈÕÁè³¿O             ©§
-©§(time_t when)    :              ©§½ö±íÊ¾Ò»ÌìÄÚµÄÃëÊý                ©§µãO·ÖOÃëµ½Ä³Ò»Ê±¼äµÄñéÊý£©£»                  ©§
-©§                                ©§                                  ©§  ¢Ú·´Ö®£¬Èç¹ûºÏ²¢ºóµÄÊ±¼äÔçÓÚµ±Ç°            ©§
-©§                                ©§                                  ©§Ê±¼ä£¬Ôò·µ»ØÏÂÒ»ÌìµÄÍ¬Ò»Ê±¿Ì£¨µ±ÌìÊ±          ©§
-©§                                ©§                                  ©§¿Ì£©µÄÊ±¼ä¡£ËüÄ¿Ç°½ö¾ßÓÐÓëexpiresÅäÖÃ         ©§
-©§                                ©§                                  ©§ÏîÏà¹ØµÄ»º´æ¹ýÆÚ¹¦ÄÜ                          ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§#define ngx_time                ©§    ÎÞ                            ©§    »ñÈ¡µ½¸ñÁÖÍþÖÎÊ±¼ä1970Äê1ÔÂ1ÈÕ            ©§
-©§ngx_cached_time->sec            ©§                                  ©§Áè³¿0µã0·Ö0Ãëµ½µ±Ç°Ê±¼äµÄÃëÊý                 ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§#define ngx_timeofday           ©§    ÎÞ                            ©§    »ñÈ¡»º´æµÄngx_time_tÀàÐÍÊ±¼ä              ©§
-©§(ngx_time_t *) ngxLcached_time  ©§                                  ©§                                              ©§
-©»©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ß©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ß©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¿
+è¡¨9-4 Nginxç¼“å­˜æ—¶é—´çš„æ“ä½œæ–¹æ³•
+â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”³â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”³â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”“
+â”ƒ    æ—¶é—´æ–¹æ³•å                  â”ƒ    å‚æ•°å«ä¹‰                      â”ƒ    æ‰§è¡Œæ„ä¹‰                                  â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒvoid ngx_time_init(void);       â”ƒ    æ—                             â”ƒ    åˆå§‹åŒ–å½“å‰è¿›ç¨‹ä¸­ç¼“å­˜çš„æ—¶é—´å˜é‡ï¼ŒåŒ        â”ƒ
+â”ƒ                                â”ƒ                                  â”ƒæ—¶ä¼šç¬¬ä¸€æ¬¡æ ¹æ®gettimeofdayè°ƒç”¨åˆ·æ–°ç¼“          â”ƒ
+â”ƒ                                â”ƒ                                  â”ƒå­˜æ—¶é—´                                        â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒvoid ngx_time_update(void)      â”ƒ    æ—                             â”ƒ    ä½¿ç”¨gettimeofdayè°ƒç”¨ä»¥ç³»ç»Ÿæ—¶é—´            â”ƒ
+â”ƒ                                â”ƒ                                  â”ƒæ›´æ–°ç¼“å­˜çš„æ—¶é—´ï¼Œä¸Šè¿°çš„ngx_current_            â”ƒ
+â”ƒ                                â”ƒ                                  â”ƒmsec. ngx_cached time. ngx_cached err         â”ƒ
+â”ƒ                                â”ƒ                                  â”ƒ log_time. ngx_cached_http_time. ngx_         â”ƒ
+â”ƒ                                â”ƒ                                  â”ƒcached_http_log_time. ngx_cached_http         â”ƒ
+â”ƒ                                â”ƒ                                  â”ƒ log_is08601è¿™6ä¸ªå…¨å±€å˜é‡éƒ½ä¼šå¾—åˆ°æ›´æ–°         â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ                                â”ƒ    tæ˜¯éœ€è¦è½¬æ¢çš„æ—¶é—´ï¼Œå®ƒæ˜¯æ ¼     â”ƒ                                              â”ƒ
+â”ƒu_char *ngx_http_time           â”ƒæž—å¨æ²»æ—¶é—´1970å¹´1æœˆ1æ—¥å‡Œæ™¨        â”ƒ    å°†æ—¶é—´tè½¬æ¢æˆâ€œMon, 28 Sep 1970 06:00:00  â”ƒ
+â”ƒ                                â”ƒ0ç‚¹Oåˆ†Oç§’åˆ°æŸä¸€æ—¶é—´çš„ç§’æ•°ï¼Œ       â”ƒ GMTâ€å½¢å¼çš„æ—¶é—´ï¼Œè¿”å›žå€¼ä¸Žbufæ˜¯ç›¸åŒ           â”ƒ
+â”ƒ(u_char *buf, time_t t)         â”ƒ                                  â”ƒçš„ï¼Œéƒ½æ˜¯æŒ‡å‘å­˜æ”¾æ—¶é—´çš„å­—ç¬¦ä¸²                  â”ƒ
+â”ƒ                                â”ƒbufæ˜¯tæ—¶é—´è½¬æ¢æˆå­—ç¬¦ä¸²å½¢å¼çš„      â”ƒ                                              â”ƒ
+â”ƒ                                â”ƒr-rrIPæ—¶é—´åŽç”¨æ¥å­˜æ”¾å­—ç¬¦ä¸²çš„å†…å­˜  â”ƒ                                              â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ                                â”ƒ    tæ‚¬éœ€è¦è½¬æ¢çš„æ—¶é—´ï¼Œå®ƒæ˜¯æ ¼     â”ƒ                                              â”ƒ
+â”ƒ                                â”ƒæž—å¨æ²»æ—¶é—´1970å¹´1æœˆ1æ—¥å‡Œæ™¨        â”ƒ    å°†æ—¶é—´tè½¬æ¢æˆâ€œMon. 28-Sep-70 06:00:00    â”ƒ
+â”ƒu_char *ngx_http_cookie_time    â”ƒ0ç‚¹0åˆ†0ç§’åˆ°æŸä¸€æ—¶é—´çš„ç§’æ•°ï¼Œ       â”ƒ GMTâ€å½¢å¼é€‚ç”¨äºŽcookieçš„æ—¶é—´ï¼Œè¿”å›žå€¼          â”ƒ
+â”ƒ(u_char *buf, time_t t)         â”ƒbufæ˜¯tæ—¶é—´è½¬æ¢æˆå­—ç¬¦ä¸²å½¢å¼é€‚      â”ƒä¸Žbufæ˜¯ç›¸åŒçš„ï¼Œéƒ½æ˜¯æŒ‡å‘å­˜æ”¾æ—¶é—´çš„å­—           â”ƒ
+â”ƒ                                â”ƒç”¨äºŽcookieçš„æ—¶é—´åŽç”¨æ¥å­˜æ”¾å­—      â”ƒç¬¦ä¸²                                          â”ƒ
+â”ƒ                                â”ƒç¬¦ä¸²çš„å†…å­˜                        â”ƒ                                              â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ                                â”ƒ    tæ˜¯éœ€è¦è½¬æ¢çš„æ—¶é—´ï¼Œå®ƒæ˜¯æ ¼æž—   â”ƒ                                              â”ƒ
+â”ƒvoid ngx_gmtime                 â”ƒå¨æ²»æ—¶é—´1970å¹´1æœˆ1æ—¥å‡Œæ™¨O         â”ƒ    å°†æ—¶é—´tè½¬æ¢æˆngx_tm_tç±»åž‹çš„æ—¶é—´ã€‚         â”ƒ
+â”ƒ                                â”ƒç‚¹0åˆ†0ç§’åˆ°æŸä¸€æ—¶é—´çš„ç§’æ•°ï¼Œtp      â”ƒ                                              â”ƒ
+â”ƒ(time_t t, ngx_tm_t *tp)        â”ƒ                                  â”ƒä¸‹é¢ä¼šè¯´æ˜Žngx_tm_tç±»åž‹                        â”ƒ
+â”ƒ                                â”ƒæ˜¯ngx_tm_tç±»åž‹çš„æ—¶é—´ï¼Œå®žé™…ä¸Š      â”ƒ                                              â”ƒ
+â”ƒ                                â”ƒå°±æ˜¯æ ‡å‡†çš„tmç±»åž‹æ—¶é—´              â”ƒ                                              â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ                                â”ƒ                                  â”ƒ    è¿”å›žä¸€1è¡¨ç¤ºå¤±è´¥ï¼Œå¦åˆ™ä¼šè¿”å›žï¼šâ‘ å¦‚         â”ƒ
+â”ƒ                                â”ƒ                                  â”ƒæžœwhenè¡¨ç¤ºå½“å¤©æ—¶é—´ç§’æ•°ï¼Œå½“å®ƒåˆå¹¶åˆ°            â”ƒ
+â”ƒ                                â”ƒ                                  â”ƒå®žé™…æ—¶é—´åŽï¼Œå·²ç»è¶…è¿‡å½“å‰æ—¶é—´ï¼Œé‚£ä¹ˆå°±          â”ƒ
+â”ƒ                                â”ƒ                                  â”ƒè¿”å›žwhenåˆå¹¶åˆ°å®žé™…æ—¶é—´åŽçš„ç§’æ•°ï¼ˆç›¸            â”ƒ
+â”ƒtime_t ngx_next_time            â”ƒ    whenè¡¨ä¸æœŸå¾…è¿‡æœŸçš„æ—¶é—´ï¼Œå®ƒ    â”ƒå¯¹äºŽæ ¼æž—å¨æ²»æ—¶é—´1970å¹´1æœˆ1æ—¥å‡Œæ™¨O             â”ƒ
+â”ƒ(time_t when)    :              â”ƒä»…è¡¨ç¤ºä¸€å¤©å†…çš„ç§’æ•°                â”ƒç‚¹Oåˆ†Oç§’åˆ°æŸä¸€æ—¶é—´çš„è€–æ•°ï¼‰ï¼›                  â”ƒ
+â”ƒ                                â”ƒ                                  â”ƒ  â‘¡åä¹‹ï¼Œå¦‚æžœåˆå¹¶åŽçš„æ—¶é—´æ—©äºŽå½“å‰            â”ƒ
+â”ƒ                                â”ƒ                                  â”ƒæ—¶é—´ï¼Œåˆ™è¿”å›žä¸‹ä¸€å¤©çš„åŒä¸€æ—¶åˆ»ï¼ˆå½“å¤©æ—¶          â”ƒ
+â”ƒ                                â”ƒ                                  â”ƒåˆ»ï¼‰çš„æ—¶é—´ã€‚å®ƒç›®å‰ä»…å…·æœ‰ä¸Žexpiresé…ç½®         â”ƒ
+â”ƒ                                â”ƒ                                  â”ƒé¡¹ç›¸å…³çš„ç¼“å­˜è¿‡æœŸåŠŸèƒ½                          â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ#define ngx_time                â”ƒ    æ—                             â”ƒ    èŽ·å–åˆ°æ ¼æž—å¨æ²»æ—¶é—´1970å¹´1æœˆ1æ—¥            â”ƒ
+â”ƒngx_cached_time->sec            â”ƒ                                  â”ƒå‡Œæ™¨0ç‚¹0åˆ†0ç§’åˆ°å½“å‰æ—¶é—´çš„ç§’æ•°                 â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ#define ngx_timeofday           â”ƒ    æ—                             â”ƒ    èŽ·å–ç¼“å­˜çš„ngx_time_tç±»åž‹æ—¶é—´              â”ƒ
+â”ƒ(ngx_time_t *) ngxLcached_time  â”ƒ                                  â”ƒ                                              â”ƒ
+â”—â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”»â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”»â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”›
 */
 
 u_char *
@@ -595,62 +595,62 @@ ngx_http_cookie_time(u_char *buf, time_t t)
 }
 
 /*
-±í9-4 Nginx»º´æÊ±¼äµÄ²Ù×÷·½·¨
-©³©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©×©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©×©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©·
-©§    Ê±¼ä·½·¨Ãû                  ©§    ²ÎÊýº¬Òå                      ©§    Ö´ÐÐÒâÒå                                  ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§void ngx_time_init(void);       ©§    ÎÞ                            ©§    ³õÊ¼»¯µ±Ç°½ø³ÌÖÐ»º´æµÄÊ±¼ä±äÁ¿£¬Í¬        ©§
-©§                                ©§                                  ©§Ê±»áµÚÒ»´Î¸ù¾Ýgettimeofdayµ÷ÓÃË¢ÐÂ»º          ©§
-©§                                ©§                                  ©§´æÊ±¼ä                                        ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§void ngx_time_update(void)      ©§    ÎÞ                            ©§    Ê¹ÓÃgettimeofdayµ÷ÓÃÒÔÏµÍ³Ê±¼ä            ©§
-©§                                ©§                                  ©§¸üÐÂ»º´æµÄÊ±¼ä£¬ÉÏÊöµÄngx_current_            ©§
-©§                                ©§                                  ©§msec. ngx_cached time. ngx_cached err         ©§
-©§                                ©§                                  ©§ log_time. ngx_cached_http_time. ngx_         ©§
-©§                                ©§                                  ©§cached_http_log_time. ngx_cached_http         ©§
-©§                                ©§                                  ©§ log_is08601Õâ6¸öÈ«¾Ö±äÁ¿¶¼»áµÃµ½¸üÐÂ         ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§                                ©§    tÊÇÐèÒª×ª»»µÄÊ±¼ä£¬ËüÊÇ¸ñ     ©§                                              ©§
-©§u_char *ngx_http_time           ©§ÁÖÍþÖÎÊ±¼ä1970Äê1ÔÂ1ÈÕÁè³¿        ©§    ½«Ê±¼ät×ª»»³É¡°Mon, 28 Sep 1970 06:00:00  ©§
-©§                                ©§0µãO·ÖOÃëµ½Ä³Ò»Ê±¼äµÄÃëÊý£¬       ©§ GMT¡±ÐÎÊ½µÄÊ±¼ä£¬·µ»ØÖµÓëbufÊÇÏàÍ¬           ©§
-©§(u_char *buf, time_t t)         ©§                                  ©§µÄ£¬¶¼ÊÇÖ¸Ïò´æ·ÅÊ±¼äµÄ×Ö·û´®                  ©§
-©§                                ©§bufÊÇtÊ±¼ä×ª»»³É×Ö·û´®ÐÎÊ½µÄ      ©§                                              ©§
-©§                                ©§r-rrIPÊ±¼äºóÓÃÀ´´æ·Å×Ö·û´®µÄÄÚ´æ  ©§                                              ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§                                ©§    tÐüÐèÒª×ª»»µÄÊ±¼ä£¬ËüÊÇ¸ñ     ©§                                              ©§
-©§                                ©§ÁÖÍþÖÎÊ±¼ä1970Äê1ÔÂ1ÈÕÁè³¿        ©§    ½«Ê±¼ät×ª»»³É¡°Mon. 28-Sep-70 06:00:00    ©§
-©§u_char *ngx_http_cookie_time    ©§0µã0·Ö0Ãëµ½Ä³Ò»Ê±¼äµÄÃëÊý£¬       ©§ GMT¡±ÐÎÊ½ÊÊÓÃÓÚcookieµÄÊ±¼ä£¬·µ»ØÖµ          ©§
-©§(u_char *buf, time_t t)         ©§bufÊÇtÊ±¼ä×ª»»³É×Ö·û´®ÐÎÊ½ÊÊ      ©§ÓëbufÊÇÏàÍ¬µÄ£¬¶¼ÊÇÖ¸Ïò´æ·ÅÊ±¼äµÄ×Ö           ©§
-©§                                ©§ÓÃÓÚcookieµÄÊ±¼äºóÓÃÀ´´æ·Å×Ö      ©§·û´®                                          ©§
-©§                                ©§·û´®µÄÄÚ´æ                        ©§                                              ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§                                ©§    tÊÇÐèÒª×ª»»µÄÊ±¼ä£¬ËüÊÇ¸ñÁÖ   ©§                                              ©§
-©§void ngx_gmtime                 ©§ÍþÖÎÊ±¼ä1970Äê1ÔÂ1ÈÕÁè³¿O         ©§    ½«Ê±¼ät×ª»»³Éngx_tm_tÀàÐÍµÄÊ±¼ä¡£         ©§
-©§                                ©§µã0·Ö0Ãëµ½Ä³Ò»Ê±¼äµÄÃëÊý£¬tp      ©§                                              ©§
-©§(time_t t, ngx_tm_t *tp)        ©§                                  ©§ÏÂÃæ»áËµÃ÷ngx_tm_tÀàÐÍ                        ©§
-©§                                ©§ÊÇngx_tm_tÀàÐÍµÄÊ±¼ä£¬Êµ¼ÊÉÏ      ©§                                              ©§
-©§                                ©§¾ÍÊÇ±ê×¼µÄtmÀàÐÍÊ±¼ä              ©§                                              ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§                                ©§                                  ©§    ·µ»ØÒ»1±íÊ¾Ê§°Ü£¬·ñÔò»á·µ»Ø£º¢ÙÈç         ©§
-©§                                ©§                                  ©§¹ûwhen±íÊ¾µ±ÌìÊ±¼äÃëÊý£¬µ±ËüºÏ²¢µ½            ©§
-©§                                ©§                                  ©§Êµ¼ÊÊ±¼äºó£¬ÒÑ¾­³¬¹ýµ±Ç°Ê±¼ä£¬ÄÇÃ´¾Í          ©§
-©§                                ©§                                  ©§·µ»ØwhenºÏ²¢µ½Êµ¼ÊÊ±¼äºóµÄÃëÊý£¨Ïà            ©§
-©§time_t ngx_next_time            ©§    when±í²»ÆÚ´ý¹ýÆÚµÄÊ±¼ä£¬Ëü    ©§¶ÔÓÚ¸ñÁÖÍþÖÎÊ±¼ä1970Äê1ÔÂ1ÈÕÁè³¿O             ©§
-©§(time_t when)    :              ©§½ö±íÊ¾Ò»ÌìÄÚµÄÃëÊý                ©§µãO·ÖOÃëµ½Ä³Ò»Ê±¼äµÄñéÊý£©£»                  ©§
-©§                                ©§                                  ©§  ¢Ú·´Ö®£¬Èç¹ûºÏ²¢ºóµÄÊ±¼äÔçÓÚµ±Ç°            ©§
-©§                                ©§                                  ©§Ê±¼ä£¬Ôò·µ»ØÏÂÒ»ÌìµÄÍ¬Ò»Ê±¿Ì£¨µ±ÌìÊ±          ©§
-©§                                ©§                                  ©§¿Ì£©µÄÊ±¼ä¡£ËüÄ¿Ç°½ö¾ßÓÐÓëexpiresÅäÖÃ         ©§
-©§                                ©§                                  ©§ÏîÏà¹ØµÄ»º´æ¹ýÆÚ¹¦ÄÜ                          ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§#define ngx_time                ©§    ÎÞ                            ©§    »ñÈ¡µ½¸ñÁÖÍþÖÎÊ±¼ä1970Äê1ÔÂ1ÈÕ            ©§
-©§ngx_cached_time->sec            ©§                                  ©§Áè³¿0µã0·Ö0Ãëµ½µ±Ç°Ê±¼äµÄÃëÊý                 ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§#define ngx_timeofday           ©§    ÎÞ                            ©§    »ñÈ¡»º´æµÄngx_time_tÀàÐÍÊ±¼ä              ©§
-©§(ngx_time_t *) ngxLcached_time  ©§                                  ©§                                              ©§
-©»©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ß©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ß©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¿
+è¡¨9-4 Nginxç¼“å­˜æ—¶é—´çš„æ“ä½œæ–¹æ³•
+â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”³â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”³â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”“
+â”ƒ    æ—¶é—´æ–¹æ³•å                  â”ƒ    å‚æ•°å«ä¹‰                      â”ƒ    æ‰§è¡Œæ„ä¹‰                                  â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒvoid ngx_time_init(void);       â”ƒ    æ—                             â”ƒ    åˆå§‹åŒ–å½“å‰è¿›ç¨‹ä¸­ç¼“å­˜çš„æ—¶é—´å˜é‡ï¼ŒåŒ        â”ƒ
+â”ƒ                                â”ƒ                                  â”ƒæ—¶ä¼šç¬¬ä¸€æ¬¡æ ¹æ®gettimeofdayè°ƒç”¨åˆ·æ–°ç¼“          â”ƒ
+â”ƒ                                â”ƒ                                  â”ƒå­˜æ—¶é—´                                        â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒvoid ngx_time_update(void)      â”ƒ    æ—                             â”ƒ    ä½¿ç”¨gettimeofdayè°ƒç”¨ä»¥ç³»ç»Ÿæ—¶é—´            â”ƒ
+â”ƒ                                â”ƒ                                  â”ƒæ›´æ–°ç¼“å­˜çš„æ—¶é—´ï¼Œä¸Šè¿°çš„ngx_current_            â”ƒ
+â”ƒ                                â”ƒ                                  â”ƒmsec. ngx_cached time. ngx_cached err         â”ƒ
+â”ƒ                                â”ƒ                                  â”ƒ log_time. ngx_cached_http_time. ngx_         â”ƒ
+â”ƒ                                â”ƒ                                  â”ƒcached_http_log_time. ngx_cached_http         â”ƒ
+â”ƒ                                â”ƒ                                  â”ƒ log_is08601è¿™6ä¸ªå…¨å±€å˜é‡éƒ½ä¼šå¾—åˆ°æ›´æ–°         â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ                                â”ƒ    tæ˜¯éœ€è¦è½¬æ¢çš„æ—¶é—´ï¼Œå®ƒæ˜¯æ ¼     â”ƒ                                              â”ƒ
+â”ƒu_char *ngx_http_time           â”ƒæž—å¨æ²»æ—¶é—´1970å¹´1æœˆ1æ—¥å‡Œæ™¨        â”ƒ    å°†æ—¶é—´tè½¬æ¢æˆâ€œMon, 28 Sep 1970 06:00:00  â”ƒ
+â”ƒ                                â”ƒ0ç‚¹Oåˆ†Oç§’åˆ°æŸä¸€æ—¶é—´çš„ç§’æ•°ï¼Œ       â”ƒ GMTâ€å½¢å¼çš„æ—¶é—´ï¼Œè¿”å›žå€¼ä¸Žbufæ˜¯ç›¸åŒ           â”ƒ
+â”ƒ(u_char *buf, time_t t)         â”ƒ                                  â”ƒçš„ï¼Œéƒ½æ˜¯æŒ‡å‘å­˜æ”¾æ—¶é—´çš„å­—ç¬¦ä¸²                  â”ƒ
+â”ƒ                                â”ƒbufæ˜¯tæ—¶é—´è½¬æ¢æˆå­—ç¬¦ä¸²å½¢å¼çš„      â”ƒ                                              â”ƒ
+â”ƒ                                â”ƒr-rrIPæ—¶é—´åŽç”¨æ¥å­˜æ”¾å­—ç¬¦ä¸²çš„å†…å­˜  â”ƒ                                              â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ                                â”ƒ    tæ‚¬éœ€è¦è½¬æ¢çš„æ—¶é—´ï¼Œå®ƒæ˜¯æ ¼     â”ƒ                                              â”ƒ
+â”ƒ                                â”ƒæž—å¨æ²»æ—¶é—´1970å¹´1æœˆ1æ—¥å‡Œæ™¨        â”ƒ    å°†æ—¶é—´tè½¬æ¢æˆâ€œMon. 28-Sep-70 06:00:00    â”ƒ
+â”ƒu_char *ngx_http_cookie_time    â”ƒ0ç‚¹0åˆ†0ç§’åˆ°æŸä¸€æ—¶é—´çš„ç§’æ•°ï¼Œ       â”ƒ GMTâ€å½¢å¼é€‚ç”¨äºŽcookieçš„æ—¶é—´ï¼Œè¿”å›žå€¼          â”ƒ
+â”ƒ(u_char *buf, time_t t)         â”ƒbufæ˜¯tæ—¶é—´è½¬æ¢æˆå­—ç¬¦ä¸²å½¢å¼é€‚      â”ƒä¸Žbufæ˜¯ç›¸åŒçš„ï¼Œéƒ½æ˜¯æŒ‡å‘å­˜æ”¾æ—¶é—´çš„å­—           â”ƒ
+â”ƒ                                â”ƒç”¨äºŽcookieçš„æ—¶é—´åŽç”¨æ¥å­˜æ”¾å­—      â”ƒç¬¦ä¸²                                          â”ƒ
+â”ƒ                                â”ƒç¬¦ä¸²çš„å†…å­˜                        â”ƒ                                              â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ                                â”ƒ    tæ˜¯éœ€è¦è½¬æ¢çš„æ—¶é—´ï¼Œå®ƒæ˜¯æ ¼æž—   â”ƒ                                              â”ƒ
+â”ƒvoid ngx_gmtime                 â”ƒå¨æ²»æ—¶é—´1970å¹´1æœˆ1æ—¥å‡Œæ™¨O         â”ƒ    å°†æ—¶é—´tè½¬æ¢æˆngx_tm_tç±»åž‹çš„æ—¶é—´ã€‚         â”ƒ
+â”ƒ                                â”ƒç‚¹0åˆ†0ç§’åˆ°æŸä¸€æ—¶é—´çš„ç§’æ•°ï¼Œtp      â”ƒ                                              â”ƒ
+â”ƒ(time_t t, ngx_tm_t *tp)        â”ƒ                                  â”ƒä¸‹é¢ä¼šè¯´æ˜Žngx_tm_tç±»åž‹                        â”ƒ
+â”ƒ                                â”ƒæ˜¯ngx_tm_tç±»åž‹çš„æ—¶é—´ï¼Œå®žé™…ä¸Š      â”ƒ                                              â”ƒ
+â”ƒ                                â”ƒå°±æ˜¯æ ‡å‡†çš„tmç±»åž‹æ—¶é—´              â”ƒ                                              â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ                                â”ƒ                                  â”ƒ    è¿”å›žä¸€1è¡¨ç¤ºå¤±è´¥ï¼Œå¦åˆ™ä¼šè¿”å›žï¼šâ‘ å¦‚         â”ƒ
+â”ƒ                                â”ƒ                                  â”ƒæžœwhenè¡¨ç¤ºå½“å¤©æ—¶é—´ç§’æ•°ï¼Œå½“å®ƒåˆå¹¶åˆ°            â”ƒ
+â”ƒ                                â”ƒ                                  â”ƒå®žé™…æ—¶é—´åŽï¼Œå·²ç»è¶…è¿‡å½“å‰æ—¶é—´ï¼Œé‚£ä¹ˆå°±          â”ƒ
+â”ƒ                                â”ƒ                                  â”ƒè¿”å›žwhenåˆå¹¶åˆ°å®žé™…æ—¶é—´åŽçš„ç§’æ•°ï¼ˆç›¸            â”ƒ
+â”ƒtime_t ngx_next_time            â”ƒ    whenè¡¨ä¸æœŸå¾…è¿‡æœŸçš„æ—¶é—´ï¼Œå®ƒ    â”ƒå¯¹äºŽæ ¼æž—å¨æ²»æ—¶é—´1970å¹´1æœˆ1æ—¥å‡Œæ™¨O             â”ƒ
+â”ƒ(time_t when)    :              â”ƒä»…è¡¨ç¤ºä¸€å¤©å†…çš„ç§’æ•°                â”ƒç‚¹Oåˆ†Oç§’åˆ°æŸä¸€æ—¶é—´çš„è€–æ•°ï¼‰ï¼›                  â”ƒ
+â”ƒ                                â”ƒ                                  â”ƒ  â‘¡åä¹‹ï¼Œå¦‚æžœåˆå¹¶åŽçš„æ—¶é—´æ—©äºŽå½“å‰            â”ƒ
+â”ƒ                                â”ƒ                                  â”ƒæ—¶é—´ï¼Œåˆ™è¿”å›žä¸‹ä¸€å¤©çš„åŒä¸€æ—¶åˆ»ï¼ˆå½“å¤©æ—¶          â”ƒ
+â”ƒ                                â”ƒ                                  â”ƒåˆ»ï¼‰çš„æ—¶é—´ã€‚å®ƒç›®å‰ä»…å…·æœ‰ä¸Žexpiresé…ç½®         â”ƒ
+â”ƒ                                â”ƒ                                  â”ƒé¡¹ç›¸å…³çš„ç¼“å­˜è¿‡æœŸåŠŸèƒ½                          â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ#define ngx_time                â”ƒ    æ—                             â”ƒ    èŽ·å–åˆ°æ ¼æž—å¨æ²»æ—¶é—´1970å¹´1æœˆ1æ—¥            â”ƒ
+â”ƒngx_cached_time->sec            â”ƒ                                  â”ƒå‡Œæ™¨0ç‚¹0åˆ†0ç§’åˆ°å½“å‰æ—¶é—´çš„ç§’æ•°                 â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ#define ngx_timeofday           â”ƒ    æ—                             â”ƒ    èŽ·å–ç¼“å­˜çš„ngx_time_tç±»åž‹æ—¶é—´              â”ƒ
+â”ƒ(ngx_time_t *) ngxLcached_time  â”ƒ                                  â”ƒ                                              â”ƒ
+â”—â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”»â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”»â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”›
 */
 
-//°Ñtime_tÊ±¼ä×ª»»ÎªtmÊ±¼ä
+//æŠŠtime_tæ—¶é—´è½¬æ¢ä¸ºtmæ—¶é—´
 void
 ngx_gmtime(time_t t, ngx_tm_t *tp)
 {
@@ -744,59 +744,59 @@ ngx_gmtime(time_t t, ngx_tm_t *tp)
 }
 
 /*
-±í9-4 Nginx»º´æÊ±¼äµÄ²Ù×÷·½·¨
-©³©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©×©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©×©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©·
-©§    Ê±¼ä·½·¨Ãû                  ©§    ²ÎÊýº¬Òå                      ©§    Ö´ÐÐÒâÒå                                  ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§void ngx_time_init(void);       ©§    ÎÞ                            ©§    ³õÊ¼»¯µ±Ç°½ø³ÌÖÐ»º´æµÄÊ±¼ä±äÁ¿£¬Í¬        ©§
-©§                                ©§                                  ©§Ê±»áµÚÒ»´Î¸ù¾Ýgettimeofdayµ÷ÓÃË¢ÐÂ»º          ©§
-©§                                ©§                                  ©§´æÊ±¼ä                                        ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§void ngx_time_update(void)      ©§    ÎÞ                            ©§    Ê¹ÓÃgettimeofdayµ÷ÓÃÒÔÏµÍ³Ê±¼ä            ©§
-©§                                ©§                                  ©§¸üÐÂ»º´æµÄÊ±¼ä£¬ÉÏÊöµÄngx_current_            ©§
-©§                                ©§                                  ©§msec. ngx_cached time. ngx_cached err         ©§
-©§                                ©§                                  ©§ log_time. ngx_cached_http_time. ngx_         ©§
-©§                                ©§                                  ©§cached_http_log_time. ngx_cached_http         ©§
-©§                                ©§                                  ©§ log_is08601Õâ6¸öÈ«¾Ö±äÁ¿¶¼»áµÃµ½¸üÐÂ         ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§                                ©§    tÊÇÐèÒª×ª»»µÄÊ±¼ä£¬ËüÊÇ¸ñ     ©§                                              ©§
-©§u_char *ngx_http_time           ©§ÁÖÍþÖÎÊ±¼ä1970Äê1ÔÂ1ÈÕÁè³¿        ©§    ½«Ê±¼ät×ª»»³É¡°Mon, 28 Sep 1970 06:00:00  ©§
-©§                                ©§0µãO·ÖOÃëµ½Ä³Ò»Ê±¼äµÄÃëÊý£¬       ©§ GMT¡±ÐÎÊ½µÄÊ±¼ä£¬·µ»ØÖµÓëbufÊÇÏàÍ¬           ©§
-©§(u_char *buf, time_t t)         ©§                                  ©§µÄ£¬¶¼ÊÇÖ¸Ïò´æ·ÅÊ±¼äµÄ×Ö·û´®                  ©§
-©§                                ©§bufÊÇtÊ±¼ä×ª»»³É×Ö·û´®ÐÎÊ½µÄ      ©§                                              ©§
-©§                                ©§r-rrIPÊ±¼äºóÓÃÀ´´æ·Å×Ö·û´®µÄÄÚ´æ  ©§                                              ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§                                ©§    tÐüÐèÒª×ª»»µÄÊ±¼ä£¬ËüÊÇ¸ñ     ©§                                              ©§
-©§                                ©§ÁÖÍþÖÎÊ±¼ä1970Äê1ÔÂ1ÈÕÁè³¿        ©§    ½«Ê±¼ät×ª»»³É¡°Mon. 28-Sep-70 06:00:00    ©§
-©§u_char *ngx_http_cookie_time    ©§0µã0·Ö0Ãëµ½Ä³Ò»Ê±¼äµÄÃëÊý£¬       ©§ GMT¡±ÐÎÊ½ÊÊÓÃÓÚcookieµÄÊ±¼ä£¬·µ»ØÖµ          ©§
-©§(u_char *buf, time_t t)         ©§bufÊÇtÊ±¼ä×ª»»³É×Ö·û´®ÐÎÊ½ÊÊ      ©§ÓëbufÊÇÏàÍ¬µÄ£¬¶¼ÊÇÖ¸Ïò´æ·ÅÊ±¼äµÄ×Ö           ©§
-©§                                ©§ÓÃÓÚcookieµÄÊ±¼äºóÓÃÀ´´æ·Å×Ö      ©§·û´®                                          ©§
-©§                                ©§·û´®µÄÄÚ´æ                        ©§                                              ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§                                ©§    tÊÇÐèÒª×ª»»µÄÊ±¼ä£¬ËüÊÇ¸ñÁÖ   ©§                                              ©§
-©§void ngx_gmtime                 ©§ÍþÖÎÊ±¼ä1970Äê1ÔÂ1ÈÕÁè³¿O         ©§    ½«Ê±¼ät×ª»»³Éngx_tm_tÀàÐÍµÄÊ±¼ä¡£         ©§
-©§                                ©§µã0·Ö0Ãëµ½Ä³Ò»Ê±¼äµÄÃëÊý£¬tp      ©§                                              ©§
-©§(time_t t, ngx_tm_t *tp)        ©§                                  ©§ÏÂÃæ»áËµÃ÷ngx_tm_tÀàÐÍ                        ©§
-©§                                ©§ÊÇngx_tm_tÀàÐÍµÄÊ±¼ä£¬Êµ¼ÊÉÏ      ©§                                              ©§
-©§                                ©§¾ÍÊÇ±ê×¼µÄtmÀàÐÍÊ±¼ä              ©§                                              ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§                                ©§                                  ©§    ·µ»ØÒ»1±íÊ¾Ê§°Ü£¬·ñÔò»á·µ»Ø£º¢ÙÈç         ©§
-©§                                ©§                                  ©§¹ûwhen±íÊ¾µ±ÌìÊ±¼äÃëÊý£¬µ±ËüºÏ²¢µ½            ©§
-©§                                ©§                                  ©§Êµ¼ÊÊ±¼äºó£¬ÒÑ¾­³¬¹ýµ±Ç°Ê±¼ä£¬ÄÇÃ´¾Í          ©§
-©§                                ©§                                  ©§·µ»ØwhenºÏ²¢µ½Êµ¼ÊÊ±¼äºóµÄÃëÊý£¨Ïà            ©§
-©§time_t ngx_next_time            ©§    when±í²»ÆÚ´ý¹ýÆÚµÄÊ±¼ä£¬Ëü    ©§¶ÔÓÚ¸ñÁÖÍþÖÎÊ±¼ä1970Äê1ÔÂ1ÈÕÁè³¿O             ©§
-©§(time_t when)    :              ©§½ö±íÊ¾Ò»ÌìÄÚµÄÃëÊý                ©§µãO·ÖOÃëµ½Ä³Ò»Ê±¼äµÄñéÊý£©£»                  ©§
-©§                                ©§                                  ©§  ¢Ú·´Ö®£¬Èç¹ûºÏ²¢ºóµÄÊ±¼äÔçÓÚµ±Ç°            ©§
-©§                                ©§                                  ©§Ê±¼ä£¬Ôò·µ»ØÏÂÒ»ÌìµÄÍ¬Ò»Ê±¿Ì£¨µ±ÌìÊ±          ©§
-©§                                ©§                                  ©§¿Ì£©µÄÊ±¼ä¡£ËüÄ¿Ç°½ö¾ßÓÐÓëexpiresÅäÖÃ         ©§
-©§                                ©§                                  ©§ÏîÏà¹ØµÄ»º´æ¹ýÆÚ¹¦ÄÜ                          ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§#define ngx_time                ©§    ÎÞ                            ©§    »ñÈ¡µ½¸ñÁÖÍþÖÎÊ±¼ä1970Äê1ÔÂ1ÈÕ            ©§
-©§ngx_cached_time->sec            ©§                                  ©§Áè³¿0µã0·Ö0Ãëµ½µ±Ç°Ê±¼äµÄÃëÊý                 ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§#define ngx_timeofday           ©§    ÎÞ                            ©§    »ñÈ¡»º´æµÄngx_time_tÀàÐÍÊ±¼ä              ©§
-©§(ngx_time_t *) ngxLcached_time  ©§                                  ©§                                              ©§
-©»©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ß©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ß©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¿
+è¡¨9-4 Nginxç¼“å­˜æ—¶é—´çš„æ“ä½œæ–¹æ³•
+â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”³â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”³â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”“
+â”ƒ    æ—¶é—´æ–¹æ³•å                  â”ƒ    å‚æ•°å«ä¹‰                      â”ƒ    æ‰§è¡Œæ„ä¹‰                                  â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒvoid ngx_time_init(void);       â”ƒ    æ—                             â”ƒ    åˆå§‹åŒ–å½“å‰è¿›ç¨‹ä¸­ç¼“å­˜çš„æ—¶é—´å˜é‡ï¼ŒåŒ        â”ƒ
+â”ƒ                                â”ƒ                                  â”ƒæ—¶ä¼šç¬¬ä¸€æ¬¡æ ¹æ®gettimeofdayè°ƒç”¨åˆ·æ–°ç¼“          â”ƒ
+â”ƒ                                â”ƒ                                  â”ƒå­˜æ—¶é—´                                        â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒvoid ngx_time_update(void)      â”ƒ    æ—                             â”ƒ    ä½¿ç”¨gettimeofdayè°ƒç”¨ä»¥ç³»ç»Ÿæ—¶é—´            â”ƒ
+â”ƒ                                â”ƒ                                  â”ƒæ›´æ–°ç¼“å­˜çš„æ—¶é—´ï¼Œä¸Šè¿°çš„ngx_current_            â”ƒ
+â”ƒ                                â”ƒ                                  â”ƒmsec. ngx_cached time. ngx_cached err         â”ƒ
+â”ƒ                                â”ƒ                                  â”ƒ log_time. ngx_cached_http_time. ngx_         â”ƒ
+â”ƒ                                â”ƒ                                  â”ƒcached_http_log_time. ngx_cached_http         â”ƒ
+â”ƒ                                â”ƒ                                  â”ƒ log_is08601è¿™6ä¸ªå…¨å±€å˜é‡éƒ½ä¼šå¾—åˆ°æ›´æ–°         â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ                                â”ƒ    tæ˜¯éœ€è¦è½¬æ¢çš„æ—¶é—´ï¼Œå®ƒæ˜¯æ ¼     â”ƒ                                              â”ƒ
+â”ƒu_char *ngx_http_time           â”ƒæž—å¨æ²»æ—¶é—´1970å¹´1æœˆ1æ—¥å‡Œæ™¨        â”ƒ    å°†æ—¶é—´tè½¬æ¢æˆâ€œMon, 28 Sep 1970 06:00:00  â”ƒ
+â”ƒ                                â”ƒ0ç‚¹Oåˆ†Oç§’åˆ°æŸä¸€æ—¶é—´çš„ç§’æ•°ï¼Œ       â”ƒ GMTâ€å½¢å¼çš„æ—¶é—´ï¼Œè¿”å›žå€¼ä¸Žbufæ˜¯ç›¸åŒ           â”ƒ
+â”ƒ(u_char *buf, time_t t)         â”ƒ                                  â”ƒçš„ï¼Œéƒ½æ˜¯æŒ‡å‘å­˜æ”¾æ—¶é—´çš„å­—ç¬¦ä¸²                  â”ƒ
+â”ƒ                                â”ƒbufæ˜¯tæ—¶é—´è½¬æ¢æˆå­—ç¬¦ä¸²å½¢å¼çš„      â”ƒ                                              â”ƒ
+â”ƒ                                â”ƒr-rrIPæ—¶é—´åŽç”¨æ¥å­˜æ”¾å­—ç¬¦ä¸²çš„å†…å­˜  â”ƒ                                              â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ                                â”ƒ    tæ‚¬éœ€è¦è½¬æ¢çš„æ—¶é—´ï¼Œå®ƒæ˜¯æ ¼     â”ƒ                                              â”ƒ
+â”ƒ                                â”ƒæž—å¨æ²»æ—¶é—´1970å¹´1æœˆ1æ—¥å‡Œæ™¨        â”ƒ    å°†æ—¶é—´tè½¬æ¢æˆâ€œMon. 28-Sep-70 06:00:00    â”ƒ
+â”ƒu_char *ngx_http_cookie_time    â”ƒ0ç‚¹0åˆ†0ç§’åˆ°æŸä¸€æ—¶é—´çš„ç§’æ•°ï¼Œ       â”ƒ GMTâ€å½¢å¼é€‚ç”¨äºŽcookieçš„æ—¶é—´ï¼Œè¿”å›žå€¼          â”ƒ
+â”ƒ(u_char *buf, time_t t)         â”ƒbufæ˜¯tæ—¶é—´è½¬æ¢æˆå­—ç¬¦ä¸²å½¢å¼é€‚      â”ƒä¸Žbufæ˜¯ç›¸åŒçš„ï¼Œéƒ½æ˜¯æŒ‡å‘å­˜æ”¾æ—¶é—´çš„å­—           â”ƒ
+â”ƒ                                â”ƒç”¨äºŽcookieçš„æ—¶é—´åŽç”¨æ¥å­˜æ”¾å­—      â”ƒç¬¦ä¸²                                          â”ƒ
+â”ƒ                                â”ƒç¬¦ä¸²çš„å†…å­˜                        â”ƒ                                              â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ                                â”ƒ    tæ˜¯éœ€è¦è½¬æ¢çš„æ—¶é—´ï¼Œå®ƒæ˜¯æ ¼æž—   â”ƒ                                              â”ƒ
+â”ƒvoid ngx_gmtime                 â”ƒå¨æ²»æ—¶é—´1970å¹´1æœˆ1æ—¥å‡Œæ™¨O         â”ƒ    å°†æ—¶é—´tè½¬æ¢æˆngx_tm_tç±»åž‹çš„æ—¶é—´ã€‚         â”ƒ
+â”ƒ                                â”ƒç‚¹0åˆ†0ç§’åˆ°æŸä¸€æ—¶é—´çš„ç§’æ•°ï¼Œtp      â”ƒ                                              â”ƒ
+â”ƒ(time_t t, ngx_tm_t *tp)        â”ƒ                                  â”ƒä¸‹é¢ä¼šè¯´æ˜Žngx_tm_tç±»åž‹                        â”ƒ
+â”ƒ                                â”ƒæ˜¯ngx_tm_tç±»åž‹çš„æ—¶é—´ï¼Œå®žé™…ä¸Š      â”ƒ                                              â”ƒ
+â”ƒ                                â”ƒå°±æ˜¯æ ‡å‡†çš„tmç±»åž‹æ—¶é—´              â”ƒ                                              â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ                                â”ƒ                                  â”ƒ    è¿”å›žä¸€1è¡¨ç¤ºå¤±è´¥ï¼Œå¦åˆ™ä¼šè¿”å›žï¼šâ‘ å¦‚         â”ƒ
+â”ƒ                                â”ƒ                                  â”ƒæžœwhenè¡¨ç¤ºå½“å¤©æ—¶é—´ç§’æ•°ï¼Œå½“å®ƒåˆå¹¶åˆ°            â”ƒ
+â”ƒ                                â”ƒ                                  â”ƒå®žé™…æ—¶é—´åŽï¼Œå·²ç»è¶…è¿‡å½“å‰æ—¶é—´ï¼Œé‚£ä¹ˆå°±          â”ƒ
+â”ƒ                                â”ƒ                                  â”ƒè¿”å›žwhenåˆå¹¶åˆ°å®žé™…æ—¶é—´åŽçš„ç§’æ•°ï¼ˆç›¸            â”ƒ
+â”ƒtime_t ngx_next_time            â”ƒ    whenè¡¨ä¸æœŸå¾…è¿‡æœŸçš„æ—¶é—´ï¼Œå®ƒ    â”ƒå¯¹äºŽæ ¼æž—å¨æ²»æ—¶é—´1970å¹´1æœˆ1æ—¥å‡Œæ™¨O             â”ƒ
+â”ƒ(time_t when)    :              â”ƒä»…è¡¨ç¤ºä¸€å¤©å†…çš„ç§’æ•°                â”ƒç‚¹Oåˆ†Oç§’åˆ°æŸä¸€æ—¶é—´çš„è€–æ•°ï¼‰ï¼›                  â”ƒ
+â”ƒ                                â”ƒ                                  â”ƒ  â‘¡åä¹‹ï¼Œå¦‚æžœåˆå¹¶åŽçš„æ—¶é—´æ—©äºŽå½“å‰            â”ƒ
+â”ƒ                                â”ƒ                                  â”ƒæ—¶é—´ï¼Œåˆ™è¿”å›žä¸‹ä¸€å¤©çš„åŒä¸€æ—¶åˆ»ï¼ˆå½“å¤©æ—¶          â”ƒ
+â”ƒ                                â”ƒ                                  â”ƒåˆ»ï¼‰çš„æ—¶é—´ã€‚å®ƒç›®å‰ä»…å…·æœ‰ä¸Žexpiresé…ç½®         â”ƒ
+â”ƒ                                â”ƒ                                  â”ƒé¡¹ç›¸å…³çš„ç¼“å­˜è¿‡æœŸåŠŸèƒ½                          â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ#define ngx_time                â”ƒ    æ—                             â”ƒ    èŽ·å–åˆ°æ ¼æž—å¨æ²»æ—¶é—´1970å¹´1æœˆ1æ—¥            â”ƒ
+â”ƒngx_cached_time->sec            â”ƒ                                  â”ƒå‡Œæ™¨0ç‚¹0åˆ†0ç§’åˆ°å½“å‰æ—¶é—´çš„ç§’æ•°                 â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ#define ngx_timeofday           â”ƒ    æ—                             â”ƒ    èŽ·å–ç¼“å­˜çš„ngx_time_tç±»åž‹æ—¶é—´              â”ƒ
+â”ƒ(ngx_time_t *) ngxLcached_time  â”ƒ                                  â”ƒ                                              â”ƒ
+â”—â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”»â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”»â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”›
 */
 
 time_t

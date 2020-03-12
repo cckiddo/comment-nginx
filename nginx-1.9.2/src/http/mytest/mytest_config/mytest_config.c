@@ -14,7 +14,7 @@ ngx_http_mytest_config_merge_loc_conf(ngx_conf_t *cf, void *parent, void *child)
 ngx_int_t
 ngx_http_mytest_config_post_conf(ngx_conf_t *cf);
 
-/* Ã¿¸öcommandsÖÐµÄ²ÎÊý¶ÔÓ¦Ò»¸ö±äÁ¿À´´æ´¢ */
+/* æ¯ä¸ªcommandsä¸­çš„å‚æ•°å¯¹åº”ä¸€ä¸ªå˜é‡æ¥å­˜å‚¨ */
 typedef struct
 {
     ngx_str_t   	my_str;
@@ -53,10 +53,10 @@ static ngx_conf_bitmask_t  test_bitmasks[] =
 };
 
 /*
-Ò»ÏÂÕâÐ©ÅäÖÃÏîÖÐµÄst·½·¨µÄconf²ÎÊý¾ÍÊÇÓÃÀ´±£´æ½âÎö³öµÄÅäÖÃÐÅÏ¢µÄ£¬ÔÚngx_http_mytest_config_create_loc_conf´´½¨
+ä¸€ä¸‹è¿™äº›é…ç½®é¡¹ä¸­çš„stæ–¹æ³•çš„confå‚æ•°å°±æ˜¯ç”¨æ¥ä¿å­˜è§£æžå‡ºçš„é…ç½®ä¿¡æ¯çš„ï¼Œåœ¨ngx_http_mytest_config_create_loc_confåˆ›å»º
 
 */ //
-static ngx_command_t  ngx_http_mytest_config_commands[] = //ËùÓÐÅäÖÃµÄÔ´Í·ÔÚngx_init_cycle
+static ngx_command_t  ngx_http_mytest_config_commands[] = //æ‰€æœ‰é…ç½®çš„æºå¤´åœ¨ngx_init_cycle
 {
 
     {
@@ -78,17 +78,17 @@ static ngx_command_t  ngx_http_mytest_config_commands[] = //ËùÓÐÅäÖÃµÄÔ´Í·ÔÚngx_
     },
 
     /*
-    test_str_arrayÅäÖÃÏîÒ²Ö»ÄÜ³öÏÖÔÚlocation{£®£®£®}¿éÄÚ¡£Èç¹ûÓÐÒÔÏÂÅäÖÃ£º
+    test_str_arrayé…ç½®é¡¹ä¹Ÿåªèƒ½å‡ºçŽ°åœ¨location{ï¼Žï¼Žï¼Ž}å—å†…ã€‚å¦‚æžœæœ‰ä»¥ä¸‹é…ç½®ï¼š
     location ... {
         test_str_array      Content-Length ;
         test_str_array      Content-Encoding ;
     }
-    ÄÇÃ´£¬my_str_array->neltsµÄÖµ½«ÊÇ2£¬±íÊ¾³öÏÖÁËÁ½¸ötest_str_arrayÅäÖÃÏî¡£¶øÇÒmy_str_array->eltsÖ¸Ïò
-ngx_str_tÀàÐÍ×é³ÉµÄÊý×é£¬ÕâÑù¾Í¿ÉÒÔ°´ÒÔÏÂ·½Ê½·ÃÎÊÕâÁ½¸öÖµ¡£
+    é‚£ä¹ˆï¼Œmy_str_array->neltsçš„å€¼å°†æ˜¯2ï¼Œè¡¨ç¤ºå‡ºçŽ°äº†ä¸¤ä¸ªtest_str_arrayé…ç½®é¡¹ã€‚è€Œä¸”my_str_array->eltsæŒ‡å‘
+ngx_str_tç±»åž‹ç»„æˆçš„æ•°ç»„ï¼Œè¿™æ ·å°±å¯ä»¥æŒ‰ä»¥ä¸‹æ–¹å¼è®¿é—®è¿™ä¸¤ä¸ªå€¼ã€‚
 ngx_str_t*  pstr  =  mycf->my_str_array->elts ;
-ÓÚÊÇ£¬pstr[0]ºÍpstr[l¡¿¿ÉÒÔÈ¡µ½²ÎÊýÖµ£¬·Ö±ðÊÇ{len=14;data=¡°Content-Length¡±£»}ºÍ
-{len=16;data=¡°Content-Encoding¡±£»)¡£´ÓÕâÀï¿ÉÒÔ¿´µ½£¬µ±´¦ÀíHTTPÍ·²¿ÕâÑùµÄÅäÖÃÏî
-Ê±ÊÇºÜÊÊºÏÊ¹ÓÃngx_conf_set_str_array_slotÔ¤Éè·½·¨µÄ¡£
+äºŽæ˜¯ï¼Œpstr[0]å’Œpstr[lã€‘å¯ä»¥å–åˆ°å‚æ•°å€¼ï¼Œåˆ†åˆ«æ˜¯{len=14;data=â€œContent-Lengthâ€ï¼›}å’Œ
+{len=16;data=â€œContent-Encodingâ€ï¼›)ã€‚ä»Žè¿™é‡Œå¯ä»¥çœ‹åˆ°ï¼Œå½“å¤„ç†HTTPå¤´éƒ¨è¿™æ ·çš„é…ç½®é¡¹
+æ—¶æ˜¯å¾ˆé€‚åˆä½¿ç”¨ngx_conf_set_str_array_sloté¢„è®¾æ–¹æ³•çš„ã€‚
     */
     {
         ngx_string("test_str_array"),
@@ -100,22 +100,22 @@ ngx_str_t*  pstr  =  mycf->my_str_array->elts ;
     },
 
 /*
-    ngx_conf_set_keyval_slotÓëngx_conf_set str_array_slot·Ç³£ÏàËÆ£¬Î¨Ò»µÄ²»Í¬µãÊÇ
-    ngx_conf_set_str_array_slotÒªÇóÍ¬ÃûÅäÖÃÏîºóµÄ²ÎÊý¸öÊýÊÇ1£¬¶øngx_conf_set_keyval_
-    slotÔòÒªÇóÅäÖÃÏîºóµÄ²ÎÊý¸öÊýÊÇ2£¬·Ö±ðÔ¬Ê¾key/value¡£Èç¹ûÓÃngx_array_t*ÀàÐÍµÄmy_
-    keyval±äÁ¿´æ´¢ÒÔtest_keyval×÷ÎªÅäÖÃÃûµÄ²ÎÊý£¬Ôò±ØÐëÉèÖÃNGX_CONF_TAKE2£¬±íÊ¾
-    test_keyvalºó¸úÁ½¸ö²ÎÊý
-    Èç¹ûnginx.confÖÐ³öÏÖÒÔÏÂÅäÖÃÏî£º
+    ngx_conf_set_keyval_slotä¸Žngx_conf_set str_array_slotéžå¸¸ç›¸ä¼¼ï¼Œå”¯ä¸€çš„ä¸åŒç‚¹æ˜¯
+    ngx_conf_set_str_array_slotè¦æ±‚åŒåé…ç½®é¡¹åŽçš„å‚æ•°ä¸ªæ•°æ˜¯1ï¼Œè€Œngx_conf_set_keyval_
+    slotåˆ™è¦æ±‚é…ç½®é¡¹åŽçš„å‚æ•°ä¸ªæ•°æ˜¯2ï¼Œåˆ†åˆ«è¢ç¤ºkey/valueã€‚å¦‚æžœç”¨ngx_array_t*ç±»åž‹çš„my_
+    keyvalå˜é‡å­˜å‚¨ä»¥test_keyvalä½œä¸ºé…ç½®åçš„å‚æ•°ï¼Œåˆ™å¿…é¡»è®¾ç½®NGX_CONF_TAKE2ï¼Œè¡¨ç¤º
+    test_keyvalåŽè·Ÿä¸¤ä¸ªå‚æ•°
+    å¦‚æžœnginx.confä¸­å‡ºçŽ°ä»¥ä¸‹é…ç½®é¡¹ï¼š
     location ... {
          test_keyval   Content-Type    image/png ;
          test_keyval   Content-Type    image/gif;
          test_keyval   Accept-Encoding gzip;
-    ÄÇÃ´£¬ngx_array_t*ÀàÐÍµÄmy_keyval½«»áÓÐ3¸ö³ÉÔ±£¬Ã¿¸ö³ÉÔ±µÄÀàÐÍÈçTËùÊ¾¡£
+    é‚£ä¹ˆï¼Œngx_array_t*ç±»åž‹çš„my_keyvalå°†ä¼šæœ‰3ä¸ªæˆå‘˜ï¼Œæ¯ä¸ªæˆå‘˜çš„ç±»åž‹å¦‚Tæ‰€ç¤ºã€‚
     typedef struct {
          ngx_str_t  key;
           ngx_str_t  value ;
     } ngx_keyval_t;
-    Òò´Ë£¬Í¨¹ý±éÀúmy_keyval¾Í¿ÉÒÔ»ñÈ¡3¸ö³ÉÔ±£¬·Ö±ðÊÇ{"Content-Type¡±£¬¡°image/png"}¡¢{"Content-Type¡±£¬¡°image/gif")¡¢{"Accept-Encoding¡±£¬¡°gzip¡±)¡£
+    å› æ­¤ï¼Œé€šè¿‡éåŽ†my_keyvalå°±å¯ä»¥èŽ·å–3ä¸ªæˆå‘˜ï¼Œåˆ†åˆ«æ˜¯{"Content-Typeâ€ï¼Œâ€œimage/png"}ã€{"Content-Typeâ€ï¼Œâ€œimage/gif")ã€{"Accept-Encodingâ€ï¼Œâ€œgzipâ€)ã€‚
 */
     {
         ngx_string("test_keyval"),
@@ -170,13 +170,13 @@ ngx_str_t*  pstr  =  mycf->my_str_array->elts ;
     },
 
 /*
-NginxÖÐÐí¶àÌØÓÐµÄÊý¾Ý½á¹¹¶¼»áÓÃµ½Á½¸ö¸ÅÄî£ºµ¥¸öngx_buf_t»º´æÇøµÄ¿Õ¼ä´óÐ¡ºÍ
-ÔÊÐíµÄ»º´æÇø¸öÊý¡£ngx_conf_set_bufs_slot¾ÍÊÇÓÃÓÚÉèÖÃËüµÄ£¬ËüÒªÇóÅäÖÃÏîºó±ØÐëÐ¯´øÁ½
-½é²ÎÊý£¬µÚ1¸ö²ÎÊýÊÇÊý×Ö£¬Í¨³£»áÓÃÀ´±íÊ¾»º´æÇøµÄ¸öÊý£ºµÚ2¸ö²ÎÊý±íÊ¾µ¥¸ö»º´æÇøµÄ
-¿Õ¼ä´óÐ¡£¬ËüÏñngx_conf_set_size_slotÖÐµÄ²ÎÊýµ¥Î»Ò»Ñù£¬¿ÉÒÔ²»Ð¯´øµ¥Î»£¬Ò²¿ÉÒÔÊ¹ÓÃk
-»òÕßK¡¢m»òÕßM×÷Îªµ¥Î»£¬Èç¡°gzip_buffers 4 8k;¡±¡£ÎÒÃÇÓÃngx_http_mytest_conf_t½á¹¹
-ÖÐµÄngx_bufs_t my_bufs;À´´æ´¢²ÎÊý£¬ngx_bufs_t£¨12.1.3½Úngx_http_upstream_conf_t½á¹¹
-ÌåÖÐµÄbufs³ÉÔ±¾ÍÊÇÓ¦ÓÃngx_bufs_tÅäÖÃµÄÒ»¸ö·Ç³£ºÃµÄÀý×Ó£©µÄ¶¨ÒåºÜ¼òµ¥
+Nginxä¸­è®¸å¤šç‰¹æœ‰çš„æ•°æ®ç»“æž„éƒ½ä¼šç”¨åˆ°ä¸¤ä¸ªæ¦‚å¿µï¼šå•ä¸ªngx_buf_tç¼“å­˜åŒºçš„ç©ºé—´å¤§å°å’Œ
+å…è®¸çš„ç¼“å­˜åŒºä¸ªæ•°ã€‚ngx_conf_set_bufs_slotå°±æ˜¯ç”¨äºŽè®¾ç½®å®ƒçš„ï¼Œå®ƒè¦æ±‚é…ç½®é¡¹åŽå¿…é¡»æºå¸¦ä¸¤
+ä»‹å‚æ•°ï¼Œç¬¬1ä¸ªå‚æ•°æ˜¯æ•°å­—ï¼Œé€šå¸¸ä¼šç”¨æ¥è¡¨ç¤ºç¼“å­˜åŒºçš„ä¸ªæ•°ï¼šç¬¬2ä¸ªå‚æ•°è¡¨ç¤ºå•ä¸ªç¼“å­˜åŒºçš„
+ç©ºé—´å¤§å°ï¼Œå®ƒåƒngx_conf_set_size_slotä¸­çš„å‚æ•°å•ä½ä¸€æ ·ï¼Œå¯ä»¥ä¸æºå¸¦å•ä½ï¼Œä¹Ÿå¯ä»¥ä½¿ç”¨k
+æˆ–è€…Kã€mæˆ–è€…Mä½œä¸ºå•ä½ï¼Œå¦‚â€œgzip_buffers 4 8k;â€ã€‚æˆ‘ä»¬ç”¨ngx_http_mytest_conf_tç»“æž„
+ä¸­çš„ngx_bufs_t my_bufs;æ¥å­˜å‚¨å‚æ•°ï¼Œngx_bufs_tï¼ˆ12.1.3èŠ‚ngx_http_upstream_conf_tç»“æž„
+ä½“ä¸­çš„bufsæˆå‘˜å°±æ˜¯åº”ç”¨ngx_bufs_té…ç½®çš„ä¸€ä¸ªéžå¸¸å¥½çš„ä¾‹å­ï¼‰çš„å®šä¹‰å¾ˆç®€å•
 */
     {
         ngx_string("test_bufs"),
@@ -189,7 +189,7 @@ NginxÖÐÐí¶àÌØÓÐµÄÊý¾Ý½á¹¹¶¼»áÓÃµ½Á½¸ö¸ÅÄî£ºµ¥¸öngx_buf_t»º´æÇøµÄ¿Õ¼ä´óÐ¡ºÍ
     {
         ngx_string("test_enum"),
         NGX_HTTP_LOC_CONF | NGX_CONF_TAKE1,
-        ngx_conf_set_enum_slot,  //²ÎÊý±ØÐëÊÇtest_enumsÊý×éÖÐµÄÖµ
+        ngx_conf_set_enum_slot,  //å‚æ•°å¿…é¡»æ˜¯test_enumsæ•°ç»„ä¸­çš„å€¼
         NGX_HTTP_LOC_CONF_OFFSET,
         offsetof(ngx_http_mytest_config_conf_t, my_enum_seq),
         test_enums
@@ -198,7 +198,7 @@ NginxÖÐÐí¶àÌØÓÐµÄÊý¾Ý½á¹¹¶¼»áÓÃµ½Á½¸ö¸ÅÄî£ºµ¥¸öngx_buf_t»º´æÇøµÄ¿Õ¼ä´óÐ¡ºÍ
     {
         ngx_string("test_bitmask"),
         NGX_HTTP_LOC_CONF | NGX_CONF_TAKE1,
-        ngx_conf_set_bitmask_slot,  //²ÎÊý±ØÐëÊÇtest_bitmasksÊý×éÖÐµÄÖµ
+        ngx_conf_set_bitmask_slot,  //å‚æ•°å¿…é¡»æ˜¯test_bitmasksæ•°ç»„ä¸­çš„å€¼
         NGX_HTTP_LOC_CONF_OFFSET,
         offsetof(ngx_http_mytest_config_conf_t, my_bitmask),
         test_bitmasks
@@ -247,11 +247,11 @@ static ngx_http_module_t  ngx_http_mytest_config_module_ctx =
     NULL,                              /* merge server configuration */
 
 /*
-Õâ¸ö»áÔÚhttp{} server{} location{}ÖÐ·Ö±ðµ÷ÓÃÒ»´Î£¬
-ÀýÈç¿ÉÒÔ·Ö±ð´æ´¢serverÍâµÄtest_str£¬ serverÄÚlocationÍâµÄtest_str, locationÄÚµÄtest_str
+è¿™ä¸ªä¼šåœ¨http{} server{} location{}ä¸­åˆ†åˆ«è°ƒç”¨ä¸€æ¬¡ï¼Œ
+ä¾‹å¦‚å¯ä»¥åˆ†åˆ«å­˜å‚¨serverå¤–çš„test_strï¼Œ serverå†…locationå¤–çš„test_str, locationå†…çš„test_str
 
-//http{}ÖÐ»áµ÷ÓÃmain_conf srv_conf loc_conf·ÖÅä¿Õ¼ä£¬¼ûngx_http_core_server¡£server{}ÖÐ»áµ÷ÓÃsrv_conf loc_conf´´½¨¿Õ¼ä,
-¼ûngx_http_core_server£¬ location{}ÖÐ»á´´½¨loc_conf¿Õ¼ä,¼ûngx_http_core_location
+//http{}ä¸­ä¼šè°ƒç”¨main_conf srv_conf loc_confåˆ†é…ç©ºé—´ï¼Œè§ngx_http_core_serverã€‚server{}ä¸­ä¼šè°ƒç”¨srv_conf loc_confåˆ›å»ºç©ºé—´,
+è§ngx_http_core_serverï¼Œ location{}ä¸­ä¼šåˆ›å»ºloc_confç©ºé—´,è§ngx_http_core_location
 */
     ngx_http_mytest_config_create_loc_conf, /* create location configuration */ 
 /* 
@@ -263,7 +263,7 @@ static ngx_http_module_t  ngx_http_mytest_config_module_ctx =
 ngx_module_t  ngx_http_mytest_config_module =
 {
     NGX_MODULE_V1,
-    &ngx_http_mytest_config_module_ctx,       /* module context */ //Í¨¹ýÔÚngx_http_module_tÖÐ¿ª±Ùhttp local server¿Õ¼äÀ´´æ´¢ºóÃængx_http_mytest_commandsÖÐ½âÎö³öµÄ²ÎÊý
+    &ngx_http_mytest_config_module_ctx,       /* module context */ //é€šè¿‡åœ¨ngx_http_module_tä¸­å¼€è¾Ÿhttp local serverç©ºé—´æ¥å­˜å‚¨åŽé¢ngx_http_mytest_commandsä¸­è§£æžå‡ºçš„å‚æ•°
     ngx_http_mytest_config_commands,          /* module directives */
     NGX_HTTP_MODULE,                       /* module type */
     NULL,                                  /* init master */
@@ -290,34 +290,34 @@ ngx_http_mytest_config_merge_loc_conf(ngx_conf_t *cf, void *parent, void *child)
 
 static char* ngx_conf_set_myconfig(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
 {
-    //×¢Òâ£¬²ÎÊýconf¾ÍÊÇhttp¿ò¼Ü´«¸øÎÒÃÇµÄ£¬ÔÚngx_http_mytest_create_loc_conf
-//»Øµ÷·½·¨ÖÐ·ÖÅäµÄ½á¹¹Ìångx_http_mytest_config_conf_t
+    //æ³¨æ„ï¼Œå‚æ•°confå°±æ˜¯httpæ¡†æž¶ä¼ ç»™æˆ‘ä»¬çš„ï¼Œåœ¨ngx_http_mytest_create_loc_conf
+//å›žè°ƒæ–¹æ³•ä¸­åˆ†é…çš„ç»“æž„ä½“ngx_http_mytest_config_conf_t
     ngx_http_mytest_config_conf_t  *mycf = conf;
 
-    // cf->argsÊÇ1¸öngx_array_t¶ÓÁÐ£¬ËüµÄ³ÉÔ±¶¼ÊÇngx_str_t½á¹¹¡£
-//ÎÒÃÇÓÃvalueÖ¸Ïòngx_array_tµÄeltsÄÚÈÝ£¬ÆäÖÐvalue[1]¾ÍÊÇµÚ1
-//¸ö²ÎÊý£¬Í¬Àívalue[2]ÊÇµÚ2¸ö²ÎÊý
+    // cf->argsæ˜¯1ä¸ªngx_array_té˜Ÿåˆ—ï¼Œå®ƒçš„æˆå‘˜éƒ½æ˜¯ngx_str_tç»“æž„ã€‚
+//æˆ‘ä»¬ç”¨valueæŒ‡å‘ngx_array_tçš„eltså†…å®¹ï¼Œå…¶ä¸­value[1]å°±æ˜¯ç¬¬1
+//ä¸ªå‚æ•°ï¼ŒåŒç†value[2]æ˜¯ç¬¬2ä¸ªå‚æ•°
     ngx_str_t* value = cf->args->elts;
 
-    //ngx_array_tµÄnelts±íÊ¾²ÎÊýµÄ¸öÊý
+    //ngx_array_tçš„neltsè¡¨ç¤ºå‚æ•°çš„ä¸ªæ•°
     if (cf->args->nelts > 1)
     {
-        //Ö±½Ó¸³Öµ¼´¿É£¬ ngx_str_t½á¹¹Ö»ÊÇÖ¸ÕëµÄ´«µÝ
+        //ç›´æŽ¥èµ‹å€¼å³å¯ï¼Œ ngx_str_tç»“æž„åªæ˜¯æŒ‡é’ˆçš„ä¼ é€’
         mycf->my_config_str = value[1];
     }
     if (cf->args->nelts > 2)
     {
-        //½«×Ö·û´®ÐÎÊ½µÄµÚ2¸ö²ÎÊý×ªÎªÕûÐÍ
+        //å°†å­—ç¬¦ä¸²å½¢å¼çš„ç¬¬2ä¸ªå‚æ•°è½¬ä¸ºæ•´åž‹
         mycf->my_config_num = ngx_atoi(value[2].data, value[2].len);
-        //Èç¹û×Ö·û´®×ª»¯ÕûÐÍÊ§°Ü£¬½«±¨"invalid number"´íÎó£¬
-//nginxÆô¶¯Ê§°Ü
+        //å¦‚æžœå­—ç¬¦ä¸²è½¬åŒ–æ•´åž‹å¤±è´¥ï¼Œå°†æŠ¥"invalid number"é”™è¯¯ï¼Œ
+//nginxå¯åŠ¨å¤±è´¥
         if (mycf->my_config_num == NGX_ERROR)
         {
             return "invalid number";
         }
     }
 
-    //·µ»Ø³É¹¦
+    //è¿”å›žæˆåŠŸ
     return NGX_CONF_OK;
 }
 
@@ -347,7 +347,7 @@ static void* ngx_http_mytest_config_create_loc_conf(ngx_conf_t *cf)
 extern ngx_module_t  ngx_http_module;
 extern ngx_module_t  ngx_http_core_module;
 
-//½öÓÃÓÚ±éÀúlocationÄÚµÄtest_str×Ö¶Î
+//ä»…ç”¨äºŽéåŽ†locationå†…çš„test_strå­—æ®µ
 void traversal(ngx_conf_t *cf, ngx_http_location_tree_node_t* node)
 {
     if (node != NULL)
@@ -378,10 +378,10 @@ void traversal(ngx_conf_t *cf, ngx_http_location_tree_node_t* node)
     }
 }
 
-//ÏÂÃæÒÔtest_strÎªÀýÔÚÆÁÄ»ÉÏÊä³ö¶ÁÈ¡µ½µÄËùÓÐ²»Í¬¿éµÄÖµ
+//ä¸‹é¢ä»¥test_strä¸ºä¾‹åœ¨å±å¹•ä¸Šè¾“å‡ºè¯»å–åˆ°çš„æ‰€æœ‰ä¸åŒå—çš„å€¼
 /*
-cf¿Õ¼äÊ¼ÖÕÔÚÒ»¸öµØ·½£¬¾ÍÊÇngx_init_cycleÖÐµÄconf£¬Ê¹ÓÃÖÐÖ»ÊÇ¼òµ¥µÄÐÞ¸ÄconfÖÐµÄctxÖ¸ÏòÒÑ¾­cmd_typeÀàÐÍ£¬È»ºóÔÚ½âÎöµ±Ç°{}ºó£¬ÖØÐÂ»Ö¸´½âÎöµ±Ç°{}Ç°µÄÅäÖÃ
-²Î¿¼"http" "server" "location"ngx_http_block  ngx_http_core_server  ngx_http_core_location  ngx_http_core_location¡£ËµÃ÷ÁËÔÚ²»Í¬µÄ{}¶ÔÏàÍ¬µÄÅäÖÃÏîµÄ¸³ÖµÊÇÓÃ²»Í¬±äÁ¿´æµÄ
+cfç©ºé—´å§‹ç»ˆåœ¨ä¸€ä¸ªåœ°æ–¹ï¼Œå°±æ˜¯ngx_init_cycleä¸­çš„confï¼Œä½¿ç”¨ä¸­åªæ˜¯ç®€å•çš„ä¿®æ”¹confä¸­çš„ctxæŒ‡å‘å·²ç»cmd_typeç±»åž‹ï¼Œç„¶åŽåœ¨è§£æžå½“å‰{}åŽï¼Œé‡æ–°æ¢å¤è§£æžå½“å‰{}å‰çš„é…ç½®
+å‚è€ƒ"http" "server" "location"ngx_http_block  ngx_http_core_server  ngx_http_core_location  ngx_http_core_locationã€‚è¯´æ˜Žäº†åœ¨ä¸åŒçš„{}å¯¹ç›¸åŒçš„é…ç½®é¡¹çš„èµ‹å€¼æ˜¯ç”¨ä¸åŒå˜é‡å­˜çš„
 */
 
 ngx_int_t
@@ -389,7 +389,7 @@ ngx_http_mytest_config_post_conf(ngx_conf_t *cf)
 {
     ngx_uint_t i = 0;
 
-    //¸ù¾ÝÒ»¼¶Ä£¿éÀàÐÍNGX_CORE_MODULEÈ·¶¨conf_ctxÊý×é³ÉÔ±Ö¸ÕëÎ»ÖÃ
+    //æ ¹æ®ä¸€çº§æ¨¡å—ç±»åž‹NGX_CORE_MODULEç¡®å®šconf_ctxæ•°ç»„æˆå‘˜æŒ‡é’ˆä½ç½®
     ngx_http_conf_ctx_t* http_root_conf = (ngx_http_conf_ctx_t*)ngx_get_conf(cf->cycle->conf_ctx, ngx_http_module);
 
     ngx_http_mytest_config_conf_t  *mycf;

@@ -8,9 +8,9 @@
 #include <ngx_config.h>
 #include <ngx_core.h>
 
-//n size·Ö±ð¶ÔÓ¦ngx_list_tÖÐµÄsizeºÍnalloc
+//n sizeåˆ†åˆ«å¯¹åº”ngx_list_tä¸­çš„sizeå’Œnalloc
 ngx_list_t *
-ngx_list_create(ngx_pool_t *pool, ngx_uint_t n, size_t size) //Êµ¼ÊÉÏ¾ÍÊÇÎªnginx_list_tµÄpart³ÉÔ±´´½¨Ö¸¶¨µÄn*size¿Õ¼ä£¬²¢ÇÒ´´½¨ÁË¿Õ¼äsizeof(ngx_list_t)
+ngx_list_create(ngx_pool_t *pool, ngx_uint_t n, size_t size) //å®žé™…ä¸Šå°±æ˜¯ä¸ºnginx_list_tçš„partæˆå‘˜åˆ›å»ºæŒ‡å®šçš„n*sizeç©ºé—´ï¼Œå¹¶ä¸”åˆ›å»ºäº†ç©ºé—´sizeof(ngx_list_t)
 {
     ngx_list_t  *list;
 
@@ -27,11 +27,11 @@ ngx_list_create(ngx_pool_t *pool, ngx_uint_t n, size_t size) //Êµ¼ÊÉÏ¾ÍÊÇÎªnginx
 }
 
 /*
-ngx_list_tÒ²ÊÇÒ»¸öË³ÐòÈÝÆ÷£¬ËüÊµ¼ÊÉÏÏàµ±ÓÚ¶¯Ì¬Êý×éÓëµ¥ÏòÁ´±íµÄ½á
-ºÏÌå£¬Ö»ÊÇÀ©ÈÝÆðÀ´±È¶¯Ì¬Êý×é¼òµ¥µÃ¶à£¬Ëü¿ÉÒÔÒ»´ÎÐÔÀ©ÈÝ1¸öÊý×é¡£
+ngx_list_tä¹Ÿæ˜¯ä¸€ä¸ªé¡ºåºå®¹å™¨ï¼Œå®ƒå®žé™…ä¸Šç›¸å½“äºŽåŠ¨æ€æ•°ç»„ä¸Žå•å‘é“¾è¡¨çš„ç»“
+åˆä½“ï¼Œåªæ˜¯æ‰©å®¹èµ·æ¥æ¯”åŠ¨æ€æ•°ç»„ç®€å•å¾—å¤šï¼Œå®ƒå¯ä»¥ä¸€æ¬¡æ€§æ‰©å®¹1ä¸ªæ•°ç»„ã€‚
 */
-//Èç¹ûlÖÐµÄlastµÄeltsÓÃÍêÁË£¬ÔòÔÚlÁ´±íÖÐÐÂ´´½¨Ò»¸öngx_list_part_t£¬ÆðÊµ¼ÊÊý¾Ý²¿·Ö¿Õ¼ä´óÐ¡Îªl->nalloc * l->size¡£
-//Èç¹ûlµÄlast»¹ÓÐÊ£Óà£¬Ôò·µ»ØlastÖÐÎ´ÓÃµÄ¿Õ¼ä
+//å¦‚æžœlä¸­çš„lastçš„eltsç”¨å®Œäº†ï¼Œåˆ™åœ¨lé“¾è¡¨ä¸­æ–°åˆ›å»ºä¸€ä¸ªngx_list_part_tï¼Œèµ·å®žé™…æ•°æ®éƒ¨åˆ†ç©ºé—´å¤§å°ä¸ºl->nalloc * l->sizeã€‚
+//å¦‚æžœlçš„lastè¿˜æœ‰å‰©ä½™ï¼Œåˆ™è¿”å›žlastä¸­æœªç”¨çš„ç©ºé—´
 void *
 ngx_list_push(ngx_list_t *l)
 {

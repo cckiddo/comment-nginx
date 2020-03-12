@@ -213,62 +213,62 @@ static ngx_http_module_t  ngx_http_gzip_filter_module_ctx = {
 
 
 /*
-±í6-1  Ä¬ÈÏ¼´±àÒë½øNginxµÄHTTP¹ýÂËÄ£¿é
-©³©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©×©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©·
-©§Ä¬ÈÏ¼´±àÒë½øNginxµÄHTTP¹ýÂËÄ£¿é     ©§    ¹¦ÄÜ                                                          ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§                                    ©§  ½ö¶ÔHTTPÍ·²¿×ö´¦Àí¡£ÔÚ·µ»Ø200³É¹¦Ê±£¬¸ù¾ÝÇëÇóÖÐIf-              ©§
-©§                                    ©§Modified-Since»òÕßIf-Unmodified-SinceÍ·²¿È¡µÃä¯ÀÀÆ÷»º´æÎÄ¼þµÄÊ±   ©§
-©§ngx_http_not_modified_filter_module ©§                                                                  ©§
-©§                                    ©§¼ä£¬ÔÙ·ÖÎö·µ»ØÓÃ»§ÎÄ¼þµÄ×îºóÐÞ¸ÄÊ±¼ä£¬ÒÔ´Ë¾ö¶¨ÊÇ·ñÖ±½Ó·¢ËÍ304     ©§
-©§                                    ©§ Not ModifiedÏìÓ¦¸øÓÃ»§                                           ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§                                    ©§  ´¦ÀíÇëÇóÖÐµÄRangeÐÅÏ¢£¬¸ù¾ÝRangeÖÐµÄÒªÇó·µ»ØÎÄ¼þµÄÒ»²¿·Ö¸ø      ©§
-©§ngx_http_range_body_filter_module   ©§                                                                  ©§
-©§                                    ©§ÓÃ»§                                                              ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§                                    ©§  ½ö¶ÔHTTP°üÌå×ö´¦Àí¡£½«ÓÃ»§·¢ËÍµÄngx_chain_t½á¹¹µÄHTTP°ü         ©§
-©§                                    ©§Ìå¸´ÖÆµ½ÐÂµÄngx_chain_t½á¹¹ÖÐ£¨¶¼ÊÇ¸÷ÖÖÖ¸ÕëµÄ¸´ÖÆ£¬²»°üÀ¨Êµ¼Ê     ©§
-©§ngx_http_copy_filter_module         ©§                                                                  ©§
-©§                                    ©§HTTPÏìÓ¦ÄÚÈÝ£©£¬ºóÐøµÄHTTP¹ýÂËÄ£¿é´¦ÂñµÄngx_chain_tÀàÐÍµÄ³É       ©§
-©§                                    ©§Ô±¶¼ÊÇngx_http_copy_filter_moduleÄ£¿é´¦ÀíºóµÄ±äÁ¿                 ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§                                    ©§  ½ö¶ÔHTTPÍ·²¿×ö´¦Àí¡£ÔÊÐíÍ¨¹ýÐÞ¸Änginx.confÅäÖÃÎÄ¼þ£¬ÔÚ·µ»Ø      ©§
-©§ngx_http_headers_filter_module      ©§                                                                  ©§
-©§                                    ©§¸øÓÃ»§µÄÏìÓ¦ÖÐÌí¼ÓÈÎÒâµÄHTTPÍ·²¿                                  ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§                                    ©§  ½ö¶ÔHTTPÍ·²¿×ö´¦Àí¡£Õâ¾ÍÊÇÖ´ÐÐconfigureÃüÁîÊ±Ìáµ½µÄhttp_        ©§
-©§ngx_http_userid_filter_module       ©§                                                                  ©§
-©§                                    ©§userid moduleÄ£¿é£¬Ëü»ùÓÚcookieÌá¹©ÁË¼òµ¥µÄÈÏÖ¤¹ÜÀí¹¦ÄÜ           ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§                                    ©§  ¿ÉÒÔ½«ÎÄ±¾ÀàÐÍ·µ»Ø¸øÓÃ»§µÄÏìÓ¦°ü£¬°´ÕÕnginx£®confÖÐµÄÅäÖÃÖØÐÂ   ©§
-©§ngx_http_charset_filter_module      ©§                                                                  ©§
-©§                                    ©§½øÐÐ±àÂë£¬ÔÙ·µ»Ø¸øÓÃ»§                                            ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§                                    ©§  Ö§³ÖSSI£¨Server Side Include£¬·þÎñÆ÷¶ËÇ¶Èë£©¹¦ÄÜ£¬½«ÎÄ¼þÄÚÈÝ°ü  ©§
-©§ngx_http_ssi_filter_module          ©§                                                                  ©§
-©§                                    ©§º¬µ½ÍøÒ³ÖÐ²¢·µ»Ø¸øÓÃ»§                                            ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§                                    ©§  ½ö¶ÔHTTP°üÌå×ö´¦Àí¡£5.5.2½ÚÏêÏ¸½éÉÜ¹ý¸Ã¹ýÂËÄ£¿é¡£Ëü½öÓ¦ÓÃÓÚ     ©§
-©§ngx_http_postpone_filter_module     ©§subrequest²úÉúµÄ×ÓÇëÇó¡£ËüÊ¹µÃ¶à¸ö×ÓÇëÇóÍ¬Ê±Ïò¿Í»§¶Ë·¢ËÍÏìÓ¦Ê±    ©§
-©§                                    ©§ÄÜ¹»ÓÐÐò£¬ËùÎ½µÄ¡°ÓÐÐò¡±ÊÇ¿«°´ÕÕ¹¹Ôì×ÓÇëÇóµÄË³Ðò·¢ËÍÏìÓ¦            ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§                                    ©§  ¶ÔÌØ¶¨µÄHTTPÏìÓ¦°üÌå£¨ÈçÍøÒ³»òÕßÎÄ±¾ÎÄ¼þ£©½øÐÐgzipÑ¹Ëõ£¬ÔÙ      ©§
-©§ngx_http_gzip_filter_module         ©§                                                                  ©§
-©§                                    ©§°ÑÑ¹ËõºóµÄÄÚÈÝ·µ»Ø¸øÓÃ»§                                          ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§ngx_http_range_header_filter_module ©§  Ö§³ÖrangeÐ­Òé                                                   ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§ngx_http_chunked_filter_module      ©§  Ö§³Öchunk±àÂë                                                   ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§                                    ©§  ½ö¶ÔHTTPÍ·²¿×ö´¦Àí¡£¸Ã¹ýÂËÄ£¿é½«»á°Ñr->headers out½á¹¹Ìå        ©§
-©§                                    ©§ÖÐµÄ³ÉÔ±ÐòÁÐ»¯Îª·µ»Ø¸øÓÃ»§µÄHTTPÏìÓ¦×Ö·ûÁ÷£¬°üÀ¨ÏìÓ¦ÐÐ(Èç         ©§
-©§ngx_http_header_filter_module       ©§                                                                  ©§
-©§                                    ©§HTTP/I.1 200 0K)ºÍÏìÓ¦Í·²¿£¬²¢Í¨¹ýµ÷ÓÃngx_http_write filter       ©§
-©§                                    ©§ module¹ýÂËÄ£¿éÖÐµÄ¹ýÂË·½·¨Ö±½Ó½«HTTP°üÍ··¢ËÍµ½¿Í»§¶Ë             ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§ngx_http_write_filter_module        ©§  ½ö¶ÔHTTP°üÌå×ö´¦Àí¡£¸ÃÄ£¿é¸ºÔðÏò¿Í»§¶Ë·¢ËÍHTTPÏìÓ¦              ©§
-©»©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ß©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¿
+è¡¨6-1  é»˜è®¤å³ç¼–è¯‘è¿›Nginxçš„HTTPè¿‡æ»¤æ¨¡å—
+â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”³â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”“
+â”ƒé»˜è®¤å³ç¼–è¯‘è¿›Nginxçš„HTTPè¿‡æ»¤æ¨¡å—     â”ƒ    åŠŸèƒ½                                                          â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ                                    â”ƒ  ä»…å¯¹HTTPå¤´éƒ¨åšå¤„ç†ã€‚åœ¨è¿”å›ž200æˆåŠŸæ—¶ï¼Œæ ¹æ®è¯·æ±‚ä¸­If-              â”ƒ
+â”ƒ                                    â”ƒModified-Sinceæˆ–è€…If-Unmodified-Sinceå¤´éƒ¨å–å¾—æµè§ˆå™¨ç¼“å­˜æ–‡ä»¶çš„æ—¶   â”ƒ
+â”ƒngx_http_not_modified_filter_module â”ƒ                                                                  â”ƒ
+â”ƒ                                    â”ƒé—´ï¼Œå†åˆ†æžè¿”å›žç”¨æˆ·æ–‡ä»¶çš„æœ€åŽä¿®æ”¹æ—¶é—´ï¼Œä»¥æ­¤å†³å®šæ˜¯å¦ç›´æŽ¥å‘é€304     â”ƒ
+â”ƒ                                    â”ƒ Not Modifiedå“åº”ç»™ç”¨æˆ·                                           â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ                                    â”ƒ  å¤„ç†è¯·æ±‚ä¸­çš„Rangeä¿¡æ¯ï¼Œæ ¹æ®Rangeä¸­çš„è¦æ±‚è¿”å›žæ–‡ä»¶çš„ä¸€éƒ¨åˆ†ç»™      â”ƒ
+â”ƒngx_http_range_body_filter_module   â”ƒ                                                                  â”ƒ
+â”ƒ                                    â”ƒç”¨æˆ·                                                              â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ                                    â”ƒ  ä»…å¯¹HTTPåŒ…ä½“åšå¤„ç†ã€‚å°†ç”¨æˆ·å‘é€çš„ngx_chain_tç»“æž„çš„HTTPåŒ…         â”ƒ
+â”ƒ                                    â”ƒä½“å¤åˆ¶åˆ°æ–°çš„ngx_chain_tç»“æž„ä¸­ï¼ˆéƒ½æ˜¯å„ç§æŒ‡é’ˆçš„å¤åˆ¶ï¼Œä¸åŒ…æ‹¬å®žé™…     â”ƒ
+â”ƒngx_http_copy_filter_module         â”ƒ                                                                  â”ƒ
+â”ƒ                                    â”ƒHTTPå“åº”å†…å®¹ï¼‰ï¼ŒåŽç»­çš„HTTPè¿‡æ»¤æ¨¡å—å¤„åŸ‹çš„ngx_chain_tç±»åž‹çš„æˆ       â”ƒ
+â”ƒ                                    â”ƒå‘˜éƒ½æ˜¯ngx_http_copy_filter_moduleæ¨¡å—å¤„ç†åŽçš„å˜é‡                 â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ                                    â”ƒ  ä»…å¯¹HTTPå¤´éƒ¨åšå¤„ç†ã€‚å…è®¸é€šè¿‡ä¿®æ”¹nginx.confé…ç½®æ–‡ä»¶ï¼Œåœ¨è¿”å›ž      â”ƒ
+â”ƒngx_http_headers_filter_module      â”ƒ                                                                  â”ƒ
+â”ƒ                                    â”ƒç»™ç”¨æˆ·çš„å“åº”ä¸­æ·»åŠ ä»»æ„çš„HTTPå¤´éƒ¨                                  â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ                                    â”ƒ  ä»…å¯¹HTTPå¤´éƒ¨åšå¤„ç†ã€‚è¿™å°±æ˜¯æ‰§è¡Œconfigureå‘½ä»¤æ—¶æåˆ°çš„http_        â”ƒ
+â”ƒngx_http_userid_filter_module       â”ƒ                                                                  â”ƒ
+â”ƒ                                    â”ƒuserid moduleæ¨¡å—ï¼Œå®ƒåŸºäºŽcookieæä¾›äº†ç®€å•çš„è®¤è¯ç®¡ç†åŠŸèƒ½           â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ                                    â”ƒ  å¯ä»¥å°†æ–‡æœ¬ç±»åž‹è¿”å›žç»™ç”¨æˆ·çš„å“åº”åŒ…ï¼ŒæŒ‰ç…§nginxï¼Žconfä¸­çš„é…ç½®é‡æ–°   â”ƒ
+â”ƒngx_http_charset_filter_module      â”ƒ                                                                  â”ƒ
+â”ƒ                                    â”ƒè¿›è¡Œç¼–ç ï¼Œå†è¿”å›žç»™ç”¨æˆ·                                            â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ                                    â”ƒ  æ”¯æŒSSIï¼ˆServer Side Includeï¼ŒæœåŠ¡å™¨ç«¯åµŒå…¥ï¼‰åŠŸèƒ½ï¼Œå°†æ–‡ä»¶å†…å®¹åŒ…  â”ƒ
+â”ƒngx_http_ssi_filter_module          â”ƒ                                                                  â”ƒ
+â”ƒ                                    â”ƒå«åˆ°ç½‘é¡µä¸­å¹¶è¿”å›žç»™ç”¨æˆ·                                            â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ                                    â”ƒ  ä»…å¯¹HTTPåŒ…ä½“åšå¤„ç†ã€‚5.5.2èŠ‚è¯¦ç»†ä»‹ç»è¿‡è¯¥è¿‡æ»¤æ¨¡å—ã€‚å®ƒä»…åº”ç”¨äºŽ     â”ƒ
+â”ƒngx_http_postpone_filter_module     â”ƒsubrequestäº§ç”Ÿçš„å­è¯·æ±‚ã€‚å®ƒä½¿å¾—å¤šä¸ªå­è¯·æ±‚åŒæ—¶å‘å®¢æˆ·ç«¯å‘é€å“åº”æ—¶    â”ƒ
+â”ƒ                                    â”ƒèƒ½å¤Ÿæœ‰åºï¼Œæ‰€è°“çš„â€œæœ‰åºâ€æ˜¯æ©æŒ‰ç…§æž„é€ å­è¯·æ±‚çš„é¡ºåºå‘é€å“åº”            â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ                                    â”ƒ  å¯¹ç‰¹å®šçš„HTTPå“åº”åŒ…ä½“ï¼ˆå¦‚ç½‘é¡µæˆ–è€…æ–‡æœ¬æ–‡ä»¶ï¼‰è¿›è¡ŒgzipåŽ‹ç¼©ï¼Œå†      â”ƒ
+â”ƒngx_http_gzip_filter_module         â”ƒ                                                                  â”ƒ
+â”ƒ                                    â”ƒæŠŠåŽ‹ç¼©åŽçš„å†…å®¹è¿”å›žç»™ç”¨æˆ·                                          â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒngx_http_range_header_filter_module â”ƒ  æ”¯æŒrangeåè®®                                                   â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒngx_http_chunked_filter_module      â”ƒ  æ”¯æŒchunkç¼–ç                                                    â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ                                    â”ƒ  ä»…å¯¹HTTPå¤´éƒ¨åšå¤„ç†ã€‚è¯¥è¿‡æ»¤æ¨¡å—å°†ä¼šæŠŠr->headers outç»“æž„ä½“        â”ƒ
+â”ƒ                                    â”ƒä¸­çš„æˆå‘˜åºåˆ—åŒ–ä¸ºè¿”å›žç»™ç”¨æˆ·çš„HTTPå“åº”å­—ç¬¦æµï¼ŒåŒ…æ‹¬å“åº”è¡Œ(å¦‚         â”ƒ
+â”ƒngx_http_header_filter_module       â”ƒ                                                                  â”ƒ
+â”ƒ                                    â”ƒHTTP/I.1 200 0K)å’Œå“åº”å¤´éƒ¨ï¼Œå¹¶é€šè¿‡è°ƒç”¨ngx_http_write filter       â”ƒ
+â”ƒ                                    â”ƒ moduleè¿‡æ»¤æ¨¡å—ä¸­çš„è¿‡æ»¤æ–¹æ³•ç›´æŽ¥å°†HTTPåŒ…å¤´å‘é€åˆ°å®¢æˆ·ç«¯             â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒngx_http_write_filter_module        â”ƒ  ä»…å¯¹HTTPåŒ…ä½“åšå¤„ç†ã€‚è¯¥æ¨¡å—è´Ÿè´£å‘å®¢æˆ·ç«¯å‘é€HTTPå“åº”              â”ƒ
+â”—â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”»â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”›
 
 */ngx_module_t  ngx_http_gzip_filter_module = {
     NGX_MODULE_V1,

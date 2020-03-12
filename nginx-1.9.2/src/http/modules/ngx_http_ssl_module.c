@@ -321,12 +321,12 @@ static ngx_str_t ngx_http_ssl_sess_id_ctx = ngx_string("HTTP");
 2017/03/08 15:24:45[                ngx_http_ssl_alpn_select,   341]  [debug] 2794#2794: *2 SSL ALPN supported by client: spdy/3.1
 2017/03/08 15:24:45[                ngx_http_ssl_alpn_select,   341]  [debug] 2794#2794: *2 SSL ALPN supported by client: http/1.1
 2017/03/08 15:24:45[                ngx_http_ssl_alpn_select,   368]  [debug] 2794#2794: *2 SSL ALPN selected: h2
-*/ /* 确定客户端和nginx采用什么协议进行通信 */ 
+*/ /* 纭畾瀹㈡埛绔拰nginx閲囩敤浠�涔堝崗璁繘琛岄�氫俊 */ 
 static int
 ngx_http_ssl_alpn_select(ngx_ssl_conn_t *ssl_conn, const unsigned char **out,
     unsigned char *outlen, const unsigned char *in, unsigned int inlen,
     void *arg)
-{/* ngx_ssl_handshake中执行该函数 */
+{/* ngx_ssl_handshake涓墽琛岃鍑芥暟 */
     unsigned int            srvlen;
     unsigned char          *srv;
 #if (NGX_DEBUG)

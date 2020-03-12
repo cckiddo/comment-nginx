@@ -51,21 +51,21 @@ typedef u_char *(*ngx_http_log_handler_pt)(ngx_http_request_t *r,
 #endif
 
 
-struct ngx_http_log_ctx_s { //ÔÚngx_http_init_connectionÖĞ´´½¨¿Õ¼ä
-    ngx_connection_t    *connection; //¸³Öµ¼ûngx_http_init_connection
-    ngx_http_request_t  *request; //¸³Öµ¼ûngx_http_create_request
-    ngx_http_request_t  *current_request; //¸³Öµ¼ûngx_http_create_request
+struct ngx_http_log_ctx_s { //åœ¨ngx_http_init_connectionä¸­åˆ›å»ºç©ºé—´
+    ngx_connection_t    *connection; //èµ‹å€¼è§ngx_http_init_connection
+    ngx_http_request_t  *request; //èµ‹å€¼è§ngx_http_create_request
+    ngx_http_request_t  *current_request; //èµ‹å€¼è§ngx_http_create_request
 };
 
 /*
-¸ñÊ½:
+æ ¼å¼:
 
-Ê®Áù½øÖÆea5±íÃ÷Õâ¸öÊî¼Ù¿éÓĞ3749×Ö½Ú
-          Õâ¸ö¿éÎª3749×Ö½Ú£¬¿éÊı½áÊøºó\r\n±íÃ÷Õâ¸ö¿éÒÑ¾­½áÊø               Õâ¸ö¿éÎª3752×Ö½Ú£¬¿éÊı½áÊøºó\r\n±íÃ÷Õâ¸ö¿éÒÑ¾­½áÊø 
-                                                                                                                                 0±íÊ¾×îºóÒ»¸ö¿é£¬×îºó¸úÁ½¸ö\r\n
+åå…­è¿›åˆ¶ea5è¡¨æ˜è¿™ä¸ªæš‘å‡å—æœ‰3749å­—èŠ‚
+          è¿™ä¸ªå—ä¸º3749å­—èŠ‚ï¼Œå—æ•°ç»“æŸå\r\nè¡¨æ˜è¿™ä¸ªå—å·²ç»ç»“æŸ               è¿™ä¸ªå—ä¸º3752å­—èŠ‚ï¼Œå—æ•°ç»“æŸå\r\nè¡¨æ˜è¿™ä¸ªå—å·²ç»ç»“æŸ 
+                                                                                                                                 0è¡¨ç¤ºæœ€åä¸€ä¸ªå—ï¼Œæœ€åè·Ÿä¸¤ä¸ª\r\n
 ea5\r\n........................................................\r\n ea8\r\n..................................................\r\n 0\r\n\r\n
 
-²Î¿¼:http://blog.csdn.net/zhangboyj/article/details/6236780
+å‚è€ƒ:http://blog.csdn.net/zhangboyj/article/details/6236780
 */
 struct ngx_http_chunked_s {
     ngx_uint_t           state;
@@ -74,36 +74,36 @@ struct ngx_http_chunked_s {
 };
 
 /*
-upstreamÄ£¿éÃ¿´Î½ÓÊÕµ½Ò»¶ÎTCPÁ÷Ê±¶¼»á»Øµ÷mytestÄ£¿éÊµÏÖµÄprocess_header·½·¨½âÎö£¬´ïÑù¾ÍĞèÒªÓĞÒ»¸öÉÏÏÂÎÄ±£´æ½âÎö×´Ì¬,ÒòÎª»ñÈ¡ÉÏÓÎ·şÎñÆ÷
-µÄÏàÓ¦Í·²¿µÄÊ±ºò£¬¿ÉÄÜĞèÒª¶ÁÈ¡¶à´Î¡£²Î¿¼ngx_http_upstream_sÖĞµÄprocess_header½âÊÍ
-*/ //Í·²¿ĞĞ½âÎö¹ı³Ì¼ûngx_http_parse_status_line
+upstreamæ¨¡å—æ¯æ¬¡æ¥æ”¶åˆ°ä¸€æ®µTCPæµæ—¶éƒ½ä¼šå›è°ƒmytestæ¨¡å—å®ç°çš„process_headeræ–¹æ³•è§£æï¼Œè¾¾æ ·å°±éœ€è¦æœ‰ä¸€ä¸ªä¸Šä¸‹æ–‡ä¿å­˜è§£æçŠ¶æ€,å› ä¸ºè·å–ä¸Šæ¸¸æœåŠ¡å™¨
+çš„ç›¸åº”å¤´éƒ¨çš„æ—¶å€™ï¼Œå¯èƒ½éœ€è¦è¯»å–å¤šæ¬¡ã€‚å‚è€ƒngx_http_upstream_sä¸­çš„process_headerè§£é‡Š
+*/ //å¤´éƒ¨è¡Œè§£æè¿‡ç¨‹è§ngx_http_parse_status_line
 typedef struct {
-    ngx_uint_t           http_version; // HTTP/1.1 ¶ÔÓ¦µÄÎª1001
-    ngx_uint_t           code; //// HTTP/1.1 200 OK ¶ÔÓ¦ÖĞµÄ200
-    ngx_uint_t           count; //ÏìÓ¦ÂëÊı×ÖÎ»Êı£¬ÀıÈç200£¬ÔòÎª3
-    u_char              *start;//Ö´ĞĞhttp 1/1 200 okÖĞµÄ2µÄµØÖ·
-    u_char              *end; //endÊµ¼ÊÉÏÖ¸ÏòµÄÊÇ\rµÄµØÖ·
+    ngx_uint_t           http_version; // HTTP/1.1 å¯¹åº”çš„ä¸º1001
+    ngx_uint_t           code; //// HTTP/1.1 200 OK å¯¹åº”ä¸­çš„200
+    ngx_uint_t           count; //å“åº”ç æ•°å­—ä½æ•°ï¼Œä¾‹å¦‚200ï¼Œåˆ™ä¸º3
+    u_char              *start;//æ‰§è¡Œhttp 1/1 200 okä¸­çš„2çš„åœ°å€
+    u_char              *end; //endå®é™…ä¸ŠæŒ‡å‘çš„æ˜¯\rçš„åœ°å€
 } ngx_http_status_t;
 
 /*
-ngx_http_get_module_ctxºÍngx_http_set_ctxÕâÁ½¸öºê¿ÉÒÔÍê³ÉHTTPÉÏÏÂÎÄµÄÉèÖÃºÍ
-Ê¹ÓÃ¡£rµÄ½á¹¹ÀàĞÍÎªngx_http_request_t
+ngx_http_get_module_ctxå’Œngx_http_set_ctxè¿™ä¸¤ä¸ªå®å¯ä»¥å®ŒæˆHTTPä¸Šä¸‹æ–‡çš„è®¾ç½®å’Œ
+ä½¿ç”¨ã€‚rçš„ç»“æ„ç±»å‹ä¸ºngx_http_request_t
 
-ngx_http_get_module ctx½ÓÊÜÁ½¸ö²ÎÊı£¬ÆäÖĞµÚ1¸ö²ÎÊıÊÇngx_http_request_tÖ¸Õë£¬
-µÚ2¸ö²ÎÊıÔòÊÇµ±Ç°µÄHTTPÄ£¿é¶ÔÏó¡£ÀıÈç£¬ÔÚmytestÄ£¿éÖĞÊ¹ÓÃµÄ¾ÍÊÇÔÚngx_module_tÀàĞÍµÄngx_http_mytest_module½á¹¹Ìå¡£ngx_http_get_module- ctx·µ»ØÖµ
-¾ÍÊÇÄ³¸öHTTPÄ£¿éµÄÉÏÏÂÎÄ½á¹¹ÌåÖ¸Õë£¬Èç¹ûÕâ¸öHTTPÄ£¿éÃ»ÓĞÉèÖÃ¹ıÉÏÏÂÎÄ£¬ÄÇÃ´½«
-»á·µ»ØNULL¿ÕÖ¸Õë¡£Òò´Ë£¬ÔÚÈÎºÎÒ»¸öHTTPÄ£¿éÖĞ£¬¶¼¿ÉÒÔÊ¹ÓÃngx_http_get_module_
-ctx»ñÈ¡ËùÓĞHTTPÄ£¿éÎª¸ÃÇëÇó´´½¨µÄÉÏÏÂÎÄ½á¹¹Ìå¡£
+ngx_http_get_module ctxæ¥å—ä¸¤ä¸ªå‚æ•°ï¼Œå…¶ä¸­ç¬¬1ä¸ªå‚æ•°æ˜¯ngx_http_request_tæŒ‡é’ˆï¼Œ
+ç¬¬2ä¸ªå‚æ•°åˆ™æ˜¯å½“å‰çš„HTTPæ¨¡å—å¯¹è±¡ã€‚ä¾‹å¦‚ï¼Œåœ¨mytestæ¨¡å—ä¸­ä½¿ç”¨çš„å°±æ˜¯åœ¨ngx_module_tç±»å‹çš„ngx_http_mytest_moduleç»“æ„ä½“ã€‚ngx_http_get_module- ctxè¿”å›å€¼
+å°±æ˜¯æŸä¸ªHTTPæ¨¡å—çš„ä¸Šä¸‹æ–‡ç»“æ„ä½“æŒ‡é’ˆï¼Œå¦‚æœè¿™ä¸ªHTTPæ¨¡å—æ²¡æœ‰è®¾ç½®è¿‡ä¸Šä¸‹æ–‡ï¼Œé‚£ä¹ˆå°†
+ä¼šè¿”å›NULLç©ºæŒ‡é’ˆã€‚å› æ­¤ï¼Œåœ¨ä»»ä½•ä¸€ä¸ªHTTPæ¨¡å—ä¸­ï¼Œéƒ½å¯ä»¥ä½¿ç”¨ngx_http_get_module_
+ctxè·å–æ‰€æœ‰HTTPæ¨¡å—ä¸ºè¯¥è¯·æ±‚åˆ›å»ºçš„ä¸Šä¸‹æ–‡ç»“æ„ä½“ã€‚
 */ 
-//ngx_http_get_module_ctx´æ´¢ÔËĞĞ¹ı³ÌÖĞµÄ¸÷ÖÖ×´Ì¬(ÀıÈç¶ÁÈ¡ºó¶ËÊı¾İ£¬¿ÉÄÜĞèÒª¶à´Î¶ÁÈ¡)  ngx_http_get_module_loc_conf»ñÈ¡¸ÃÄ£¿éÔÚlocal{}ÖĞµÄÅäÖÃĞÅÏ¢
-//×¢Òângx_http_get_module_main_conf ngx_http_get_module_loc_confºÍngx_http_get_module_ctxµÄÇø±ğ
-#define ngx_http_get_module_ctx(r, module)  (r)->ctx[module.ctx_index]  //Ö÷ÒªÊÇhttp upstreamÉÏÏÂÎÄ
+//ngx_http_get_module_ctxå­˜å‚¨è¿è¡Œè¿‡ç¨‹ä¸­çš„å„ç§çŠ¶æ€(ä¾‹å¦‚è¯»å–åç«¯æ•°æ®ï¼Œå¯èƒ½éœ€è¦å¤šæ¬¡è¯»å–)  ngx_http_get_module_loc_confè·å–è¯¥æ¨¡å—åœ¨local{}ä¸­çš„é…ç½®ä¿¡æ¯
+//æ³¨æ„ngx_http_get_module_main_conf ngx_http_get_module_loc_confå’Œngx_http_get_module_ctxçš„åŒºåˆ«
+#define ngx_http_get_module_ctx(r, module)  (r)->ctx[module.ctx_index]  //ä¸»è¦æ˜¯http upstreamä¸Šä¸‹æ–‡
 
 /*
- ngx_http_set ctx½ÓÊÜ3¸ö²ÎÊı£¬ÆäÖĞµÚ1¸ö²ÎÊıÊÇngx_http_request_tÖ¸Õë£¬µÚ2¸ö²Î
-ÊıÊÇ×¼±¸ÉèÖÃµÄÉÏÏÂÎÄ½á¹¹ÌåµÄÖ¸Õë£¬µÚ3¸ö²ÎÊıÔòÊÇHTTPÄ£¿é¶ÔÏó¡£  ²Î¿¼4.5½Ú
-*/ //×¢ÒâºÍconf->ctxµÄÇø±ğ£¬²Î¿¼ngx_http_get_module_loc_conf
-#define ngx_http_set_ctx(r, c, module)      r->ctx[module.ctx_index] = c; //Ö÷ÒªÊÇhttp upstreamÏà¹ØµÄfastcgi proxy memcachedµÈÉÏÏÂÎÄ 
+ ngx_http_set ctxæ¥å—3ä¸ªå‚æ•°ï¼Œå…¶ä¸­ç¬¬1ä¸ªå‚æ•°æ˜¯ngx_http_request_tæŒ‡é’ˆï¼Œç¬¬2ä¸ªå‚
+æ•°æ˜¯å‡†å¤‡è®¾ç½®çš„ä¸Šä¸‹æ–‡ç»“æ„ä½“çš„æŒ‡é’ˆï¼Œç¬¬3ä¸ªå‚æ•°åˆ™æ˜¯HTTPæ¨¡å—å¯¹è±¡ã€‚  å‚è€ƒ4.5èŠ‚
+*/ //æ³¨æ„å’Œconf->ctxçš„åŒºåˆ«ï¼Œå‚è€ƒngx_http_get_module_loc_conf
+#define ngx_http_set_ctx(r, c, module)      r->ctx[module.ctx_index] = c; //ä¸»è¦æ˜¯http upstreamç›¸å…³çš„fastcgi proxy memcachedç­‰ä¸Šä¸‹æ–‡ 
 
 
 ngx_int_t ngx_http_add_location(ngx_conf_t *cf, ngx_queue_t **locations,

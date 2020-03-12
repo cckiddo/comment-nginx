@@ -27,10 +27,10 @@ static void ngx_stream_upstream_save_round_robin_peer_session(
 #endif
 
 /*
-Ö÷ÒªÍê³ÉÁËÅäÖÃÖÐÖ¸¶¨·þÎñÆ÷µÄ³õÊ¼»¯¹¤×÷£º
-1¡¢·þÎñÆ÷ÊôÐÔ»ñÈ¡¡£°üÀ¨socket¡¢Éè¶¨È¨ÖØÖµ¡¢Ê§°Ü´ÎÊýºÍÊ§°ÜÊ±¼äÉÏÏÞµÈµÈ£»
-2¡¢Çø·Öµ¥Ì¨·þÎñÆ÷¡£ÎªºóÐø×öµ¥¶À´¦Àí×ö×¼±¸£»
-3¡¢Õý³£serverºÍbackup server·Ö¿ª´¦Àí¡£
+ä¸»è¦å®Œæˆäº†é…ç½®ä¸­æŒ‡å®šæœåŠ¡å™¨çš„åˆå§‹åŒ–å·¥ä½œï¼š
+1ã€æœåŠ¡å™¨å±žæ€§èŽ·å–ã€‚åŒ…æ‹¬socketã€è®¾å®šæƒé‡å€¼ã€å¤±è´¥æ¬¡æ•°å’Œå¤±è´¥æ—¶é—´ä¸Šé™ç­‰ç­‰ï¼›
+2ã€åŒºåˆ†å•å°æœåŠ¡å™¨ã€‚ä¸ºåŽç»­åšå•ç‹¬å¤„ç†åšå‡†å¤‡ï¼›
+3ã€æ­£å¸¸serverå’Œbackup serveråˆ†å¼€å¤„ç†ã€‚
 */
 ngx_int_t
 ngx_stream_upstream_init_round_robin(ngx_conf_t *cf,
@@ -40,9 +40,9 @@ ngx_stream_upstream_init_round_robin(ngx_conf_t *cf,
     ngx_uint_t                       i, j, n, w;
     ngx_stream_upstream_server_t    *server;
     ngx_stream_upstream_rr_peer_t   *peer, **peerp;
-    ngx_stream_upstream_rr_peers_t  *peers, *backup;//Ò»¸öÊÇÕý³£µÄservers£¬Ò»¸öÊÇbackup servers
+    ngx_stream_upstream_rr_peers_t  *peers, *backup;//ä¸€ä¸ªæ˜¯æ­£å¸¸çš„serversï¼Œä¸€ä¸ªæ˜¯backup servers
 
-    us->peer.init = ngx_stream_upstream_init_round_robin_peer;//upstreamÖÐ·þÎñÆ÷½ÚµãµÄ³õÊ¼»¯¸³Öµ
+    us->peer.init = ngx_stream_upstream_init_round_robin_peer;//upstreamä¸­æœåŠ¡å™¨èŠ‚ç‚¹çš„åˆå§‹åŒ–èµ‹å€¼
 
     if (us->servers) {
         server = us->servers->elts;

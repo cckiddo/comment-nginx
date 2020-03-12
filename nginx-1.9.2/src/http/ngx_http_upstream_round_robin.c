@@ -27,57 +27,57 @@ static void ngx_http_upstream_empty_save_session(ngx_peer_connection_t *pc,
 #endif
 
 /*
-Load-blanceÄ£¿éÖĞ4¸ö¹Ø¼ü»Øµ÷º¯Êı£º
-»Øµ÷Ö¸Õë                  º¯Êı¹¦ÄÜ                          round_robinÄ£¿é                     IP_hashÄ£¿é
+Load-blanceæ¨¡å—ä¸­4ä¸ªå…³é”®å›è°ƒå‡½æ•°ï¼š
+å›è°ƒæŒ‡é’ˆ                  å‡½æ•°åŠŸèƒ½                          round_robinæ¨¡å—                     IP_hashæ¨¡å—
  
-uscf->peer.init_upstream (Ä¬ÈÏÎªngx_http_upstream_init_round_robin ÔÚngx_http_upstream_init_main_confÖĞÖ´ĞĞ)
-½âÎöÅäÖÃÎÄ¼ş¹ı³ÌÖĞµ÷ÓÃ£¬¸ù¾İupstreamÀï¸÷¸öserverÅäÖÃÏî×ö³õÊ¼×¼±¸¹¤×÷£¬ÁíÍâµÄºËĞÄ¹¤×÷ÊÇÉèÖÃ»Øµ÷Ö¸Õëus->peer.init¡£ÅäÖÃÎÄ¼ş½âÎöÍêºó²»ÔÙ±»µ÷ÓÃ
+uscf->peer.init_upstream (é»˜è®¤ä¸ºngx_http_upstream_init_round_robin åœ¨ngx_http_upstream_init_main_confä¸­æ‰§è¡Œ)
+è§£æé…ç½®æ–‡ä»¶è¿‡ç¨‹ä¸­è°ƒç”¨ï¼Œæ ¹æ®upstreamé‡Œå„ä¸ªserveré…ç½®é¡¹åšåˆå§‹å‡†å¤‡å·¥ä½œï¼Œå¦å¤–çš„æ ¸å¿ƒå·¥ä½œæ˜¯è®¾ç½®å›è°ƒæŒ‡é’ˆus->peer.initã€‚é…ç½®æ–‡ä»¶è§£æå®Œåä¸å†è¢«è°ƒç”¨
 
 ngx_http_upstream_init_round_robin
-ÉèÖÃ£ºus->peer.init = ngx_http_upstream_init_round_robin_peer;
+è®¾ç½®ï¼šus->peer.init = ngx_http_upstream_init_round_robin_peer;
  
 ngx_http_upstream_init_ip_hash
-ÉèÖÃ£ºus->peer.init = ngx_http_upstream_init_ip_hash_peer;
+è®¾ç½®ï¼šus->peer.init = ngx_http_upstream_init_ip_hash_peer;
  
 
 
 us->peer.init
-ÔÚÃ¿Ò»´ÎNginx×¼±¸×ª·¢¿Í»§¶ËÇëÇóµ½ºó¶Ë·şÎñÆ÷Ç°¶¼»áµ÷ÓÃ¸Ãº¯Êı¡£¸Ãº¯ÊıÎª±¾´Î×ª·¢Ñ¡ÔñºÏÊÊµÄºó¶Ë·şÎñÆ÷×ö³õÊ¼×¼±¸¹¤×÷£¬ÁíÍâµÄºËĞÄ¹¤
-×÷ÊÇÉèÖÃ»Øµ÷Ö¸Õër->upstream->peer.getºÍr->upstream->peer.freeµÈ
+åœ¨æ¯ä¸€æ¬¡Nginxå‡†å¤‡è½¬å‘å®¢æˆ·ç«¯è¯·æ±‚åˆ°åç«¯æœåŠ¡å™¨å‰éƒ½ä¼šè°ƒç”¨è¯¥å‡½æ•°ã€‚è¯¥å‡½æ•°ä¸ºæœ¬æ¬¡è½¬å‘é€‰æ‹©åˆé€‚çš„åç«¯æœåŠ¡å™¨åšåˆå§‹å‡†å¤‡å·¥ä½œï¼Œå¦å¤–çš„æ ¸å¿ƒå·¥
+ä½œæ˜¯è®¾ç½®å›è°ƒæŒ‡é’ˆr->upstream->peer.getå’Œr->upstream->peer.freeç­‰
  
 ngx_http_upstream_init_round_robin_peer
-ÉèÖÃ£ºr->upstream->peer.get = ngx_http_upstream_get_round_robin_peer;
+è®¾ç½®ï¼šr->upstream->peer.get = ngx_http_upstream_get_round_robin_peer;
 r->upstream->peer.free = ngx_http_upstream_free_round_robin_peer;
  
 ngx_http_upstream_init_ip_hash_peer
-ÉèÖÃ£ºr->upstream->peer.get = ngx_http_upstream_get_ip_hash_peer;
-r->upstream->peer.freeÎª¿Õ
+è®¾ç½®ï¼šr->upstream->peer.get = ngx_http_upstream_get_ip_hash_peer;
+r->upstream->peer.freeä¸ºç©º
  
 
 
 r->upstream->peer.get
-ÔÚÃ¿Ò»´ÎNginx×¼±¸×ª·¢¿Í»§¶ËÇëÇóµ½ºó¶Ë·şÎñÆ÷Ç°¶¼»áµ÷ÓÃ¸Ãº¯Êı¡£¸Ãº¯ÊıÊµÏÖ¾ßÌåµÄÎ»±¾´Î×ª·¢Ñ¡ÔñºÏÊÊµÄºó¶Ë·şÎñÆ÷µÄËã·¨Âß¼­£¬¼´
-Íê³ÉÑ¡Ôñ»ñÈ¡ºÏÊÊºó¶Ë·şÎñÆ÷µÄ¹¦ÄÜ
+åœ¨æ¯ä¸€æ¬¡Nginxå‡†å¤‡è½¬å‘å®¢æˆ·ç«¯è¯·æ±‚åˆ°åç«¯æœåŠ¡å™¨å‰éƒ½ä¼šè°ƒç”¨è¯¥å‡½æ•°ã€‚è¯¥å‡½æ•°å®ç°å…·ä½“çš„ä½æœ¬æ¬¡è½¬å‘é€‰æ‹©åˆé€‚çš„åç«¯æœåŠ¡å™¨çš„ç®—æ³•é€»è¾‘ï¼Œå³
+å®Œæˆé€‰æ‹©è·å–åˆé€‚åç«¯æœåŠ¡å™¨çš„åŠŸèƒ½
  
 ngx_http_upstream_get_round_robin_peer
-¼ÓÈ¨Ñ¡Ôñµ±Ç°È¨Öµ×î¸ßµÄºó¶Ë·şÎñÆ÷
+åŠ æƒé€‰æ‹©å½“å‰æƒå€¼æœ€é«˜çš„åç«¯æœåŠ¡å™¨
  
 ngx_http_upstream_get_ip_hash_peer
-¸ù¾İIP¹şÏ£ÖµÑ¡Ôñºó¶Ë·şÎñÆ÷
+æ ¹æ®IPå“ˆå¸Œå€¼é€‰æ‹©åç«¯æœåŠ¡å™¨
  
 
 
 
 
 r->upstream->peer.free
-ÔÚÃ¿Ò»´ÎNginxÍê³ÉÓëºó¶Ë·şÎñÆ÷Ö®¼äµÄ½»»¥ºó¶¼»áµ÷ÓÃ¸Ãº¯Êı¡£
+åœ¨æ¯ä¸€æ¬¡Nginxå®Œæˆä¸åç«¯æœåŠ¡å™¨ä¹‹é—´çš„äº¤äº’åéƒ½ä¼šè°ƒç”¨è¯¥å‡½æ•°ã€‚
 ngx_http_upstream_free_round_robin_peer
-¸üĞÂÏà¹ØÊıÖµ£¬±ÈÈçrrp->current
+æ›´æ–°ç›¸å…³æ•°å€¼ï¼Œæ¯”å¦‚rrp->current
 */
 
 ngx_int_t
 ngx_http_upstream_init_round_robin(ngx_conf_t *cf,
-    ngx_http_upstream_srv_conf_t *us)//ÔÚngx_http_upstream_init_main_confÖĞÖ´ĞĞ
+    ngx_http_upstream_srv_conf_t *us)//åœ¨ngx_http_upstream_init_main_confä¸­æ‰§è¡Œ
 {
     ngx_url_t                      u;
     ngx_uint_t                     i, j, n, w;
@@ -90,12 +90,12 @@ ngx_http_upstream_init_round_robin(ngx_conf_t *cf,
     if (us->servers) {
         server = us->servers->elts;
 
-        n = 0; //ËùÓĞ·şÎñÆ÷ÊıÁ¿
-        w = 0; //ËùÓĞ·şÎñÆ÷µÄÈ¨ÖØÖ®ºÍ
+        n = 0; //æ‰€æœ‰æœåŠ¡å™¨æ•°é‡
+        w = 0; //æ‰€æœ‰æœåŠ¡å™¨çš„æƒé‡ä¹‹å’Œ
         
 
         for (i = 0; i < us->servers->nelts; i++) {
-            if (server[i].backup) { //±¸·İ·şÎñÆ÷²»ËãÔÚÄÚ
+            if (server[i].backup) { //å¤‡ä»½æœåŠ¡å™¨ä¸ç®—åœ¨å†…
                 continue;
             }
 
@@ -115,21 +115,21 @@ ngx_http_upstream_init_round_robin(ngx_conf_t *cf,
             return NGX_ERROR;
         }
 
-        peer = ngx_pcalloc(cf->pool, sizeof(ngx_http_upstream_rr_peer_t) * n); //ÎªËùÓĞµÄ·Çbackup·şÎñÆ÷·ÖÅäÏà¹Ø´æ´¢¿Õ¼ä
+        peer = ngx_pcalloc(cf->pool, sizeof(ngx_http_upstream_rr_peer_t) * n); //ä¸ºæ‰€æœ‰çš„ébackupæœåŠ¡å™¨åˆ†é…ç›¸å…³å­˜å‚¨ç©ºé—´
         if (peer == NULL) {
             return NGX_ERROR;
         }
 
-        peers->single = (n == 1); //n=1£¬±íÊ¾Ö»Îªºó¶ËÅäÖÃÁËÒ»¸ö·şÎñÆ÷
+        peers->single = (n == 1); //n=1ï¼Œè¡¨ç¤ºåªä¸ºåç«¯é…ç½®äº†ä¸€ä¸ªæœåŠ¡å™¨
         peers->number = n;
-        peers->weighted = (w != n); //w=n±íÊ¾È¨ÖØ¶¼ÏàµÈ£¬¶¼ÊÇ1
+        peers->weighted = (w != n); //w=nè¡¨ç¤ºæƒé‡éƒ½ç›¸ç­‰ï¼Œéƒ½æ˜¯1
         peers->total_weight = w;
         peers->name = &us->host;
 
         n = 0;
         peerp = &peers->peer;
         
-        //³õÊ¼»¯Ã¿¸öpeer½ÚµãµÄĞÅÏ¢
+        //åˆå§‹åŒ–æ¯ä¸ªpeerèŠ‚ç‚¹çš„ä¿¡æ¯
         for (i = 0; i < us->servers->nelts; i++) {
             if (server[i].backup) {
                 continue;
@@ -147,7 +147,7 @@ ngx_http_upstream_init_round_robin(ngx_conf_t *cf,
                 peer[n].down = server[i].down;
                 peer[n].server = server[i].name;
 
-                *peerp = &peer[n]; //ËùÓĞµÄpeer[]·şÎñÆ÷ĞÅÏ¢Í¨¹ıpeers->peerÁ¬½ÓÔÚÒ»Æğ
+                *peerp = &peer[n]; //æ‰€æœ‰çš„peer[]æœåŠ¡å™¨ä¿¡æ¯é€šè¿‡peers->peerè¿æ¥åœ¨ä¸€èµ·
                 peerp = &peer[n].next;
                 n++;
             }
@@ -156,7 +156,7 @@ ngx_http_upstream_init_round_robin(ngx_conf_t *cf,
         us->peer.data = peers;
 
         
-        //³õÊ¼»¯backup servers
+        //åˆå§‹åŒ–backup servers
         /* backup servers */
 
         n = 0;
@@ -212,20 +212,20 @@ ngx_http_upstream_init_round_robin(ngx_conf_t *cf,
                 peer[n].down = server[i].down;
                 peer[n].server = server[i].name;
 
-                *peerp = &peer[n]; //ËùÓĞµÄbackup·şÎñÆ÷Í¨¹ınextÁ¬½ÓÔÚÒ»Æğ
+                *peerp = &peer[n]; //æ‰€æœ‰çš„backupæœåŠ¡å™¨é€šè¿‡nextè¿æ¥åœ¨ä¸€èµ·
                 peerp = &peer[n].next;
                 n++;
             }
         }
 
-        peers->next = backup; //ËùÓĞbackup·şÎñÆ÷µÄĞÅÏ¢¶¼Á¬½ÓÔÚÉÏÃæµÄ·Çbackup·şÎñÆ÷µÄnextºóÃæ£¬ÕâÑùËùÓĞµÄ·şÎñÆ÷(°üÀ¨backupºÍ·Çbackup)¶¼»áÁ¬½Óµ½us->peer.data
+        peers->next = backup; //æ‰€æœ‰backupæœåŠ¡å™¨çš„ä¿¡æ¯éƒ½è¿æ¥åœ¨ä¸Šé¢çš„ébackupæœåŠ¡å™¨çš„nextåé¢ï¼Œè¿™æ ·æ‰€æœ‰çš„æœåŠ¡å™¨(åŒ…æ‹¬backupå’Œébackup)éƒ½ä¼šè¿æ¥åˆ°us->peer.data
 
         return NGX_OK;
     }
 
 
     /* an upstream implicitly defined by proxy_pass, etc. */
-    //us²ÎÊıÖĞ·şÎñÆ÷Ö¸ÕëÎª¿Õ£¬ÀıÈçÓÃ»§Ö±½ÓÔÚproxy_passµÈÖ¸ÁîºóÅäÖÃºó¶Ë·şÎñÆ÷µØÖ·
+    //uså‚æ•°ä¸­æœåŠ¡å™¨æŒ‡é’ˆä¸ºç©ºï¼Œä¾‹å¦‚ç”¨æˆ·ç›´æ¥åœ¨proxy_passç­‰æŒ‡ä»¤åé…ç½®åç«¯æœåŠ¡å™¨åœ°å€
     if (us->port == 0) {
         ngx_log_error(NGX_LOG_EMERG, cf->log, 0,
                       "no port in upstream \"%V\" in %s:%ui",
@@ -289,67 +289,67 @@ ngx_http_upstream_init_round_robin(ngx_conf_t *cf,
 }
 
 /*
-Load-blanceÄ£¿éÖĞ4¸ö¹Ø¼ü»Øµ÷º¯Êı£º
-»Øµ÷Ö¸Õë                  º¯Êı¹¦ÄÜ                          round_robinÄ£¿é                     IP_hashÄ£¿é
+Load-blanceæ¨¡å—ä¸­4ä¸ªå…³é”®å›è°ƒå‡½æ•°ï¼š
+å›è°ƒæŒ‡é’ˆ                  å‡½æ•°åŠŸèƒ½                          round_robinæ¨¡å—                     IP_hashæ¨¡å—
  
-uscf->peer.init_upstreamÄ¬ÈÏÎªngx_http_upstream_init_round_robin ÔÚngx_http_upstream_init_main_confÖĞÖ´ĞĞ
-½âÎöÅäÖÃÎÄ¼ş¹ı³ÌÖĞµ÷ÓÃ£¬¸ù¾İupstreamÀï¸÷¸öserverÅäÖÃÏî×ö³õÊ¼×¼±¸¹¤×÷£¬ÁíÍâµÄºËĞÄ¹¤×÷ÊÇÉèÖÃ»Øµ÷Ö¸Õëus->peer.init¡£ÅäÖÃÎÄ¼ş½âÎöÍêºó²»ÔÙ±»µ÷ÓÃ
+uscf->peer.init_upstreamé»˜è®¤ä¸ºngx_http_upstream_init_round_robin åœ¨ngx_http_upstream_init_main_confä¸­æ‰§è¡Œ
+è§£æé…ç½®æ–‡ä»¶è¿‡ç¨‹ä¸­è°ƒç”¨ï¼Œæ ¹æ®upstreamé‡Œå„ä¸ªserveré…ç½®é¡¹åšåˆå§‹å‡†å¤‡å·¥ä½œï¼Œå¦å¤–çš„æ ¸å¿ƒå·¥ä½œæ˜¯è®¾ç½®å›è°ƒæŒ‡é’ˆus->peer.initã€‚é…ç½®æ–‡ä»¶è§£æå®Œåä¸å†è¢«è°ƒç”¨
 
 ngx_http_upstream_init_round_robin
-ÉèÖÃ£ºus->peer.init = ngx_http_upstream_init_round_robin_peer;
+è®¾ç½®ï¼šus->peer.init = ngx_http_upstream_init_round_robin_peer;
  
 ngx_http_upstream_init_ip_hash
-ÉèÖÃ£ºus->peer.init = ngx_http_upstream_init_ip_hash_peer;
+è®¾ç½®ï¼šus->peer.init = ngx_http_upstream_init_ip_hash_peer;
  
 
 
 us->peer.init
-ÔÚÃ¿Ò»´ÎNginx×¼±¸×ª·¢¿Í»§¶ËÇëÇóµ½ºó¶Ë·şÎñÆ÷Ç°¶¼»áµ÷ÓÃ¸Ãº¯Êı¡£¸Ãº¯ÊıÎª±¾´Î×ª·¢Ñ¡ÔñºÏÊÊµÄºó¶Ë·şÎñÆ÷×ö³õÊ¼×¼±¸¹¤×÷£¬ÁíÍâµÄºËĞÄ¹¤
-×÷ÊÇÉèÖÃ»Øµ÷Ö¸Õër->upstream->peer.getºÍr->upstream->peer.freeµÈ
+åœ¨æ¯ä¸€æ¬¡Nginxå‡†å¤‡è½¬å‘å®¢æˆ·ç«¯è¯·æ±‚åˆ°åç«¯æœåŠ¡å™¨å‰éƒ½ä¼šè°ƒç”¨è¯¥å‡½æ•°ã€‚è¯¥å‡½æ•°ä¸ºæœ¬æ¬¡è½¬å‘é€‰æ‹©åˆé€‚çš„åç«¯æœåŠ¡å™¨åšåˆå§‹å‡†å¤‡å·¥ä½œï¼Œå¦å¤–çš„æ ¸å¿ƒå·¥
+ä½œæ˜¯è®¾ç½®å›è°ƒæŒ‡é’ˆr->upstream->peer.getå’Œr->upstream->peer.freeç­‰
  
 ngx_http_upstream_init_round_robin_peer
-ÉèÖÃ£ºr->upstream->peer.get = ngx_http_upstream_get_round_robin_peer;
+è®¾ç½®ï¼šr->upstream->peer.get = ngx_http_upstream_get_round_robin_peer;
 r->upstream->peer.free = ngx_http_upstream_free_round_robin_peer;
  
 ngx_http_upstream_init_ip_hash_peer
-ÉèÖÃ£ºr->upstream->peer.get = ngx_http_upstream_get_ip_hash_peer;
-r->upstream->peer.freeÎª¿Õ
+è®¾ç½®ï¼šr->upstream->peer.get = ngx_http_upstream_get_ip_hash_peer;
+r->upstream->peer.freeä¸ºç©º
  
 
 
 r->upstream->peer.get
-ÔÚÃ¿Ò»´ÎNginx×¼±¸×ª·¢¿Í»§¶ËÇëÇóµ½ºó¶Ë·şÎñÆ÷Ç°¶¼»áµ÷ÓÃ¸Ãº¯Êı¡£¸Ãº¯ÊıÊµÏÖ¾ßÌåµÄÎ»±¾´Î×ª·¢Ñ¡ÔñºÏÊÊµÄºó¶Ë·şÎñÆ÷µÄËã·¨Âß¼­£¬¼´
-Íê³ÉÑ¡Ôñ»ñÈ¡ºÏÊÊºó¶Ë·şÎñÆ÷µÄ¹¦ÄÜ
+åœ¨æ¯ä¸€æ¬¡Nginxå‡†å¤‡è½¬å‘å®¢æˆ·ç«¯è¯·æ±‚åˆ°åç«¯æœåŠ¡å™¨å‰éƒ½ä¼šè°ƒç”¨è¯¥å‡½æ•°ã€‚è¯¥å‡½æ•°å®ç°å…·ä½“çš„ä½æœ¬æ¬¡è½¬å‘é€‰æ‹©åˆé€‚çš„åç«¯æœåŠ¡å™¨çš„ç®—æ³•é€»è¾‘ï¼Œå³
+å®Œæˆé€‰æ‹©è·å–åˆé€‚åç«¯æœåŠ¡å™¨çš„åŠŸèƒ½
  
 ngx_http_upstream_get_round_robin_peer
-¼ÓÈ¨Ñ¡Ôñµ±Ç°È¨Öµ×î¸ßµÄºó¶Ë·şÎñÆ÷
+åŠ æƒé€‰æ‹©å½“å‰æƒå€¼æœ€é«˜çš„åç«¯æœåŠ¡å™¨
  
 ngx_http_upstream_get_ip_hash_peer
-¸ù¾İIP¹şÏ£ÖµÑ¡Ôñºó¶Ë·şÎñÆ÷
+æ ¹æ®IPå“ˆå¸Œå€¼é€‰æ‹©åç«¯æœåŠ¡å™¨
  
 
 
 
 
 r->upstream->peer.free
-ÔÚÃ¿Ò»´ÎNginxÍê³ÉÓëºó¶Ë·şÎñÆ÷Ö®¼äµÄ½»»¥ºó¶¼»áµ÷ÓÃ¸Ãº¯Êı¡£
+åœ¨æ¯ä¸€æ¬¡Nginxå®Œæˆä¸åç«¯æœåŠ¡å™¨ä¹‹é—´çš„äº¤äº’åéƒ½ä¼šè°ƒç”¨è¯¥å‡½æ•°ã€‚
 ngx_http_upstream_free_round_robin_peer
-¸üĞÂÏà¹ØÊıÖµ£¬±ÈÈçrrp->current
+æ›´æ–°ç›¸å…³æ•°å€¼ï¼Œæ¯”å¦‚rrp->current
 
-ÂÖÑ¯²ßÂÔºÍIP¹şÏ£²ßÂÔ¶Ô±È
-¼ÓÈ¨ÂÖÑ¯²ßÂÔ
-ÓÅµã£ºÊÊÓÃĞÔ¸üÇ¿£¬²»ÒÀÀµÓÚ¿Í»§¶ËµÄÈÎºÎĞÅÏ¢£¬ÍêÈ«ÒÀ¿¿ºó¶Ë·şÎñÆ÷µÄÇé¿öÀ´½øĞĞÑ¡Ôñ¡£ÄÜ°Ñ¿Í»§¶ËÇëÇó¸üºÏÀí¸ü¾ùÔÈµØ·ÖÅäµ½¸÷¸öºó¶Ë·şÎñÆ÷´¦Àí¡£
-È±µã£ºÍ¬Ò»¸ö¿Í»§¶ËµÄ¶à´ÎÇëÇó¿ÉÄÜ»á±»·ÖÅäµ½²»Í¬µÄºó¶Ë·şÎñÆ÷½øĞĞ´¦Àí£¬ÎŞ·¨Âú×ã×ö»á»°±£³ÖµÄÓ¦ÓÃµÄĞèÇó¡£
+è½®è¯¢ç­–ç•¥å’ŒIPå“ˆå¸Œç­–ç•¥å¯¹æ¯”
+åŠ æƒè½®è¯¢ç­–ç•¥
+ä¼˜ç‚¹ï¼šé€‚ç”¨æ€§æ›´å¼ºï¼Œä¸ä¾èµ–äºå®¢æˆ·ç«¯çš„ä»»ä½•ä¿¡æ¯ï¼Œå®Œå…¨ä¾é åç«¯æœåŠ¡å™¨çš„æƒ…å†µæ¥è¿›è¡Œé€‰æ‹©ã€‚èƒ½æŠŠå®¢æˆ·ç«¯è¯·æ±‚æ›´åˆç†æ›´å‡åŒ€åœ°åˆ†é…åˆ°å„ä¸ªåç«¯æœåŠ¡å™¨å¤„ç†ã€‚
+ç¼ºç‚¹ï¼šåŒä¸€ä¸ªå®¢æˆ·ç«¯çš„å¤šæ¬¡è¯·æ±‚å¯èƒ½ä¼šè¢«åˆ†é…åˆ°ä¸åŒçš„åç«¯æœåŠ¡å™¨è¿›è¡Œå¤„ç†ï¼Œæ— æ³•æ»¡è¶³åšä¼šè¯ä¿æŒçš„åº”ç”¨çš„éœ€æ±‚ã€‚
 
-IP¹şÏ£²ßÂÔ
-ÓÅµã£ºÄÜ½ÏºÃµØ°ÑÍ¬Ò»¸ö¿Í»§¶ËµÄ¶à´ÎÇëÇó·ÖÅäµ½Í¬Ò»Ì¨·şÎñÆ÷´¦Àí£¬±ÜÃâÁË¼ÓÈ¨ÂÖÑ¯ÎŞ·¨ÊÊÓÃ»á»°±£³ÖµÄĞèÇó¡£
-È±µã£ºµ±Ä³¸öÊ±¿ÌÀ´×ÔÄ³¸öIPµØÖ·µÄÇëÇóÌØ±ğ¶à£¬ÄÇÃ´½«µ¼ÖÂÄ³Ì¨ºó¶Ë·şÎñÆ÷µÄÑ¹Á¦¿ÉÄÜ·Ç³£´ó£¬¶øÆäËûºó¶Ë·şÎñÆ÷È´¿ÕÏĞµÄ²»¾ùºâÇé¿ö¡¢
+IPå“ˆå¸Œç­–ç•¥
+ä¼˜ç‚¹ï¼šèƒ½è¾ƒå¥½åœ°æŠŠåŒä¸€ä¸ªå®¢æˆ·ç«¯çš„å¤šæ¬¡è¯·æ±‚åˆ†é…åˆ°åŒä¸€å°æœåŠ¡å™¨å¤„ç†ï¼Œé¿å…äº†åŠ æƒè½®è¯¢æ— æ³•é€‚ç”¨ä¼šè¯ä¿æŒçš„éœ€æ±‚ã€‚
+ç¼ºç‚¹ï¼šå½“æŸä¸ªæ—¶åˆ»æ¥è‡ªæŸä¸ªIPåœ°å€çš„è¯·æ±‚ç‰¹åˆ«å¤šï¼Œé‚£ä¹ˆå°†å¯¼è‡´æŸå°åç«¯æœåŠ¡å™¨çš„å‹åŠ›å¯èƒ½éå¸¸å¤§ï¼Œè€Œå…¶ä»–åç«¯æœåŠ¡å™¨å´ç©ºé—²çš„ä¸å‡è¡¡æƒ…å†µã€
 */
-//Èç¹ûÃ»ÓĞÊÖ¶¯ÉèÖÃ·ÃÎÊºó¶Ë·şÎñÆ÷µÄËã·¨£¬ÔòÄ¬ÈÏÓÃrobin·½Ê½  //ÂÖÑ¯¸ºÕ®¾ùºâËã·¨ngx_http_upstream_init_round_robin_peer  iphash¸ºÔØ¾ùºâËã·¨ngx_http_upstream_init_ip_hash_peer
-ngx_int_t //ngx_http_upstream_init_request×¼±¸ºÃFCGIÊı¾İ£¬bufferºó£¬»áµ÷ÓÃÕâÀï½øĞĞÒ»¸öpeerµÄ³õÊ¼»¯£¬´Ë´¦ÊÇÂÖÑ¯peerµÄ³õÊ¼»¯¡£
+//å¦‚æœæ²¡æœ‰æ‰‹åŠ¨è®¾ç½®è®¿é—®åç«¯æœåŠ¡å™¨çš„ç®—æ³•ï¼Œåˆ™é»˜è®¤ç”¨robinæ–¹å¼  //è½®è¯¢è´Ÿå€ºå‡è¡¡ç®—æ³•ngx_http_upstream_init_round_robin_peer  iphashè´Ÿè½½å‡è¡¡ç®—æ³•ngx_http_upstream_init_ip_hash_peer
+ngx_int_t //ngx_http_upstream_init_requestå‡†å¤‡å¥½FCGIæ•°æ®ï¼Œbufferåï¼Œä¼šè°ƒç”¨è¿™é‡Œè¿›è¡Œä¸€ä¸ªpeerçš„åˆå§‹åŒ–ï¼Œæ­¤å¤„æ˜¯è½®è¯¢peerçš„åˆå§‹åŒ–ã€‚
 ngx_http_upstream_init_round_robin_peer(ngx_http_request_t *r,
-    ngx_http_upstream_srv_conf_t *us) // (Ä¬ÈÏÎªngx_http_upstream_init_round_robin ÔÚngx_http_upstream_init_main_confÖĞÖ´ĞĞ)
-{//ngx_http_upstream_get_peerºÍngx_http_upstream_init_round_robin_peerÅäºÏÔÄ¶Á  
+    ngx_http_upstream_srv_conf_t *us) // (é»˜è®¤ä¸ºngx_http_upstream_init_round_robin åœ¨ngx_http_upstream_init_main_confä¸­æ‰§è¡Œ)
+{//ngx_http_upstream_get_peerå’Œngx_http_upstream_init_round_robin_peeré…åˆé˜…è¯»  
     ngx_uint_t                         n;
     ngx_http_upstream_rr_peer_data_t  *rrp;
 
@@ -364,20 +364,20 @@ ngx_http_upstream_init_round_robin_peer(ngx_http_request_t *r,
         r->upstream->peer.data = rrp;
     }
 
-    rrp->peers = us->peer.data; //¸Ãupstream {}ËùÔÚµÄ
-    rrp->current = NULL; //µ±Ç°ÊÇµÚ0¸ö
+    rrp->peers = us->peer.data; //è¯¥upstream {}æ‰€åœ¨çš„
+    rrp->current = NULL; //å½“å‰æ˜¯ç¬¬0ä¸ª
 
     n = rrp->peers->number;
 
     if (rrp->peers->next && rrp->peers->next->number > n) {
-        n = rrp->peers->next->number; //»ñÈ¡backupºÍ·ÇbackupÕâÁ½×é·şÎñÆ÷ÖĞ×î´óµÄ¸öÊı£¬ÀıÈçbackup·şÎñÆ÷¸öÊıÎª5£¬·Çbackup·şÎñÆ÷Îª3£¬ÔòÕâÀïÎª5
+        n = rrp->peers->next->number; //è·å–backupå’Œébackupè¿™ä¸¤ç»„æœåŠ¡å™¨ä¸­æœ€å¤§çš„ä¸ªæ•°ï¼Œä¾‹å¦‚backupæœåŠ¡å™¨ä¸ªæ•°ä¸º5ï¼ŒébackupæœåŠ¡å™¨ä¸º3ï¼Œåˆ™è¿™é‡Œä¸º5
     }
 
-    if (n <= 8 * sizeof(uintptr_t)) { //n<32Ö±½ÓÓÃdataÀ´±íÊ¾Î»Í¼ĞÅÏ¢
+    if (n <= 8 * sizeof(uintptr_t)) { //n<32ç›´æ¥ç”¨dataæ¥è¡¨ç¤ºä½å›¾ä¿¡æ¯
         rrp->tried = &rrp->data;
         rrp->data = 0;
 
-    } else { //³¬¹ı32Ôò·ÖÅäÏàÓ¦µÄ¶à¸öINTÀ´´æ´¢Î»Í¼
+    } else { //è¶…è¿‡32åˆ™åˆ†é…ç›¸åº”çš„å¤šä¸ªINTæ¥å­˜å‚¨ä½å›¾
         n = (n + (8 * sizeof(uintptr_t) - 1)) / (8 * sizeof(uintptr_t));
 
         rrp->tried = ngx_pcalloc(r->pool, n * sizeof(uintptr_t));
@@ -524,90 +524,90 @@ ngx_http_upstream_create_round_robin_peer(ngx_http_request_t *r,
 }
 
 /*
-Load-blanceÄ£¿éÖĞ4¸ö¹Ø¼ü»Øµ÷º¯Êı£º
-»Øµ÷Ö¸Õë                  º¯Êı¹¦ÄÜ                          round_robinÄ£¿é                     IP_hashÄ£¿é
+Load-blanceæ¨¡å—ä¸­4ä¸ªå…³é”®å›è°ƒå‡½æ•°ï¼š
+å›è°ƒæŒ‡é’ˆ                  å‡½æ•°åŠŸèƒ½                          round_robinæ¨¡å—                     IP_hashæ¨¡å—
  
-uscf->peer.init_upstream (Ä¬ÈÏÎªngx_http_upstream_init_round_robin ÔÚngx_http_upstream_init_main_confÖĞÖ´ĞĞ)
-½âÎöÅäÖÃÎÄ¼ş¹ı³ÌÖĞµ÷ÓÃ£¬¸ù¾İupstreamÀï¸÷¸öserverÅäÖÃÏî×ö³õÊ¼×¼±¸¹¤×÷£¬ÁíÍâµÄºËĞÄ¹¤×÷ÊÇÉèÖÃ»Øµ÷Ö¸Õëus->peer.init¡£ÅäÖÃÎÄ¼ş½âÎöÍêºó²»ÔÙ±»µ÷ÓÃ
+uscf->peer.init_upstream (é»˜è®¤ä¸ºngx_http_upstream_init_round_robin åœ¨ngx_http_upstream_init_main_confä¸­æ‰§è¡Œ)
+è§£æé…ç½®æ–‡ä»¶è¿‡ç¨‹ä¸­è°ƒç”¨ï¼Œæ ¹æ®upstreamé‡Œå„ä¸ªserveré…ç½®é¡¹åšåˆå§‹å‡†å¤‡å·¥ä½œï¼Œå¦å¤–çš„æ ¸å¿ƒå·¥ä½œæ˜¯è®¾ç½®å›è°ƒæŒ‡é’ˆus->peer.initã€‚é…ç½®æ–‡ä»¶è§£æå®Œåä¸å†è¢«è°ƒç”¨
 
 ngx_http_upstream_init_round_robin
-ÉèÖÃ£ºus->peer.init = ngx_http_upstream_init_round_robin_peer;
+è®¾ç½®ï¼šus->peer.init = ngx_http_upstream_init_round_robin_peer;
  
 ngx_http_upstream_init_ip_hash
-ÉèÖÃ£ºus->peer.init = ngx_http_upstream_init_ip_hash_peer;
+è®¾ç½®ï¼šus->peer.init = ngx_http_upstream_init_ip_hash_peer;
  
 
 
 us->peer.init
-ÔÚÃ¿Ò»´ÎNginx×¼±¸×ª·¢¿Í»§¶ËÇëÇóµ½ºó¶Ë·şÎñÆ÷Ç°¶¼»áµ÷ÓÃ¸Ãº¯Êı¡£¸Ãº¯ÊıÎª±¾´Î×ª·¢Ñ¡ÔñºÏÊÊµÄºó¶Ë·şÎñÆ÷×ö³õÊ¼×¼±¸¹¤×÷£¬ÁíÍâµÄºËĞÄ¹¤
-×÷ÊÇÉèÖÃ»Øµ÷Ö¸Õër->upstream->peer.getºÍr->upstream->peer.freeµÈ
+åœ¨æ¯ä¸€æ¬¡Nginxå‡†å¤‡è½¬å‘å®¢æˆ·ç«¯è¯·æ±‚åˆ°åç«¯æœåŠ¡å™¨å‰éƒ½ä¼šè°ƒç”¨è¯¥å‡½æ•°ã€‚è¯¥å‡½æ•°ä¸ºæœ¬æ¬¡è½¬å‘é€‰æ‹©åˆé€‚çš„åç«¯æœåŠ¡å™¨åšåˆå§‹å‡†å¤‡å·¥ä½œï¼Œå¦å¤–çš„æ ¸å¿ƒå·¥
+ä½œæ˜¯è®¾ç½®å›è°ƒæŒ‡é’ˆr->upstream->peer.getå’Œr->upstream->peer.freeç­‰
  
 ngx_http_upstream_init_round_robin_peer
-ÉèÖÃ£ºr->upstream->peer.get = ngx_http_upstream_get_round_robin_peer;
+è®¾ç½®ï¼šr->upstream->peer.get = ngx_http_upstream_get_round_robin_peer;
 r->upstream->peer.free = ngx_http_upstream_free_round_robin_peer;
  
 ngx_http_upstream_init_ip_hash_peer
-ÉèÖÃ£ºr->upstream->peer.get = ngx_http_upstream_get_ip_hash_peer;
-r->upstream->peer.freeÎª¿Õ
+è®¾ç½®ï¼šr->upstream->peer.get = ngx_http_upstream_get_ip_hash_peer;
+r->upstream->peer.freeä¸ºç©º
  
 
 
 r->upstream->peer.get
-ÔÚÃ¿Ò»´ÎNginx×¼±¸×ª·¢¿Í»§¶ËÇëÇóµ½ºó¶Ë·şÎñÆ÷Ç°¶¼»áµ÷ÓÃ¸Ãº¯Êı¡£¸Ãº¯ÊıÊµÏÖ¾ßÌåµÄÎ»±¾´Î×ª·¢Ñ¡ÔñºÏÊÊµÄºó¶Ë·şÎñÆ÷µÄËã·¨Âß¼­£¬¼´
-Íê³ÉÑ¡Ôñ»ñÈ¡ºÏÊÊºó¶Ë·şÎñÆ÷µÄ¹¦ÄÜ
+åœ¨æ¯ä¸€æ¬¡Nginxå‡†å¤‡è½¬å‘å®¢æˆ·ç«¯è¯·æ±‚åˆ°åç«¯æœåŠ¡å™¨å‰éƒ½ä¼šè°ƒç”¨è¯¥å‡½æ•°ã€‚è¯¥å‡½æ•°å®ç°å…·ä½“çš„ä½æœ¬æ¬¡è½¬å‘é€‰æ‹©åˆé€‚çš„åç«¯æœåŠ¡å™¨çš„ç®—æ³•é€»è¾‘ï¼Œå³
+å®Œæˆé€‰æ‹©è·å–åˆé€‚åç«¯æœåŠ¡å™¨çš„åŠŸèƒ½
  
 ngx_http_upstream_get_round_robin_peer
-¼ÓÈ¨Ñ¡Ôñµ±Ç°È¨Öµ×î¸ßµÄºó¶Ë·şÎñÆ÷
+åŠ æƒé€‰æ‹©å½“å‰æƒå€¼æœ€é«˜çš„åç«¯æœåŠ¡å™¨
  
 ngx_http_upstream_get_ip_hash_peer
-¸ù¾İIP¹şÏ£ÖµÑ¡Ôñºó¶Ë·şÎñÆ÷
+æ ¹æ®IPå“ˆå¸Œå€¼é€‰æ‹©åç«¯æœåŠ¡å™¨
  
 
 
 
 
 r->upstream->peer.free
-ÔÚÃ¿Ò»´ÎNginxÍê³ÉÓëºó¶Ë·şÎñÆ÷Ö®¼äµÄ½»»¥ºó¶¼»áµ÷ÓÃ¸Ãº¯Êı¡£
+åœ¨æ¯ä¸€æ¬¡Nginxå®Œæˆä¸åç«¯æœåŠ¡å™¨ä¹‹é—´çš„äº¤äº’åéƒ½ä¼šè°ƒç”¨è¯¥å‡½æ•°ã€‚
 ngx_http_upstream_free_round_robin_peer
-¸üĞÂÏà¹ØÊıÖµ£¬±ÈÈçrrp->current
+æ›´æ–°ç›¸å…³æ•°å€¼ï¼Œæ¯”å¦‚rrp->current
 
-ÂÖÑ¯²ßÂÔºÍIP¹şÏ£²ßÂÔ¶Ô±È
-¼ÓÈ¨ÂÖÑ¯²ßÂÔ
-ÓÅµã£ºÊÊÓÃĞÔ¸üÇ¿£¬²»ÒÀÀµÓÚ¿Í»§¶ËµÄÈÎºÎĞÅÏ¢£¬ÍêÈ«ÒÀ¿¿ºó¶Ë·şÎñÆ÷µÄÇé¿öÀ´½øĞĞÑ¡Ôñ¡£ÄÜ°Ñ¿Í»§¶ËÇëÇó¸üºÏÀí¸ü¾ùÔÈµØ·ÖÅäµ½¸÷¸öºó¶Ë·şÎñÆ÷´¦Àí¡£
-È±µã£ºÍ¬Ò»¸ö¿Í»§¶ËµÄ¶à´ÎÇëÇó¿ÉÄÜ»á±»·ÖÅäµ½²»Í¬µÄºó¶Ë·şÎñÆ÷½øĞĞ´¦Àí£¬ÎŞ·¨Âú×ã×ö»á»°±£³ÖµÄÓ¦ÓÃµÄĞèÇó¡£
+è½®è¯¢ç­–ç•¥å’ŒIPå“ˆå¸Œç­–ç•¥å¯¹æ¯”
+åŠ æƒè½®è¯¢ç­–ç•¥
+ä¼˜ç‚¹ï¼šé€‚ç”¨æ€§æ›´å¼ºï¼Œä¸ä¾èµ–äºå®¢æˆ·ç«¯çš„ä»»ä½•ä¿¡æ¯ï¼Œå®Œå…¨ä¾é åç«¯æœåŠ¡å™¨çš„æƒ…å†µæ¥è¿›è¡Œé€‰æ‹©ã€‚èƒ½æŠŠå®¢æˆ·ç«¯è¯·æ±‚æ›´åˆç†æ›´å‡åŒ€åœ°åˆ†é…åˆ°å„ä¸ªåç«¯æœåŠ¡å™¨å¤„ç†ã€‚
+ç¼ºç‚¹ï¼šåŒä¸€ä¸ªå®¢æˆ·ç«¯çš„å¤šæ¬¡è¯·æ±‚å¯èƒ½ä¼šè¢«åˆ†é…åˆ°ä¸åŒçš„åç«¯æœåŠ¡å™¨è¿›è¡Œå¤„ç†ï¼Œæ— æ³•æ»¡è¶³åšä¼šè¯ä¿æŒçš„åº”ç”¨çš„éœ€æ±‚ã€‚
 
-IP¹şÏ£²ßÂÔ
-ÓÅµã£ºÄÜ½ÏºÃµØ°ÑÍ¬Ò»¸ö¿Í»§¶ËµÄ¶à´ÎÇëÇó·ÖÅäµ½Í¬Ò»Ì¨·şÎñÆ÷´¦Àí£¬±ÜÃâÁË¼ÓÈ¨ÂÖÑ¯ÎŞ·¨ÊÊÓÃ»á»°±£³ÖµÄĞèÇó¡£
-È±µã£ºµ±Ä³¸öÊ±¿ÌÀ´×ÔÄ³¸öIPµØÖ·µÄÇëÇóÌØ±ğ¶à£¬ÄÇÃ´½«µ¼ÖÂÄ³Ì¨ºó¶Ë·şÎñÆ÷µÄÑ¹Á¦¿ÉÄÜ·Ç³£´ó£¬¶øÆäËûºó¶Ë·şÎñÆ÷È´¿ÕÏĞµÄ²»¾ùºâÇé¿ö¡¢
+IPå“ˆå¸Œç­–ç•¥
+ä¼˜ç‚¹ï¼šèƒ½è¾ƒå¥½åœ°æŠŠåŒä¸€ä¸ªå®¢æˆ·ç«¯çš„å¤šæ¬¡è¯·æ±‚åˆ†é…åˆ°åŒä¸€å°æœåŠ¡å™¨å¤„ç†ï¼Œé¿å…äº†åŠ æƒè½®è¯¢æ— æ³•é€‚ç”¨ä¼šè¯ä¿æŒçš„éœ€æ±‚ã€‚
+ç¼ºç‚¹ï¼šå½“æŸä¸ªæ—¶åˆ»æ¥è‡ªæŸä¸ªIPåœ°å€çš„è¯·æ±‚ç‰¹åˆ«å¤šï¼Œé‚£ä¹ˆå°†å¯¼è‡´æŸå°åç«¯æœåŠ¡å™¨çš„å‹åŠ›å¯èƒ½éå¸¸å¤§ï¼Œè€Œå…¶ä»–åç«¯æœåŠ¡å™¨å´ç©ºé—²çš„ä¸å‡è¡¡æƒ…å†µã€
 
-ÂÖÑ¯²ßÂÔºÍIP¹şÏ£²ßÂÔ¶Ô±È
-¼ÓÈ¨ÂÖÑ¯²ßÂÔ
-ÓÅµã£ºÊÊÓÃĞÔ¸üÇ¿£¬²»ÒÀÀµÓÚ¿Í»§¶ËµÄÈÎºÎĞÅÏ¢£¬ÍêÈ«ÒÀ¿¿ºó¶Ë·şÎñÆ÷µÄÇé¿öÀ´½øĞĞÑ¡Ôñ¡£ÄÜ°Ñ¿Í»§¶ËÇëÇó¸üºÏÀí¸ü¾ùÔÈµØ·ÖÅäµ½¸÷¸öºó¶Ë·şÎñÆ÷´¦Àí¡£
-È±µã£ºÍ¬Ò»¸ö¿Í»§¶ËµÄ¶à´ÎÇëÇó¿ÉÄÜ»á±»·ÖÅäµ½²»Í¬µÄºó¶Ë·şÎñÆ÷½øĞĞ´¦Àí£¬ÎŞ·¨Âú×ã×ö»á»°±£³ÖµÄÓ¦ÓÃµÄĞèÇó¡£
+è½®è¯¢ç­–ç•¥å’ŒIPå“ˆå¸Œç­–ç•¥å¯¹æ¯”
+åŠ æƒè½®è¯¢ç­–ç•¥
+ä¼˜ç‚¹ï¼šé€‚ç”¨æ€§æ›´å¼ºï¼Œä¸ä¾èµ–äºå®¢æˆ·ç«¯çš„ä»»ä½•ä¿¡æ¯ï¼Œå®Œå…¨ä¾é åç«¯æœåŠ¡å™¨çš„æƒ…å†µæ¥è¿›è¡Œé€‰æ‹©ã€‚èƒ½æŠŠå®¢æˆ·ç«¯è¯·æ±‚æ›´åˆç†æ›´å‡åŒ€åœ°åˆ†é…åˆ°å„ä¸ªåç«¯æœåŠ¡å™¨å¤„ç†ã€‚
+ç¼ºç‚¹ï¼šåŒä¸€ä¸ªå®¢æˆ·ç«¯çš„å¤šæ¬¡è¯·æ±‚å¯èƒ½ä¼šè¢«åˆ†é…åˆ°ä¸åŒçš„åç«¯æœåŠ¡å™¨è¿›è¡Œå¤„ç†ï¼Œæ— æ³•æ»¡è¶³åšä¼šè¯ä¿æŒçš„åº”ç”¨çš„éœ€æ±‚ã€‚
 
-IP¹şÏ£²ßÂÔ
-ÓÅµã£ºÄÜ½ÏºÃµØ°ÑÍ¬Ò»¸ö¿Í»§¶ËµÄ¶à´ÎÇëÇó·ÖÅäµ½Í¬Ò»Ì¨·şÎñÆ÷´¦Àí£¬±ÜÃâÁË¼ÓÈ¨ÂÖÑ¯ÎŞ·¨ÊÊÓÃ»á»°±£³ÖµÄĞèÇó¡£
-È±µã£ºµ±Ä³¸öÊ±¿ÌÀ´×ÔÄ³¸öIPµØÖ·µÄÇëÇóÌØ±ğ¶à£¬ÄÇÃ´½«µ¼ÖÂÄ³Ì¨ºó¶Ë·şÎñÆ÷µÄÑ¹Á¦¿ÉÄÜ·Ç³£´ó£¬¶øÆäËûºó¶Ë·şÎñÆ÷È´¿ÕÏĞµÄ²»¾ùºâÇé¿ö¡¢
+IPå“ˆå¸Œç­–ç•¥
+ä¼˜ç‚¹ï¼šèƒ½è¾ƒå¥½åœ°æŠŠåŒä¸€ä¸ªå®¢æˆ·ç«¯çš„å¤šæ¬¡è¯·æ±‚åˆ†é…åˆ°åŒä¸€å°æœåŠ¡å™¨å¤„ç†ï¼Œé¿å…äº†åŠ æƒè½®è¯¢æ— æ³•é€‚ç”¨ä¼šè¯ä¿æŒçš„éœ€æ±‚ã€‚
+ç¼ºç‚¹ï¼šå½“æŸä¸ªæ—¶åˆ»æ¥è‡ªæŸä¸ªIPåœ°å€çš„è¯·æ±‚ç‰¹åˆ«å¤šï¼Œé‚£ä¹ˆå°†å¯¼è‡´æŸå°åç«¯æœåŠ¡å™¨çš„å‹åŠ›å¯èƒ½éå¸¸å¤§ï¼Œè€Œå…¶ä»–åç«¯æœåŠ¡å™¨å´ç©ºé—²çš„ä¸å‡è¡¡æƒ…å†µã€
 */
 
 /*
- ÅĞ¶Ïserver ÊÇ·ñÓĞĞ§µÄ·½·¨ÊÇ£º
- 1£©Èç¹ûserverµÄÊ§°Ü´ÎÊı£¨peers->peer[i].fails£©Ã»ÓĞ´ïµ½ÁËmax_failsËùÉèÖÃµÄ×î´óÊ§°Ü´ÎÊı£¬Ôò¸ÃserverÊÇÓĞĞ§µÄ¡£
- 2£©Èç¹ûserverÒÑ¾­´ïµ½ÁËmax_failsËùÉèÖÃµÄ×î´óÊ§°Ü´ÎÊı£¬´ÓÕâÒ»Ê±¿Ì¿ªÊ¼ËãÆğ£¬ÔÚfail_timeout ËùÉèÖÃµÄÊ±¼ä¶ÎÄÚ£¬ serverÊÇÎŞĞ§µÄ¡£
- 3£©µ±serverµÄÊ§°Ü´ÎÊı£¨peers->peer[i].fails£©Îª×î´óµÄÊ§°Ü´ÎÊı£¬µ±¾àÀëÏÖÔÚµÄÊ±¼ä³¬¹ıÁËfail_timeout ËùÉèÖÃµÄÊ±¼ä¶Î£¬ ÔòÁîpeers->peer[i].fails =0£¬Ê¹µÃ¸ÃserverÖØĞÂÓĞĞ§¡£
+ åˆ¤æ–­server æ˜¯å¦æœ‰æ•ˆçš„æ–¹æ³•æ˜¯ï¼š
+ 1ï¼‰å¦‚æœserverçš„å¤±è´¥æ¬¡æ•°ï¼ˆpeers->peer[i].failsï¼‰æ²¡æœ‰è¾¾åˆ°äº†max_failsæ‰€è®¾ç½®çš„æœ€å¤§å¤±è´¥æ¬¡æ•°ï¼Œåˆ™è¯¥serveræ˜¯æœ‰æ•ˆçš„ã€‚
+ 2ï¼‰å¦‚æœserverå·²ç»è¾¾åˆ°äº†max_failsæ‰€è®¾ç½®çš„æœ€å¤§å¤±è´¥æ¬¡æ•°ï¼Œä»è¿™ä¸€æ—¶åˆ»å¼€å§‹ç®—èµ·ï¼Œåœ¨fail_timeout æ‰€è®¾ç½®çš„æ—¶é—´æ®µå†…ï¼Œ serveræ˜¯æ— æ•ˆçš„ã€‚
+ 3ï¼‰å½“serverçš„å¤±è´¥æ¬¡æ•°ï¼ˆpeers->peer[i].failsï¼‰ä¸ºæœ€å¤§çš„å¤±è´¥æ¬¡æ•°ï¼Œå½“è·ç¦»ç°åœ¨çš„æ—¶é—´è¶…è¿‡äº†fail_timeout æ‰€è®¾ç½®çš„æ—¶é—´æ®µï¼Œ åˆ™ä»¤peers->peer[i].fails =0ï¼Œä½¿å¾—è¯¥serveré‡æ–°æœ‰æ•ˆã€‚
 
 2.2.2.1
-Èç¹ûpeersÖĞËùÓĞµÄserver¶¼ÊÇÎŞĞ§µÄ; ¾Í»á³¢ÊÔÈ¥backupµÄÊı×éÖĞÕÒÒ»¸öÓĞĞ§µÄserver, Èç¹ûÕÒµ½£¬ Ìø×ªµ½2.2.3; Èç¹ûÈÔÈ»ÕÒ²»µ½£¬±íÊ¾´ËÊ±
-upstreamÖĞÎŞserver¿ÉÒÔÊ¹ÓÃ¡£¾Í»áÇå¿ÕËùÓĞpeersÊı×éÖĞËùÓĞµÄÊ§°Ü´ÎÊıµÄ¼ÇÂ¼£¬Ê¹ËùÓĞserver¶¼±ä³ÉÁËÓĞĞ§¡£ÕâÑù×öµÄÄ¿µÄÊÇÎªÁË·ÀÖ¹ÏÂ´ÎÔÙ
-ÓĞÇëÇó·ÃÎÊÊ±£¬ÈÔÕÒ²»µ½Ò»¸öÓĞĞ§µÄserver.
+å¦‚æœpeersä¸­æ‰€æœ‰çš„serveréƒ½æ˜¯æ— æ•ˆçš„; å°±ä¼šå°è¯•å»backupçš„æ•°ç»„ä¸­æ‰¾ä¸€ä¸ªæœ‰æ•ˆçš„server, å¦‚æœæ‰¾åˆ°ï¼Œ è·³è½¬åˆ°2.2.3; å¦‚æœä»ç„¶æ‰¾ä¸åˆ°ï¼Œè¡¨ç¤ºæ­¤æ—¶
+upstreamä¸­æ— serverå¯ä»¥ä½¿ç”¨ã€‚å°±ä¼šæ¸…ç©ºæ‰€æœ‰peersæ•°ç»„ä¸­æ‰€æœ‰çš„å¤±è´¥æ¬¡æ•°çš„è®°å½•ï¼Œä½¿æ‰€æœ‰serveréƒ½å˜æˆäº†æœ‰æ•ˆã€‚è¿™æ ·åšçš„ç›®çš„æ˜¯ä¸ºäº†é˜²æ­¢ä¸‹æ¬¡å†
+æœ‰è¯·æ±‚è®¿é—®æ—¶ï¼Œä»æ‰¾ä¸åˆ°ä¸€ä¸ªæœ‰æ•ˆçš„server.
     for (i = 0; i < peers->number; i++) {
             peers->peer[i].fails2 = 0;
     }
-    ²¢·µ»Ø´íÎóÂë¸ønginx,  nginxµÃµ½´Ë´íÎóÂëºó£¬¾Í²»ÔÙÏòºóÌ¨server·¢ÇëÇó£¬¶øÊÇÔÚnginxµÄ´íÎóÈÕÖ¾ÖĞÊä³ö¡°no live upstreams while connecting to upstream¡±
-    µÄ¼ÇÂ¼£¨Õâ¾ÍÊÇno live²úÉúµÄÕæÕıÔ­Òò£©£¬²¢Ö±½Ó·µ»Ø¸øÇëÇóµÄ¿Í»§¶ËÒ»¸ö502µÄ´íÎó¡£
+    å¹¶è¿”å›é”™è¯¯ç ç»™nginx,  nginxå¾—åˆ°æ­¤é”™è¯¯ç åï¼Œå°±ä¸å†å‘åå°serverå‘è¯·æ±‚ï¼Œè€Œæ˜¯åœ¨nginxçš„é”™è¯¯æ—¥å¿—ä¸­è¾“å‡ºâ€œno live upstreams while connecting to upstreamâ€
+    çš„è®°å½•ï¼ˆè¿™å°±æ˜¯no liveäº§ç”Ÿçš„çœŸæ­£åŸå› ï¼‰ï¼Œå¹¶ç›´æ¥è¿”å›ç»™è¯·æ±‚çš„å®¢æˆ·ç«¯ä¸€ä¸ª502çš„é”™è¯¯ã€‚
 */
 /*ngx_http_upstream_get_round_robin_peer ngx_http_upstream_get_least_conn_peer ngx_http_upstream_get_hash_peer  
-ngx_http_upstream_get_ip_hash_peer ngx_http_upstream_get_keepalive_peerµÈ */
+ngx_http_upstream_get_ip_hash_peer ngx_http_upstream_get_keepalive_peerç­‰ */
 ngx_int_t
 ngx_http_upstream_get_round_robin_peer(ngx_peer_connection_t *pc, void *data)
 {
@@ -630,7 +630,7 @@ ngx_http_upstream_get_round_robin_peer(ngx_peer_connection_t *pc, void *data)
     if (peers->single) {
         peer = peers->peer;
 
-        if (peer->down) {  //¸Ã·şÎñÆ÷ÒÑ¾­Ê§Ğ§£¬²»ÄÜÔÚÊ¹ÓÃ¸Ã·şÎñÆ÷ÁË
+        if (peer->down) {  //è¯¥æœåŠ¡å™¨å·²ç»å¤±æ•ˆï¼Œä¸èƒ½åœ¨ä½¿ç”¨è¯¥æœåŠ¡å™¨äº†
             goto failed;
         }
 
@@ -641,7 +641,7 @@ ngx_http_upstream_get_round_robin_peer(ngx_peer_connection_t *pc, void *data)
         /* there are several peers */
 
         peer = ngx_http_upstream_get_peer(rrp);
-        //get_peerº¯Êı·µ»ØÓÅÏÈ¼¶×î´óµÄ·şÎñÆ÷
+        //get_peerå‡½æ•°è¿”å›ä¼˜å…ˆçº§æœ€å¤§çš„æœåŠ¡å™¨
 
         if (peer == NULL) {
             goto failed;
@@ -652,7 +652,7 @@ ngx_http_upstream_get_round_robin_peer(ngx_peer_connection_t *pc, void *data)
                        peer, peer->current_weight);
     }
     
-    //pcÖĞ¼ÇÂ¼ÁËÑ¡È¡µÄ·şÎñÆ÷µÄĞÅÏ¢
+    //pcä¸­è®°å½•äº†é€‰å–çš„æœåŠ¡å™¨çš„ä¿¡æ¯
     pc->sockaddr = peer->sockaddr;
     pc->socklen = peer->socklen;
     pc->name = &peer->name;
@@ -663,7 +663,7 @@ ngx_http_upstream_get_round_robin_peer(ngx_peer_connection_t *pc, void *data)
 
     return NGX_OK;
 
-failed: //Ñ¡ÔñÊ§°Ü£¬×ªÏòºó±¸·şÎñÆ÷
+failed: //é€‰æ‹©å¤±è´¥ï¼Œè½¬å‘åå¤‡æœåŠ¡å™¨
 
     if (peers->next) {
 
@@ -691,8 +691,8 @@ failed: //Ñ¡ÔñÊ§°Ü£¬×ªÏòºó±¸·şÎñÆ÷
 
     /* all peers failed, mark them as live for quick recovery */
     /*
-         ±íÊ¾´ËÊ±upstreamÖĞÎŞserver¿ÉÒÔÊ¹ÓÃ¡£¾Í»áÇå¿ÕËùÓĞpeersÊı×éÖĞËùÓĞµÄÊ§°Ü´ÎÊıµÄ¼ÇÂ¼£¬Ê¹ËùÓĞserver¶¼±ä³ÉÁËÓĞĞ§¡£ÕâÑù
-         ×öµÄÄ¿µÄÊÇÎªÁË·ÀÖ¹ÏÂ´ÎÔÙÓĞÇëÇó·ÃÎÊÊ±£¬ÈÔÕÒ²»µ½Ò»¸öÓĞĞ§µÄserver.
+         è¡¨ç¤ºæ­¤æ—¶upstreamä¸­æ— serverå¯ä»¥ä½¿ç”¨ã€‚å°±ä¼šæ¸…ç©ºæ‰€æœ‰peersæ•°ç»„ä¸­æ‰€æœ‰çš„å¤±è´¥æ¬¡æ•°çš„è®°å½•ï¼Œä½¿æ‰€æœ‰serveréƒ½å˜æˆäº†æœ‰æ•ˆã€‚è¿™æ ·
+         åšçš„ç›®çš„æ˜¯ä¸ºäº†é˜²æ­¢ä¸‹æ¬¡å†æœ‰è¯·æ±‚è®¿é—®æ—¶ï¼Œä»æ‰¾ä¸åˆ°ä¸€ä¸ªæœ‰æ•ˆçš„server.
      */
     for (peer = peers->peer; peer; peer = peer->next) {
         peer->fails = 0;
@@ -706,13 +706,13 @@ failed: //Ñ¡ÔñÊ§°Ü£¬×ªÏòºó±¸·şÎñÆ÷
 }
 
 /*
-   fail_timeoutÊÂ¼şÄÚ·ÃÎÊºó¶Ë³öÏÖ´íÎóµÄ´ÎÊı´óÓÚµÈÓÚmax_fails£¬ÔòÈÏÎª¸Ã·şÎñÆ÷²»¿ÉÓÃ£¬ÄÇÃ´Èç¹û²»¿ÉÓÃÁË£¬ºó¶Ë¸Ã·şÎñÆ÷ÓĞ»Ö¸´ÁËÔõÃ´ÅĞ¶Ï¼ì²âÄØ?
-   ´ğ:µ±Õâ¸öfail_timeoutÊ±¼ä¶Î¹ıÁËºó£¬»áÖØÖÃpeer->checked£¬ÄÇÃ´ÓĞ¿ÉÒÔÊÔÌ½¸Ã·şÎñÆ÷ÁË£¬²Î¿¼ngx_http_upstream_get_peer
-   //checkedÓÃÀ´¼ì²âÊ±¼ä£¬ÀıÈçÄ³¸öÊ±¼ä¶Îfail_timeoutÕâ¶ÎÊ±¼äºó¶ËÊ§Ğ§ÁË£¬ÄÇÃ´Õâ¸öfail_timeout¹ıÁËºó£¬Ò²¿ÉÒÔÊÔÌ½Ê¹ÓÃ¸Ã·şÎñÆ÷
+   fail_timeoutäº‹ä»¶å†…è®¿é—®åç«¯å‡ºç°é”™è¯¯çš„æ¬¡æ•°å¤§äºç­‰äºmax_failsï¼Œåˆ™è®¤ä¸ºè¯¥æœåŠ¡å™¨ä¸å¯ç”¨ï¼Œé‚£ä¹ˆå¦‚æœä¸å¯ç”¨äº†ï¼Œåç«¯è¯¥æœåŠ¡å™¨æœ‰æ¢å¤äº†æ€ä¹ˆåˆ¤æ–­æ£€æµ‹å‘¢?
+   ç­”:å½“è¿™ä¸ªfail_timeoutæ—¶é—´æ®µè¿‡äº†åï¼Œä¼šé‡ç½®peer->checkedï¼Œé‚£ä¹ˆæœ‰å¯ä»¥è¯•æ¢è¯¥æœåŠ¡å™¨äº†ï¼Œå‚è€ƒngx_http_upstream_get_peer
+   //checkedç”¨æ¥æ£€æµ‹æ—¶é—´ï¼Œä¾‹å¦‚æŸä¸ªæ—¶é—´æ®µfail_timeoutè¿™æ®µæ—¶é—´åç«¯å¤±æ•ˆäº†ï¼Œé‚£ä¹ˆè¿™ä¸ªfail_timeoutè¿‡äº†åï¼Œä¹Ÿå¯ä»¥è¯•æ¢ä½¿ç”¨è¯¥æœåŠ¡å™¨
  */ 
-//get_peerº¯Êı·µ»ØÓÅÏÈ¼¶×î´óµÄ·şÎñÆ÷ //°´ÕÕµ±Ç°¸÷·şÎñÆ÷È¨Öµ½øĞĞÑ¡Ôñ
+//get_peerå‡½æ•°è¿”å›ä¼˜å…ˆçº§æœ€å¤§çš„æœåŠ¡å™¨ //æŒ‰ç…§å½“å‰å„æœåŠ¡å™¨æƒå€¼è¿›è¡Œé€‰æ‹©
 static ngx_http_upstream_rr_peer_t *
-ngx_http_upstream_get_peer(ngx_http_upstream_rr_peer_data_t *rrp)//ngx_http_upstream_get_peerºÍngx_http_upstream_init_round_robin_peerÅäºÏÔÄ¶Á
+ngx_http_upstream_get_peer(ngx_http_upstream_rr_peer_data_t *rrp)//ngx_http_upstream_get_peerå’Œngx_http_upstream_init_round_robin_peeré…åˆé˜…è¯»
 {
     time_t                        now;
     uintptr_t                     m;
@@ -731,27 +731,27 @@ ngx_http_upstream_get_peer(ngx_http_upstream_rr_peer_data_t *rrp)//ngx_http_upst
 
     for (peer = rrp->peers->peer, i = 0;
          peer;
-         peer = peer->next, i++) //ngx_http_upstream_get_peerºÍngx_http_upstream_init_round_robin_peerÅäºÏÔÄ¶Á
+         peer = peer->next, i++) //ngx_http_upstream_get_peerå’Œngx_http_upstream_init_round_robin_peeré…åˆé˜…è¯»
     {
-        //¼ÆËãµ±Ç°·şÎñÆ÷µÄ±ê¼ÇÎ»ÔÚÎ»Í¼ÖĞµÄÎ»ÖÃ
+        //è®¡ç®—å½“å‰æœåŠ¡å™¨çš„æ ‡è®°ä½åœ¨ä½å›¾ä¸­çš„ä½ç½®
         n = i / (8 * sizeof(uintptr_t));
         m = (uintptr_t) 1 << i % (8 * sizeof(uintptr_t));
 
-        if (rrp->tried[n] & m) {//ÒÑ¾­Ñ¡Ôñ¹ı£¬Ìø¹ı
+        if (rrp->tried[n] & m) {//å·²ç»é€‰æ‹©è¿‡ï¼Œè·³è¿‡
             continue;
         }
 
-        if (peer->down) {//µ±Ç°·şÎñÆ÷ÒÑå´»ú£¬ÅÅ³ı
+        if (peer->down) {//å½“å‰æœåŠ¡å™¨å·²å®•æœºï¼Œæ’é™¤
             continue;
         }
 
       /*
-       fail_timeoutÊÂ¼şÄÚ·ÃÎÊºó¶Ë³öÏÖ´íÎóµÄ´ÎÊı´óÓÚµÈÓÚmax_fails£¬ÔòÈÏÎª¸Ã·şÎñÆ÷²»¿ÉÓÃ£¬ÄÇÃ´Èç¹û²»¿ÉÓÃÁË£¬ºó¶Ë¸Ã·şÎñÆ÷ÓĞ»Ö¸´ÁËÔõÃ´ÅĞ¶Ï¼ì²âÄØ?
-       ´ğ:µ±Õâ¸öfail_timeoutÊ±¼ä¶Î¹ıÁËºó£¬»áÖØÖÃpeer->checked£¬ÄÇÃ´ÓĞ¿ÉÒÔÊÔÌ½¸Ã·şÎñÆ÷ÁË
+       fail_timeoutäº‹ä»¶å†…è®¿é—®åç«¯å‡ºç°é”™è¯¯çš„æ¬¡æ•°å¤§äºç­‰äºmax_failsï¼Œåˆ™è®¤ä¸ºè¯¥æœåŠ¡å™¨ä¸å¯ç”¨ï¼Œé‚£ä¹ˆå¦‚æœä¸å¯ç”¨äº†ï¼Œåç«¯è¯¥æœåŠ¡å™¨æœ‰æ¢å¤äº†æ€ä¹ˆåˆ¤æ–­æ£€æµ‹å‘¢?
+       ç­”:å½“è¿™ä¸ªfail_timeoutæ—¶é—´æ®µè¿‡äº†åï¼Œä¼šé‡ç½®peer->checkedï¼Œé‚£ä¹ˆæœ‰å¯ä»¥è¯•æ¢è¯¥æœåŠ¡å™¨äº†
        */
         if (peer->max_fails
             && peer->fails >= peer->max_fails
-            && now - peer->checked <= peer->fail_timeout)//¸ù¾İÖ¸¶¨Ò»¶ÎÊ±¼äÄÚ×î´óÊ§°Ü´ÎÊı×öÅĞ¶Ï
+            && now - peer->checked <= peer->fail_timeout)//æ ¹æ®æŒ‡å®šä¸€æ®µæ—¶é—´å†…æœ€å¤§å¤±è´¥æ¬¡æ•°åšåˆ¤æ–­
         {
             continue;
         }
@@ -765,8 +765,8 @@ ngx_http_upstream_get_peer(ngx_http_upstream_rr_peer_data_t *rrp)//ngx_http_upst
             }
             }
             best->current_weight -= total;
-            Õâ¸öËã·¨Ó¦¸ÃËµ¾ÍÊÇ¶¾»¯µÄ¼ÓÈ¨¶¯Ì¬ÓÅÏÈ¼¶Ëã·¨£¬×î´óµÄÌØµãÓĞÁ½µã£ºÒ»ÊÇÓÅÏÈ¼¶current_weightµÄ±ä»¯Á¿ÊÇÈ¨effective_weight£¬¶şÊÇ¶ÔËùÑ¡serverµÄÓÅÏÈ¼¶½øĞĞ´ó¹æÄ£¶¾»¯£¬¶¾»¯³Ì¶ÈÊÇËùÓĞserverµÄÈ¨ÖµÖ®ºÍ¡£ÕâÖÖËã·¨µÄ½á¹ûÌØµãÒ»¶¨ÊÇÈ¨¸ßµÄserverÒ»¶¨ÏÈ±»Ñ¡ÖĞ£¬²¢ÇÒ¸üÆµ·±µÄ±»Ñ¡ÖĞ£¬¶øÈ¨µÍµÄserverÒ²»áÂıÂıµÄÌáÉıÓÅÏÈ¼¶¶ø±»Ñ¡ÖĞ¡£¶ÔÓÚÉÏÃæµÄ±ß½çÇé¿ö£¬ÕâÖÖËã·¨µÃµ½µÄĞòÁĞÊÇa, a, b, a, c, a, a£¬¾ùÔÈ³Ì¶ÈÌáÉı·Ç³£ÏÔÖø¡£
-            ¶ÔÓÚÎÒÃÇ×Ô¼ºµÄÀı×Ó£¬ÕâÀïÒ²ÑİËãÒ»ÏÂ£º
+            è¿™ä¸ªç®—æ³•åº”è¯¥è¯´å°±æ˜¯æ¯’åŒ–çš„åŠ æƒåŠ¨æ€ä¼˜å…ˆçº§ç®—æ³•ï¼Œæœ€å¤§çš„ç‰¹ç‚¹æœ‰ä¸¤ç‚¹ï¼šä¸€æ˜¯ä¼˜å…ˆçº§current_weightçš„å˜åŒ–é‡æ˜¯æƒeffective_weightï¼ŒäºŒæ˜¯å¯¹æ‰€é€‰serverçš„ä¼˜å…ˆçº§è¿›è¡Œå¤§è§„æ¨¡æ¯’åŒ–ï¼Œæ¯’åŒ–ç¨‹åº¦æ˜¯æ‰€æœ‰serverçš„æƒå€¼ä¹‹å’Œã€‚è¿™ç§ç®—æ³•çš„ç»“æœç‰¹ç‚¹ä¸€å®šæ˜¯æƒé«˜çš„serverä¸€å®šå…ˆè¢«é€‰ä¸­ï¼Œå¹¶ä¸”æ›´é¢‘ç¹çš„è¢«é€‰ä¸­ï¼Œè€Œæƒä½çš„serverä¹Ÿä¼šæ…¢æ…¢çš„æå‡ä¼˜å…ˆçº§è€Œè¢«é€‰ä¸­ã€‚å¯¹äºä¸Šé¢çš„è¾¹ç•Œæƒ…å†µï¼Œè¿™ç§ç®—æ³•å¾—åˆ°çš„åºåˆ—æ˜¯a, a, b, a, c, a, aï¼Œå‡åŒ€ç¨‹åº¦æå‡éå¸¸æ˜¾è‘—ã€‚
+            å¯¹äºæˆ‘ä»¬è‡ªå·±çš„ä¾‹å­ï¼Œè¿™é‡Œä¹Ÿæ¼”ç®—ä¸€ä¸‹ï¼š
             selected server current_weight          before selected           current_weight after selected
                     a                                   { 5, 1, 2 }                 { -3, 1, 2 }
                     b                                   { 2, 2, 4 }                 { 2, 2, -4 }
@@ -776,13 +776,13 @@ ngx_http_upstream_get_peer(ngx_http_upstream_rr_peer_data_t *rrp)//ngx_http_upst
                     a                                    { 6, -2, 4 }            { -2, -2, 4 }
                     b                                    { 3, -1, 6 }            { 3, -1, -2 }
                     a                                   { 8, 0, 0 }              { 0, 0, 0 }
-            ¾­¹ıÒ»ÂÖÑ¡ÔñÒÔºó£¬ÓÅÏÈ¼¶»Ö¸´µ½³õÊ¼×´Ì¬¡£Õâ¸öĞÔÖÊÊ¹µÃ´úÂëµÃÒÔËõ¶Ì¡£Cool!
+            ç»è¿‡ä¸€è½®é€‰æ‹©ä»¥åï¼Œä¼˜å…ˆçº§æ¢å¤åˆ°åˆå§‹çŠ¶æ€ã€‚è¿™ä¸ªæ€§è´¨ä½¿å¾—ä»£ç å¾—ä»¥ç¼©çŸ­ã€‚Cool!
           */
-        //¼ÓÈ¨ÂÖÑµËã·¨¿ÉÒÔ²Î¿¼:http://blog.sina.com.cn/s/blog_7303a1dc01014i0j.html
+        //åŠ æƒè½®è®­ç®—æ³•å¯ä»¥å‚è€ƒ:http://blog.sina.com.cn/s/blog_7303a1dc01014i0j.html
         peer->current_weight += peer->effective_weight;
         total += peer->effective_weight;
 
-        if (peer->effective_weight < peer->weight) {//·şÎñÕı³££¬effective_weight Öğ½¥»Ö¸´Õı³£    
+        if (peer->effective_weight < peer->weight) {//æœåŠ¡æ­£å¸¸ï¼Œeffective_weight é€æ¸æ¢å¤æ­£å¸¸    
             peer->effective_weight++;
         }
 
@@ -798,17 +798,17 @@ ngx_http_upstream_get_peer(ngx_http_upstream_rr_peer_data_t *rrp)//ngx_http_upst
 
     rrp->current = best;
     
-    //ËùÑ¡ÔñµÄ·şÎñÆ÷ÔÚ·şÎñÆ÷ÁĞ±íÖĞµÄÎ»ÖÃ
+    //æ‰€é€‰æ‹©çš„æœåŠ¡å™¨åœ¨æœåŠ¡å™¨åˆ—è¡¨ä¸­çš„ä½ç½®
     n = p / (8 * sizeof(uintptr_t));
     m = (uintptr_t) 1 << p % (8 * sizeof(uintptr_t));
 
-    rrp->tried[n] |= m; //Î»Í¼ÏàÓ¦Î»ÖÃÖÃÎ»
+    rrp->tried[n] |= m; //ä½å›¾ç›¸åº”ä½ç½®ç½®ä½
 
     best->current_weight -= total;
 
     /*
-       fail_timeoutÊÂ¼şÄÚ·ÃÎÊºó¶Ë³öÏÖ´íÎóµÄ´ÎÊı´óÓÚµÈÓÚmax_fails£¬ÔòÈÏÎª¸Ã·şÎñÆ÷²»¿ÉÓÃ£¬ÄÇÃ´Èç¹û²»¿ÉÓÃÁË£¬ºó¶Ë¸Ã·şÎñÆ÷ÓĞ»Ö¸´ÁËÔõÃ´ÅĞ¶Ï¼ì²âÄØ?
-       ´ğ:µ±Õâ¸öfail_timeoutÊ±¼ä¶Î¹ıÁËºó£¬»áÖØÖÃpeer->checked£¬ÄÇÃ´ÓĞ¿ÉÒÔÊÔÌ½¸Ã·şÎñÆ÷ÁË
+       fail_timeoutäº‹ä»¶å†…è®¿é—®åç«¯å‡ºç°é”™è¯¯çš„æ¬¡æ•°å¤§äºç­‰äºmax_failsï¼Œåˆ™è®¤ä¸ºè¯¥æœåŠ¡å™¨ä¸å¯ç”¨ï¼Œé‚£ä¹ˆå¦‚æœä¸å¯ç”¨äº†ï¼Œåç«¯è¯¥æœåŠ¡å™¨æœ‰æ¢å¤äº†æ€ä¹ˆåˆ¤æ–­æ£€æµ‹å‘¢?
+       ç­”:å½“è¿™ä¸ªfail_timeoutæ—¶é—´æ®µè¿‡äº†åï¼Œä¼šé‡ç½®peer->checkedï¼Œé‚£ä¹ˆæœ‰å¯ä»¥è¯•æ¢è¯¥æœåŠ¡å™¨äº†
      */
     if (now - best->checked > best->fail_timeout) {
         best->checked = now;
@@ -817,65 +817,65 @@ ngx_http_upstream_get_peer(ngx_http_upstream_rr_peer_data_t *rrp)//ngx_http_upst
     return best;
 }
 /*
-Load-blanceÄ£¿éÖĞ4¸ö¹Ø¼ü»Øµ÷º¯Êı£º
-»Øµ÷Ö¸Õë                  º¯Êı¹¦ÄÜ                          round_robinÄ£¿é                     IP_hashÄ£¿é
+Load-blanceæ¨¡å—ä¸­4ä¸ªå…³é”®å›è°ƒå‡½æ•°ï¼š
+å›è°ƒæŒ‡é’ˆ                  å‡½æ•°åŠŸèƒ½                          round_robinæ¨¡å—                     IP_hashæ¨¡å—
  
-uscf->peer.init_upstream (Ä¬ÈÏÎªngx_http_upstream_init_round_robin ÔÚngx_http_upstream_init_main_confÖĞÖ´ĞĞ)
-½âÎöÅäÖÃÎÄ¼ş¹ı³ÌÖĞµ÷ÓÃ£¬¸ù¾İupstreamÀï¸÷¸öserverÅäÖÃÏî×ö³õÊ¼×¼±¸¹¤×÷£¬ÁíÍâµÄºËĞÄ¹¤×÷ÊÇÉèÖÃ»Øµ÷Ö¸Õëus->peer.init¡£ÅäÖÃÎÄ¼ş½âÎöÍêºó²»ÔÙ±»µ÷ÓÃ
+uscf->peer.init_upstream (é»˜è®¤ä¸ºngx_http_upstream_init_round_robin åœ¨ngx_http_upstream_init_main_confä¸­æ‰§è¡Œ)
+è§£æé…ç½®æ–‡ä»¶è¿‡ç¨‹ä¸­è°ƒç”¨ï¼Œæ ¹æ®upstreamé‡Œå„ä¸ªserveré…ç½®é¡¹åšåˆå§‹å‡†å¤‡å·¥ä½œï¼Œå¦å¤–çš„æ ¸å¿ƒå·¥ä½œæ˜¯è®¾ç½®å›è°ƒæŒ‡é’ˆus->peer.initã€‚é…ç½®æ–‡ä»¶è§£æå®Œåä¸å†è¢«è°ƒç”¨
 
 ngx_http_upstream_init_round_robin
-ÉèÖÃ£ºus->peer.init = ngx_http_upstream_init_round_robin_peer;
+è®¾ç½®ï¼šus->peer.init = ngx_http_upstream_init_round_robin_peer;
  
 ngx_http_upstream_init_ip_hash
-ÉèÖÃ£ºus->peer.init = ngx_http_upstream_init_ip_hash_peer;
+è®¾ç½®ï¼šus->peer.init = ngx_http_upstream_init_ip_hash_peer;
  
 
 
 us->peer.init
-ÔÚÃ¿Ò»´ÎNginx×¼±¸×ª·¢¿Í»§¶ËÇëÇóµ½ºó¶Ë·şÎñÆ÷Ç°¶¼»áµ÷ÓÃ¸Ãº¯Êı¡£¸Ãº¯ÊıÎª±¾´Î×ª·¢Ñ¡ÔñºÏÊÊµÄºó¶Ë·şÎñÆ÷×ö³õÊ¼×¼±¸¹¤×÷£¬ÁíÍâµÄºËĞÄ¹¤
-×÷ÊÇÉèÖÃ»Øµ÷Ö¸Õër->upstream->peer.getºÍr->upstream->peer.freeµÈ
+åœ¨æ¯ä¸€æ¬¡Nginxå‡†å¤‡è½¬å‘å®¢æˆ·ç«¯è¯·æ±‚åˆ°åç«¯æœåŠ¡å™¨å‰éƒ½ä¼šè°ƒç”¨è¯¥å‡½æ•°ã€‚è¯¥å‡½æ•°ä¸ºæœ¬æ¬¡è½¬å‘é€‰æ‹©åˆé€‚çš„åç«¯æœåŠ¡å™¨åšåˆå§‹å‡†å¤‡å·¥ä½œï¼Œå¦å¤–çš„æ ¸å¿ƒå·¥
+ä½œæ˜¯è®¾ç½®å›è°ƒæŒ‡é’ˆr->upstream->peer.getå’Œr->upstream->peer.freeç­‰
  
 ngx_http_upstream_init_round_robin_peer
-ÉèÖÃ£ºr->upstream->peer.get = ngx_http_upstream_get_round_robin_peer;
+è®¾ç½®ï¼šr->upstream->peer.get = ngx_http_upstream_get_round_robin_peer;
 r->upstream->peer.free = ngx_http_upstream_free_round_robin_peer;
  
 ngx_http_upstream_init_ip_hash_peer
-ÉèÖÃ£ºr->upstream->peer.get = ngx_http_upstream_get_ip_hash_peer;
-r->upstream->peer.freeÎª¿Õ
+è®¾ç½®ï¼šr->upstream->peer.get = ngx_http_upstream_get_ip_hash_peer;
+r->upstream->peer.freeä¸ºç©º
  
 
 
 r->upstream->peer.get
-ÔÚÃ¿Ò»´ÎNginx×¼±¸×ª·¢¿Í»§¶ËÇëÇóµ½ºó¶Ë·şÎñÆ÷Ç°¶¼»áµ÷ÓÃ¸Ãº¯Êı¡£¸Ãº¯ÊıÊµÏÖ¾ßÌåµÄÎ»±¾´Î×ª·¢Ñ¡ÔñºÏÊÊµÄºó¶Ë·şÎñÆ÷µÄËã·¨Âß¼­£¬¼´
-Íê³ÉÑ¡Ôñ»ñÈ¡ºÏÊÊºó¶Ë·şÎñÆ÷µÄ¹¦ÄÜ
+åœ¨æ¯ä¸€æ¬¡Nginxå‡†å¤‡è½¬å‘å®¢æˆ·ç«¯è¯·æ±‚åˆ°åç«¯æœåŠ¡å™¨å‰éƒ½ä¼šè°ƒç”¨è¯¥å‡½æ•°ã€‚è¯¥å‡½æ•°å®ç°å…·ä½“çš„ä½æœ¬æ¬¡è½¬å‘é€‰æ‹©åˆé€‚çš„åç«¯æœåŠ¡å™¨çš„ç®—æ³•é€»è¾‘ï¼Œå³
+å®Œæˆé€‰æ‹©è·å–åˆé€‚åç«¯æœåŠ¡å™¨çš„åŠŸèƒ½
  
 ngx_http_upstream_get_round_robin_peer
-¼ÓÈ¨Ñ¡Ôñµ±Ç°È¨Öµ×î¸ßµÄºó¶Ë·şÎñÆ÷
+åŠ æƒé€‰æ‹©å½“å‰æƒå€¼æœ€é«˜çš„åç«¯æœåŠ¡å™¨
  
 ngx_http_upstream_get_ip_hash_peer
-¸ù¾İIP¹şÏ£ÖµÑ¡Ôñºó¶Ë·şÎñÆ÷
+æ ¹æ®IPå“ˆå¸Œå€¼é€‰æ‹©åç«¯æœåŠ¡å™¨
  
 
 
 
 
 r->upstream->peer.free
-ÔÚÃ¿Ò»´ÎNginxÍê³ÉÓëºó¶Ë·şÎñÆ÷Ö®¼äµÄ½»»¥ºó¶¼»áµ÷ÓÃ¸Ãº¯Êı¡£
+åœ¨æ¯ä¸€æ¬¡Nginxå®Œæˆä¸åç«¯æœåŠ¡å™¨ä¹‹é—´çš„äº¤äº’åéƒ½ä¼šè°ƒç”¨è¯¥å‡½æ•°ã€‚
 ngx_http_upstream_free_round_robin_peer
-¸üĞÂÏà¹ØÊıÖµ£¬±ÈÈçrrp->current
+æ›´æ–°ç›¸å…³æ•°å€¼ï¼Œæ¯”å¦‚rrp->current
 
-ÂÖÑ¯²ßÂÔºÍIP¹şÏ£²ßÂÔ¶Ô±È
-¼ÓÈ¨ÂÖÑ¯²ßÂÔ
-ÓÅµã£ºÊÊÓÃĞÔ¸üÇ¿£¬²»ÒÀÀµÓÚ¿Í»§¶ËµÄÈÎºÎĞÅÏ¢£¬ÍêÈ«ÒÀ¿¿ºó¶Ë·şÎñÆ÷µÄÇé¿öÀ´½øĞĞÑ¡Ôñ¡£ÄÜ°Ñ¿Í»§¶ËÇëÇó¸üºÏÀí¸ü¾ùÔÈµØ·ÖÅäµ½¸÷¸öºó¶Ë·şÎñÆ÷´¦Àí¡£
-È±µã£ºÍ¬Ò»¸ö¿Í»§¶ËµÄ¶à´ÎÇëÇó¿ÉÄÜ»á±»·ÖÅäµ½²»Í¬µÄºó¶Ë·şÎñÆ÷½øĞĞ´¦Àí£¬ÎŞ·¨Âú×ã×ö»á»°±£³ÖµÄÓ¦ÓÃµÄĞèÇó¡£
+è½®è¯¢ç­–ç•¥å’ŒIPå“ˆå¸Œç­–ç•¥å¯¹æ¯”
+åŠ æƒè½®è¯¢ç­–ç•¥
+ä¼˜ç‚¹ï¼šé€‚ç”¨æ€§æ›´å¼ºï¼Œä¸ä¾èµ–äºå®¢æˆ·ç«¯çš„ä»»ä½•ä¿¡æ¯ï¼Œå®Œå…¨ä¾é åç«¯æœåŠ¡å™¨çš„æƒ…å†µæ¥è¿›è¡Œé€‰æ‹©ã€‚èƒ½æŠŠå®¢æˆ·ç«¯è¯·æ±‚æ›´åˆç†æ›´å‡åŒ€åœ°åˆ†é…åˆ°å„ä¸ªåç«¯æœåŠ¡å™¨å¤„ç†ã€‚
+ç¼ºç‚¹ï¼šåŒä¸€ä¸ªå®¢æˆ·ç«¯çš„å¤šæ¬¡è¯·æ±‚å¯èƒ½ä¼šè¢«åˆ†é…åˆ°ä¸åŒçš„åç«¯æœåŠ¡å™¨è¿›è¡Œå¤„ç†ï¼Œæ— æ³•æ»¡è¶³åšä¼šè¯ä¿æŒçš„åº”ç”¨çš„éœ€æ±‚ã€‚
 
-IP¹şÏ£²ßÂÔ
-ÓÅµã£ºÄÜ½ÏºÃµØ°ÑÍ¬Ò»¸ö¿Í»§¶ËµÄ¶à´ÎÇëÇó·ÖÅäµ½Í¬Ò»Ì¨·şÎñÆ÷´¦Àí£¬±ÜÃâÁË¼ÓÈ¨ÂÖÑ¯ÎŞ·¨ÊÊÓÃ»á»°±£³ÖµÄĞèÇó¡£
-È±µã£ºµ±Ä³¸öÊ±¿ÌÀ´×ÔÄ³¸öIPµØÖ·µÄÇëÇóÌØ±ğ¶à£¬ÄÇÃ´½«µ¼ÖÂÄ³Ì¨ºó¶Ë·şÎñÆ÷µÄÑ¹Á¦¿ÉÄÜ·Ç³£´ó£¬¶øÆäËûºó¶Ë·şÎñÆ÷È´¿ÕÏĞµÄ²»¾ùºâÇé¿ö¡¢
+IPå“ˆå¸Œç­–ç•¥
+ä¼˜ç‚¹ï¼šèƒ½è¾ƒå¥½åœ°æŠŠåŒä¸€ä¸ªå®¢æˆ·ç«¯çš„å¤šæ¬¡è¯·æ±‚åˆ†é…åˆ°åŒä¸€å°æœåŠ¡å™¨å¤„ç†ï¼Œé¿å…äº†åŠ æƒè½®è¯¢æ— æ³•é€‚ç”¨ä¼šè¯ä¿æŒçš„éœ€æ±‚ã€‚
+ç¼ºç‚¹ï¼šå½“æŸä¸ªæ—¶åˆ»æ¥è‡ªæŸä¸ªIPåœ°å€çš„è¯·æ±‚ç‰¹åˆ«å¤šï¼Œé‚£ä¹ˆå°†å¯¼è‡´æŸå°åç«¯æœåŠ¡å™¨çš„å‹åŠ›å¯èƒ½éå¸¸å¤§ï¼Œè€Œå…¶ä»–åç«¯æœåŠ¡å™¨å´ç©ºé—²çš„ä¸å‡è¡¡æƒ…å†µã€
 
 */
 
-//ngx_http_upstream_free_round_robin_peerº¯Êı½«·şÎñÆ÷µÄ±êÖ¾×Ö¶Î¶¼»Ö¸´µ½³õÊ¼×´Ì¬£¬ÒÔ±ãºóĞøÊ¹ÓÃ
+//ngx_http_upstream_free_round_robin_peerå‡½æ•°å°†æœåŠ¡å™¨çš„æ ‡å¿—å­—æ®µéƒ½æ¢å¤åˆ°åˆå§‹çŠ¶æ€ï¼Œä»¥ä¾¿åç»­ä½¿ç”¨
 void
 ngx_http_upstream_free_round_robin_peer(ngx_peer_connection_t *pc, void *data,
     ngx_uint_t state)
@@ -906,17 +906,17 @@ ngx_http_upstream_free_round_robin_peer(ngx_peer_connection_t *pc, void *data,
         return;
     }
 
-    if (state & NGX_PEER_FAILED) { //´Óngx_http_upstream_next×ßµ½ÕâÀï
+    if (state & NGX_PEER_FAILED) { //ä»ngx_http_upstream_nextèµ°åˆ°è¿™é‡Œ
         now = ngx_time();
 
         peer->fails++;
-        peer->accessed = now; //Ñ¡È¡µÄºó¶Ë·şÎñÆ÷Òì³£Ôò¸úĞÂaccessedÊ±¼äÎªµ±Ç°Ñ¡È¡ºó¶Ë·şÎñÆ÷µÄÊ±ºò¼ì²âµ½Òì³£µÄÊ±¼ä
+        peer->accessed = now; //é€‰å–çš„åç«¯æœåŠ¡å™¨å¼‚å¸¸åˆ™è·Ÿæ–°accessedæ—¶é—´ä¸ºå½“å‰é€‰å–åç«¯æœåŠ¡å™¨çš„æ—¶å€™æ£€æµ‹åˆ°å¼‚å¸¸çš„æ—¶é—´
         peer->checked = now;
 
-        if (peer->max_fails) {//·şÎñ·¢ÉúÒì³£Ê±£¬µ÷µÍeffective_weight
-            peer->effective_weight -= peer->weight / peer->max_fails;//·şÎñ·¢ÉúÒì³£Ê±£¬µ÷µÍeffective_weight
+        if (peer->max_fails) {//æœåŠ¡å‘ç”Ÿå¼‚å¸¸æ—¶ï¼Œè°ƒä½effective_weight
+            peer->effective_weight -= peer->weight / peer->max_fails;//æœåŠ¡å‘ç”Ÿå¼‚å¸¸æ—¶ï¼Œè°ƒä½effective_weight
 
-            if (peer->fails >= peer->max_fails) { //³¬¹ıÔÊĞíµÄ×î´óÊ§°Ü´ÎÊı
+            if (peer->fails >= peer->max_fails) { //è¶…è¿‡å…è®¸çš„æœ€å¤§å¤±è´¥æ¬¡æ•°
                 ngx_log_error(NGX_LOG_WARN, pc->log, 0,
                               "upstream server temporarily disabled");
             }
@@ -933,10 +933,10 @@ ngx_http_upstream_free_round_robin_peer(ngx_peer_connection_t *pc, void *data,
     } else {
 
         /* mark peer live if check passed */
-        //Ò»¸öfail_timeoutÊ±¼ä¶Îµ½ÁË£¬Ôò¸úĞÂchecekedÎªµ±Ç°Ê±¼ä
+        //ä¸€ä¸ªfail_timeoutæ—¶é—´æ®µåˆ°äº†ï¼Œåˆ™è·Ÿæ–°checekedä¸ºå½“å‰æ—¶é—´
         if (peer->accessed < peer->checked) { 
-        //´Ó»ñÈ¡ºó¶ËÊ§°Ü²¢ÇÒÅĞ¶Ï´ïµ½×î´óÉÏÏŞÊ§°Ü´ÎÊı£¬Ôò»á¸´»î¸Ãºó¶Ë·şÎñÆ÷£¬Í¬Ê±ÔÙ´ÎÑ¡Ôñ¸Ã·şÎñÆ÷£¬Èç¹û¸Ã·şÎñÆ÷ÓÖÓĞĞ§ÁË£¬Ôò»áÉèÖÃcheckedÎªµ±Ç°Ê±¼ä
-        //ÕâÊ±ºòpeer->accessed < peer->checkedÂú×ãÌõ¼ş£¬°ÑfailsÇå0
+        //ä»è·å–åç«¯å¤±è´¥å¹¶ä¸”åˆ¤æ–­è¾¾åˆ°æœ€å¤§ä¸Šé™å¤±è´¥æ¬¡æ•°ï¼Œåˆ™ä¼šå¤æ´»è¯¥åç«¯æœåŠ¡å™¨ï¼ŒåŒæ—¶å†æ¬¡é€‰æ‹©è¯¥æœåŠ¡å™¨ï¼Œå¦‚æœè¯¥æœåŠ¡å™¨åˆæœ‰æ•ˆäº†ï¼Œåˆ™ä¼šè®¾ç½®checkedä¸ºå½“å‰æ—¶é—´
+        //è¿™æ—¶å€™peer->accessed < peer->checkedæ»¡è¶³æ¡ä»¶ï¼ŒæŠŠfailsæ¸…0
             peer->fails = 0;
         }
     }

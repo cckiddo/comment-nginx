@@ -48,7 +48,7 @@ static ngx_conf_post_t  ngx_http_v2_chunk_size_post =
 
 
 static ngx_command_t  ngx_http_v2_commands[] = {
-    //ÉèÖÃÃ¿Ò»¸öworkerµÄÊäÈë»º³åÇø´óĞ¡
+    //è®¾ç½®æ¯ä¸€ä¸ªworkerçš„è¾“å…¥ç¼“å†²åŒºå¤§å°
     { ngx_string("http2_recv_buffer_size"),
       NGX_HTTP_MAIN_CONF|NGX_CONF_TAKE1,
       ngx_conf_set_size_slot,
@@ -63,7 +63,7 @@ static ngx_command_t  ngx_http_v2_commands[] = {
       offsetof(ngx_http_v2_srv_conf_t, pool_size),
       &ngx_http_v2_pool_size_post },
 
-    //ÉèÖÃÒ»¸öÁ¬½ÓÖĞ×î´ó²¢·¢Á÷µÄÊıÁ¿
+    //è®¾ç½®ä¸€ä¸ªè¿æ¥ä¸­æœ€å¤§å¹¶å‘æµçš„æ•°é‡
     { ngx_string("http2_max_concurrent_streams"),
       NGX_HTTP_MAIN_CONF|NGX_HTTP_SRV_CONF|NGX_CONF_TAKE1,
       ngx_conf_set_num_slot,
@@ -71,7 +71,7 @@ static ngx_command_t  ngx_http_v2_commands[] = {
       offsetof(ngx_http_v2_srv_conf_t, concurrent_streams),
       NULL },
 
-    //ÏŞÖÆ¾­¹ıHPACKÑ¹ËõºóÇëÇóÍ·ÖĞÃ¿¸ö×Ö¶ÎµÄ×î´ó³ß´ç¡£
+    //é™åˆ¶ç»è¿‡HPACKå‹ç¼©åè¯·æ±‚å¤´ä¸­æ¯ä¸ªå­—æ®µçš„æœ€å¤§å°ºå¯¸ã€‚
     { ngx_string("http2_max_field_size"),
       NGX_HTTP_MAIN_CONF|NGX_HTTP_SRV_CONF|NGX_CONF_TAKE1,
       ngx_conf_set_size_slot,
@@ -79,7 +79,7 @@ static ngx_command_t  ngx_http_v2_commands[] = {
       offsetof(ngx_http_v2_srv_conf_t, max_field_size),
       NULL },
 
-    //ÏŞÖÆ¾­¹ıHPACKÑ¹ËõºóÍêÕûÇëÇóÍ·µÄ×î´ó³ß´ç¡£
+    //é™åˆ¶ç»è¿‡HPACKå‹ç¼©åå®Œæ•´è¯·æ±‚å¤´çš„æœ€å¤§å°ºå¯¸ã€‚
     { ngx_string("http2_max_header_size"),
       NGX_HTTP_MAIN_CONF|NGX_HTTP_SRV_CONF|NGX_CONF_TAKE1,
       ngx_conf_set_size_slot,
@@ -101,7 +101,7 @@ static ngx_command_t  ngx_http_v2_commands[] = {
       offsetof(ngx_http_v2_srv_conf_t, recv_timeout),
       NULL },
 
-    /* ÉèÖÃ¿ÕÏĞÁ¬½Ó¹Ø±ÕµÄ³¬Ê±Ê±¼ä¡£ */
+    /* è®¾ç½®ç©ºé—²è¿æ¥å…³é—­çš„è¶…æ—¶æ—¶é—´ã€‚ */
     { ngx_string("http2_idle_timeout"),
       NGX_HTTP_MAIN_CONF|NGX_HTTP_SRV_CONF|NGX_CONF_TAKE1,
       ngx_conf_set_msec_slot,
@@ -109,8 +109,8 @@ static ngx_command_t  ngx_http_v2_commands[] = {
       offsetof(ngx_http_v2_srv_conf_t, idle_timeout),
       NULL },
 
-    /* ÉèÖÃÏìÓ¦±¨ÎÄÄÚÈİ£¨response body£©·ÖÆ¬µÄ×î´ó³¤¶È¡£Èç¹ûÕâ¸öÖµ¹ıĞ¡£¬½«»á´øÀ´¸ü¸ßµÄ¿ªÏú£¬
-    Èç¹ûÖµ¹ı´ó£¬Ôò»áµ¼ÖÂÏßÍ·×èÈûµÄÎÊÌâ¡£Ä¬ÈÏ´óĞ¡8k¡£ */
+    /* è®¾ç½®å“åº”æŠ¥æ–‡å†…å®¹ï¼ˆresponse bodyï¼‰åˆ†ç‰‡çš„æœ€å¤§é•¿åº¦ã€‚å¦‚æœè¿™ä¸ªå€¼è¿‡å°ï¼Œå°†ä¼šå¸¦æ¥æ›´é«˜çš„å¼€é”€ï¼Œ
+    å¦‚æœå€¼è¿‡å¤§ï¼Œåˆ™ä¼šå¯¼è‡´çº¿å¤´é˜»å¡çš„é—®é¢˜ã€‚é»˜è®¤å¤§å°8kã€‚ */
     { ngx_string("http2_chunk_size"),
       NGX_HTTP_MAIN_CONF|NGX_HTTP_SRV_CONF|NGX_HTTP_LOC_CONF|NGX_CONF_TAKE1,
       ngx_conf_set_size_slot,

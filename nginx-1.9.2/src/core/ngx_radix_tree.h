@@ -17,26 +17,26 @@
 
 typedef struct ngx_radix_node_s  ngx_radix_node_t;
 
-//�ο�<��������nginx> ͼ7-9
+//参考<深入理解nginx> 图7-9
 struct ngx_radix_node_s {
-    ngx_radix_node_t  *right; //ָ�������������û������������ֵΪnull��ָ��
-    ngx_radix_node_t  *left; //ָ�������������û������������ֵΪnull��ָ��
-    ngx_radix_node_t  *parent; //ָ�򸸽ڵ㣬���û�и��ڵ㣬������ڵ㣩ֵΪnull��ָ��
-    uintptr_t          value; //value�洢����ָ���ֵ����ָ���û���������ݽṹ���������ڵ㻹δʹ�ã�value��ֵ����NGX_RADIX_NO_VALUE
+    ngx_radix_node_t  *right; //指向右子树，如果没有右子树，则值为null空指针
+    ngx_radix_node_t  *left; //指向左子树，如果没有左子树，则值为null空指针
+    ngx_radix_node_t  *parent; //指向父节点，如果没有父节点，则（如根节点）值为null空指针
+    uintptr_t          value; //value存储的是指针的值，它指向用户定义的数据结构。如果这个节点还未使用，value的值将是NGX_RADIX_NO_VALUE
 };
 
 /*
-ÿ��ɾ��1���ڵ�ʱ��ngx_radix_treej�������������ͷ�����ڵ�ռ�õ��ڴ棬���ǰ������ӵ�free�������С��������������µĽڵ�ʱ������
-�Ȳ鿴free���Ƿ��нڵ㣬���free����δʹ�õĽڵ㣬�������ʹ�ã����û�У��ͻ��ٴ�pool�ڴ���з������ڴ�洢�ڵ㡣
+每次删除1个节点时，ngx_radix_treej基数树并不会释放这个节点占用的内存，而是把它添加到free单链表中。这样，在添加新的节点时，会首
+先查看free中是否还有节点，如果free中有未使用的节点，则会优先使用，如果没有，就会再从pool内存池中分配新内存存储节点。
 
-����ngx_radix_tree-t�ṹ����˵������ʹ�õĽǶ����������ǲ���Ҫ�˽�pool��free��start��size��Щ��Ա�����壬���˽����ʹ��root���ڵ㼴�ɡ�
+对于ngx_radix_tree-t结构体来说，仅从使用的角度来看，我们不需要了解pool、free、start、size这些成员的意义，仅了解如何使用root根节点即可。
 */
 typedef struct {
-    ngx_radix_node_t  *root;  //ָ����ڵ�
-    ngx_pool_t        *pool;  //�ڴ�أ���������������Ľڵ�����ڴ�
-    ngx_radix_node_t  *free;  //�����Ѿ����䵫��ʱδʹ�ã��������У��Ľڵ㣬freeʵ���������в������нڵ�ĵ�����
-    char              *start; //�ѷ����ڴ��л�δʹ���ڴ���׵�ַ
-    size_t             size;  //�ѷ����ڴ��л�δʹ�õ��ڴ��С
+    ngx_radix_node_t  *root;  //指向根节点
+    ngx_pool_t        *pool;  //内存池，它负责给基数树的节点分配内存
+    ngx_radix_node_t  *free;  //管理已经分配但暂时未使用（不在树中）的节点，free实际上是所有不在树中节点的单链表
+    char              *start; //已分配内存中还未使用内存的首地址
+    size_t             size;  //已分配内存中还未使用的内存大小
 } ngx_radix_tree_t;
 
 

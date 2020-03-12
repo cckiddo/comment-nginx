@@ -73,7 +73,7 @@
 #include <sys/sendfile.h>
 #else
 extern ssize_t sendfile(int s, int fd, int32_t *offset, size_t size);
-#define NGX_SENDFILE_LIMIT  0x80000000 //sendfile·¢ËÍÎÄ¼şµÄÉÏÏŞÖµ
+#define NGX_SENDFILE_LIMIT  0x80000000 //sendfileå‘é€æ–‡ä»¶çš„ä¸Šé™å€¼
 #endif
 
 
@@ -96,7 +96,7 @@ extern ssize_t sendfile(int s, int fd, int32_t *offset, size_t size);
 typedef struct iocb  ngx_aiocb_t;
 #endif
 
-//TCPÊµÏÖ¼àÌıÊ±µÄbacklog¶ÓÁĞ£¬Ëü±íÊ¾ÔÊĞíÕıÔÚÍ¨¹ıÈı´ÎÎÕÊÖ½¨Á¢TCPÁ¬½Óµ«»¹Ã»ÓĞÈÎºÎ½ø³Ì¿ªÊ¼´¦ÀíµÄÁ¬½Ó×î´ó¸öÊı
+//TCPå®ç°ç›‘å¬æ—¶çš„backlogé˜Ÿåˆ—ï¼Œå®ƒè¡¨ç¤ºå…è®¸æ­£åœ¨é€šè¿‡ä¸‰æ¬¡æ¡æ‰‹å»ºç«‹TCPè¿æ¥ä½†è¿˜æ²¡æœ‰ä»»ä½•è¿›ç¨‹å¼€å§‹å¤„ç†çš„è¿æ¥æœ€å¤§ä¸ªæ•°
 #define NGX_LISTEN_BACKLOG        511  //
 
 

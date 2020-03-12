@@ -13,12 +13,12 @@
 #include <ngx_core.h>
 
 /*
-Nginx�е�ÿ�����̶��ᵥ���ع�����ǰʱ�䣬��������һ�»����ȫ��ʱ�������ʲô
+Nginx中的每个进程都会单独地管理当前时间，下面来看一下缓存的全局时间变量是什么
 */
 typedef struct {
-    time_t      sec; //��������ʱ��1970��1��1���賿o��o��o�뵽��ǰʱ�������
-    ngx_uint_t  msec; //sec��Աֻ�ܾ�ȷ���룬msec���ǵ�ǰʱ�������sec�ĺ���ƫ����
-    ngx_int_t   gmtoff; //ʱ��
+    time_t      sec; //格林威治时间1970年1月1日凌晨o点o分o秒到当前时间的秒数
+    ngx_uint_t  msec; //sec成员只能精确到秒，msec别是当前时间相对于sec的毫秒偏移量
+    ngx_int_t   gmtoff; //时区
 } ngx_time_t;
 
 

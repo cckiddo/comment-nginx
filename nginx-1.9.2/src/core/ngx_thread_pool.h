@@ -13,19 +13,19 @@
 #include <ngx_core.h>
 #include <ngx_event.h>
 
-//ÔÚÖĞÌí¼Óµ½ÁËngx_thread_pool_s->queue¶ÓÁĞÖĞ£¬Ò²¾ÍÊÇÌí¼Óµ½ngx_thread_pool_s¶ÔÓ¦µÄÏß³Ì³Ø¶ÓÁĞÖĞ
+//åœ¨ä¸­æ·»åŠ åˆ°äº†ngx_thread_pool_s->queueé˜Ÿåˆ—ä¸­ï¼Œä¹Ÿå°±æ˜¯æ·»åŠ åˆ°ngx_thread_pool_så¯¹åº”çš„çº¿ç¨‹æ± é˜Ÿåˆ—ä¸­
 struct ngx_thread_task_s {
-    ngx_thread_task_t   *next; //Ö¸ÏòÏÂÒ»¸öÌá½»µÄÈÎÎñ  
-    ngx_uint_t           id; //ÈÎÎñid  Ã»Ìí¼ÓÒ»¸öÈÎÎñ¾Í×ÔÔö¼Ó£¬¼ûngx_thread_pool_task_id
-    void                *ctx; //Ö´ĞĞ»Øµ÷º¯ÊıµÄ²ÎÊı  
-    //ngx_thread_pool_cycleÖĞÖ´ĞĞ
-    void               (*handler)(void *data, ngx_log_t *log); //»Øµ÷º¯Êı   Ö´ĞĞÍêhandlerºó»áÍ¨¹ıngx_notifyÖ´ĞĞevent->handler 
-    //Ö´ĞĞÍêhandlerºó»áÍ¨¹ıngx_notifyÖ´ĞĞevent->handler 
-    ngx_event_t          event; //Ò»¸öÈÎÎñºÍÒ»¸öÊÂ¼ş¶ÔÓ¦  ÊÂ¼şÔÚÍ¨¹ıngx_notifyÔÚngx_thread_pool_handlerÖĞÖ´ĞĞ
+    ngx_thread_task_t   *next; //æŒ‡å‘ä¸‹ä¸€ä¸ªæäº¤çš„ä»»åŠ¡  
+    ngx_uint_t           id; //ä»»åŠ¡id  æ²¡æ·»åŠ ä¸€ä¸ªä»»åŠ¡å°±è‡ªå¢åŠ ï¼Œè§ngx_thread_pool_task_id
+    void                *ctx; //æ‰§è¡Œå›è°ƒå‡½æ•°çš„å‚æ•°  
+    //ngx_thread_pool_cycleä¸­æ‰§è¡Œ
+    void               (*handler)(void *data, ngx_log_t *log); //å›è°ƒå‡½æ•°   æ‰§è¡Œå®Œhandleråä¼šé€šè¿‡ngx_notifyæ‰§è¡Œevent->handler 
+    //æ‰§è¡Œå®Œhandleråä¼šé€šè¿‡ngx_notifyæ‰§è¡Œevent->handler 
+    ngx_event_t          event; //ä¸€ä¸ªä»»åŠ¡å’Œä¸€ä¸ªäº‹ä»¶å¯¹åº”  äº‹ä»¶åœ¨é€šè¿‡ngx_notifyåœ¨ngx_thread_pool_handlerä¸­æ‰§è¡Œ
 };
 
 
-typedef struct ngx_thread_pool_s  ngx_thread_pool_t;//Ò»¸ö¸Ã½á¹¹¶ÔÓ¦Ò»¸öthreads_poolÏß³Ì³ØÅäÖÃ
+typedef struct ngx_thread_pool_s  ngx_thread_pool_t;//ä¸€ä¸ªè¯¥ç»“æ„å¯¹åº”ä¸€ä¸ªthreads_poolçº¿ç¨‹æ± é…ç½®
 
 ngx_thread_pool_t *ngx_thread_pool_add(ngx_conf_t *cf, ngx_str_t *name);
 ngx_thread_pool_t *ngx_thread_pool_get(ngx_cycle_t *cycle, ngx_str_t *name);

@@ -101,7 +101,7 @@ uint32_t  ngx_crc32_table256[] = {
 
 uint32_t *ngx_crc32_table_short = ngx_crc32_table16;
 
-//µ÷ÓÃngx_crc32_table_init()³õÊ¼»¯CRC±í(ºóĞøµÄCRCĞ£ÑéÍ¨¹ı²é±í½øĞĞ£¬Ğ§ÂÊ¸ß)£»
+//è°ƒç”¨ngx_crc32_table_init()åˆå§‹åŒ–CRCè¡¨(åç»­çš„CRCæ ¡éªŒé€šè¿‡æŸ¥è¡¨è¿›è¡Œï¼Œæ•ˆç‡é«˜)ï¼›
 ngx_int_t
 ngx_crc32_table_init(void)
 {

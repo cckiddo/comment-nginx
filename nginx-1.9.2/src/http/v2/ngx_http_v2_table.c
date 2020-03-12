@@ -17,8 +17,8 @@ static ngx_int_t ngx_http_v2_table_account(ngx_http_v2_connection_t *h2c,
     size_t size);
 
 /**/
-//headerÖ¡ÄÚÈİ²¿·Ö£¬¿ÉÒÔÍ¨¹ı1×Ö½ÚÀ´»ñÈ¡µ½¶ÔÓ¦µÄname:value£¬ÀıÈç¿Í»§¶Ë·¢ËÍ¹ıÀ´µÄÒ»×Ö½Ú±àÂë×ª»»ºóÎª2£¬Ôò¶ÔÓ¦method:POSTÍ·²¿ĞĞ
-//HPACK Ê¹ÓÃ2¸öË÷Òı±í(¾²Ì¬Ë÷Òı±íºÍ¶¯Ì¬Ë÷Òı±í)À´°ÑÍ·²¿Ó³Éäµ½Ë÷ÒıÖµ,ÕâÀïµÄngx_http_v2_static_tableÊÇ¾²Ì¬Ë÷Òı±í
+//headerå¸§å†…å®¹éƒ¨åˆ†ï¼Œå¯ä»¥é€šè¿‡1å­—èŠ‚æ¥è·å–åˆ°å¯¹åº”çš„name:valueï¼Œä¾‹å¦‚å®¢æˆ·ç«¯å‘é€è¿‡æ¥çš„ä¸€å­—èŠ‚ç¼–ç è½¬æ¢åä¸º2ï¼Œåˆ™å¯¹åº”method:POSTå¤´éƒ¨è¡Œ
+//HPACK ä½¿ç”¨2ä¸ªç´¢å¼•è¡¨(é™æ€ç´¢å¼•è¡¨å’ŒåŠ¨æ€ç´¢å¼•è¡¨)æ¥æŠŠå¤´éƒ¨æ˜ å°„åˆ°ç´¢å¼•å€¼,è¿™é‡Œçš„ngx_http_v2_static_tableæ˜¯é™æ€ç´¢å¼•è¡¨
 static ngx_http_v2_header_t  ngx_http_v2_static_table[] = {
     { ngx_string(":authority"), ngx_string("") },  //0   
     { ngx_string(":method"), ngx_string("GET") },
@@ -84,16 +84,16 @@ static ngx_http_v2_header_t  ngx_http_v2_static_table[] = {
 };
 
 /*
-¾²Ì¬±íµÄ´óĞ¡ÏÖÔÚÊÇ¹Ì¶¨µÄ61£¬ Òò´Ë¾²Ì¬±í¾ÍÊÇ´Ó1µ½61µÄË÷Òı£¬È»ºó¶¯Ì¬±í´ÓĞÂµ½¾É£¬ÒÀ´Î´Ó62¿ªÊ¼µİÔö¡£
-ÕâÑù¾Í¹²Í¬µÄ×é³ÉÁËÒ»¸öË÷Òı¿Õ¼ä£¬ÇÒ»¥²»³åÍ»¡£
+é™æ€è¡¨çš„å¤§å°ç°åœ¨æ˜¯å›ºå®šçš„61ï¼Œ å› æ­¤é™æ€è¡¨å°±æ˜¯ä»1åˆ°61çš„ç´¢å¼•ï¼Œç„¶ååŠ¨æ€è¡¨ä»æ–°åˆ°æ—§ï¼Œä¾æ¬¡ä»62å¼€å§‹é€’å¢ã€‚
+è¿™æ ·å°±å…±åŒçš„ç»„æˆäº†ä¸€ä¸ªç´¢å¼•ç©ºé—´ï¼Œä¸”äº’ä¸å†²çªã€‚
 */
-//ngx_http_v2_static_table¾²Ì¬±í³ÉÔ±Êı
+//ngx_http_v2_static_tableé™æ€è¡¨æˆå‘˜æ•°
 #define NGX_HTTP_V2_STATIC_TABLE_ENTRIES                                      \
     (sizeof(ngx_http_v2_static_table)                                         \
      / sizeof(ngx_http_v2_header_t))
 
-/* ¸ù¾İindexË÷Òı´Ó¾²Ì¬±í»òÕß¶¯Ì¬±íÖĞ»ñÈ¡name:value´æÈëµ½h2c->state.header£¬µÚÒ»´Î·¢ËÍname:value¹ıÀ´£¬µÚ¶ş´Î
-   ¾Í¿ÉÒÔÖ±½Ó·¢ËÍÖ®Ç°name:value¶ÔÓ¦µÄË÷Òı¹ıÀ´¾Í¿ÉÒÔ¶¨Î»µ½¶ÔÓ¦µÄname:value£¬´Ó¶ø½ÚÔ¼ÍøÂç×ÊÔ´
+/* æ ¹æ®indexç´¢å¼•ä»é™æ€è¡¨æˆ–è€…åŠ¨æ€è¡¨ä¸­è·å–name:valueå­˜å…¥åˆ°h2c->state.headerï¼Œç¬¬ä¸€æ¬¡å‘é€name:valueè¿‡æ¥ï¼Œç¬¬äºŒæ¬¡
+   å°±å¯ä»¥ç›´æ¥å‘é€ä¹‹å‰name:valueå¯¹åº”çš„ç´¢å¼•è¿‡æ¥å°±å¯ä»¥å®šä½åˆ°å¯¹åº”çš„name:valueï¼Œä»è€ŒèŠ‚çº¦ç½‘ç»œèµ„æº
 */
 ngx_int_t
 ngx_http_v2_get_indexed_header(ngx_http_v2_connection_t *h2c, ngx_uint_t index,
@@ -109,30 +109,30 @@ ngx_http_v2_get_indexed_header(ngx_http_v2_connection_t *h2c, ngx_uint_t index,
         return NGX_ERROR;
     }
 
-    //×¢ÒâÕâÀï´òÓ¡Èç¹ûÊÇ7£¬±íÊ¾´Ó1¿ªÊ¼£¬Êµ¼ÊÉÏÊÇ¶ÔÓ¦Êı×Öngx_http_v2_static_table[6]
+    //æ³¨æ„è¿™é‡Œæ‰“å°å¦‚æœæ˜¯7ï¼Œè¡¨ç¤ºä»1å¼€å§‹ï¼Œå®é™…ä¸Šæ˜¯å¯¹åº”æ•°å­—ngx_http_v2_static_table[6]
     ngx_log_debug2(NGX_LOG_DEBUG_HTTP, h2c->connection->log, 0,
                    "http2 get indexed %s: %ui",
                    name_only ? "header" : "header name", index);
 
-    index--;//--ÊÇÒòÎªÊı×é´Ó0¿ªÊ¼µÄ
+    index--;//--æ˜¯å› ä¸ºæ•°ç»„ä»0å¼€å§‹çš„
     
-    if (index < NGX_HTTP_V2_STATIC_TABLE_ENTRIES) { /* ËµÃ÷Ñ¹ËõµÄÍ·²¿ĞĞÊÇ¾²Ì¬Ë÷Òı±íÖĞÍ·²¿ĞĞĞÅÏ¢ */
+    if (index < NGX_HTTP_V2_STATIC_TABLE_ENTRIES) { /* è¯´æ˜å‹ç¼©çš„å¤´éƒ¨è¡Œæ˜¯é™æ€ç´¢å¼•è¡¨ä¸­å¤´éƒ¨è¡Œä¿¡æ¯ */
         h2c->state.header = ngx_http_v2_static_table[index];
         return NGX_OK;
     }
 
     
     index -= NGX_HTTP_V2_STATIC_TABLE_ENTRIES;
-    /* ËµÃ÷¸ÃÑ¹ËõµÄÍ·²¿ĞĞÔÚ¶¯Ì¬Ë÷Òı±íÖĞ£¬ÔÚ¶¯Ì¬Ë÷Òı±í·¶Î§ÄÚ */
-    //°Ñ´Ó¶¯Ì¬±íÖĞ²éÕÒµÄname:value¸³Öµ¸øh2c->state.header
+    /* è¯´æ˜è¯¥å‹ç¼©çš„å¤´éƒ¨è¡Œåœ¨åŠ¨æ€ç´¢å¼•è¡¨ä¸­ï¼Œåœ¨åŠ¨æ€ç´¢å¼•è¡¨èŒƒå›´å†… */
+    //æŠŠä»åŠ¨æ€è¡¨ä¸­æŸ¥æ‰¾çš„name:valueèµ‹å€¼ç»™h2c->state.header
     if (index < h2c->hpack.added - h2c->hpack.deleted) {
-        /* ËµÃ÷Ö®Ç°ÒÔ¼°·¢ËÍ¹ıÄ³name:value£¬Õâ´Î·¢ËÍÁË¶ÔÓ¦µÄË÷ÒıÖµ¹ıÀ´£¬Í¨¹ı¸ÃË÷Òı¾Í¿ÉÒÔÖ±½Ó¶¨Î»µ½Ö®Ç°·¢ËÍµÄname:valueĞÅÏ¢£¬
-           ÕâÑù¾Í¿ÉÒÔ¼õÉÙÍ·²¿±¨ÎÄµÄ³¤¶È£¬½ÚÊ¡´ø¿í
+        /* è¯´æ˜ä¹‹å‰ä»¥åŠå‘é€è¿‡æŸname:valueï¼Œè¿™æ¬¡å‘é€äº†å¯¹åº”çš„ç´¢å¼•å€¼è¿‡æ¥ï¼Œé€šè¿‡è¯¥ç´¢å¼•å°±å¯ä»¥ç›´æ¥å®šä½åˆ°ä¹‹å‰å‘é€çš„name:valueä¿¡æ¯ï¼Œ
+           è¿™æ ·å°±å¯ä»¥å‡å°‘å¤´éƒ¨æŠ¥æ–‡çš„é•¿åº¦ï¼ŒèŠ‚çœå¸¦å®½
         */
         index = (h2c->hpack.added - index - 1) % h2c->hpack.allocated;
         entry = h2c->hpack.entries[index];
 
-        /* ¿ª±Ù´æ´¢nameµÄ¿Õ¼ä */
+        /* å¼€è¾Ÿå­˜å‚¨nameçš„ç©ºé—´ */
         p = ngx_pnalloc(h2c->state.pool, entry->name.len + 1);
         if (p == NULL) {
             return NGX_ERROR;
@@ -143,7 +143,7 @@ ngx_http_v2_get_indexed_header(ngx_http_v2_connection_t *h2c, ngx_uint_t index,
 
         rest = h2c->hpack.storage + NGX_HTTP_V2_TABLE_SIZE - entry->name.data;
 
-        //¿½±´Ë÷Òı±íÖĞnameÄÚÈİ
+        //æ‹·è´ç´¢å¼•è¡¨ä¸­nameå†…å®¹
         if (entry->name.len > rest) {
             p = ngx_cpymem(p, entry->name.data, rest);
             p = ngx_cpymem(p, h2c->hpack.storage, entry->name.len - rest);
@@ -158,7 +158,7 @@ ngx_http_v2_get_indexed_header(ngx_http_v2_connection_t *h2c, ngx_uint_t index,
             return NGX_OK;
         }
 
-        /* ¿ª±Ù´æ´¢valueµÄ¿Õ¼ä */
+        /* å¼€è¾Ÿå­˜å‚¨valueçš„ç©ºé—´ */
         p = ngx_pnalloc(h2c->state.pool, entry->value.len + 1);
         if (p == NULL) {
             return NGX_ERROR;
@@ -169,7 +169,7 @@ ngx_http_v2_get_indexed_header(ngx_http_v2_connection_t *h2c, ngx_uint_t index,
         
         rest = h2c->hpack.storage + NGX_HTTP_V2_TABLE_SIZE - entry->value.data;
 
-        //¿½±´Ë÷Òı±íÖĞvalueÄÚÈİ
+        //æ‹·è´ç´¢å¼•è¡¨ä¸­valueå†…å®¹
         if (entry->value.len > rest) {
             p = ngx_cpymem(p, entry->value.data, rest);
             p = ngx_cpymem(p, h2c->hpack.storage, entry->value.len - rest);
@@ -183,16 +183,16 @@ ngx_http_v2_get_indexed_header(ngx_http_v2_connection_t *h2c, ngx_uint_t index,
         return NGX_OK;
     }
 
-    /* ËµÃ÷Ö®Ç°Ã»ÓĞ·¢ËÍ¹ıÄ³name:value¹ıÀ´£¬ÄãÏÖÔÚÈ´·¢ËÍÁË¸Ãname:value¶ÔÓ¦µÄË÷Òı¹ıÀ´£¬ÕâÏÔÈ»²»¶Ô */
+    /* è¯´æ˜ä¹‹å‰æ²¡æœ‰å‘é€è¿‡æŸname:valueè¿‡æ¥ï¼Œä½ ç°åœ¨å´å‘é€äº†è¯¥name:valueå¯¹åº”çš„ç´¢å¼•è¿‡æ¥ï¼Œè¿™æ˜¾ç„¶ä¸å¯¹ */
     ngx_log_error(NGX_LOG_INFO, h2c->connection->log, 0,
                   "client sent out of bound hpack table index: %ui", index);
 
     return NGX_ERROR;
 }
 
-/* °Ñheader¶ÔÓ¦µÄname:valueÌí¼Óµ½entries[]Ö¸ÏòµÄÓ³Éä±íÖĞ£¬ÕâÀïµÄheader¿ÉÄÜÊÇ¾²Ì¬±í£¬Ò²¿ÉÄÜÊÇ¶¯Ì¬±í£¬ËùÒÔentriesÖ¸ÏòµÄ
-Ó³Éä±íÖĞ¿ÉÄÜÍ¬Ê±°üº¬¾²Ì¬±íºÍ¶¯Ì¬±í */
-//°Ñname:value¼ÓÈëµ½h2c->hpack.entries[]Ö¸ÏòµÄ¿Õ¼ä
+/* æŠŠheaderå¯¹åº”çš„name:valueæ·»åŠ åˆ°entries[]æŒ‡å‘çš„æ˜ å°„è¡¨ä¸­ï¼Œè¿™é‡Œçš„headerå¯èƒ½æ˜¯é™æ€è¡¨ï¼Œä¹Ÿå¯èƒ½æ˜¯åŠ¨æ€è¡¨ï¼Œæ‰€ä»¥entriesæŒ‡å‘çš„
+æ˜ å°„è¡¨ä¸­å¯èƒ½åŒæ—¶åŒ…å«é™æ€è¡¨å’ŒåŠ¨æ€è¡¨ */
+//æŠŠname:valueåŠ å…¥åˆ°h2c->hpack.entries[]æŒ‡å‘çš„ç©ºé—´
 ngx_int_t
 ngx_http_v2_add_header(ngx_http_v2_connection_t *h2c,
     ngx_http_v2_header_t *header)
@@ -226,7 +226,7 @@ ngx_http_v2_add_header(ngx_http_v2_connection_t *h2c,
         h2c->hpack.pos = h2c->hpack.storage;
     }
 
-    /* ¼ÆËã¿ÉÓÃ¿Õ¼ä£¬²»¹»ÔòÕ¼ÓÃ×î¾ÉµÄname:value¿Õ¼ä */
+    /* è®¡ç®—å¯ç”¨ç©ºé—´ï¼Œä¸å¤Ÿåˆ™å ç”¨æœ€æ—§çš„name:valueç©ºé—´ */
     if (ngx_http_v2_table_account(h2c, header->name.len + header->value.len)
         != NGX_OK)
     {
@@ -243,19 +243,19 @@ ngx_http_v2_add_header(ngx_http_v2_connection_t *h2c,
         entry = h2c->hpack.entries[h2c->hpack.reused++ % h2c->hpack.allocated];
     }
 
-    /* storageÖĞ¿ÉÓÃµÄÓĞĞ§¿Õ¼ä */
+    /* storageä¸­å¯ç”¨çš„æœ‰æ•ˆç©ºé—´ */
     avail = h2c->hpack.storage + NGX_HTTP_V2_TABLE_SIZE - h2c->hpack.pos;
 
     entry->name.len = header->name.len;
     entry->name.data = h2c->hpack.pos;
 
-    //¿½±´nameµ½storage¿Õ¼ä
+    //æ‹·è´nameåˆ°storageç©ºé—´
     if (avail >= header->name.len) {
-        /* storageÖĞÓĞĞ§¿ÉÓÃ¿Õ¼ä³ä×ã£¬¿½±´nameµ½storage¿Õ¼ä */
+        /* storageä¸­æœ‰æ•ˆå¯ç”¨ç©ºé—´å……è¶³ï¼Œæ‹·è´nameåˆ°storageç©ºé—´ */
         h2c->hpack.pos = ngx_cpymem(h2c->hpack.pos, header->name.data,
                                     header->name.len);
     } else {
-        /* storage¿Õ¼ä²»¹»ÁË£¬ÔòÖØÍ·¸²¸Ç */
+        /* storageç©ºé—´ä¸å¤Ÿäº†ï¼Œåˆ™é‡å¤´è¦†ç›– */
         ngx_memcpy(h2c->hpack.pos, header->name.data, avail);
         h2c->hpack.pos = ngx_cpymem(h2c->hpack.storage,
                                     header->name.data + avail,
@@ -268,7 +268,7 @@ ngx_http_v2_add_header(ngx_http_v2_connection_t *h2c,
     entry->value.len = header->value.len;
     entry->value.data = h2c->hpack.pos;
 
-    //¿½±´valueµ½storage¿Õ¼ä
+    //æ‹·è´valueåˆ°storageç©ºé—´
     if (avail >= header->value.len) {
         h2c->hpack.pos = ngx_cpymem(h2c->hpack.pos, header->value.data,
                                     header->value.len);
@@ -307,27 +307,27 @@ ngx_http_v2_add_header(ngx_http_v2_connection_t *h2c,
         h2c->hpack.allocated += 64;
     }
 
-    /* entries[i]Ö¸ÕëÖ±½ÓÖ¸ÏòÄ³¸öentry£¬Í¨¹ı¸Ãentry¾Í¿ÉÒÔÖ±½Ó¶¨Î»µ½¸Ãname:valueÔÚstorageÖĞµÄ´æ´¢Î»ÖÃ */
+    /* entries[i]æŒ‡é’ˆç›´æ¥æŒ‡å‘æŸä¸ªentryï¼Œé€šè¿‡è¯¥entryå°±å¯ä»¥ç›´æ¥å®šä½åˆ°è¯¥name:valueåœ¨storageä¸­çš„å­˜å‚¨ä½ç½® */
     h2c->hpack.entries[h2c->hpack.added++ % h2c->hpack.allocated] = entry;
 
     return NGX_OK;
 }
 
-/* ±£Ö¤ĞÂ¼ÓÈëµÄsize×Ö½Ú¿ÉÒÔ´æÈëµ½storageÖĞ£¬Èç¹ûstorage¿Õ¼ä²»¹»£¬ÔòÇå³ıµô×îÀÏµÄname:value */
+/* ä¿è¯æ–°åŠ å…¥çš„sizeå­—èŠ‚å¯ä»¥å­˜å…¥åˆ°storageä¸­ï¼Œå¦‚æœstorageç©ºé—´ä¸å¤Ÿï¼Œåˆ™æ¸…é™¤æ‰æœ€è€çš„name:value */
 static ngx_int_t
 ngx_http_v2_table_account(ngx_http_v2_connection_t *h2c, size_t size)
 {
     ngx_http_v2_header_t  *entry;
 
-    /* ?????????????????????????? ÕâÀïÎªÊ²Ã´Òª¼Ó32×Ö½Ú */
+    /* ?????????????????????????? è¿™é‡Œä¸ºä»€ä¹ˆè¦åŠ 32å­—èŠ‚ */
     size += 32;
 
     ngx_log_debug2(NGX_LOG_DEBUG_HTTP, h2c->connection->log, 0,
                    "http2 hpack table account: %uz free:%uz",
                    size, h2c->hpack.free);
 
-    if (size <= h2c->hpack.free) { /* free¿Õ¼ä³ä×ã£¬¿ÉÒÔ´æÏÂsize */
-        h2c->hpack.free -= size; /* ÒòÎªÓÖÒª·Åsize×Ö½Úµ½storageÖĞ£¬Òò´ËĞèÒª×ö¼õ·¨ */
+    if (size <= h2c->hpack.free) { /* freeç©ºé—´å……è¶³ï¼Œå¯ä»¥å­˜ä¸‹size */
+        h2c->hpack.free -= size; /* å› ä¸ºåˆè¦æ”¾sizeå­—èŠ‚åˆ°storageä¸­ï¼Œå› æ­¤éœ€è¦åšå‡æ³• */
         return NGX_OK;
     }
 
@@ -337,14 +337,14 @@ ngx_http_v2_table_account(ngx_http_v2_connection_t *h2c, size_t size)
         return NGX_DECLINED;
     }
 
-    /* storageÖĞ¿Õ¼ä²»¹»£¬ÔòÇå³ıÆäÖĞ±£´æµÄ²¿·Öname:value£¬²¢¼ÇÂ¼µ½deletedÖĞ£¬¿ÉÒÔ¿´³ödeletedÊÇÇå³ıµÄstorageÖĞ×îÀÏµÄname:value */
+    /* storageä¸­ç©ºé—´ä¸å¤Ÿï¼Œåˆ™æ¸…é™¤å…¶ä¸­ä¿å­˜çš„éƒ¨åˆ†name:valueï¼Œå¹¶è®°å½•åˆ°deletedä¸­ï¼Œå¯ä»¥çœ‹å‡ºdeletedæ˜¯æ¸…é™¤çš„storageä¸­æœ€è€çš„name:value */
     do {
         entry = h2c->hpack.entries[h2c->hpack.deleted++ % h2c->hpack.allocated];
         h2c->hpack.free += 32 + entry->name.len + entry->value.len;
     } while (size > h2c->hpack.free);
 
 
-    /* ÒòÎªÓÖÒª·Åsize×Ö½Úµ½storageÖĞ£¬Òò´ËĞèÒª×ö¼õ·¨ */
+    /* å› ä¸ºåˆè¦æ”¾sizeå­—èŠ‚åˆ°storageä¸­ï¼Œå› æ­¤éœ€è¦åšå‡æ³• */
     h2c->hpack.free -= size;
 
     return NGX_OK;
@@ -357,7 +357,7 @@ ngx_http_v2_table_size(ngx_http_v2_connection_t *h2c, size_t size)
     ssize_t                needed;
     ngx_http_v2_header_t  *entry;
 
-    if (size > NGX_HTTP_V2_TABLE_SIZE) { //¶¯Ì¬±í³¤¶Èµ÷Õû²»ÄÜ³¬¹ı¸ÃÖµ
+    if (size > NGX_HTTP_V2_TABLE_SIZE) { //åŠ¨æ€è¡¨é•¿åº¦è°ƒæ•´ä¸èƒ½è¶…è¿‡è¯¥å€¼
         ngx_log_error(NGX_LOG_INFO, h2c->connection->log, 0,
                       "client sent invalid table size update: %uz", size);
 
@@ -370,7 +370,7 @@ ngx_http_v2_table_size(ngx_http_v2_connection_t *h2c, size_t size)
 
     needed = h2c->hpack.size - size;
 
-    /* storageÖĞ¿Õ¼ä²»¹»£¬ÔòÇå³ıÆäÖĞ±£´æµÄ²¿·Öname:value£¬²¢¼ÇÂ¼µ½deletedÖĞ£¬¿ÉÒÔ¿´³ödeletedÊÇÇå³ıµÄstorageÖĞ×îÀÏµÄname:value */
+    /* storageä¸­ç©ºé—´ä¸å¤Ÿï¼Œåˆ™æ¸…é™¤å…¶ä¸­ä¿å­˜çš„éƒ¨åˆ†name:valueï¼Œå¹¶è®°å½•åˆ°deletedä¸­ï¼Œå¯ä»¥çœ‹å‡ºdeletedæ˜¯æ¸…é™¤çš„storageä¸­æœ€è€çš„name:value */
     while (needed > (ssize_t) h2c->hpack.free) {
         entry = h2c->hpack.entries[h2c->hpack.deleted++ % h2c->hpack.allocated];
         h2c->hpack.free += 32 + entry->name.len + entry->value.len;

@@ -32,78 +32,78 @@ typedef void (*ngx_pool_cleanup_pt)(void *data);
 typedef struct ngx_pool_cleanup_s  ngx_pool_cleanup_t;
 
 /*
-ngx_pool_cleanup_tÓëngx_http_cleanup_ptÊÇ²»Í¬µÄ£¬ngx_pool_cleanup_t½öÔÚËùÓÃµÄÄÚ´æ³ØÏú»ÙÊ±²Å»á±»µ÷ÓÃÀ´ÇåÀí×ÊÔ´£¬ËüºÎÊ±ÊÍ·Å×Ê
-Ô´½«ÊÓËùÊ¹ÓÃµÄÄÚ´æ³Ø¶ø¶¨£¬¶øngx_http_cleanup_ptÊÇÔÚngx_http_request_t½á¹¹ÌåÊÍ·ÅÊ±±»µ÷ÓÃÀ´ÊÍ·Å×ÊÔ´µÄ¡£
+ngx_pool_cleanup_tä¸ngx_http_cleanup_ptæ˜¯ä¸åŒçš„ï¼Œngx_pool_cleanup_tä»…åœ¨æ‰€ç”¨çš„å†…å­˜æ± é”€æ¯æ—¶æ‰ä¼šè¢«è°ƒç”¨æ¥æ¸…ç†èµ„æºï¼Œå®ƒä½•æ—¶é‡Šæ”¾èµ„
+æºå°†è§†æ‰€ä½¿ç”¨çš„å†…å­˜æ± è€Œå®šï¼Œè€Œngx_http_cleanup_ptæ˜¯åœ¨ngx_http_request_tç»“æ„ä½“é‡Šæ”¾æ—¶è¢«è°ƒç”¨æ¥é‡Šæ”¾èµ„æºçš„ã€‚
 
 
-Èç¹ûÎÒÃÇĞèÒªÌí¼Ó×Ô¼ºµÄ»Øµ÷º¯Êı£¬ÔòĞèÒªµ÷ÓÃngx_pool_cleanup_addÀ´µÃµ½Ò»¸öngx_pool_cleanup_t£¬È»ºóÉèÖÃhandlerÎªÎÒÃÇµÄÇåÀíº¯Êı£¬
-²¢ÉèÖÃdataÎªÎÒÃÇÒªÇåÀíµÄÊı¾İ¡£ÕâÑùÔÚngx_destroy_poolÖĞ»áÑ­»·µ÷ÓÃhandlerÇåÀíÊı¾İ£»
+å¦‚æœæˆ‘ä»¬éœ€è¦æ·»åŠ è‡ªå·±çš„å›è°ƒå‡½æ•°ï¼Œåˆ™éœ€è¦è°ƒç”¨ngx_pool_cleanup_addæ¥å¾—åˆ°ä¸€ä¸ªngx_pool_cleanup_tï¼Œç„¶åè®¾ç½®handlerä¸ºæˆ‘ä»¬çš„æ¸…ç†å‡½æ•°ï¼Œ
+å¹¶è®¾ç½®dataä¸ºæˆ‘ä»¬è¦æ¸…ç†çš„æ•°æ®ã€‚è¿™æ ·åœ¨ngx_destroy_poolä¸­ä¼šå¾ªç¯è°ƒç”¨handleræ¸…ç†æ•°æ®ï¼›
 
-±ÈÈç£ºÎÒÃÇ¿ÉÒÔ½«Ò»¸ö¿ª´òµÄÎÄ¼şÃèÊö·û×÷Îª×ÊÔ´¹ÒÔØµ½ÄÚ´æ³ØÉÏ£¬Í¬Ê±Ìá¹©Ò»¸ö¹Ø±ÕÎÄ¼şÃèÊöµÄº¯Êı×¢²áµ½handlerÉÏ£¬ÄÇÃ´ÄÚ´æ³ØÔÚÊÍ·Å
-µÄÊ±ºò£¬¾Í»áµ÷ÓÃÎÒÃÇÌá¹©µÄ¹Ø±ÕÎÄ¼şº¯ÊıÀ´´¦ÀíÎÄ¼şÃèÊö·û×ÊÔ´ÁË
+æ¯”å¦‚ï¼šæˆ‘ä»¬å¯ä»¥å°†ä¸€ä¸ªå¼€æ‰“çš„æ–‡ä»¶æè¿°ç¬¦ä½œä¸ºèµ„æºæŒ‚è½½åˆ°å†…å­˜æ± ä¸Šï¼ŒåŒæ—¶æä¾›ä¸€ä¸ªå…³é—­æ–‡ä»¶æè¿°çš„å‡½æ•°æ³¨å†Œåˆ°handlerä¸Šï¼Œé‚£ä¹ˆå†…å­˜æ± åœ¨é‡Šæ”¾
+çš„æ—¶å€™ï¼Œå°±ä¼šè°ƒç”¨æˆ‘ä»¬æä¾›çš„å…³é—­æ–‡ä»¶å‡½æ•°æ¥å¤„ç†æ–‡ä»¶æè¿°ç¬¦èµ„æºäº†
 */
-//ÄÚ´æ³ØpoolÖĞÇåÀíÊı¾İµÄÓÃµÄ£¬¼ûngx_pool_s  ngx_destroy_pool
-struct ngx_pool_cleanup_s { //Õâ¸öÊÇÌí¼Óµ½ngx_pool_sÖĞµÄcleanupÉÏµÄ£¬¼ûngx_pool_cleanup_add
-    ngx_pool_cleanup_pt   handler;// µ±Ç° cleanup Êı¾İµÄ»Øµ÷º¯Êı  ngx_destroy_poolÖĞÖ´ĞĞ    ÀıÈçÇåÀíÎÄ¼ş¾ä±úngx_pool_cleanup_fileµÈ
-    void                 *data;// ÄÚ´æµÄÕæÕıµØÖ·     »Øµ÷Ê±£¬½«´ËÊı¾İ´«Èë»Øµ÷º¯Êı£»  ngx_pool_cleanup_addÖĞ¿ª±Ù¿Õ¼ä
+//å†…å­˜æ± poolä¸­æ¸…ç†æ•°æ®çš„ç”¨çš„ï¼Œè§ngx_pool_s  ngx_destroy_pool
+struct ngx_pool_cleanup_s { //è¿™ä¸ªæ˜¯æ·»åŠ åˆ°ngx_pool_sä¸­çš„cleanupä¸Šçš„ï¼Œè§ngx_pool_cleanup_add
+    ngx_pool_cleanup_pt   handler;// å½“å‰ cleanup æ•°æ®çš„å›è°ƒå‡½æ•°  ngx_destroy_poolä¸­æ‰§è¡Œ    ä¾‹å¦‚æ¸…ç†æ–‡ä»¶å¥æŸ„ngx_pool_cleanup_fileç­‰
+    void                 *data;// å†…å­˜çš„çœŸæ­£åœ°å€     å›è°ƒæ—¶ï¼Œå°†æ­¤æ•°æ®ä¼ å…¥å›è°ƒå‡½æ•°ï¼›  ngx_pool_cleanup_addä¸­å¼€è¾Ÿç©ºé—´
     
-    ngx_pool_cleanup_t   *next;// Ö¸ÏòÏÂÒ»¿é cleanup ÄÚ´æµÄÖ¸Õë
+    ngx_pool_cleanup_t   *next;// æŒ‡å‘ä¸‹ä¸€å— cleanup å†…å­˜çš„æŒ‡é’ˆ
 };
 
 
 typedef struct ngx_pool_large_s  ngx_pool_large_t;
 
 /*
-ÄÚ´æ³Ø           ---  ngx_pool_s;
-ÄÚ´æ¿éÊı¾İ       ---  ngx_pool_data_t;
-´óÄÚ´æ¿é         --- ngx_pool_large_s; 
-*///´ó¿éÄÚ´æ½á¹¹Ìå,Á´±í½á¹¹  
-struct ngx_pool_large_s { //ngx_pool_sÖĞµÄ´ó¿éÄÚ´æ³ÉÔ±
+å†…å­˜æ±            ---  ngx_pool_s;
+å†…å­˜å—æ•°æ®       ---  ngx_pool_data_t;
+å¤§å†…å­˜å—         --- ngx_pool_large_s; 
+*///å¤§å—å†…å­˜ç»“æ„ä½“,é“¾è¡¨ç»“æ„  
+struct ngx_pool_large_s { //ngx_pool_sä¸­çš„å¤§å—å†…å­˜æˆå‘˜
     ngx_pool_large_t     *next;
-    void                 *alloc;//ÉêÇëµÄÄÚ´æ¿éµØÖ·   
+    void                 *alloc;//ç”³è¯·çš„å†…å­˜å—åœ°å€   
 };
 
 /*
-ÄÚ´æ³Ø           ---  ngx_pool_s;
-ÄÚ´æ¿éÊı¾İ       ---  ngx_pool_data_t;
-´óÄÚ´æ¿é         --- ngx_pool_large_s; 
-*/ //ÄÚ´æ¿é°üº¬µÄÊı¾İ   
+å†…å­˜æ±            ---  ngx_pool_s;
+å†…å­˜å—æ•°æ®       ---  ngx_pool_data_t;
+å¤§å†…å­˜å—         --- ngx_pool_large_s; 
+*/ //å†…å­˜å—åŒ…å«çš„æ•°æ®   
 typedef struct {
-    u_char               *last;//ÉêÇë¹ıµÄÄÚ´æµÄÎ²µØÖ·,¿ÉÉêÇëµÄÊ×µØÖ·    pool->d.last ~ pool->d.end ÖĞµÄÄÚ´æÇø±ãÊÇ¿ÉÓÃÊı¾İÇø¡£
-    u_char               *end;//µ±Ç°ÄÚ´æ³Ø½Úµã¿ÉÒÔÉêÇëµÄÄÚ´æµÄ×îÖÕÎ»ÖÃ  
-    ngx_pool_t           *next;//ÏÂÒ»¸öÄÚ´æ³Ø½Úµãngx_pool_t,¼ûngx_palloc_block
-    ngx_uint_t            failed;//µ±Ç°½ÚµãÉêÇëÄÚ´æÊ§°ÜµÄ´ÎÊı,   Èç¹û·¢ÏÖ´Óµ±Ç°poolÖĞ·ÖÅäÄÚ´æÊ§°ÜËÄ´Î£¬ÔòÊ¹ÓÃÏÂÒ»¸öpool,¼ûngx_palloc_block 
+    u_char               *last;//ç”³è¯·è¿‡çš„å†…å­˜çš„å°¾åœ°å€,å¯ç”³è¯·çš„é¦–åœ°å€    pool->d.last ~ pool->d.end ä¸­çš„å†…å­˜åŒºä¾¿æ˜¯å¯ç”¨æ•°æ®åŒºã€‚
+    u_char               *end;//å½“å‰å†…å­˜æ± èŠ‚ç‚¹å¯ä»¥ç”³è¯·çš„å†…å­˜çš„æœ€ç»ˆä½ç½®  
+    ngx_pool_t           *next;//ä¸‹ä¸€ä¸ªå†…å­˜æ± èŠ‚ç‚¹ngx_pool_t,è§ngx_palloc_block
+    ngx_uint_t            failed;//å½“å‰èŠ‚ç‚¹ç”³è¯·å†…å­˜å¤±è´¥çš„æ¬¡æ•°,   å¦‚æœå‘ç°ä»å½“å‰poolä¸­åˆ†é…å†…å­˜å¤±è´¥å››æ¬¡ï¼Œåˆ™ä½¿ç”¨ä¸‹ä¸€ä¸ªpool,è§ngx_palloc_block 
 } ngx_pool_data_t;
 
 /*
-ÎªÁË¼õÉÙÄÚ´æËéÆ¬µÄÊıÁ¿£¬²¢Í¨¹ıÍ³Ò»¹ÜÀíÀ´¼õÉÙ´úÂëÖĞ³öÏÖÄÚ´æĞ¹Â©µÄ¿ÉÄÜĞÔ£¬NginxÉè¼ÆÁËngx_pool_tÄÚ´æ³ØÊı¾İ½á¹¹¡£
+ä¸ºäº†å‡å°‘å†…å­˜ç¢ç‰‡çš„æ•°é‡ï¼Œå¹¶é€šè¿‡ç»Ÿä¸€ç®¡ç†æ¥å‡å°‘ä»£ç ä¸­å‡ºç°å†…å­˜æ³„æ¼çš„å¯èƒ½æ€§ï¼ŒNginxè®¾è®¡äº†ngx_pool_tå†…å­˜æ± æ•°æ®ç»“æ„ã€‚
 */
 /*
-ÄÚ´æ³Ø           ---  ngx_pool_s;
-ÄÚ´æ¿éÊı¾İ       ---  ngx_pool_data_t;
-´óÄÚ´æ¿é         --- ngx_pool_large_s; 
+å†…å­˜æ±            ---  ngx_pool_s;
+å†…å­˜å—æ•°æ®       ---  ngx_pool_data_t;
+å¤§å†…å­˜å—         --- ngx_pool_large_s; 
 */
-//ÄÚ´æ³ØÊı¾İ½á¹¹,Á´±íĞÎÊ½´æ´¢   Í¼ĞÎ»¯Àí½â²Î¿¼Nginx ÄÚ´æ³Ø£¨pool£©·ÖÎö http://www.linuxidc.com/Linux/2011-08/41860.htm
+//å†…å­˜æ± æ•°æ®ç»“æ„,é“¾è¡¨å½¢å¼å­˜å‚¨   å›¾å½¢åŒ–ç†è§£å‚è€ƒNginx å†…å­˜æ± ï¼ˆpoolï¼‰åˆ†æ http://www.linuxidc.com/Linux/2011-08/41860.htm
 struct ngx_pool_s {
-    ngx_pool_data_t       d;//½ÚµãÊı¾İ    // °üº¬ pool µÄÊı¾İÇøÖ¸ÕëµÄ½á¹¹Ìå pool->d.last ~ pool->d.end ÖĞµÄÄÚ´æÇø±ãÊÇ¿ÉÓÃÊı¾İÇø¡£
-    size_t                max;//µ±Ç°ÄÚ´æ½Úµã¿ÉÒÔÉêÇëµÄ×î´óÄÚ´æ¿Õ¼ä // Ò»´Î×î¶à´ÓpoolÖĞ¿ª±ÙµÄ×î´ó¿Õ¼ä
-    //Ã¿´Î´ÓpoolÖĞ·ÖÅäÄÚ´æµÄÊ±ºò¶¼ÊÇ´Ócurren¿ªÊ¼±éÀúpool½Úµã»ñÈ¡ÄÚ´æµÄ
-    ngx_pool_t           *current;//ÄÚ´æ³ØÖĞ¿ÉÒÔÉêÇëÄÚ´æµÄµÚÒ»¸ö½Úµã      pool µ±Ç°ÕıÔÚÊ¹ÓÃµÄpoolµÄÖ¸Õë current ÓÀÔ¶Ö¸Ïò´ËpoolµÄ¿ªÊ¼µØÖ·¡£currentµÄÒâË¼ÊÇµ±Ç°µÄpoolµØÖ·
+    ngx_pool_data_t       d;//èŠ‚ç‚¹æ•°æ®    // åŒ…å« pool çš„æ•°æ®åŒºæŒ‡é’ˆçš„ç»“æ„ä½“ pool->d.last ~ pool->d.end ä¸­çš„å†…å­˜åŒºä¾¿æ˜¯å¯ç”¨æ•°æ®åŒºã€‚
+    size_t                max;//å½“å‰å†…å­˜èŠ‚ç‚¹å¯ä»¥ç”³è¯·çš„æœ€å¤§å†…å­˜ç©ºé—´ // ä¸€æ¬¡æœ€å¤šä»poolä¸­å¼€è¾Ÿçš„æœ€å¤§ç©ºé—´
+    //æ¯æ¬¡ä»poolä¸­åˆ†é…å†…å­˜çš„æ—¶å€™éƒ½æ˜¯ä»currenå¼€å§‹éå†poolèŠ‚ç‚¹è·å–å†…å­˜çš„
+    ngx_pool_t           *current;//å†…å­˜æ± ä¸­å¯ä»¥ç”³è¯·å†…å­˜çš„ç¬¬ä¸€ä¸ªèŠ‚ç‚¹      pool å½“å‰æ­£åœ¨ä½¿ç”¨çš„poolçš„æŒ‡é’ˆ current æ°¸è¿œæŒ‡å‘æ­¤poolçš„å¼€å§‹åœ°å€ã€‚currentçš„æ„æ€æ˜¯å½“å‰çš„poolåœ°å€
 
 /*
-pool ÖĞµÄ chain Ö¸ÏòÒ»¸ö ngx_chain_t Êı¾İ£¬ÆäÖµÊÇÓÉºê ngx_free_chain ½øĞĞ¸³ÓèµÄ£¬Ö¸ÏòÖ®Ç°ÓÃÍêÁËµÄ£¬
-¿ÉÒÔÊÍ·ÅµÄngx_chain_tÊı¾İ¡£ÓÉº¯Êıngx_alloc_chain_link½øĞĞÊ¹ÓÃ¡£
+pool ä¸­çš„ chain æŒ‡å‘ä¸€ä¸ª ngx_chain_t æ•°æ®ï¼Œå…¶å€¼æ˜¯ç”±å® ngx_free_chain è¿›è¡Œèµ‹äºˆçš„ï¼ŒæŒ‡å‘ä¹‹å‰ç”¨å®Œäº†çš„ï¼Œ
+å¯ä»¥é‡Šæ”¾çš„ngx_chain_tæ•°æ®ã€‚ç”±å‡½æ•°ngx_alloc_chain_linkè¿›è¡Œä½¿ç”¨ã€‚
 */
-    ngx_chain_t          *chain;// pool µ±Ç°¿ÉÓÃµÄ ngx_chain_t Êı¾İ£¬×¢Òâ£ºÓÉ ngx_free_chain ¸³Öµ   ngx_alloc_chain_link
-    ngx_pool_large_t     *large;//½ÚµãÖĞ´óÄÚ´æ¿éÖ¸Õë   // pool ÖĞÖ¸Ïò´óÊı¾İ¿ìµÄÖ¸Õë£¨´óÊı¾İ¿ìÊÇÖ¸ size > max µÄÊı¾İ¿é£©
-    ngx_pool_cleanup_t   *cleanup;// pool ÖĞÖ¸Ïò ngx_pool_cleanup_t Êı¾İ¿éµÄÖ¸Õë //cleanupÔÚngx_pool_cleanup_add¸³Öµ
-    ngx_log_t            *log; // pool ÖĞÖ¸Ïò ngx_log_t µÄÖ¸Õë£¬ÓÃÓÚĞ´ÈÕÖ¾µÄ  ngx_event_accept»á¸³Öµ
+    ngx_chain_t          *chain;// pool å½“å‰å¯ç”¨çš„ ngx_chain_t æ•°æ®ï¼Œæ³¨æ„ï¼šç”± ngx_free_chain èµ‹å€¼   ngx_alloc_chain_link
+    ngx_pool_large_t     *large;//èŠ‚ç‚¹ä¸­å¤§å†…å­˜å—æŒ‡é’ˆ   // pool ä¸­æŒ‡å‘å¤§æ•°æ®å¿«çš„æŒ‡é’ˆï¼ˆå¤§æ•°æ®å¿«æ˜¯æŒ‡ size > max çš„æ•°æ®å—ï¼‰
+    ngx_pool_cleanup_t   *cleanup;// pool ä¸­æŒ‡å‘ ngx_pool_cleanup_t æ•°æ®å—çš„æŒ‡é’ˆ //cleanupåœ¨ngx_pool_cleanup_addèµ‹å€¼
+    ngx_log_t            *log; // pool ä¸­æŒ‡å‘ ngx_log_t çš„æŒ‡é’ˆï¼Œç”¨äºå†™æ—¥å¿—çš„  ngx_event_acceptä¼šèµ‹å€¼
 };
 
-typedef struct {//ngx_open_cached_fileÖĞ´´½¨¿Õ¼äºÍ¸³Öµ
-    ngx_fd_t              fd;//ÎÄ¼ş¾ä±ú
-    u_char               *name; //ÎÄ¼şÃû³Æ
-    ngx_log_t            *log;//ÈÕÖ¾¶ÔÏó
+typedef struct {//ngx_open_cached_fileä¸­åˆ›å»ºç©ºé—´å’Œèµ‹å€¼
+    ngx_fd_t              fd;//æ–‡ä»¶å¥æŸ„
+    u_char               *name; //æ–‡ä»¶åç§°
+    ngx_log_t            *log;//æ—¥å¿—å¯¹è±¡
 } ngx_pool_cleanup_file_t;
 
 

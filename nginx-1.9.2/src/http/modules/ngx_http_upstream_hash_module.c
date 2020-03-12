@@ -91,16 +91,16 @@ static ngx_http_module_t  ngx_http_upstream_hash_module_ctx = {
 };
 
 /*
-¸ºÔØ¾ùºâÏà¹ØÅäÖÃ:
+è´Ÿè½½å‡è¡¡ç›¸å…³é…ç½®:
 upstream
 server
-ip_hash:¸ù¾İ¿Í»§¶ËµÄIPÀ´×öhash,²»¹ıÈç¹ûsquid -- nginx -- server(s)Ôò£¬ipÓÀÔ¶ÊÇsquid·şÎñÆ÷ip,Òò´Ë²»¹ÜÓÃ,ĞèÒªngx_http_realip_module»òÕßµÚÈı·½Ä£¿é
-keepalive:ÅäÖÃµ½ºó¶ËµÄ×î´óÁ¬½ÓÊı£¬±£³Ö³¤Á¬½Ó£¬²»±ØÎªÃ¿Ò»¸ö¿Í»§¶Ë¶¼ÖØĞÂ½¨Á¢nginxµ½ºó¶ËPHPµÈ·şÎñÆ÷µÄÁ¬½Ó£¬ĞèÒª±£³ÖºÍºó¶Ë
-    ³¤Á¬½Ó£¬ÀıÈçfastcgi:fastcgi_keep_conn on;       proxy:  proxy_http_version 1.1;  proxy_set_header Connection "";
-least_conn:¸ù¾İÆäÈ¨ÖØÖµ£¬½«ÇëÇó·¢ËÍµ½»îÔ¾Á¬½ÓÊı×îÉÙµÄÄÇÌ¨·şÎñÆ÷
-hash:¿ÉÒÔ°´ÕÕuri  ip µÈ²ÎÊı½øĞĞ×öhash
+ip_hash:æ ¹æ®å®¢æˆ·ç«¯çš„IPæ¥åšhash,ä¸è¿‡å¦‚æœsquid -- nginx -- server(s)åˆ™ï¼Œipæ°¸è¿œæ˜¯squidæœåŠ¡å™¨ip,å› æ­¤ä¸ç®¡ç”¨,éœ€è¦ngx_http_realip_moduleæˆ–è€…ç¬¬ä¸‰æ–¹æ¨¡å—
+keepalive:é…ç½®åˆ°åç«¯çš„æœ€å¤§è¿æ¥æ•°ï¼Œä¿æŒé•¿è¿æ¥ï¼Œä¸å¿…ä¸ºæ¯ä¸€ä¸ªå®¢æˆ·ç«¯éƒ½é‡æ–°å»ºç«‹nginxåˆ°åç«¯PHPç­‰æœåŠ¡å™¨çš„è¿æ¥ï¼Œéœ€è¦ä¿æŒå’Œåç«¯
+    é•¿è¿æ¥ï¼Œä¾‹å¦‚fastcgi:fastcgi_keep_conn on;       proxy:  proxy_http_version 1.1;  proxy_set_header Connection "";
+least_conn:æ ¹æ®å…¶æƒé‡å€¼ï¼Œå°†è¯·æ±‚å‘é€åˆ°æ´»è·ƒè¿æ¥æ•°æœ€å°‘çš„é‚£å°æœåŠ¡å™¨
+hash:å¯ä»¥æŒ‰ç…§uri  ip ç­‰å‚æ•°è¿›è¡Œåšhash
 
-²Î¿¼http://tengine.taobao.org/nginx_docs/cn/docs/http/ngx_http_upstream_module.html#ip_hash
+å‚è€ƒhttp://tengine.taobao.org/nginx_docs/cn/docs/http/ngx_http_upstream_module.html#ip_hash
 */
 ngx_module_t  ngx_http_upstream_hash_module = {
     NGX_MODULE_V1,
@@ -171,7 +171,7 @@ ngx_http_upstream_init_hash_peer(ngx_http_request_t *r,
 
 
 /*ngx_http_upstream_get_round_robin_peer ngx_http_upstream_get_least_conn_peer ngx_http_upstream_get_hash_peer  
-ngx_http_upstream_get_ip_hash_peer ngx_http_upstream_get_keepalive_peerµÈ */
+ngx_http_upstream_get_ip_hash_peer ngx_http_upstream_get_keepalive_peerç­‰ */
 static ngx_int_t
 ngx_http_upstream_get_hash_peer(ngx_peer_connection_t *pc, void *data)
 {

@@ -74,32 +74,32 @@ typedef struct {
 } ngx_addr_t;
 
 
-typedef struct { //Í¨Åä·û½âÎö¼ûngx_parse_inet_url
-    ngx_str_t                 url;//±£´æIPµØÖ·+¶Ë¿ÚĞÅÏ¢£¨e.g. 192.168.124.129:8011 »ò money.163.com£©
-    ngx_str_t                 host;//±£´æIPµØÖ·ĞÅÏ¢ //proxy_pass  http://10.10.0.103:8080/tttxx; ÖĞµÄ10.10.0.103
-    ngx_str_t                 port_text;//±£´æport×Ö·û´®
-    ngx_str_t                 uri;//uri²¿·Ö£¬ÔÚº¯Êıngx_parse_inet_url()ÖĞÉèÖÃ  http://10.10.0.103:8080/tttxx;ÖĞµÄ/tttxx
+typedef struct { //é€šé…ç¬¦è§£æè§ngx_parse_inet_url
+    ngx_str_t                 url;//ä¿å­˜IPåœ°å€+ç«¯å£ä¿¡æ¯ï¼ˆe.g. 192.168.124.129:8011 æˆ– money.163.comï¼‰
+    ngx_str_t                 host;//ä¿å­˜IPåœ°å€ä¿¡æ¯ //proxy_pass  http://10.10.0.103:8080/tttxx; ä¸­çš„10.10.0.103
+    ngx_str_t                 port_text;//ä¿å­˜portå­—ç¬¦ä¸²
+    ngx_str_t                 uri;//uriéƒ¨åˆ†ï¼Œåœ¨å‡½æ•°ngx_parse_inet_url()ä¸­è®¾ç½®  http://10.10.0.103:8080/tttxx;ä¸­çš„/tttxx
 
-    in_port_t                 port;//¶Ë¿Ú£¬e.g. listenÖ¸ÁîÖĞÖ¸¶¨µÄ¶Ë¿Ú£¨listen 192.168.124.129:8011£©
-    //Ä¬ÈÏ¶Ë¿Ú£¨µ±no_port×Ö¶ÎÎªÕæÊ±£¬½«Ä¬ÈÏ¶Ë¿Ú¸³Öµ¸øport×Ö¶Î£¬ Ä¬ÈÏ¶Ë¿ÚÍ¨³£ÊÇ80£©
-    in_port_t                 default_port; //ngx_http_core_listenÖĞÉèÖÃÎª80 //Ä¬ÈÏ¶Ë¿Ú£¨µ±no_port×Ö¶ÎÎªÕæÊ±£¬½«Ä¬ÈÏ¶Ë¿Ú¸³Öµ¸øport×Ö¶Î£¬ Ä¬ÈÏ¶Ë¿ÚÍ¨³£ÊÇ80£©
-    int                       family;//address family, AF_xxx  //AF_UNIX´ú±íÓòÌ×½Ó×Ö  AF_INET´ú±íÆÕÍ¨ÍøÂçÌ×½Ó×Ö
+    in_port_t                 port;//ç«¯å£ï¼Œe.g. listenæŒ‡ä»¤ä¸­æŒ‡å®šçš„ç«¯å£ï¼ˆlisten 192.168.124.129:8011ï¼‰
+    //é»˜è®¤ç«¯å£ï¼ˆå½“no_portå­—æ®µä¸ºçœŸæ—¶ï¼Œå°†é»˜è®¤ç«¯å£èµ‹å€¼ç»™portå­—æ®µï¼Œ é»˜è®¤ç«¯å£é€šå¸¸æ˜¯80ï¼‰
+    in_port_t                 default_port; //ngx_http_core_listenä¸­è®¾ç½®ä¸º80 //é»˜è®¤ç«¯å£ï¼ˆå½“no_portå­—æ®µä¸ºçœŸæ—¶ï¼Œå°†é»˜è®¤ç«¯å£èµ‹å€¼ç»™portå­—æ®µï¼Œ é»˜è®¤ç«¯å£é€šå¸¸æ˜¯80ï¼‰
+    int                       family;//address family, AF_xxx  //AF_UNIXä»£è¡¨åŸŸå¥—æ¥å­—  AF_INETä»£è¡¨æ™®é€šç½‘ç»œå¥—æ¥å­—
 
-    unsigned                  listen:1; //ngx_http_core_listenÖĞÖÃ1 //ÊÇ·ñÎªÖ¸¼àÌıÀàµÄÉèÖÃ
+    unsigned                  listen:1; //ngx_http_core_listenä¸­ç½®1 //æ˜¯å¦ä¸ºæŒ‡ç›‘å¬ç±»çš„è®¾ç½®
     unsigned                  uri_part:1;
-    unsigned                  no_resolve:1; //¸ù¾İÇé¿ö¾ö¶¨ÊÇ·ñ½âÎöÓòÃû£¨½«ÓòÃû½âÎöµ½IPµØÖ·£©
-    unsigned                  one_addr:1;  /* compatibility */ ///µÈÓÚ1Ê±£¬½öÓĞÒ»¸öIPµØÖ·
+    unsigned                  no_resolve:1; //æ ¹æ®æƒ…å†µå†³å®šæ˜¯å¦è§£æåŸŸåï¼ˆå°†åŸŸåè§£æåˆ°IPåœ°å€ï¼‰
+    unsigned                  one_addr:1;  /* compatibility */ ///ç­‰äº1æ—¶ï¼Œä»…æœ‰ä¸€ä¸ªIPåœ°å€
 
-    unsigned                  no_port:1;//±êÊ¶urlÖĞÃ»ÓĞÏÔÊ¾Ö¸¶¨¶Ë¿Ú(Îª1Ê±Ã»ÓĞÖ¸¶¨)  uriÖĞÊÇ·ñÓĞÖ¸¶¨¶Ë¿Ú
-    unsigned                  wildcard:1; //Èçlisten  *:80Ôò¸ÃÎ»ÖÃ1 //±êÊ¶ÊÇ·ñÊ¹ÓÃÍ¨Åä·û£¨e.g. listen *:8000;£©
+    unsigned                  no_port:1;//æ ‡è¯†urlä¸­æ²¡æœ‰æ˜¾ç¤ºæŒ‡å®šç«¯å£(ä¸º1æ—¶æ²¡æœ‰æŒ‡å®š)  uriä¸­æ˜¯å¦æœ‰æŒ‡å®šç«¯å£
+    unsigned                  wildcard:1; //å¦‚listen  *:80åˆ™è¯¥ä½ç½®1 //æ ‡è¯†æ˜¯å¦ä½¿ç”¨é€šé…ç¬¦ï¼ˆe.g. listen *:8000;ï¼‰
 
     socklen_t                 socklen;//sizeof(struct sockaddr_in)
-    u_char                    sockaddr[NGX_SOCKADDRLEN];//sockaddr_in½á¹¹Ö¸ÏòËü
+    u_char                    sockaddr[NGX_SOCKADDRLEN];//sockaddr_inç»“æ„æŒ‡å‘å®ƒ
 
-    ngx_addr_t               *addrs;//Êı×é´óĞ¡ÊÇnaddrs×Ö¶Î£»Ã¿¸öÔªËØ¶ÔÓ¦ÓòÃûµÄIPµØÖ·ĞÅÏ¢(struct sockaddr_in)£¬ÔÚº¯ÊıÖĞ¸³Öµ£¨ngx_inet_resolve_host()£©
-    ngx_uint_t                naddrs;//url¶ÔÓ¦µÄIPµØÖ·¸öÊı,IP¸ñÊ½µÄµØÖ·½«Ä¬ÈÏÎª1
+    ngx_addr_t               *addrs;//æ•°ç»„å¤§å°æ˜¯naddrså­—æ®µï¼›æ¯ä¸ªå…ƒç´ å¯¹åº”åŸŸåçš„IPåœ°å€ä¿¡æ¯(struct sockaddr_in)ï¼Œåœ¨å‡½æ•°ä¸­èµ‹å€¼ï¼ˆngx_inet_resolve_host()ï¼‰
+    ngx_uint_t                naddrs;//urlå¯¹åº”çš„IPåœ°å€ä¸ªæ•°,IPæ ¼å¼çš„åœ°å€å°†é»˜è®¤ä¸º1
 
-    char                     *err;//´íÎóĞÅÏ¢×Ö·û´®
+    char                     *err;//é”™è¯¯ä¿¡æ¯å­—ç¬¦ä¸²
 } ngx_url_t;
 
 

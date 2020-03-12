@@ -61,7 +61,7 @@ static char *ngx_openssl_engine(ngx_conf_t *cf, ngx_command_t *cmd, void *conf);
 static void ngx_openssl_exit(ngx_cycle_t *cycle);
 
 
-static ngx_command_t  ngx_openssl_commands[] = { //´ò¿ªsslÓ²¼ş¼ÓËÙ£¬ĞèÒªÓ²¼şÖ§³Ö£¬Í¨¹ıopenssl engine -t²é¿´
+static ngx_command_t  ngx_openssl_commands[] = { //æ‰“å¼€sslç¡¬ä»¶åŠ é€Ÿï¼Œéœ€è¦ç¡¬ä»¶æ”¯æŒï¼Œé€šè¿‡openssl engine -tæŸ¥çœ‹
 
     { ngx_string("ssl_engine"),
       NGX_MAIN_CONF|NGX_DIRECT_CONF|NGX_CONF_TAKE1,
@@ -1081,8 +1081,8 @@ ngx_ssl_set_session(ngx_connection_t *c, ngx_ssl_session_t *session)
     return NGX_OK;
 }
 
-/* TLSµ¥ÏòÈÏÖ¤ Ğ­ÒéÎÕÊÖ¹ı³Ì²Î¿¼http://www.ruanyifeng.com/blog/2014/02/ssl_tls.html */
-//tlsµ¥ÏòÈÏÖ¤ËÄ´ÎÎÕÊÖ¹ı³Ì£¬¶¼»áµ÷ÓÃ¸Ãº¯Êı´¦Àí£¬·µ»ØNGX_AGAIN±íÊ¾ÎÕÊÖ»¹Ã»ÓĞÍê³É£¬ĞèÒªÔÙ´Î½øĞĞºóĞøÎÕÊÖ¹ı³Ì
+/* TLSå•å‘è®¤è¯ åè®®æ¡æ‰‹è¿‡ç¨‹å‚è€ƒhttp://www.ruanyifeng.com/blog/2014/02/ssl_tls.html */
+//tlså•å‘è®¤è¯å››æ¬¡æ¡æ‰‹è¿‡ç¨‹ï¼Œéƒ½ä¼šè°ƒç”¨è¯¥å‡½æ•°å¤„ç†ï¼Œè¿”å›NGX_AGAINè¡¨ç¤ºæ¡æ‰‹è¿˜æ²¡æœ‰å®Œæˆï¼Œéœ€è¦å†æ¬¡è¿›è¡Œåç»­æ¡æ‰‹è¿‡ç¨‹
 ngx_int_t
 ngx_ssl_handshake(ngx_connection_t *c)
 {
@@ -1091,13 +1091,13 @@ ngx_ssl_handshake(ngx_connection_t *c)
 
     ngx_ssl_clear_error(c->log);
 
-    //ÕâÀï»áÊÔ×ÅÎÕÊÖ
-    n = SSL_do_handshake(c->ssl->connection); //¸Äº¯ÊıÄÚ²¿»áµ÷ÓÃngx_http_ssl_alpn_selectÖ´ĞĞ
+    //è¿™é‡Œä¼šè¯•ç€æ¡æ‰‹
+    n = SSL_do_handshake(c->ssl->connection); //æ”¹å‡½æ•°å†…éƒ¨ä¼šè°ƒç”¨ngx_http_ssl_alpn_selectæ‰§è¡Œ
 
     //0x80:SSLv2  0x16:SSLv3/TLSv1 
     ngx_log_debug1(NGX_LOG_DEBUG_EVENT, c->log, 0, "SSL_do_handshake: %d", n);
 
-    if (n == 1) { //ÎÕÊÖÍê³É
+    if (n == 1) { //æ¡æ‰‹å®Œæˆ
 
         if (ngx_handle_read_event(c->read, 0, NGX_FUNC_LINE) != NGX_OK) {
             return NGX_ERROR;
@@ -1138,7 +1138,7 @@ ngx_ssl_handshake(ngx_connection_t *c)
 
             *d = '\0';
 
-            /* ´òÓ¡ÃÜÂëºÍ°æ±¾£¬ÈçSSL: TLSv1.2, cipher: "ECDHE-RSA-AES128-GCM-SHA256 TLSv1.2 Kx=ECDH Au=RSA Enc=AESGCM(128) Mac=AEAD */
+            /* æ‰“å°å¯†ç å’Œç‰ˆæœ¬ï¼Œå¦‚SSL: TLSv1.2, cipher: "ECDHE-RSA-AES128-GCM-SHA256 TLSv1.2 Kx=ECDH Au=RSA Enc=AESGCM(128) Mac=AEAD */
             ngx_log_debug2(NGX_LOG_DEBUG_EVENT, c->log, 0,
                            "SSL: %s, cipher: \"%s\"",
                            SSL_get_version(c->ssl->connection), &buf[1]);
@@ -1171,14 +1171,14 @@ ngx_ssl_handshake(ngx_connection_t *c)
 
 #endif
 
-        return NGX_OK;//ÎÕÊÖÍê³É
+        return NGX_OK;//æ¡æ‰‹å®Œæˆ
     }
 
     sslerr = SSL_get_error(c->ssl->connection, n);
     
     ngx_log_debug1(NGX_LOG_DEBUG_EVENT, c->log, 0, "SSL_get_error: %d", sslerr);
-    //ÕâÀïÓ¦¸ÃÔÙÖØĞÂ½ÓÊÕÒ»´ÎºÍNGINXÒ»Ñù,µÈ´ıÏÂÒ»´ÎÑ­»·£¨epoll£©ÔÙ½øĞĞ£¬Í¬Ê±ÉèÖÃ¶ÁĞ´¾ä±ú£¬ÒÔ±ãÏÂ´Î¶ÁÈ¡µÄÊ±ºòÖ±½Ó½øĞĞÎÕÊÖ
-    //µ¥ÏòÈÏÖ¤ËÄ´ÎÎÕÊÖ¹ı³Ì»¹Ã»ÓĞÍê³É£¬ĞèÒª¼ÌĞøÎÕÊÖ
+    //è¿™é‡Œåº”è¯¥å†é‡æ–°æ¥æ”¶ä¸€æ¬¡å’ŒNGINXä¸€æ ·,ç­‰å¾…ä¸‹ä¸€æ¬¡å¾ªç¯ï¼ˆepollï¼‰å†è¿›è¡Œï¼ŒåŒæ—¶è®¾ç½®è¯»å†™å¥æŸ„ï¼Œä»¥ä¾¿ä¸‹æ¬¡è¯»å–çš„æ—¶å€™ç›´æ¥è¿›è¡Œæ¡æ‰‹
+    //å•å‘è®¤è¯å››æ¬¡æ¡æ‰‹è¿‡ç¨‹è¿˜æ²¡æœ‰å®Œæˆï¼Œéœ€è¦ç»§ç»­æ¡æ‰‹
     if (sslerr == SSL_ERROR_WANT_READ) {  //# define SSL_ERROR_WANT_READ             2
         c->read->ready = 0;
         c->read->handler = ngx_ssl_handshake_handler;
@@ -1192,7 +1192,7 @@ ngx_ssl_handshake(ngx_connection_t *c)
             return NGX_ERROR;
         }
 
-        return NGX_AGAIN;//ĞèÒª¼ÌĞøÎÕÊÖ
+        return NGX_AGAIN;//éœ€è¦ç»§ç»­æ¡æ‰‹
     }
 
     if (sslerr == SSL_ERROR_WANT_WRITE) {
@@ -1208,7 +1208,7 @@ ngx_ssl_handshake(ngx_connection_t *c)
             return NGX_ERROR;
         }
 
-        return NGX_AGAIN; //ĞèÒª¼ÌĞøÎÕÊÖ
+        return NGX_AGAIN; //éœ€è¦ç»§ç»­æ¡æ‰‹
     }
 
     err = (sslerr == SSL_ERROR_SYSCALL) ? ngx_errno : 0;
@@ -1228,11 +1228,11 @@ ngx_ssl_handshake(ngx_connection_t *c)
 
     ngx_ssl_connection_error(c, sslerr, err, "SSL_do_handshake() failed");
 
-    return NGX_ERROR; //ÎÕÊÖÊ§°Ü
+    return NGX_ERROR; //æ¡æ‰‹å¤±è´¥
 }
 
 
-/* tlsÎÕÊÖµÚÒ»²½£¬½ÓÊÕ¿Í»§¶Ë·¢ËÍ¹ıÀ´µÄClientHelloÇëÇó£¬TLSĞ­ÒéÎÕÊÖ¹ı³Ì²Î¿¼http://www.ruanyifeng.com/blog/2014/02/ssl_tls.html */
+/* tlsæ¡æ‰‹ç¬¬ä¸€æ­¥ï¼Œæ¥æ”¶å®¢æˆ·ç«¯å‘é€è¿‡æ¥çš„ClientHelloè¯·æ±‚ï¼ŒTLSåè®®æ¡æ‰‹è¿‡ç¨‹å‚è€ƒhttp://www.ruanyifeng.com/blog/2014/02/ssl_tls.html */
 static void
 ngx_ssl_handshake_handler(ngx_event_t *ev)
 {
@@ -1506,7 +1506,7 @@ ngx_ssl_write_handler(ngx_event_t *wev)
  * Besides for protocols such as HTTP it is possible to always buffer
  * the output to decrease a SSL overhead some more.
  */
-//·¢ËÍinÁ´ÖĞµÄÊı¾İµ½c£¬Èç¹û·¢ËÍinÃ»ÓĞÈ«²¿·¢ËÍ³É¹¦£¬ÔòÊ£ÓàµÄ²¿·ÖÊı¾İÍ¨¹ıin·µ»Ø
+//å‘é€iné“¾ä¸­çš„æ•°æ®åˆ°cï¼Œå¦‚æœå‘é€inæ²¡æœ‰å…¨éƒ¨å‘é€æˆåŠŸï¼Œåˆ™å‰©ä½™çš„éƒ¨åˆ†æ•°æ®é€šè¿‡inè¿”å›
 ngx_chain_t *
 ngx_ssl_send_chain(ngx_connection_t *c, ngx_chain_t *in, off_t limit)
 {

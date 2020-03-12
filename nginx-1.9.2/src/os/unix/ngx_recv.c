@@ -138,65 +138,65 @@ ngx_unix_recv(ngx_connection_t *c, u_char *buf, size_t size)
 
     do {
         /*
-            Õë¶Ô·Ç×èÈûI/OÖ´ÐÐµÄÏµÍ³µ÷ÓÃÔò×ÜÊÇÁ¢¼´·µ»Ø£¬¶ø²»¹ÜÊÂ¼þ×ã·ñÒÑ¾­·¢Éú¡£Èç¹ûÊÂ¼þÃ»ÓÐíõ¼´·¢Éú£¬ÕâÐ©ÏµÍ³µ÷ÓÃ¾Í
-        ·µ»Ø¡ª1£®ºÍ³ö´íµÄÇé¿öÒ»Ñù¡£´ËÊ±ÎÒÃÇ±ØÐë¸ù¾ÝerrnoÀ´Çø·ÖÕâÁ½ÖÖÇé¿ö¡£¶Ôaccept¡¢sendºÍrecv¶øÑÔ£¬ÊÂ¼þÎ´·¢Å£Ê±errno
-        Í¨³£±»ÉèÖÃ³ÉEAGAIN£¨ÒâÎª¡°ÔÙÀ´Ò»´Î¡±£©»òÕßEWOULDBLOCK£¨ÒâÎª¡°ÆÚ´ý×èÈû¡±£©£º¶Ôconncct¶øÑÔ£¬errnoÔò±»
-        ÉèÖÃ³ÉEINPROGRESS£¨ÒâÎª¡°ÔÚ´¦ÀíÖÐ"£©¡£
+            é’ˆå¯¹éžé˜»å¡žI/Oæ‰§è¡Œçš„ç³»ç»Ÿè°ƒç”¨åˆ™æ€»æ˜¯ç«‹å³è¿”å›žï¼Œè€Œä¸ç®¡äº‹ä»¶è¶³å¦å·²ç»å‘ç”Ÿã€‚å¦‚æžœäº‹ä»¶æ²¡æœ‰çœ­å³å‘ç”Ÿï¼Œè¿™äº›ç³»ç»Ÿè°ƒç”¨å°±
+        è¿”å›žâ€•1ï¼Žå’Œå‡ºé”™çš„æƒ…å†µä¸€æ ·ã€‚æ­¤æ—¶æˆ‘ä»¬å¿…é¡»æ ¹æ®errnoæ¥åŒºåˆ†è¿™ä¸¤ç§æƒ…å†µã€‚å¯¹acceptã€sendå’Œrecvè€Œè¨€ï¼Œäº‹ä»¶æœªå‘ç‰›æ—¶errno
+        é€šå¸¸è¢«è®¾ç½®æˆEAGAINï¼ˆæ„ä¸ºâ€œå†æ¥ä¸€æ¬¡â€ï¼‰æˆ–è€…EWOULDBLOCKï¼ˆæ„ä¸ºâ€œæœŸå¾…é˜»å¡žâ€ï¼‰ï¼šå¯¹conncctè€Œè¨€ï¼Œerrnoåˆ™è¢«
+        è®¾ç½®æˆEINPROGRESSï¼ˆæ„ä¸ºâ€œåœ¨å¤„ç†ä¸­"ï¼‰ã€‚
           */
         //n = recv(c->fd, buf, size, 0); yang test
         //These calls return the number of bytes received, or -1 if an error occurred.  The return value will be 0 when the peer has performed an orderly shutdown.
-        n = recv(c->fd, buf, size, 0);//±íÊ¾TCP´íÎó£¬¼ûngx_http_read_request_header   recv·µ»Ø0±íÊ¾¶Ô·½ÒÑ¾­¹Ø±ÕÁ¬½Ó
+        n = recv(c->fd, buf, size, 0);//è¡¨ç¤ºTCPé”™è¯¯ï¼Œè§ngx_http_read_request_header   recvè¿”å›ž0è¡¨ç¤ºå¯¹æ–¹å·²ç»å…³é—­è¿žæŽ¥
 
-        //¶ÁÈ¡³É¹¦£¬Ö±½Ó·µ»Ø   
+        //è¯»å–æˆåŠŸï¼Œç›´æŽ¥è¿”å›ž   
 
 
 
-        //recv·µ»Ø0£¬±¾¶Ë²»Ó¦¸ÃÈ¥¹Ø±ÕÁ¬½Ó£¬Èç¹ûÊÇÒòÎª¶Ô¶ËÊ¹ÓÃÁËshutdownÀ´¹Ø±Õ°ëÁ¬½Ó£¬±¾¶Ë»¹ÊÇ¿ÉÒÔ·¢ËÍÊý¾ÝµÄ£¬ÖªÊ¶²»ÄÜ¶ÁÊý¾Ý£¬ËùÒÔÕâÀïÖÃready=0
-        //Èç¹û²»ÊÇ¶Ô¶Ëshutdown£¬ÄÇÃ´ËµÃ÷ÊÇÒòÎª¶Á»º³åÇøÊý¾Ý¶ÁÍêÁË£¬Ã»Êý¾ÝÁË£¬¶Á²»µ½Êý¾Ý£¬ËùÒÔ·µ»Ø0¡£·µ»Ø0²»ÄÜ±¾¶Ë²»ÄÜ¹Ø±ÕÌ×½Ó×Ö
-        //recv·µ»Ø0£¬±íÊ¾¶Ô¶ËÊ¹ÓÃshutdownÀ´ÊµÏÖ°ë¹Ø±Õ»òÕßÒì²½¶ÁÐ´µÄÇé¿öÏÂ£¬»º³åÇøÃ»ÓÐÊý¾Ý¿É¶Á£¬Ò²»á·µ»Ø0¡£send·µ»Ø0µ±×÷Õý³£Çé¿ö´¦Àí
-        if (n == 0) { //±íÊ¾TCP´íÎó£¬¼ûngx_http_read_request_header   recv·µ»Ø0±íÊ¾¶Ô·½ÒÑ¾­¹Ø±ÕÁ¬½Ó The return value will be 0 when the peer has performed an orderly shutdown.
-            rev->ready = 0;//Êý¾Ý¶ÁÈ¡Íê±ÏreadyÖÃ0
+        //recvè¿”å›ž0ï¼Œæœ¬ç«¯ä¸åº”è¯¥åŽ»å…³é—­è¿žæŽ¥ï¼Œå¦‚æžœæ˜¯å› ä¸ºå¯¹ç«¯ä½¿ç”¨äº†shutdownæ¥å…³é—­åŠè¿žæŽ¥ï¼Œæœ¬ç«¯è¿˜æ˜¯å¯ä»¥å‘é€æ•°æ®çš„ï¼ŒçŸ¥è¯†ä¸èƒ½è¯»æ•°æ®ï¼Œæ‰€ä»¥è¿™é‡Œç½®ready=0
+        //å¦‚æžœä¸æ˜¯å¯¹ç«¯shutdownï¼Œé‚£ä¹ˆè¯´æ˜Žæ˜¯å› ä¸ºè¯»ç¼“å†²åŒºæ•°æ®è¯»å®Œäº†ï¼Œæ²¡æ•°æ®äº†ï¼Œè¯»ä¸åˆ°æ•°æ®ï¼Œæ‰€ä»¥è¿”å›ž0ã€‚è¿”å›ž0ä¸èƒ½æœ¬ç«¯ä¸èƒ½å…³é—­å¥—æŽ¥å­—
+        //recvè¿”å›ž0ï¼Œè¡¨ç¤ºå¯¹ç«¯ä½¿ç”¨shutdownæ¥å®žçŽ°åŠå…³é—­æˆ–è€…å¼‚æ­¥è¯»å†™çš„æƒ…å†µä¸‹ï¼Œç¼“å†²åŒºæ²¡æœ‰æ•°æ®å¯è¯»ï¼Œä¹Ÿä¼šè¿”å›ž0ã€‚sendè¿”å›ž0å½“ä½œæ­£å¸¸æƒ…å†µå¤„ç†
+        if (n == 0) { //è¡¨ç¤ºTCPé”™è¯¯ï¼Œè§ngx_http_read_request_header   recvè¿”å›ž0è¡¨ç¤ºå¯¹æ–¹å·²ç»å…³é—­è¿žæŽ¥ The return value will be 0 when the peer has performed an orderly shutdown.
+            rev->ready = 0;//æ•°æ®è¯»å–å®Œæ¯•readyç½®0
             rev->eof = 1;
             goto end;
 
         } else if (n > 0) {
-            //ÆÚ´ý·¢ËÍ1000×Ö½Ú£¬Êµ¼ÊÉÏ·µ»Ø500×Ö½Ú£¬ËµÃ÷ÄÚºË»º³åÇø½ÓÊÕµ½Õâ500×Ö½ÚºóÒÑ¾­ÂúÁË£¬²»ÄÜÔÚÐ´, readÎª0£¬Ö»ÓÐµÈepollÐ´ÊÂ¼þ´¥·¢ read
-            //µ«ÊÇ£¬½ÓÊÕÈç¹ûÆÚ´ý½ÓÊÕ1000×Ö½Ú£¬·µ»Ø500×Ö½ÚÔòËµÃ÷ÎÒÄÚºË»º³åÇøÖÐÖ»ÓÐ500×Ö½Ú£¬Òò´Ë¿ÉÒÔ¼ÌÐørecv£¬ready»¹ÊÇÎª1
+            //æœŸå¾…å‘é€1000å­—èŠ‚ï¼Œå®žé™…ä¸Šè¿”å›ž500å­—èŠ‚ï¼Œè¯´æ˜Žå†…æ ¸ç¼“å†²åŒºæŽ¥æ”¶åˆ°è¿™500å­—èŠ‚åŽå·²ç»æ»¡äº†ï¼Œä¸èƒ½åœ¨å†™, readä¸º0ï¼Œåªæœ‰ç­‰epollå†™äº‹ä»¶è§¦å‘ read
+            //ä½†æ˜¯ï¼ŒæŽ¥æ”¶å¦‚æžœæœŸå¾…æŽ¥æ”¶1000å­—èŠ‚ï¼Œè¿”å›ž500å­—èŠ‚åˆ™è¯´æ˜Žæˆ‘å†…æ ¸ç¼“å†²åŒºä¸­åªæœ‰500å­—èŠ‚ï¼Œå› æ­¤å¯ä»¥ç»§ç»­recvï¼Œreadyè¿˜æ˜¯ä¸º1
             if ((size_t) n < size
-                && !(ngx_event_flags & NGX_USE_GREEDY_EVENT)) //Êý¾Ý¶ÁÈ¡Íê±ÏreadyÖÃ0,ÐèÒªÖØÐÂÌí¼Óadd epoll event
+                && !(ngx_event_flags & NGX_USE_GREEDY_EVENT)) //æ•°æ®è¯»å–å®Œæ¯•readyç½®0,éœ€è¦é‡æ–°æ·»åŠ add epoll event
             {
-                rev->ready = 0; //ÎÒÆÚÍû¶ÁÈ¡1000×Ö½Ú£¬µ¥Êµ¼ÊÉÏ·µ»Ø500×Ö½Ú£¬ËµÃ÷ÄÚºË»º³åÇøÊý¾ÝÒÑ¾­¶ÁÈ¡Íê±Ï  epoll²»»á×ßµ½ÕâÀï
+                rev->ready = 0; //æˆ‘æœŸæœ›è¯»å–1000å­—èŠ‚ï¼Œå•å®žé™…ä¸Šè¿”å›ž500å­—èŠ‚ï¼Œè¯´æ˜Žå†…æ ¸ç¼“å†²åŒºæ•°æ®å·²ç»è¯»å–å®Œæ¯•  epollä¸ä¼šèµ°åˆ°è¿™é‡Œ
             }
 
             goto end;
         }
 
-        //Èç¹ûÄÚºËÊý¾Ý½ÓÊÕÍê±Ï£¬Ôò×ßµ½ÕâÀïnÎª-1£¬errÎªNGX_EAGAIN
+        //å¦‚æžœå†…æ ¸æ•°æ®æŽ¥æ”¶å®Œæ¯•ï¼Œåˆ™èµ°åˆ°è¿™é‡Œnä¸º-1ï¼Œerrä¸ºNGX_EAGAIN
         err = ngx_socket_errno;
         
         /* 
-          EINTR´íÎóµÄ²úÉú£ºµ±×èÈûÓÚÄ³¸öÂýÏµÍ³µ÷ÓÃµÄÒ»¸ö½ø³Ì²¶»ñÄ³¸öÐÅºÅÇÒÏàÓ¦ÐÅºÅ´¦Àíº¯Êý·µ»ØÊ±£¬¸ÃÏµÍ³µ÷ÓÃ¿ÉÄÜ·µ»ØÒ»¸öEINTR´íÎó¡£   
-          ÔÚlinux½øÐÐ·Ç×èÈûµÄsocket½ÓÊÕÊý¾ÝÊ±¾­³£³öÏÖResource temporarily unavailable£¬errno´úÂëÎª11(EAGAIN)£¬Õâ±íÃ÷ÄãÔÚ·Ç×èÈûÄ£Ê½ÏÂµ÷ÓÃÁË×èÈû²Ù×÷£¬
-          ÔÚ¸Ã²Ù×÷Ã»ÓÐÍê³É¾Í·µ»ØÕâ¸ö´íÎó£¬Õâ¸ö´íÎó²»»áÆÆ»µsocketµÄÍ¬²½£¬²»ÓÃ¹ÜËü£¬ÏÂ´ÎÑ­»·½Ó×Årecv¾Í¿ÉÒÔ¡£¶Ô·Ç×èÈûsocket¶øÑÔ£¬EAGAIN²»ÊÇÒ»ÖÖ´íÎó¡£
-          ÔÚVxWorksºÍWindowsÉÏ£¬EAGAINµÄÃû×Ö½Ð×öEWOULDBLOCK¡£ ÁíÍâ£¬Èç¹û³öÏÖEINTR¼´errnoÎª4£¬´íÎóÃèÊöInterrupted system call£¬²Ù×÷Ò²Ó¦¸Ã¼ÌÐø¡£
+          EINTRé”™è¯¯çš„äº§ç”Ÿï¼šå½“é˜»å¡žäºŽæŸä¸ªæ…¢ç³»ç»Ÿè°ƒç”¨çš„ä¸€ä¸ªè¿›ç¨‹æ•èŽ·æŸä¸ªä¿¡å·ä¸”ç›¸åº”ä¿¡å·å¤„ç†å‡½æ•°è¿”å›žæ—¶ï¼Œè¯¥ç³»ç»Ÿè°ƒç”¨å¯èƒ½è¿”å›žä¸€ä¸ªEINTRé”™è¯¯ã€‚   
+          åœ¨linuxè¿›è¡Œéžé˜»å¡žçš„socketæŽ¥æ”¶æ•°æ®æ—¶ç»å¸¸å‡ºçŽ°Resource temporarily unavailableï¼Œerrnoä»£ç ä¸º11(EAGAIN)ï¼Œè¿™è¡¨æ˜Žä½ åœ¨éžé˜»å¡žæ¨¡å¼ä¸‹è°ƒç”¨äº†é˜»å¡žæ“ä½œï¼Œ
+          åœ¨è¯¥æ“ä½œæ²¡æœ‰å®Œæˆå°±è¿”å›žè¿™ä¸ªé”™è¯¯ï¼Œè¿™ä¸ªé”™è¯¯ä¸ä¼šç ´åsocketçš„åŒæ­¥ï¼Œä¸ç”¨ç®¡å®ƒï¼Œä¸‹æ¬¡å¾ªçŽ¯æŽ¥ç€recvå°±å¯ä»¥ã€‚å¯¹éžé˜»å¡žsocketè€Œè¨€ï¼ŒEAGAINä¸æ˜¯ä¸€ç§é”™è¯¯ã€‚
+          åœ¨VxWorkså’ŒWindowsä¸Šï¼ŒEAGAINçš„åå­—å«åšEWOULDBLOCKã€‚ å¦å¤–ï¼Œå¦‚æžœå‡ºçŽ°EINTRå³errnoä¸º4ï¼Œé”™è¯¯æè¿°Interrupted system callï¼Œæ“ä½œä¹Ÿåº”è¯¥ç»§ç»­ã€‚
 
-          ÔÚLinux»·¾³ÏÂ¿ª·¢¾­³£»áÅöµ½ºÜ¶à´íÎó(ÉèÖÃerrno)£¬ÆäÖÐEAGAINÊÇÆäÖÐ±È½Ï³£¼ûµÄÒ»¸ö´íÎó(±ÈÈçÓÃÔÚ·Ç×èÈû²Ù×÷ÖÐ)¡£
-´Ó×ÖÃæÉÏÀ´¿´£¬ÊÇÌáÊ¾ÔÙÊÔÒ»´Î¡£Õâ¸ö´íÎó¾­³£³öÏÖÔÚµ±Ó¦ÓÃ³ÌÐò½øÐÐÒ»Ð©·Ç×èÈû(non-blocking)²Ù×÷(¶ÔÎÄ¼þ»òsocket)µÄÊ±ºò¡£
-ÀýÈç£¬ÒÔ O_NONBLOCKµÄ±êÖ¾´ò¿ªÎÄ¼þ/socket/FIFO£¬Èç¹ûÄãÁ¬Ðø×öread²Ù×÷¶øÃ»ÓÐÊý¾Ý¿É¶Á¡£´ËÊ±³ÌÐò²»»á×èÈûÆðÀ´µÈ´ýÊý¾Ý×¼±¸¾ÍÐ÷·µ»Ø£¬
-readº¯Êý»á·µ»ØÒ»¸ö´íÎóEAGAIN£¬ÌáÊ¾ÄãµÄÓ¦ÓÃ³ÌÐòÏÖÔÚÃ»ÓÐÊý¾Ý¿É¶ÁÇëÉÔºóÔÙÊÔ¡£
+          åœ¨LinuxçŽ¯å¢ƒä¸‹å¼€å‘ç»å¸¸ä¼šç¢°åˆ°å¾ˆå¤šé”™è¯¯(è®¾ç½®errno)ï¼Œå…¶ä¸­EAGAINæ˜¯å…¶ä¸­æ¯”è¾ƒå¸¸è§çš„ä¸€ä¸ªé”™è¯¯(æ¯”å¦‚ç”¨åœ¨éžé˜»å¡žæ“ä½œä¸­)ã€‚
+ä»Žå­—é¢ä¸Šæ¥çœ‹ï¼Œæ˜¯æç¤ºå†è¯•ä¸€æ¬¡ã€‚è¿™ä¸ªé”™è¯¯ç»å¸¸å‡ºçŽ°åœ¨å½“åº”ç”¨ç¨‹åºè¿›è¡Œä¸€äº›éžé˜»å¡ž(non-blocking)æ“ä½œ(å¯¹æ–‡ä»¶æˆ–socket)çš„æ—¶å€™ã€‚
+ä¾‹å¦‚ï¼Œä»¥ O_NONBLOCKçš„æ ‡å¿—æ‰“å¼€æ–‡ä»¶/socket/FIFOï¼Œå¦‚æžœä½ è¿žç»­åšreadæ“ä½œè€Œæ²¡æœ‰æ•°æ®å¯è¯»ã€‚æ­¤æ—¶ç¨‹åºä¸ä¼šé˜»å¡žèµ·æ¥ç­‰å¾…æ•°æ®å‡†å¤‡å°±ç»ªè¿”å›žï¼Œ
+readå‡½æ•°ä¼šè¿”å›žä¸€ä¸ªé”™è¯¯EAGAINï¼Œæç¤ºä½ çš„åº”ç”¨ç¨‹åºçŽ°åœ¨æ²¡æœ‰æ•°æ®å¯è¯»è¯·ç¨åŽå†è¯•ã€‚
           */
-        if (err == NGX_EAGAIN || err == NGX_EINTR) {  //ÕâÁ½ÖÖÇé¿ö ,ÐèÒª¼ÌÐø¶Á
+        if (err == NGX_EAGAIN || err == NGX_EINTR) {  //è¿™ä¸¤ç§æƒ…å†µ ,éœ€è¦ç»§ç»­è¯»
             
             ngx_log_debug0(NGX_LOG_DEBUG_EVENT, c->log, err,
                            "recv() not ready"); //recv() not ready (11: Resource temporarily unavailable)
-            n = NGX_AGAIN; //·µ»ØÕâ¸ö±íÊ¾ÄÚºËÊý¾ÝÒÑÓÐµÄÊý¾ÝÒÑ¾­¶ÁÈ¡Íê£¬ÐèÒªÖØÐÂadd epoll eventÀ´´¥·¢ÐÂÊý¾Ýepoll·µ»Ø
+            n = NGX_AGAIN; //è¿”å›žè¿™ä¸ªè¡¨ç¤ºå†…æ ¸æ•°æ®å·²æœ‰çš„æ•°æ®å·²ç»è¯»å–å®Œï¼Œéœ€è¦é‡æ–°add epoll eventæ¥è§¦å‘æ–°æ•°æ®epollè¿”å›ž
 
-        } else {//TCPÁ¬½Ó³ö´íÁË
+        } else {//TCPè¿žæŽ¥å‡ºé”™äº†
             n = ngx_connection_error(c, err, "recv() failed");
             break;
         }
 
-    } while (err == NGX_EINTR); //Èç¹û¶Á¹ý³ÌÖÐ±»ÖÐ¶ÏÇÐ»»£¬Ôò¼ÌÐø¶Á
+    } while (err == NGX_EINTR); //å¦‚æžœè¯»è¿‡ç¨‹ä¸­è¢«ä¸­æ–­åˆ‡æ¢ï¼Œåˆ™ç»§ç»­è¯»
 
     rev->ready = 0;
 

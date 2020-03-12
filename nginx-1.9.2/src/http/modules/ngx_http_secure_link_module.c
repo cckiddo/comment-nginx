@@ -11,42 +11,42 @@
 #include <ngx_md5.h>
 
 /*
-ÑéÖ¤È¨ÏŞÓĞÁ½ÖÖ·½Ê½£¬Ò»ÖÖÊÇsecure_link_secret£¬ÁíÒ»ÖÖÊÇsecure_link+secure_link_md5,ËûÃÇ²»ÄÜ¹²´æ£¬¼ûngx_http_secure_link_merge_conf
+éªŒè¯æƒé™æœ‰ä¸¤ç§æ–¹å¼ï¼Œä¸€ç§æ˜¯secure_link_secretï¼Œå¦ä¸€ç§æ˜¯secure_link+secure_link_md5,ä»–ä»¬ä¸èƒ½å…±å­˜ï¼Œè§ngx_http_secure_link_merge_conf
 
-Èç¹ûÊÇsecure_link+secure_link_md5·½Ê½£¬ÔòÒ»°ã¿Í»§¶ËÇëÇóuriÖĞĞ¯´øsecure_link $md5_str, timeÖĞµÄmd5_str×Ö·û´®£¬nginxÊÕµ½ºó£¬½øĞĞ64base decode
-¼ÆËã³ö×Ö·û´®ºó£¬°Ñ¸Ã×Ö·û´®Óësecure_link_md5×Ö·û´®½øĞĞMD5ÔËËã£¬Í¬Ê±ÅĞ¶Ïsecure_link $md5_str, timeÖĞµÄtimeºÍµ±Ç°Ê±¼äÊÇ·ñ¹ıÆÚ£¬Èç¹û×Ö·û´®
-±È½ÏÏàÍ¬²¢ÇÒÃ»ÓĞ¹ıÆÚ£¬ÔòÖÃ±äÁ¿$secure_linkÎª'1'£¬·ñÔò×Ó±äÁ¿Îª¡®0'£¬¼ûngx_http_secure_link_variable£¬Í¬Ê±°Ñsecure_link $md5_str, time
-ÖĞµÄtime´æÈë±äÁ¿$secure_link_expires
+å¦‚æœæ˜¯secure_link+secure_link_md5æ–¹å¼ï¼Œåˆ™ä¸€èˆ¬å®¢æˆ·ç«¯è¯·æ±‚uriä¸­æºå¸¦secure_link $md5_str, timeä¸­çš„md5_strå­—ç¬¦ä¸²ï¼Œnginxæ”¶åˆ°åï¼Œè¿›è¡Œ64base decode
+è®¡ç®—å‡ºå­—ç¬¦ä¸²åï¼ŒæŠŠè¯¥å­—ç¬¦ä¸²ä¸secure_link_md5å­—ç¬¦ä¸²è¿›è¡ŒMD5è¿ç®—ï¼ŒåŒæ—¶åˆ¤æ–­secure_link $md5_str, timeä¸­çš„timeå’Œå½“å‰æ—¶é—´æ˜¯å¦è¿‡æœŸï¼Œå¦‚æœå­—ç¬¦ä¸²
+æ¯”è¾ƒç›¸åŒå¹¶ä¸”æ²¡æœ‰è¿‡æœŸï¼Œåˆ™ç½®å˜é‡$secure_linkä¸º'1'ï¼Œå¦åˆ™å­å˜é‡ä¸ºâ€˜0'ï¼Œè§ngx_http_secure_link_variableï¼ŒåŒæ—¶æŠŠsecure_link $md5_str, time
+ä¸­çš„timeå­˜å…¥å˜é‡$secure_link_expires
 
-Èç¹ûÊÇsecure_link_secret·½Ê½£¬ÔòÊÇ°Ñ¿Í»§¶ËÇëÇóuriÖĞµÄ/p/5e814704a28d9bc1914ff19fa0c4a00a/link/xxÖĞµÄ5e814704a28d9bc1914ff19fa0c4a00a×Ö·û´®Óë
-secure_link_secret xxx¼ÆËã³öµÄMD5Öµ½øĞĞ±È½Ï£¬ÏàÍ¬ÔòÓĞÈ¨ÏŞ£¬ÖÃ±äÁ¿$secure_linkÎª'1'£¬·ñÔò×Ó±äÁ¿Îª¡®0'¡£¸Ã·½Ê½²»Éæ¼°time¹ıÆÚ
+å¦‚æœæ˜¯secure_link_secretæ–¹å¼ï¼Œåˆ™æ˜¯æŠŠå®¢æˆ·ç«¯è¯·æ±‚uriä¸­çš„/p/5e814704a28d9bc1914ff19fa0c4a00a/link/xxä¸­çš„5e814704a28d9bc1914ff19fa0c4a00aå­—ç¬¦ä¸²ä¸
+secure_link_secret xxxè®¡ç®—å‡ºçš„MD5å€¼è¿›è¡Œæ¯”è¾ƒï¼Œç›¸åŒåˆ™æœ‰æƒé™ï¼Œç½®å˜é‡$secure_linkä¸º'1'ï¼Œå¦åˆ™å­å˜é‡ä¸ºâ€˜0'ã€‚è¯¥æ–¹å¼ä¸æ¶‰åŠtimeè¿‡æœŸ
 */
 
-//²Î¿¼ngx_http_secure_link_commands
+//å‚è€ƒngx_http_secure_link_commands
 typedef struct {
-    ngx_http_complex_value_t  *variable; //secure_link md5_str, 120ÅäÖÃ£¬ ¼ûngx_http_set_complex_value_slot
-//ÃüÁîĞĞÇÃecho -n 'secure_link_md5ÅäÖÃµÄ×Ö·û´®' |     openssl md5 -binary | openssl base64 | tr +/ -_ | tr -d = »ñÈ¡×Ö·û´®¶ÔÓ¦µÄMD5Öµ
-    ngx_http_complex_value_t  *md5;//secure_link_md5 $the_uri_you_want_to_hashed_by_md5ÅäÖÃ
-//ÃüÁîĞĞÇÃecho -n 'secure_link_secretÅäÖÃµÄ×Ö·û´®' | openssl md5 -hex  »ñÈ¡secure_link_secretÅäÖÃÅäÖÃµÄMD5ĞÅÏ¢
-    ngx_str_t                  secret;//secure_link_secretÅäÖÃ
+    ngx_http_complex_value_t  *variable; //secure_link md5_str, 120é…ç½®ï¼Œ è§ngx_http_set_complex_value_slot
+//å‘½ä»¤è¡Œæ•²echo -n 'secure_link_md5é…ç½®çš„å­—ç¬¦ä¸²' |     openssl md5 -binary | openssl base64 | tr +/ -_ | tr -d = è·å–å­—ç¬¦ä¸²å¯¹åº”çš„MD5å€¼
+    ngx_http_complex_value_t  *md5;//secure_link_md5 $the_uri_you_want_to_hashed_by_md5é…ç½®
+//å‘½ä»¤è¡Œæ•²echo -n 'secure_link_secreté…ç½®çš„å­—ç¬¦ä¸²' | openssl md5 -hex  è·å–secure_link_secreté…ç½®é…ç½®çš„MD5ä¿¡æ¯
+    ngx_str_t                  secret;//secure_link_secreté…ç½®
 } ngx_http_secure_link_conf_t;
 
 
 /*
-ÑéÖ¤È¨ÏŞÓĞÁ½ÖÖ·½Ê½£¬Ò»ÖÖÊÇsecure_link_secret£¬ÁíÒ»ÖÖÊÇsecure_link+secure_link_md5,ËûÃÇ²»ÄÜ¹²´æ£¬¼ûngx_http_secure_link_merge_conf
+éªŒè¯æƒé™æœ‰ä¸¤ç§æ–¹å¼ï¼Œä¸€ç§æ˜¯secure_link_secretï¼Œå¦ä¸€ç§æ˜¯secure_link+secure_link_md5,ä»–ä»¬ä¸èƒ½å…±å­˜ï¼Œè§ngx_http_secure_link_merge_conf
 
-Èç¹ûÊÇsecure_link+secure_link_md5·½Ê½£¬ÔòÒ»°ã¿Í»§¶ËÇëÇóuriÖĞĞ¯´øsecure_link $md5_str, timeÖĞµÄmd5_str×Ö·û´®£¬nginxÊÕµ½ºó£¬½øĞĞ64base decode
-¼ÆËã³ö×Ö·û´®ºó£¬°Ñ¸Ã×Ö·û´®Óësecure_link_md5×Ö·û´®½øĞĞMD5ÔËËã£¬Í¬Ê±ÅĞ¶Ïsecure_link $md5_str, timeÖĞµÄtimeºÍµ±Ç°Ê±¼äÊÇ·ñ¹ıÆÚ£¬Èç¹û×Ö·û´®
-±È½ÏÏàÍ¬²¢ÇÒÃ»ÓĞ¹ıÆÚ£¬ÔòÖÃ±äÁ¿$secure_linkÎª'1'£¬·ñÔò×Ó±äÁ¿Îª¡®0'£¬¼ûngx_http_secure_link_variable£¬Í¬Ê±°Ñsecure_link $md5_str, time
-ÖĞµÄtime´æÈë±äÁ¿$secure_link_expires
+å¦‚æœæ˜¯secure_link+secure_link_md5æ–¹å¼ï¼Œåˆ™ä¸€èˆ¬å®¢æˆ·ç«¯è¯·æ±‚uriä¸­æºå¸¦secure_link $md5_str, timeä¸­çš„md5_strå­—ç¬¦ä¸²ï¼Œnginxæ”¶åˆ°åï¼Œè¿›è¡Œ64base decode
+è®¡ç®—å‡ºå­—ç¬¦ä¸²åï¼ŒæŠŠè¯¥å­—ç¬¦ä¸²ä¸secure_link_md5å­—ç¬¦ä¸²è¿›è¡ŒMD5è¿ç®—ï¼ŒåŒæ—¶åˆ¤æ–­secure_link $md5_str, timeä¸­çš„timeå’Œå½“å‰æ—¶é—´æ˜¯å¦è¿‡æœŸï¼Œå¦‚æœå­—ç¬¦ä¸²
+æ¯”è¾ƒç›¸åŒå¹¶ä¸”æ²¡æœ‰è¿‡æœŸï¼Œåˆ™ç½®å˜é‡$secure_linkä¸º'1'ï¼Œå¦åˆ™å­å˜é‡ä¸ºâ€˜0'ï¼Œè§ngx_http_secure_link_variableï¼ŒåŒæ—¶æŠŠsecure_link $md5_str, time
+ä¸­çš„timeå­˜å…¥å˜é‡$secure_link_expires
 
-Èç¹ûÊÇsecure_link_secret·½Ê½£¬ÔòÊÇ°Ñ¿Í»§¶ËÇëÇóuriÖĞµÄ/p/5e814704a28d9bc1914ff19fa0c4a00a/link/xxÖĞµÄ5e814704a28d9bc1914ff19fa0c4a00a×Ö·û´®Óë
-secure_link_secret xxx¼ÆËã³öµÄMD5Öµ½øĞĞ±È½Ï£¬ÏàÍ¬ÔòÓĞÈ¨ÏŞ£¬ÖÃ±äÁ¿$secure_linkÎª'1'£¬·ñÔò×Ó±äÁ¿Îª¡®0'¡£¸Ã·½Ê½²»Éæ¼°time¹ıÆÚ
+å¦‚æœæ˜¯secure_link_secretæ–¹å¼ï¼Œåˆ™æ˜¯æŠŠå®¢æˆ·ç«¯è¯·æ±‚uriä¸­çš„/p/5e814704a28d9bc1914ff19fa0c4a00a/link/xxä¸­çš„5e814704a28d9bc1914ff19fa0c4a00aå­—ç¬¦ä¸²ä¸
+secure_link_secret xxxè®¡ç®—å‡ºçš„MD5å€¼è¿›è¡Œæ¯”è¾ƒï¼Œç›¸åŒåˆ™æœ‰æƒé™ï¼Œç½®å˜é‡$secure_linkä¸º'1'ï¼Œå¦åˆ™å­å˜é‡ä¸ºâ€˜0'ã€‚è¯¥æ–¹å¼ä¸æ¶‰åŠtimeè¿‡æœŸ
 
-Òò´Ë¿ªÆôsecure_linkÒ»°ãĞèÒª¿Í»§¶Ëä¯ÀÀÆ÷ÅäºÏÊ¹ÓÃ£¬Ò»°ãĞèÒªÅäÌ×Èí¼şÖ§³Ö
+å› æ­¤å¼€å¯secure_linkä¸€èˆ¬éœ€è¦å®¢æˆ·ç«¯æµè§ˆå™¨é…åˆä½¿ç”¨ï¼Œä¸€èˆ¬éœ€è¦é…å¥—è½¯ä»¶æ”¯æŒ
 */
 typedef struct {
-    ngx_str_t                  expires;//secure_link md5_str, timeÅäÖÃÖĞµÄtime×Ö·û´®£¬¼ûngx_http_secure_link_variable
+    ngx_str_t                  expires;//secure_link md5_str, timeé…ç½®ä¸­çš„timeå­—ç¬¦ä¸²ï¼Œè§ngx_http_secure_link_variable
 } ngx_http_secure_link_ctx_t;
 
 
@@ -61,7 +61,7 @@ static char *ngx_http_secure_link_merge_conf(ngx_conf_t *cf, void *parent,
 static ngx_int_t ngx_http_secure_link_add_variables(ngx_conf_t *cf);
 
 /*
-ÅäÖÃnginx
+é…ç½®nginx
 server {
 
     listen       80;
@@ -85,99 +85,99 @@ server {
     }
 }
 
-phpÏÂÔØÒ³Ãæ
+phpä¸‹è½½é¡µé¢
 
 <?php
- # ×÷ÓÃ£ºÉú³Énginx secure linkÁ´½Ó
- # Õ¾µã£ºwww.ttlsa.com
- # ×÷Õß£ºÁ¹°×¿ª
- # Ê±¼ä£º2013-09-11
-$secret = 'ttlsa.com'; # ÃÜÔ¿
- $path = '/web/nginx-1.4.2.tar.gz'; # ÏÂÔØÎÄ¼ş
- # ÏÂÔØµ½ÆÚÊ±¼ä,timeÊÇµ±Ç°Ê±¼ä,300±íÊ¾300Ãë,Ò²¾ÍÊÇËµ´ÓÏÖÔÚµ½300ÃëÖ®ÄÚÎÄ¼ş²»¹ıÆÚ
+ # ä½œç”¨ï¼šç”Ÿæˆnginx secure linké“¾æ¥
+ # ç«™ç‚¹ï¼šwww.ttlsa.com
+ # ä½œè€…ï¼šå‡‰ç™½å¼€
+ # æ—¶é—´ï¼š2013-09-11
+$secret = 'ttlsa.com'; # å¯†é’¥
+ $path = '/web/nginx-1.4.2.tar.gz'; # ä¸‹è½½æ–‡ä»¶
+ # ä¸‹è½½åˆ°æœŸæ—¶é—´,timeæ˜¯å½“å‰æ—¶é—´,300è¡¨ç¤º300ç§’,ä¹Ÿå°±æ˜¯è¯´ä»ç°åœ¨åˆ°300ç§’ä¹‹å†…æ–‡ä»¶ä¸è¿‡æœŸ
  $expire = time()+300;
-# ÓÃÎÄ¼şÂ·¾¶¡¢ÃÜÔ¿¡¢¹ıÆÚÊ±¼äÉú³É¼ÓÃÜ´®
+# ç”¨æ–‡ä»¶è·¯å¾„ã€å¯†é’¥ã€è¿‡æœŸæ—¶é—´ç”ŸæˆåŠ å¯†ä¸²
  $md5 = base64_encode(md5($secret . $path . $expire, true));
  $md5 = strtr($md5, '+/', '-_');
  $md5 = str_replace('=', '', $md5);
-# ¼ÓÃÜºóµÄÏÂÔØµØÖ·
+# åŠ å¯†åçš„ä¸‹è½½åœ°å€
  echo '<a href=http://s1.down.ttlsa.com/web/nginx-1.4.2.tar.gz?st='.$md5.'&e='.$expire.'>nginx-1.4.2</a>';
  echo '<br>http://s1.down.ttlsa.com/web/nginx-1.4.2.tar.gz?st='.$md5.'&e='.$expire;
  ?>
 
 
-²âÊÔnginx·ÀµÁÁ´
-´ò¿ªhttp://test.ttlsa.com/down.phpµã»÷ÉÏÃæµÄÁ¬½ÓÏÂÔØ
- ÏÂÔØµØÖ·ÈçÏÂ£º
+æµ‹è¯•nginxé˜²ç›—é“¾
+æ‰“å¼€http://test.ttlsa.com/down.phpç‚¹å‡»ä¸Šé¢çš„è¿æ¥ä¸‹è½½
+ ä¸‹è½½åœ°å€å¦‚ä¸‹ï¼š
 http://s1.down.ttlsa.com/web/nginx-1.4.2.tar.gz?st=LSVzmZllg68AJaBmeK3E8Q&e=1378881984
-Ò³Ãæ²»ÒªË¢ĞÂ£¬µÈµ½5·ÖÖÓºóÔÚÏÂÔØÒ»´Î£¬Äã»á·¢ÏÖµã»÷ÏÂÔØ»áÌø×ªµ½403Ò³Ãæ¡£
+é¡µé¢ä¸è¦åˆ·æ–°ï¼Œç­‰åˆ°5åˆ†é’Ÿååœ¨ä¸‹è½½ä¸€æ¬¡ï¼Œä½ ä¼šå‘ç°ç‚¹å‡»ä¸‹è½½ä¼šè·³è½¬åˆ°403é¡µé¢ã€‚
 
-secure link ·ÀµÁÁ´Ô­Àí
-?ÓÃ»§·ÃÎÊdown.php
-?down.php¸ù¾İsecretÃÜÔ¿¡¢¹ıÆÚÊ±¼ä¡¢ÎÄ¼şuriÉú³É¼ÓÃÜ´®
-?½«¼ÓÃÜ´®Óë¹ıÆÚÊ±¼ä×÷Îª²ÎÊı¸úµ½ÎÄ¼şÏÂÔØµØÖ·µÄºóÃæ
-?nginxÏÂÔØ·şÎñÆ÷½ÓÊÕµ½ÁË¹ıÆÚÊ±¼ä£¬Ò²Ê¹ÓÃ¹ıÆÚÊ±¼ä¡¢ÅäÖÃÀïÃÜÔ¿¡¢ÎÄ¼şuriÉú³É¼ÓÃÜ´®
-?½«ÓÃ»§´«½øÀ´µÄ¼ÓÃÜ´®Óë×Ô¼ºÉú³ÉµÄ¼ÓÃÜ´®½øĞĞ¶Ô±È£¬Ò»ÖÂÔÊĞíÏÂÔØ£¬²»Ò»ÖÂ403
+secure link é˜²ç›—é“¾åŸç†
+?ç”¨æˆ·è®¿é—®down.php
+?down.phpæ ¹æ®secretå¯†é’¥ã€è¿‡æœŸæ—¶é—´ã€æ–‡ä»¶uriç”ŸæˆåŠ å¯†ä¸²
+?å°†åŠ å¯†ä¸²ä¸è¿‡æœŸæ—¶é—´ä½œä¸ºå‚æ•°è·Ÿåˆ°æ–‡ä»¶ä¸‹è½½åœ°å€çš„åé¢
+?nginxä¸‹è½½æœåŠ¡å™¨æ¥æ”¶åˆ°äº†è¿‡æœŸæ—¶é—´ï¼Œä¹Ÿä½¿ç”¨è¿‡æœŸæ—¶é—´ã€é…ç½®é‡Œå¯†é’¥ã€æ–‡ä»¶uriç”ŸæˆåŠ å¯†ä¸²
+?å°†ç”¨æˆ·ä¼ è¿›æ¥çš„åŠ å¯†ä¸²ä¸è‡ªå·±ç”Ÿæˆçš„åŠ å¯†ä¸²è¿›è¡Œå¯¹æ¯”ï¼Œä¸€è‡´å…è®¸ä¸‹è½½ï¼Œä¸ä¸€è‡´403
 
-Õû¸ö¹ı³ÌÊµ¼ÊÉÏºÜ¼òµ¥£¬ÀàËÆÓÚÓÃ»§ÃÜÂëÑéÖ¤. ÓÈÎª×¢ÒâµÄÒ»µãÊÇ´ó¼ÒÒ»¶¨²»ÒªĞ¹Â¶ÁË×Ô¼ºµÄÃÜÔ¿£¬·ñÔò±ğÈË¾Í¿ÉÒÔµÁÁ´ÁË£¬³ıÁËĞ¹Â¶Ö®Íâ×îºÃÄÜ¾­³£¸üĞÂÃÜÔ¿.
+æ•´ä¸ªè¿‡ç¨‹å®é™…ä¸Šå¾ˆç®€å•ï¼Œç±»ä¼¼äºç”¨æˆ·å¯†ç éªŒè¯. å°¤ä¸ºæ³¨æ„çš„ä¸€ç‚¹æ˜¯å¤§å®¶ä¸€å®šä¸è¦æ³„éœ²äº†è‡ªå·±çš„å¯†é’¥ï¼Œå¦åˆ™åˆ«äººå°±å¯ä»¥ç›—é“¾äº†ï¼Œé™¤äº†æ³„éœ²ä¹‹å¤–æœ€å¥½èƒ½ç»å¸¸æ›´æ–°å¯†é’¥.
 
 */  
 
-//ngx_http_secure_link_moduleÏÖÔÚ¿ÉÒÔ´úÌængx_http_accesskey_module£¬ËûÃÇ¹¦ÄÜÀàËÆ   ngx_http_secure_link_module NginxµÄ°²È«Ä£¿é,ÃâµÃ±ğÈËÄÃwebserverÈ¨ÏŞ¡£
-//ngx_http_referer_module¾ßÓĞÆÕÍ¨·ÀµÁÁ´¹¦ÄÜ
+//ngx_http_secure_link_moduleç°åœ¨å¯ä»¥ä»£æ›¿ngx_http_accesskey_moduleï¼Œä»–ä»¬åŠŸèƒ½ç±»ä¼¼   ngx_http_secure_link_module Nginxçš„å®‰å…¨æ¨¡å—,å…å¾—åˆ«äººæ‹¿webserveræƒé™ã€‚
+//ngx_http_referer_moduleå…·æœ‰æ™®é€šé˜²ç›—é“¾åŠŸèƒ½
 
 
 /*
 The ngx_http_secure_link_module module (0.7.18) is used to check authenticity of requested links, protect resources 
 from unauthorized access, and limit link lifetime. 
-¸ÃÄ£¿éÊÇ¿ØÖÆ¿Í»§¶ËµÄ·ÃÎÊÈ¨ÏŞµÄ£¬Èç¹ûÄ³´Î·ÃÎÊÓĞÈ¨ÏŞ£¬¿ÉÒÔ·ÃÎÊ£¬Ò²¿ÉÒÔ¿ØÖÆÕâ´ÎÔÚ¶à³¤Ê±¼ä¶ÎÄÚ¿ÉÒÔ·ÃÎÊ¸ÃÎÄ¼ş»òÕß×ÊÔ´
+è¯¥æ¨¡å—æ˜¯æ§åˆ¶å®¢æˆ·ç«¯çš„è®¿é—®æƒé™çš„ï¼Œå¦‚æœæŸæ¬¡è®¿é—®æœ‰æƒé™ï¼Œå¯ä»¥è®¿é—®ï¼Œä¹Ÿå¯ä»¥æ§åˆ¶è¿™æ¬¡åœ¨å¤šé•¿æ—¶é—´æ®µå†…å¯ä»¥è®¿é—®è¯¥æ–‡ä»¶æˆ–è€…èµ„æº
 */
 
 /*
-ÑéÖ¤È¨ÏŞÓĞÁ½ÖÖ·½Ê½£¬Ò»ÖÖÊÇsecure_link_secret£¬ÁíÒ»ÖÖÊÇsecure_link+secure_link_md5,ËûÃÇ²»ÄÜ¹²´æ£¬¼ûngx_http_secure_link_merge_conf
+éªŒè¯æƒé™æœ‰ä¸¤ç§æ–¹å¼ï¼Œä¸€ç§æ˜¯secure_link_secretï¼Œå¦ä¸€ç§æ˜¯secure_link+secure_link_md5,ä»–ä»¬ä¸èƒ½å…±å­˜ï¼Œè§ngx_http_secure_link_merge_conf
 
-Èç¹ûÊÇsecure_link+secure_link_md5·½Ê½£¬ÔòÒ»°ã¿Í»§¶ËÇëÇóuriÖĞĞ¯´øsecure_link $md5_str, timeÖĞµÄmd5_str×Ö·û´®£¬nginxÊÕµ½ºó£¬½øĞĞ64base decode
-¼ÆËã³ö×Ö·û´®ºó£¬°Ñ¸Ã×Ö·û´®Óësecure_link_md5×Ö·û´®½øĞĞMD5ÔËËã£¬Í¬Ê±ÅĞ¶Ïsecure_link $md5_str, timeÖĞµÄtimeºÍµ±Ç°Ê±¼äÊÇ·ñ¹ıÆÚ£¬Èç¹û×Ö·û´®
-±È½ÏÏàÍ¬²¢ÇÒÃ»ÓĞ¹ıÆÚ£¬ÔòÖÃ±äÁ¿$secure_linkÎª'1'£¬·ñÔò×Ó±äÁ¿Îª¡®0'£¬¼ûngx_http_secure_link_variable£¬Í¬Ê±°Ñsecure_link $md5_str, time
-ÖĞµÄtime´æÈë±äÁ¿$secure_link_expires
+å¦‚æœæ˜¯secure_link+secure_link_md5æ–¹å¼ï¼Œåˆ™ä¸€èˆ¬å®¢æˆ·ç«¯è¯·æ±‚uriä¸­æºå¸¦secure_link $md5_str, timeä¸­çš„md5_strå­—ç¬¦ä¸²ï¼Œnginxæ”¶åˆ°åï¼Œè¿›è¡Œ64base decode
+è®¡ç®—å‡ºå­—ç¬¦ä¸²åï¼ŒæŠŠè¯¥å­—ç¬¦ä¸²ä¸secure_link_md5å­—ç¬¦ä¸²è¿›è¡ŒMD5è¿ç®—ï¼ŒåŒæ—¶åˆ¤æ–­secure_link $md5_str, timeä¸­çš„timeå’Œå½“å‰æ—¶é—´æ˜¯å¦è¿‡æœŸï¼Œå¦‚æœå­—ç¬¦ä¸²
+æ¯”è¾ƒç›¸åŒå¹¶ä¸”æ²¡æœ‰è¿‡æœŸï¼Œåˆ™ç½®å˜é‡$secure_linkä¸º'1'ï¼Œå¦åˆ™å­å˜é‡ä¸ºâ€˜0'ï¼Œè§ngx_http_secure_link_variableï¼ŒåŒæ—¶æŠŠsecure_link $md5_str, time
+ä¸­çš„timeå­˜å…¥å˜é‡$secure_link_expires
 
-Èç¹ûÊÇsecure_link_secret·½Ê½£¬ÔòÊÇ°Ñ¿Í»§¶ËÇëÇóuriÖĞµÄ/p/5e814704a28d9bc1914ff19fa0c4a00a/link/xxÖĞµÄ5e814704a28d9bc1914ff19fa0c4a00a×Ö·û´®Óë
-secure_link_secret xxx¼ÆËã³öµÄMD5Öµ½øĞĞ±È½Ï£¬ÏàÍ¬ÔòÓĞÈ¨ÏŞ£¬ÖÃ±äÁ¿$secure_linkÎª'1'£¬·ñÔò×Ó±äÁ¿Îª¡®0'¡£¸Ã·½Ê½²»Éæ¼°time¹ıÆÚ
+å¦‚æœæ˜¯secure_link_secretæ–¹å¼ï¼Œåˆ™æ˜¯æŠŠå®¢æˆ·ç«¯è¯·æ±‚uriä¸­çš„/p/5e814704a28d9bc1914ff19fa0c4a00a/link/xxä¸­çš„5e814704a28d9bc1914ff19fa0c4a00aå­—ç¬¦ä¸²ä¸
+secure_link_secret xxxè®¡ç®—å‡ºçš„MD5å€¼è¿›è¡Œæ¯”è¾ƒï¼Œç›¸åŒåˆ™æœ‰æƒé™ï¼Œç½®å˜é‡$secure_linkä¸º'1'ï¼Œå¦åˆ™å­å˜é‡ä¸ºâ€˜0'ã€‚è¯¥æ–¹å¼ä¸æ¶‰åŠtimeè¿‡æœŸ
 */
 static ngx_command_t  ngx_http_secure_link_commands[] = {
     /*
-    Óï·¨£ºsecure_link $md5_hash[,$expire_time] 
-    Ä¬ÈÏÖµ£ºnone 
-    Ê¹ÓÃ×Ö¶Î£ºlocation
-    Õâ¸öÖ¸ÁîÖ¸¶¨Õâ¸öÁ´½ÓURLµÄMD5¹şÏ£ÖµºÍ¹ıÆÚÊ±¼ä£¬$md5_hashÎª»ùÓÚURLµÄ64Î»±àÂë£¬$expired_timeÎª×Ô1970-01-01 00:00:00 UTCÊ±¼äÒÔÀ´µÄÃëÊı£¬
-    Èç¹ûÄã²»Ôö¼Ó$expire_time£¬ÄÇÃ´Õâ¸öURLÓÀÔ¶²»»á¹ıÆÚ¡£
-    */ //¿Í»§¶ËÓĞÈ¨ÏŞ·ÃÎÊ¸Ã×ÊÔ´£¬¶à³¤Ê±¼äÄÚ¶¼¿ÉÒÔ·ÃÎÊ£¬¹ıÁËÕâ¸öÊ±¼ä¶Î¾Í²»ÄÜ·ÃÎÊÁË£¬Ö»ÓĞÖØĞÂ»ñÈ¡È¨ÏŞ
+    è¯­æ³•ï¼šsecure_link $md5_hash[,$expire_time] 
+    é»˜è®¤å€¼ï¼šnone 
+    ä½¿ç”¨å­—æ®µï¼šlocation
+    è¿™ä¸ªæŒ‡ä»¤æŒ‡å®šè¿™ä¸ªé“¾æ¥URLçš„MD5å“ˆå¸Œå€¼å’Œè¿‡æœŸæ—¶é—´ï¼Œ$md5_hashä¸ºåŸºäºURLçš„64ä½ç¼–ç ï¼Œ$expired_timeä¸ºè‡ª1970-01-01 00:00:00 UTCæ—¶é—´ä»¥æ¥çš„ç§’æ•°ï¼Œ
+    å¦‚æœä½ ä¸å¢åŠ $expire_timeï¼Œé‚£ä¹ˆè¿™ä¸ªURLæ°¸è¿œä¸ä¼šè¿‡æœŸã€‚
+    */ //å®¢æˆ·ç«¯æœ‰æƒé™è®¿é—®è¯¥èµ„æºï¼Œå¤šé•¿æ—¶é—´å†…éƒ½å¯ä»¥è®¿é—®ï¼Œè¿‡äº†è¿™ä¸ªæ—¶é—´æ®µå°±ä¸èƒ½è®¿é—®äº†ï¼Œåªæœ‰é‡æ–°è·å–æƒé™
 
     /*
-       secure_link $md5_str, timeÖĞµÄmd5_strÒ»°ãÊÇ´Ó¿Í»§¶ËÇëÇóÖĞµÄuri»ñÈ¡£¬»ñÈ¡µ½ºó½øĞĞ64Î»decode£¬È»ºóÓësecure_link_md5ÉèÖÃµÄ×Ö·û´®½øĞĞMD5
-       ÖµÔËËãºóµÄ½á¹û±È½Ï£¬Í¬Ê±°ÑtimeÓëÏëÔÚÊÂ¼ş±È½Ï£¬¿´ÊÇ·ñ¹ıÆÚ£¬±È½Ï½á¹ûÏàÍ¬²¢ÇÒÃ»ÓĞ¹ıÆÚÔòÈÏÎªÈ¨ÏŞÍ¨¹ı£¬ÉèÖÃ$secure_linkÎª'1'£¬·ñÔò²»Í¨¹ı
-       ÉèÖÃÎª¡®0¡¯²Î¿¼ngx_http_secure_link_variable
+       secure_link $md5_str, timeä¸­çš„md5_strä¸€èˆ¬æ˜¯ä»å®¢æˆ·ç«¯è¯·æ±‚ä¸­çš„uriè·å–ï¼Œè·å–åˆ°åè¿›è¡Œ64ä½decodeï¼Œç„¶åä¸secure_link_md5è®¾ç½®çš„å­—ç¬¦ä¸²è¿›è¡ŒMD5
+       å€¼è¿ç®—åçš„ç»“æœæ¯”è¾ƒï¼ŒåŒæ—¶æŠŠtimeä¸æƒ³åœ¨äº‹ä»¶æ¯”è¾ƒï¼Œçœ‹æ˜¯å¦è¿‡æœŸï¼Œæ¯”è¾ƒç»“æœç›¸åŒå¹¶ä¸”æ²¡æœ‰è¿‡æœŸåˆ™è®¤ä¸ºæƒé™é€šè¿‡ï¼Œè®¾ç½®$secure_linkä¸º'1'ï¼Œå¦åˆ™ä¸é€šè¿‡
+       è®¾ç½®ä¸ºâ€˜0â€™å‚è€ƒngx_http_secure_link_variable
 
-       ³¬Ê±ºó»áÖØĞÂ°Ñ$secure_linkÉèÖÃÎª¡®0¡¯£¬±íÊ¾¹ıÆÚ¡£Èç¹ûÆ¥ÅäMD5_strÊ§°Ü£¬±íÊ¾ÎŞĞ§£¬$secure_linkÉèÖÃÎª¿Õ×Ö·û´®¡£
+       è¶…æ—¶åä¼šé‡æ–°æŠŠ$secure_linkè®¾ç½®ä¸ºâ€˜0â€™ï¼Œè¡¨ç¤ºè¿‡æœŸã€‚å¦‚æœåŒ¹é…MD5_strå¤±è´¥ï¼Œè¡¨ç¤ºæ— æ•ˆï¼Œ$secure_linkè®¾ç½®ä¸ºç©ºå­—ç¬¦ä¸²ã€‚
 
-       ×¢Òâmd5_str×Ö·û´®³¤¶È²»ÄÜ³¬¹ı24×Ö½Ú£¬²Î¿¼ngx_http_secure_link_variable,MD5Öµ±È½ÏÒ²²Î¿¼ngx_http_secure_link_variable
+       æ³¨æ„md5_strå­—ç¬¦ä¸²é•¿åº¦ä¸èƒ½è¶…è¿‡24å­—èŠ‚ï¼Œå‚è€ƒngx_http_secure_link_variable,MD5å€¼æ¯”è¾ƒä¹Ÿå‚è€ƒngx_http_secure_link_variable
      */ 
-    //Èç¹ûÅäÖÃÁËsecure_link_secretÔò²»ÄÜÅäÖÃ secure_link secure_link_md5
-     //secure_linkÉúĞ§±È½Ï¼ûngx_http_secure_link_variable£¬¼ûngx_http_secure_link_merge_conf
+    //å¦‚æœé…ç½®äº†secure_link_secretåˆ™ä¸èƒ½é…ç½® secure_link secure_link_md5
+     //secure_linkç”Ÿæ•ˆæ¯”è¾ƒè§ngx_http_secure_link_variableï¼Œè§ngx_http_secure_link_merge_conf
 
     /*
-ÑéÖ¤È¨ÏŞÓĞÁ½ÖÖ·½Ê½£¬Ò»ÖÖÊÇsecure_link_secret£¬ÁíÒ»ÖÖÊÇsecure_link+secure_link_md5,ËûÃÇ²»ÄÜ¹²´æ£¬¼ûngx_http_secure_link_merge_conf
+éªŒè¯æƒé™æœ‰ä¸¤ç§æ–¹å¼ï¼Œä¸€ç§æ˜¯secure_link_secretï¼Œå¦ä¸€ç§æ˜¯secure_link+secure_link_md5,ä»–ä»¬ä¸èƒ½å…±å­˜ï¼Œè§ngx_http_secure_link_merge_conf
 
-Èç¹ûÊÇsecure_link+secure_link_md5·½Ê½£¬ÔòÒ»°ã¿Í»§¶ËÇëÇóuriÖĞĞ¯´øsecure_link $md5_str, timeÖĞµÄmd5_str×Ö·û´®£¬nginxÊÕµ½ºó£¬½øĞĞ64base decode
-¼ÆËã³ö×Ö·û´®ºó£¬°Ñ¸Ã×Ö·û´®Óësecure_link_md5×Ö·û´®½øĞĞMD5ÔËËã£¬Í¬Ê±ÅĞ¶Ïsecure_link $md5_str, timeÖĞµÄtimeºÍµ±Ç°Ê±¼äÊÇ·ñ¹ıÆÚ£¬Èç¹û×Ö·û´®
-±È½ÏÏàÍ¬²¢ÇÒÃ»ÓĞ¹ıÆÚ£¬ÔòÖÃ±äÁ¿$secure_linkÎª'1'£¬·ñÔò×Ó±äÁ¿Îª¡®0'£¬¼ûngx_http_secure_link_variable£¬Í¬Ê±°Ñsecure_link $md5_str, time
-ÖĞµÄtime´æÈë±äÁ¿$secure_link_expires
+å¦‚æœæ˜¯secure_link+secure_link_md5æ–¹å¼ï¼Œåˆ™ä¸€èˆ¬å®¢æˆ·ç«¯è¯·æ±‚uriä¸­æºå¸¦secure_link $md5_str, timeä¸­çš„md5_strå­—ç¬¦ä¸²ï¼Œnginxæ”¶åˆ°åï¼Œè¿›è¡Œ64base decode
+è®¡ç®—å‡ºå­—ç¬¦ä¸²åï¼ŒæŠŠè¯¥å­—ç¬¦ä¸²ä¸secure_link_md5å­—ç¬¦ä¸²è¿›è¡ŒMD5è¿ç®—ï¼ŒåŒæ—¶åˆ¤æ–­secure_link $md5_str, timeä¸­çš„timeå’Œå½“å‰æ—¶é—´æ˜¯å¦è¿‡æœŸï¼Œå¦‚æœå­—ç¬¦ä¸²
+æ¯”è¾ƒç›¸åŒå¹¶ä¸”æ²¡æœ‰è¿‡æœŸï¼Œåˆ™ç½®å˜é‡$secure_linkä¸º'1'ï¼Œå¦åˆ™å­å˜é‡ä¸ºâ€˜0'ï¼Œè§ngx_http_secure_link_variableï¼ŒåŒæ—¶æŠŠsecure_link $md5_str, time
+ä¸­çš„timeå­˜å…¥å˜é‡$secure_link_expires
 
-Èç¹ûÊÇsecure_link_secret·½Ê½£¬ÔòÊÇ°Ñ¿Í»§¶ËÇëÇóuriÖĞµÄ/p/5e814704a28d9bc1914ff19fa0c4a00a/link/xxÖĞµÄ5e814704a28d9bc1914ff19fa0c4a00a×Ö·û´®Óë
-secure_link_secret xxx¼ÆËã³öµÄMD5Öµ½øĞĞ±È½Ï£¬ÏàÍ¬ÔòÓĞÈ¨ÏŞ£¬ÖÃ±äÁ¿$secure_linkÎª'1'£¬·ñÔò×Ó±äÁ¿Îª¡®0'¡£¸Ã·½Ê½²»Éæ¼°time¹ıÆÚ
-*/ //secure_link $MD5_STR¿ÉÒÔ´ÓuriÖĞ»ñÈ¡£¬¿ÉÒÔ²Î¿¼ngx_http_arg
+å¦‚æœæ˜¯secure_link_secretæ–¹å¼ï¼Œåˆ™æ˜¯æŠŠå®¢æˆ·ç«¯è¯·æ±‚uriä¸­çš„/p/5e814704a28d9bc1914ff19fa0c4a00a/link/xxä¸­çš„5e814704a28d9bc1914ff19fa0c4a00aå­—ç¬¦ä¸²ä¸
+secure_link_secret xxxè®¡ç®—å‡ºçš„MD5å€¼è¿›è¡Œæ¯”è¾ƒï¼Œç›¸åŒåˆ™æœ‰æƒé™ï¼Œç½®å˜é‡$secure_linkä¸º'1'ï¼Œå¦åˆ™å­å˜é‡ä¸ºâ€˜0'ã€‚è¯¥æ–¹å¼ä¸æ¶‰åŠtimeè¿‡æœŸ
+*/ //secure_link $MD5_STRå¯ä»¥ä»uriä¸­è·å–ï¼Œå¯ä»¥å‚è€ƒngx_http_arg
      
-    { ngx_string("secure_link"),   //×¢Òâ»¹´æÔÚ±äÁ¿$secure_link_expiresºÍ±äÁ¿$secure_link
+    { ngx_string("secure_link"),   //æ³¨æ„è¿˜å­˜åœ¨å˜é‡$secure_link_expireså’Œå˜é‡$secure_link
       NGX_HTTP_MAIN_CONF|NGX_HTTP_SRV_CONF|NGX_HTTP_LOC_CONF|NGX_CONF_TAKE1,
       ngx_http_set_complex_value_slot,
       NGX_HTTP_LOC_CONF_OFFSET,
@@ -185,13 +185,13 @@ secure_link_secret xxx¼ÆËã³öµÄMD5Öµ½øĞĞ±È½Ï£¬ÏàÍ¬ÔòÓĞÈ¨ÏŞ£¬ÖÃ±äÁ¿$secure_linkÎª'
       NULL },
 
 /*
-Óï·¨£ºsecure_link_md5 $the_uri_you_want_to_hashed_by_md5
-Ä¬ÈÏÖµ£ºnone 
-Ê¹ÓÃ×Ö¶Î£ºlocation
-Õâ¸öÖ¸ÁîÖ¸¶¨ÄãĞèÒªÍ¨¹ıMD5¹şÏ£µÄ×Ö·û´®£¬×Ö·û´®¿ÉÒÔ°üº¬±äÁ¿£¬¹şÏ£Öµ½«ºÍ¡±secure_link¡±ÉèÖÃµÄ$md5_hash±äÁ¿½øĞĞ±È½Ï£¬Èç¹û½á¹ûÏàÍ¬£¬
-$secure_link±äÁ¿ÖµÎª1£¬·ñÔòÎª¿Õ×Ö·û´®¡£
-*/ //secure_link_md5ÉúĞ§±È½Ï¼ûngx_http_secure_link_variable 
-//Èç¹ûÅäÖÃÁËsecure_link_secretÔò²»ÄÜÅäÖÃ secure_link secure_link_md5£¬¼ûngx_http_secure_link_merge_conf
+è¯­æ³•ï¼šsecure_link_md5 $the_uri_you_want_to_hashed_by_md5
+é»˜è®¤å€¼ï¼šnone 
+ä½¿ç”¨å­—æ®µï¼šlocation
+è¿™ä¸ªæŒ‡ä»¤æŒ‡å®šä½ éœ€è¦é€šè¿‡MD5å“ˆå¸Œçš„å­—ç¬¦ä¸²ï¼Œå­—ç¬¦ä¸²å¯ä»¥åŒ…å«å˜é‡ï¼Œå“ˆå¸Œå€¼å°†å’Œâ€secure_linkâ€è®¾ç½®çš„$md5_hashå˜é‡è¿›è¡Œæ¯”è¾ƒï¼Œå¦‚æœç»“æœç›¸åŒï¼Œ
+$secure_linkå˜é‡å€¼ä¸º1ï¼Œå¦åˆ™ä¸ºç©ºå­—ç¬¦ä¸²ã€‚
+*/ //secure_link_md5ç”Ÿæ•ˆæ¯”è¾ƒè§ngx_http_secure_link_variable 
+//å¦‚æœé…ç½®äº†secure_link_secretåˆ™ä¸èƒ½é…ç½® secure_link secure_link_md5ï¼Œè§ngx_http_secure_link_merge_conf
     { ngx_string("secure_link_md5"),
       NGX_HTTP_MAIN_CONF|NGX_HTTP_SRV_CONF|NGX_HTTP_LOC_CONF|NGX_CONF_TAKE1,
       ngx_http_set_complex_value_slot,
@@ -200,12 +200,12 @@ $secure_link±äÁ¿ÖµÎª1£¬·ñÔòÎª¿Õ×Ö·û´®¡£
       NULL },
 
     /*
-    Óï·¨£ºsecure_link_secret secret_word 
-    Ä¬ÈÏÖµ£ºnone 
-    Ê¹ÓÃ×Ö¶Î£ºlocation
-    Ö¸ÁîÎªÉóºËÇëÇóÖ¸¶¨Ò»¸öÃØÃÜ×Ö¶Î£¬Ò»¸ö±»±£»¤Á¬½ÓµÄÍêÕûÍøÖ·ÈçÏÂ£º
+    è¯­æ³•ï¼šsecure_link_secret secret_word 
+    é»˜è®¤å€¼ï¼šnone 
+    ä½¿ç”¨å­—æ®µï¼šlocation
+    æŒ‡ä»¤ä¸ºå®¡æ ¸è¯·æ±‚æŒ‡å®šä¸€ä¸ªç§˜å¯†å­—æ®µï¼Œä¸€ä¸ªè¢«ä¿æŠ¤è¿æ¥çš„å®Œæ•´ç½‘å€å¦‚ä¸‹ï¼š
     /prefix/MD5 hash/reference
-    ÔÚsecretÖ¸ÁîÖĞÖ¸¶¨µÄsecret_word½«±»¼ÆËãÎªÒ»¸öMD5Öµ¶ø´®Áªµ½ÊÜ±£»¤µÄÁ´½ÓÖĞ£¬ÀıÈç£ºÊÜ±£»¤µÄÎÄ¼ştop_secret_file.pdfÎ»ÓÚÄ¿Â¼p¡£nginxÅäÖÃÎª£º
+    åœ¨secretæŒ‡ä»¤ä¸­æŒ‡å®šçš„secret_wordå°†è¢«è®¡ç®—ä¸ºä¸€ä¸ªMD5å€¼è€Œä¸²è”åˆ°å—ä¿æŠ¤çš„é“¾æ¥ä¸­ï¼Œä¾‹å¦‚ï¼šå—ä¿æŠ¤çš„æ–‡ä»¶top_secret_file.pdfä½äºç›®å½•pã€‚nginxé…ç½®ä¸ºï¼š
     location /p/ {
         secure_link_secret segredo;
      
@@ -216,30 +216,30 @@ $secure_link±äÁ¿ÖµÎª1£¬·ñÔòÎª¿Õ×Ö·û´®¡£
         rewrite ^ /p/$secure_link break;
     }
     
-    Äã¿ÉÒÔÍ¨¹ıopensslÃüÁîÀ´¼ÆËãMD5Öµ£º
+    ä½ å¯ä»¥é€šè¿‡opensslå‘½ä»¤æ¥è®¡ç®—MD5å€¼ï¼š
     echo -n 'top_secret_file.pdfsegredo' | openssl dgst -md5
     
-    µÃµ½µÄÖµÎª0849e9c72988f118896724a0502b92a8¡£¿ÉÒÔÍ¨¹ıÏÂÃæÊ×±£»¤µÄÁ¬½Ó·ÃÎÊ:
+    å¾—åˆ°çš„å€¼ä¸º0849e9c72988f118896724a0502b92a8ã€‚å¯ä»¥é€šè¿‡ä¸‹é¢é¦–ä¿æŠ¤çš„è¿æ¥è®¿é—®:
     http://example.com/p/0849e9c72988f118896724a0502b92a8/top_secret_file.pdf
     
-    ×¢Òâ£¬²»ÄÜÊ¹ÓÃ¸úÂ·¾¶£¬¼´/£¬ÀıÈç£º
+    æ³¨æ„ï¼Œä¸èƒ½ä½¿ç”¨è·Ÿè·¯å¾„ï¼Œå³/ï¼Œä¾‹å¦‚ï¼š
     location / {
-   #²»ÄÜÊ¹ÓÃ/
+   #ä¸èƒ½ä½¿ç”¨/
        secure_link_secret segredo;
        [...]
     }
-    */ //Èç¹ûÅäÖÃÁËsecure_link_secretÔò²»ÄÜÅäÖÃ secure_link secure_link_md5£¬¼ûngx_http_secure_link_merge_conf
+    */ //å¦‚æœé…ç½®äº†secure_link_secretåˆ™ä¸èƒ½é…ç½® secure_link secure_link_md5ï¼Œè§ngx_http_secure_link_merge_conf
 
         /*
-    ÑéÖ¤È¨ÏŞÓĞÁ½ÖÖ·½Ê½£¬Ò»ÖÖÊÇsecure_link_secret£¬ÁíÒ»ÖÖÊÇsecure_link+secure_link_md5,ËûÃÇ²»ÄÜ¹²´æ£¬¼ûngx_http_secure_link_merge_conf
+    éªŒè¯æƒé™æœ‰ä¸¤ç§æ–¹å¼ï¼Œä¸€ç§æ˜¯secure_link_secretï¼Œå¦ä¸€ç§æ˜¯secure_link+secure_link_md5,ä»–ä»¬ä¸èƒ½å…±å­˜ï¼Œè§ngx_http_secure_link_merge_conf
     
-    Èç¹ûÊÇsecure_link+secure_link_md5·½Ê½£¬ÔòÒ»°ã¿Í»§¶ËÇëÇóuriÖĞĞ¯´øsecure_link $md5_str, timeÖĞµÄmd5_str×Ö·û´®£¬nginxÊÕµ½ºó£¬½øĞĞ64base decode
-    ¼ÆËã³ö×Ö·û´®ºó£¬°Ñ¸Ã×Ö·û´®Óësecure_link_md5×Ö·û´®½øĞĞMD5ÔËËã£¬Í¬Ê±ÅĞ¶Ïsecure_link $md5_str, timeÖĞµÄtimeºÍµ±Ç°Ê±¼äÊÇ·ñ¹ıÆÚ£¬Èç¹û×Ö·û´®
-    ±È½ÏÏàÍ¬²¢ÇÒÃ»ÓĞ¹ıÆÚ£¬ÔòÖÃ±äÁ¿$secure_linkÎª'1'£¬·ñÔò×Ó±äÁ¿Îª¡®0'£¬¼ûngx_http_secure_link_variable£¬Í¬Ê±°Ñsecure_link $md5_str, time
-    ÖĞµÄtime´æÈë±äÁ¿$secure_link_expires
+    å¦‚æœæ˜¯secure_link+secure_link_md5æ–¹å¼ï¼Œåˆ™ä¸€èˆ¬å®¢æˆ·ç«¯è¯·æ±‚uriä¸­æºå¸¦secure_link $md5_str, timeä¸­çš„md5_strå­—ç¬¦ä¸²ï¼Œnginxæ”¶åˆ°åï¼Œè¿›è¡Œ64base decode
+    è®¡ç®—å‡ºå­—ç¬¦ä¸²åï¼ŒæŠŠè¯¥å­—ç¬¦ä¸²ä¸secure_link_md5å­—ç¬¦ä¸²è¿›è¡ŒMD5è¿ç®—ï¼ŒåŒæ—¶åˆ¤æ–­secure_link $md5_str, timeä¸­çš„timeå’Œå½“å‰æ—¶é—´æ˜¯å¦è¿‡æœŸï¼Œå¦‚æœå­—ç¬¦ä¸²
+    æ¯”è¾ƒç›¸åŒå¹¶ä¸”æ²¡æœ‰è¿‡æœŸï¼Œåˆ™ç½®å˜é‡$secure_linkä¸º'1'ï¼Œå¦åˆ™å­å˜é‡ä¸ºâ€˜0'ï¼Œè§ngx_http_secure_link_variableï¼ŒåŒæ—¶æŠŠsecure_link $md5_str, time
+    ä¸­çš„timeå­˜å…¥å˜é‡$secure_link_expires
     
-    Èç¹ûÊÇsecure_link_secret·½Ê½£¬ÔòÊÇ°Ñ¿Í»§¶ËÇëÇóuriÖĞµÄ/p/5e814704a28d9bc1914ff19fa0c4a00a/link/xxÖĞµÄ5e814704a28d9bc1914ff19fa0c4a00a×Ö·û´®Óë
-    secure_link_secret xxx¼ÆËã³öµÄMD5Öµ½øĞĞ±È½Ï£¬ÏàÍ¬ÔòÓĞÈ¨ÏŞ£¬ÖÃ±äÁ¿$secure_linkÎª'1'£¬·ñÔò×Ó±äÁ¿Îª¡®0'¡£¸Ã·½Ê½²»Éæ¼°time¹ıÆÚ
+    å¦‚æœæ˜¯secure_link_secretæ–¹å¼ï¼Œåˆ™æ˜¯æŠŠå®¢æˆ·ç«¯è¯·æ±‚uriä¸­çš„/p/5e814704a28d9bc1914ff19fa0c4a00a/link/xxä¸­çš„5e814704a28d9bc1914ff19fa0c4a00aå­—ç¬¦ä¸²ä¸
+    secure_link_secret xxxè®¡ç®—å‡ºçš„MD5å€¼è¿›è¡Œæ¯”è¾ƒï¼Œç›¸åŒåˆ™æœ‰æƒé™ï¼Œç½®å˜é‡$secure_linkä¸º'1'ï¼Œå¦åˆ™å­å˜é‡ä¸ºâ€˜0'ã€‚è¯¥æ–¹å¼ä¸æ¶‰åŠtimeè¿‡æœŸ
     */
 
     { ngx_string("secure_link_secret"),
@@ -267,12 +267,12 @@ static ngx_http_module_t  ngx_http_secure_link_module_ctx = {
     ngx_http_secure_link_merge_conf        /* merge location configuration */
 };
 
-//ngx_http_secure_link_moduleÏÖÔÚ¿ÉÒÔ´úÌængx_http_accesskey_module£¬ËûÃÇ¹¦ÄÜÀàËÆ   ngx_http_secure_link_module NginxµÄ°²È«Ä£¿é,ÃâµÃ±ğÈËÄÃwebserverÈ¨ÏŞ¡£
-//ngx_http_referer_module¾ßÓĞÆÕÍ¨·ÀµÁÁ´¹¦ÄÜ
+//ngx_http_secure_link_moduleç°åœ¨å¯ä»¥ä»£æ›¿ngx_http_accesskey_moduleï¼Œä»–ä»¬åŠŸèƒ½ç±»ä¼¼   ngx_http_secure_link_module Nginxçš„å®‰å…¨æ¨¡å—,å…å¾—åˆ«äººæ‹¿webserveræƒé™ã€‚
+//ngx_http_referer_moduleå…·æœ‰æ™®é€šé˜²ç›—é“¾åŠŸèƒ½
 
-//¸ÃÄ£¿éÒ»°ãĞèÒª×¨ÃÅµÄ¿Í»§¶ËÖ§³Ö
+//è¯¥æ¨¡å—ä¸€èˆ¬éœ€è¦ä¸“é—¨çš„å®¢æˆ·ç«¯æ”¯æŒ
 ngx_module_t  ngx_http_secure_link_module = { 
-//·ÃÎÊÈ¨ÏŞ¿ØÖÆÏà¹ØÄ£¿é:nginx½øĞĞ·ÃÎÊÏŞÖÆµÄÓĞngx_http_access_moduleÄ£¿éºÍ ngx_http_auth_basic_moduleÄ£¿é   ngx_http_secure_link_module
+//è®¿é—®æƒé™æ§åˆ¶ç›¸å…³æ¨¡å—:nginxè¿›è¡Œè®¿é—®é™åˆ¶çš„æœ‰ngx_http_access_moduleæ¨¡å—å’Œ ngx_http_auth_basic_moduleæ¨¡å—   ngx_http_secure_link_module
     NGX_MODULE_V1,
     &ngx_http_secure_link_module_ctx,      /* module context */
     ngx_http_secure_link_commands,         /* module directives */
@@ -289,29 +289,29 @@ ngx_module_t  ngx_http_secure_link_module = {
 
 
 /*
-±äÁ¿
+å˜é‡
 
 $secure_link
-¸ù¾İÄãÊÇ·ñÊ¹ÓÃ¡±secure_link_secret¡±£¬Õâ¸öÖµÓĞÁ½¸ö²»Í¬µÄÒâÒå£º
-Èç¹ûÊ¹ÓÃ¡±secure_link_secret¡±£¬²¢ÇÒÑéÖ¤µÄURLÍ¨¹ıÑéÖ¤£¬Õâ¸öÖµÎªtrue£¬·ñÔòÎª¿Õ×Ö·û´®¡£
-Èç¹ûÊ¹ÓÃ¡±secure_link¡±ºÍ¡±secure_link_md5¡±¡£²¢ÇÒÑéÖ¤µÄURLÍ¨¹ıÑéÖ¤$secure_linkÎª'1'¡£Èç¹û±¾µØÊ±¼ä³¬¹ı$expire_time, $secure_linkÖµÎª'0'¡£·ñÔò£¬½«Îª¿Õ×Ö·û´®¡£
+æ ¹æ®ä½ æ˜¯å¦ä½¿ç”¨â€secure_link_secretâ€ï¼Œè¿™ä¸ªå€¼æœ‰ä¸¤ä¸ªä¸åŒçš„æ„ä¹‰ï¼š
+å¦‚æœä½¿ç”¨â€secure_link_secretâ€ï¼Œå¹¶ä¸”éªŒè¯çš„URLé€šè¿‡éªŒè¯ï¼Œè¿™ä¸ªå€¼ä¸ºtrueï¼Œå¦åˆ™ä¸ºç©ºå­—ç¬¦ä¸²ã€‚
+å¦‚æœä½¿ç”¨â€secure_linkâ€å’Œâ€secure_link_md5â€ã€‚å¹¶ä¸”éªŒè¯çš„URLé€šè¿‡éªŒè¯$secure_linkä¸º'1'ã€‚å¦‚æœæœ¬åœ°æ—¶é—´è¶…è¿‡$expire_time, $secure_linkå€¼ä¸º'0'ã€‚å¦åˆ™ï¼Œå°†ä¸ºç©ºå­—ç¬¦ä¸²ã€‚
 
 $secure_link_expires
-µÈÓÚ±äÁ¿$expire_timeµÄÖµ¡£
+ç­‰äºå˜é‡$expire_timeçš„å€¼ã€‚
 
 The status of these checks is made available in the $secure_link variable. 
-//ÊÇ·ñÓĞÈ¨ÏŞ·ÃÎÊµÄÅĞ¶Ï½á¹û´æ´¢ÔÚsecure_linkÖĞ£¬Îª1¿ÉÒÔ·ÃÎÊ£¬Îª0²»ÄÜ·ÃÎÊ
+//æ˜¯å¦æœ‰æƒé™è®¿é—®çš„åˆ¤æ–­ç»“æœå­˜å‚¨åœ¨secure_linkä¸­ï¼Œä¸º1å¯ä»¥è®¿é—®ï¼Œä¸º0ä¸èƒ½è®¿é—®
 
 */ 
 
-//$secure_link±äÁ¿¸³Öµ¼ûngx_http_secure_link_variable
+//$secure_linkå˜é‡èµ‹å€¼è§ngx_http_secure_link_variable
 static ngx_str_t  ngx_http_secure_link_name = ngx_string("secure_link");
-//$secure_link_expires±äÁ¿¸³Öµ¼ûngx_http_secure_link_expires_variable,±íÊ¾secure_link $md5_str, timeÖĞµÄtime£¬Ã¿´Î¿Í»§¶ËÇëÇó¹ıÀ´
-//¶¼ÒªÅĞ¶Ï¸ÃÊ±¼ä£¬¹ıÆÚÖÃ$secure_linkÎª0£¬Ã»¹ıÆÚÖÃ1£¬¼ûngx_http_secure_link_variable
+//$secure_link_expireså˜é‡èµ‹å€¼è§ngx_http_secure_link_expires_variable,è¡¨ç¤ºsecure_link $md5_str, timeä¸­çš„timeï¼Œæ¯æ¬¡å®¢æˆ·ç«¯è¯·æ±‚è¿‡æ¥
+//éƒ½è¦åˆ¤æ–­è¯¥æ—¶é—´ï¼Œè¿‡æœŸç½®$secure_linkä¸º0ï¼Œæ²¡è¿‡æœŸç½®1ï¼Œè§ngx_http_secure_link_variable
 static ngx_str_t  ngx_http_secure_link_expires_name =
     ngx_string("secure_link_expires");
 
-//»ñÈ¡secure_linkÅäÖÃµÄÖµ£¬Í¬Ê±Óësecure_link_md5ÔËËãµÄÖµ½øĞĞ±È½Ï£¬ÏàÍ¬ÔòÖÃ$secure_link±äÁ¿Îª1£¬²»Í¬ÔòÖÃ0
+//è·å–secure_linké…ç½®çš„å€¼ï¼ŒåŒæ—¶ä¸secure_link_md5è¿ç®—çš„å€¼è¿›è¡Œæ¯”è¾ƒï¼Œç›¸åŒåˆ™ç½®$secure_linkå˜é‡ä¸º1ï¼Œä¸åŒåˆ™ç½®0
 static ngx_int_t
 ngx_http_secure_link_variable(ngx_http_request_t *r,
     ngx_http_variable_value_t *v, uintptr_t data)
@@ -343,13 +343,13 @@ ngx_http_secure_link_variable(ngx_http_request_t *r,
 
     last = val.data + val.len;
 
-    p = ngx_strlchr(val.data, last, ','); ////secure_link md5_str, 120ÅäÖÃ£¬
+    p = ngx_strlchr(val.data, last, ','); ////secure_link md5_str, 120é…ç½®ï¼Œ
     expires = 0;
 
     if (p) {
-        val.len = p++ - val.data; //ÕâÊ±ºò£¬val.len=md5_strµÄ×Ö·û´®³¤¶ÈÁË£¬²»°üÀ¨ºóÃæµÄ,120×Ö·û´®
+        val.len = p++ - val.data; //è¿™æ—¶å€™ï¼Œval.len=md5_strçš„å­—ç¬¦ä¸²é•¿åº¦äº†ï¼Œä¸åŒ…æ‹¬åé¢çš„,120å­—ç¬¦ä¸²
 
-        expires = ngx_atotm(p, last - p); //»ñÈ¡//secure_link md5_str, 120ÅäÖÃÖĞµÄ120
+        expires = ngx_atotm(p, last - p); //è·å–//secure_link md5_str, 120é…ç½®ä¸­çš„120
         if (expires <= 0) {
             goto not_found;
         }
@@ -365,15 +365,15 @@ ngx_http_secure_link_variable(ngx_http_request_t *r,
         ctx->expires.data = p;
     }
 
-    //ÕâÊ±ºò£¬val.len=md5_strµÄ×Ö·û´®³¤¶ÈÁË£¬²»°üÀ¨ºóÃæµÄ,120×Ö·û´®
-    if (val.len > 24) {//secure_linkÅäÖÃ½âÎö³öµÄ×Ö·û´®²»ÄÜ³¬¹ı24¸ö×Ö·û ?????? ÎªÊ²Ã´ÄØ
+    //è¿™æ—¶å€™ï¼Œval.len=md5_strçš„å­—ç¬¦ä¸²é•¿åº¦äº†ï¼Œä¸åŒ…æ‹¬åé¢çš„,120å­—ç¬¦ä¸²
+    if (val.len > 24) {//secure_linké…ç½®è§£æå‡ºçš„å­—ç¬¦ä¸²ä¸èƒ½è¶…è¿‡24ä¸ªå­—ç¬¦ ?????? ä¸ºä»€ä¹ˆå‘¢
         goto not_found;
     }
 
     hash.len = 16;
     hash.data = hash_buf;
 
-    //°Ñsecure_link md5_str, 120ÅäÖÃÖĞµÄmd5_str×Ö·û´®½øĞĞbase64½âÃÜdecodeÔËËãºóµÄÖµ´æµ½ÕâÀïÃæ    
+    //æŠŠsecure_link md5_str, 120é…ç½®ä¸­çš„md5_strå­—ç¬¦ä¸²è¿›è¡Œbase64è§£å¯†decodeè¿ç®—åçš„å€¼å­˜åˆ°è¿™é‡Œé¢    
     if (ngx_decode_base64url(&hash, &val) != NGX_OK) {
         goto not_found;
     }
@@ -382,7 +382,7 @@ ngx_http_secure_link_variable(ngx_http_request_t *r,
         goto not_found;
     }
 
-    //½âÎösecure_link_md5 $the_uri_you_want_to_hashed_by_md5ÅäÖÃµÄ×Ö·û´®
+    //è§£æsecure_link_md5 $the_uri_you_want_to_hashed_by_md5é…ç½®çš„å­—ç¬¦ä¸²
     if (ngx_http_complex_value(r, conf->md5, &val) != NGX_OK) {
         return NGX_ERROR;
     }
@@ -395,11 +395,11 @@ ngx_http_secure_link_variable(ngx_http_request_t *r,
     ngx_md5_update(&md5, val.data, val.len);
     ngx_md5_final(md5_buf, &md5);
 
-    if (ngx_memcmp(hash_buf, md5_buf, 16) != 0) { //±È½ÏÅĞ¶ÏÊÇ·ñÒ»ÖÂ
+    if (ngx_memcmp(hash_buf, md5_buf, 16) != 0) { //æ¯”è¾ƒåˆ¤æ–­æ˜¯å¦ä¸€è‡´
         goto not_found;
     }
 
-    //ÉèÖÃv±äÁ¿¶ÔÓ¦µÄÖµÎª0»òÕß1
+    //è®¾ç½®vå˜é‡å¯¹åº”çš„å€¼ä¸º0æˆ–è€…1
     v->data = (u_char *) ((expires && expires < ngx_time()) ? "0" : "1");
     v->len = 1;
     v->valid = 1;
@@ -431,7 +431,7 @@ ngx_http_secure_link_old_variable(ngx_http_request_t *r,
     p = &r->unparsed_uri.data[1];
     last = r->unparsed_uri.data + r->unparsed_uri.len;
 
-    // »ñÈ¡/p/5e814704a28d9bc1914ff19fa0c4a00a/link/xxÇëÇóÖĞ5e814704a28d9bc1914ff19fa0c4a00a×Ö·û´®
+    // è·å–/p/5e814704a28d9bc1914ff19fa0c4a00a/link/xxè¯·æ±‚ä¸­5e814704a28d9bc1914ff19fa0c4a00aå­—ç¬¦ä¸²
     while (p < last) {
         if (*p++ == '/') {
             start = p;
@@ -442,7 +442,7 @@ ngx_http_secure_link_old_variable(ngx_http_request_t *r,
     goto not_found;
 
 md5_start:
-    // »ñÈ¡/p/5e814704a28d9bc1914ff19fa0c4a00a/link/xxÇëÇóÖĞ/link/xx×Ö·û´®×öÎªĞÂµÄuri
+    // è·å–/p/5e814704a28d9bc1914ff19fa0c4a00a/link/xxè¯·æ±‚ä¸­/link/xxå­—ç¬¦ä¸²åšä¸ºæ–°çš„uri
     while (p < last) {
         if (*p++ == '/') {
             end = p - 1;
@@ -456,12 +456,12 @@ url_start:
 
     len = last - p;
 
-    //5e814704a28d9bc1914ff19fa0c4a00a±ØĞëÂú×ã32×Ö½Ú£¬ÒòÎªMD5ÔËËã½á¹ûÊÇ32×Ö½Ú
+    //5e814704a28d9bc1914ff19fa0c4a00aå¿…é¡»æ»¡è¶³32å­—èŠ‚ï¼Œå› ä¸ºMD5è¿ç®—ç»“æœæ˜¯32å­—èŠ‚
     if (end - start != 32 || len == 0) {
         goto not_found;
     }
 
-    //¼ÆËãsecure_link_secretÅäÖÃµÄ×Ö·û´®µÄMD5Ğ£ÑéÖµ
+    //è®¡ç®—secure_link_secreté…ç½®çš„å­—ç¬¦ä¸²çš„MD5æ ¡éªŒå€¼
     ngx_md5_init(&md5);
     ngx_md5_update(&md5, p, len);
     ngx_md5_update(&md5, conf->secret.data, conf->secret.len);
@@ -541,7 +541,7 @@ ngx_http_secure_link_merge_conf(ngx_conf_t *cf, void *parent, void *child)
     ngx_http_secure_link_conf_t *prev = parent;
     ngx_http_secure_link_conf_t *conf = child;
 
-    if (conf->secret.data) { //Èç¹ûÅäÖÃÁËsecure_link_secretÔò²»ÄÜÅäÖÃ secure_link secure_link_md5
+    if (conf->secret.data) { //å¦‚æœé…ç½®äº†secure_link_secretåˆ™ä¸èƒ½é…ç½® secure_link secure_link_md5
         if (conf->variable || conf->md5) {
             ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                                "\"secure_link_secret\" cannot be mixed with "

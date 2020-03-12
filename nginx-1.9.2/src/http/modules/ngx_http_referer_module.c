@@ -13,10 +13,10 @@
 #define NGX_HTTP_REFERER_NO_URI_PART  ((void *) 4)
 
 /*
-The ngx_http_referer_module module is used to block access to a site for requests with invalid values in the ¡°Referer¡± header 
-field. It should be kept in mind that fabricating a request with an appropriate ¡°Referer¡± field value is quite easy, and so 
+The ngx_http_referer_module module is used to block access to a site for requests with invalid values in the â€œRefererâ€ header 
+field. It should be kept in mind that fabricating a request with an appropriate â€œRefererâ€ field value is quite easy, and so 
 the intended purpose of this module is not to block such requests thoroughly but to block the mass flow of requests sent by 
-regular browsers. It should also be taken into consideration that regular browsers may not send the ¡°Referer¡± field even for 
+regular browsers. It should also be taken into consideration that regular browsers may not send the â€œRefererâ€ field even for 
 valid requests. 
 
 Example Configuration
@@ -42,39 +42,39 @@ Sets the maximum size of the valid referers hash tables. The details of setting 
 
 Syntax: 
 valid_referers none | blocked | server_names | string ...;
-Default: ¡ª  
+Default: â€•  
 Context: 
 server, location
  
-Specifies the ¡°Referer¡± request header field values that will cause the embedded $invalid_referer variable to be set to an empty 
-string. Otherwise, the variable will be set to ¡°1¡±. Search for a match is case-insensitive. 
+Specifies the â€œRefererâ€ request header field values that will cause the embedded $invalid_referer variable to be set to an empty 
+string. Otherwise, the variable will be set to â€œ1â€. Search for a match is case-insensitive. 
 
 Parameters can be as follows: 
-nonethe ¡°Referer¡± field is missing in the request header; blockedthe ¡°Referer¡± field is present in the request header, but its 
-value has been deleted by a firewall or proxy server; such values are strings that do not start with ¡°http://¡± or ¡°https://¡±; 
-server_namesthe ¡°Referer¡± request header field contains one of the server names; arbitrary stringdefines a server name and an 
-optional URI prefix. A server name can have an ¡°*¡± at the beginning or end. During the checking, the server¡¯s port in the ¡°Referer¡± 
-field is ignored; regular expressionthe first symbol should be a ¡°~¡±. It should be noted that an expression will be matched against 
-the text starting after the ¡°http://¡± or ¡°https://¡±. 
+nonethe â€œRefererâ€ field is missing in the request header; blockedthe â€œRefererâ€ field is present in the request header, but its 
+value has been deleted by a firewall or proxy server; such values are strings that do not start with â€œhttp://â€ or â€œhttps://â€; 
+server_namesthe â€œRefererâ€ request header field contains one of the server names; arbitrary stringdefines a server name and an 
+optional URI prefix. A server name can have an â€œ*â€ at the beginning or end. During the checking, the serverâ€™s port in the â€œRefererâ€ 
+field is ignored; regular expressionthe first symbol should be a â€œ~â€. It should be noted that an expression will be matched against 
+the text starting after the â€œhttp://â€ or â€œhttps://â€. 
 Example: 
 valid_referers none blocked server_names
                *.example.com example.* www.example.org/galleries/
                ~\.google\.;
 
 Embedded Variables
-$invalid_refererEmpty string, if the ¡°Referer¡± request header field value is considered valid, otherwise ¡°1¡±. 
+$invalid_refererEmpty string, if the â€œRefererâ€ request header field value is considered valid, otherwise â€œ1â€. 
 */
 
 typedef struct {
-    ngx_hash_combined_t      hash;//¸³ÖµºÍ³õÊ¼»¯¼ûngx_http_referer_merge_conf
+    ngx_hash_combined_t      hash;//èµ‹å€¼å’Œåˆå§‹åŒ–è§ngx_http_referer_merge_conf
 
 #if (NGX_PCRE)
-    //³ÉÔ±ÀàĞÍngx_regex_elt_t 
+    //æˆå‘˜ç±»å‹ngx_regex_elt_t 
     /* 
- ÓÃÓÚ½âÎövalid_referers server_names ~\.google\.ºóÃæ¸úµÄÕıÔò±í´ïÊ½ÓòÃûĞÅÏ¢£¬³ıÕıÔò±í´ïÊ½ÒÔÍâµÄÓòÃûĞÅÏ¢´æ´¢ÔÚÏÂÃæµÄkeys hashÊı×éÖĞ
+ ç”¨äºè§£ævalid_referers server_names ~\.google\.åé¢è·Ÿçš„æ­£åˆ™è¡¨è¾¾å¼åŸŸåä¿¡æ¯ï¼Œé™¤æ­£åˆ™è¡¨è¾¾å¼ä»¥å¤–çš„åŸŸåä¿¡æ¯å­˜å‚¨åœ¨ä¸‹é¢çš„keys hashæ•°ç»„ä¸­
 
     */
-    ngx_array_t             *regex; //´´½¨¿Õ¼äºÍ¸³Öµ¼ûngx_http_add_regex_referer
+    ngx_array_t             *regex; //åˆ›å»ºç©ºé—´å’Œèµ‹å€¼è§ngx_http_add_regex_referer
     ngx_array_t             *server_name_regex;
 #endif
 
@@ -83,13 +83,13 @@ typedef struct {
     ngx_flag_t               server_names; //valid_referers server_names *.example.com example.* www.example.org/galleries/
 
 
-//´´½¨¿Õ¼äºÍ¸³Öµ¼ûngx_http_valid_referers ÀïÃæ´æ´¢µÄÊÇvalid_referers server_namesÅäÖÃµÄ³ıÕıÔò±í´ïÊ½ÒÔÍâµÄÓòÃûĞÅÏ¢£¬ÕıÔò±í´ïÊ½ÓòÃûĞÅÏ¢´æ´¢ÔÚÉÏÃæµÄregex
+//åˆ›å»ºç©ºé—´å’Œèµ‹å€¼è§ngx_http_valid_referers é‡Œé¢å­˜å‚¨çš„æ˜¯valid_referers server_namesé…ç½®çš„é™¤æ­£åˆ™è¡¨è¾¾å¼ä»¥å¤–çš„åŸŸåä¿¡æ¯ï¼Œæ­£åˆ™è¡¨è¾¾å¼åŸŸåä¿¡æ¯å­˜å‚¨åœ¨ä¸Šé¢çš„regex
     ngx_hash_keys_arrays_t  *keys;
 
-    //ÕâÁ½¸öÖµµÄÉúĞ§Ô­Àí²Î¿¼ngx_hash_init_tÖĞmax_sizeºÍbucket_size
-    //referer_hash_max_sizeÅäÖÃ  Ä¬ÈÏ2048  ²¢²»ÊÇ±íÊ¾Êµ¼ÊĞèÒª2048¸öÍ°£¬Êµ¼ÊĞèÒª¶àÉÙ¸öÊÇËã¸ù¾İÓĞ¶àÉÙ¸ö³ÉÔ±Ìí¼Óµ½Í°ÖĞÀ´Ëã´¦ÀíµÄ£¬²Î¿¼ngx_hash_init
+    //è¿™ä¸¤ä¸ªå€¼çš„ç”Ÿæ•ˆåŸç†å‚è€ƒngx_hash_init_tä¸­max_sizeå’Œbucket_size
+    //referer_hash_max_sizeé…ç½®  é»˜è®¤2048  å¹¶ä¸æ˜¯è¡¨ç¤ºå®é™…éœ€è¦2048ä¸ªæ¡¶ï¼Œå®é™…éœ€è¦å¤šå°‘ä¸ªæ˜¯ç®—æ ¹æ®æœ‰å¤šå°‘ä¸ªæˆå‘˜æ·»åŠ åˆ°æ¡¶ä¸­æ¥ç®—å¤„ç†çš„ï¼Œå‚è€ƒngx_hash_init
     ngx_uint_t               referer_hash_max_size; 
-    ngx_uint_t               referer_hash_bucket_size;//referer_hash_bucket_sizeÅäÖÃ Ä¬ÈÏ64
+    ngx_uint_t               referer_hash_bucket_size;//referer_hash_bucket_sizeé…ç½® é»˜è®¤64
 } ngx_http_referer_conf_t;
 
 
@@ -110,22 +110,22 @@ static int ngx_libc_cdecl ngx_http_cmp_referer_wildcards(const void *one,
     const void *two);
 
 /*
-ÎÒµÄÊµÏÖ·ÀµÁÁ´µÄ×ö·¨£¬Ò²ÊÇ²Î¿¼¸ÃÎ»Ç°±²µÄÎÄÕÂ¡£»ù±¾Ô­Àí¾ÍÊÇ¾ÍÊÇÒ»¾ä»°£ºÍ¨¹ıÅĞ¶ÏrequestÇëÇóÍ·µÄreferÊÇ·ñÀ´Ô´ÓÚ±¾Õ¾¡££¨µ±È»ÇëÇóÍ·ÊÇÀ´×ÔÓÚ¿Í»§¶ËµÄ£¬
-ÊÇ¿ÉÎ±ÔìµÄ£¬Ôİ²»ÔÚ±¾ÎÄÌÖÂÛ·¶Î§ÄÚ£©¡£
+æˆ‘çš„å®ç°é˜²ç›—é“¾çš„åšæ³•ï¼Œä¹Ÿæ˜¯å‚è€ƒè¯¥ä½å‰è¾ˆçš„æ–‡ç« ã€‚åŸºæœ¬åŸç†å°±æ˜¯å°±æ˜¯ä¸€å¥è¯ï¼šé€šè¿‡åˆ¤æ–­requestè¯·æ±‚å¤´çš„referæ˜¯å¦æ¥æºäºæœ¬ç«™ã€‚ï¼ˆå½“ç„¶è¯·æ±‚å¤´æ˜¯æ¥è‡ªäºå®¢æˆ·ç«¯çš„ï¼Œ
+æ˜¯å¯ä¼ªé€ çš„ï¼Œæš‚ä¸åœ¨æœ¬æ–‡è®¨è®ºèŒƒå›´å†…ï¼‰ã€‚
 
-2£®  Ê×ÏÈÎÒÃÇÈ¥ÁË½âÏÂÊ²Ã´ÊÇHTTP Referer¡£¼òÑÔÖ®£¬HTTP RefererÊÇheaderµÄÒ»²¿·Ö£¬µ±ä¯ÀÀÆ÷Ïòweb·şÎñÆ÷·¢ËÍÇëÇóµÄÊ±ºò£¬Ò»°ã»á´øÉÏReferer£¬¸æËß
-·şÎñÆ÷ÎÒÊÇ´ÓÄÄ¸öÒ³ÃæÁ´½Ó¹ıÀ´µÄ£¬·şÎñÆ÷¼®´Ë¿ÉÒÔ»ñµÃÒ»Ğ©ĞÅÏ¢ÓÃÓÚ´¦Àí¡£±ÈÈç´ÓÎÒÖ÷Ò³ÉÏÁ´½Óµ½Ò»¸öÅóÓÑÄÇÀï£¬ËûµÄ·şÎñÆ÷¾ÍÄÜ¹»´ÓHTTP RefererÖĞÍ³¼Æ
-³öÃ¿ÌìÓĞ¶àÉÙÓÃ»§µã»÷ÎÒÖ÷Ò³ÉÏµÄÁ´½Ó·ÃÎÊËûµÄÍøÕ¾¡££¨×¢£º¸ÃÎÄËùÓĞÓÃµÄÕ¾µã¾ù¼ÙÉèÒÔ http://blog.csdn.netÎªÀı£©
+2ï¼  é¦–å…ˆæˆ‘ä»¬å»äº†è§£ä¸‹ä»€ä¹ˆæ˜¯HTTP Refererã€‚ç®€è¨€ä¹‹ï¼ŒHTTP Refereræ˜¯headerçš„ä¸€éƒ¨åˆ†ï¼Œå½“æµè§ˆå™¨å‘webæœåŠ¡å™¨å‘é€è¯·æ±‚çš„æ—¶å€™ï¼Œä¸€èˆ¬ä¼šå¸¦ä¸ŠRefererï¼Œå‘Šè¯‰
+æœåŠ¡å™¨æˆ‘æ˜¯ä»å“ªä¸ªé¡µé¢é“¾æ¥è¿‡æ¥çš„ï¼ŒæœåŠ¡å™¨ç±æ­¤å¯ä»¥è·å¾—ä¸€äº›ä¿¡æ¯ç”¨äºå¤„ç†ã€‚æ¯”å¦‚ä»æˆ‘ä¸»é¡µä¸Šé“¾æ¥åˆ°ä¸€ä¸ªæœ‹å‹é‚£é‡Œï¼Œä»–çš„æœåŠ¡å™¨å°±èƒ½å¤Ÿä»HTTP Refererä¸­ç»Ÿè®¡
+å‡ºæ¯å¤©æœ‰å¤šå°‘ç”¨æˆ·ç‚¹å‡»æˆ‘ä¸»é¡µä¸Šçš„é“¾æ¥è®¿é—®ä»–çš„ç½‘ç«™ã€‚ï¼ˆæ³¨ï¼šè¯¥æ–‡æ‰€æœ‰ç”¨çš„ç«™ç‚¹å‡å‡è®¾ä»¥ http://blog.csdn.netä¸ºä¾‹ï¼‰
 
-¼ÙÈçÎÒÃÇÒª·ÃÎÊ×ÊÔ´£ºhttp://blog.csdn.net/Beacher_Ma ÓĞÁ½ÖÖÇé¿ö£º
-1£®  ÎÒÃÇÖ±½ÓÔÚä¯ÀÀÆ÷ÉÏÊäÈë¸ÃÍøÖ·¡£ÄÇÃ´¸ÃÇëÇóµÄHTTP Referer ¾ÍÎªnull
-2£®  Èç¹ûÎÒÃÇÔÚÆäËûÆäËûÒ³ÃæÖĞ£¬Í¨¹ıµã»÷£¬Èç http://www.csdn.net ÉÏÓĞÒ»¸ö http://blog.csdn.net/Beacher_Ma ÕâÑùµÄÁ´½Ó£¬ÄÇÃ´¸ÃÇëÇóµÄHTTP Referer 
-¾ÍÎªhttp://www.csdn.net 
+å‡å¦‚æˆ‘ä»¬è¦è®¿é—®èµ„æºï¼šhttp://blog.csdn.net/Beacher_Ma æœ‰ä¸¤ç§æƒ…å†µï¼š
+1ï¼  æˆ‘ä»¬ç›´æ¥åœ¨æµè§ˆå™¨ä¸Šè¾“å…¥è¯¥ç½‘å€ã€‚é‚£ä¹ˆè¯¥è¯·æ±‚çš„HTTP Referer å°±ä¸ºnull
+2ï¼  å¦‚æœæˆ‘ä»¬åœ¨å…¶ä»–å…¶ä»–é¡µé¢ä¸­ï¼Œé€šè¿‡ç‚¹å‡»ï¼Œå¦‚ http://www.csdn.net ä¸Šæœ‰ä¸€ä¸ª http://blog.csdn.net/Beacher_Ma è¿™æ ·çš„é“¾æ¥ï¼Œé‚£ä¹ˆè¯¥è¯·æ±‚çš„HTTP Referer 
+å°±ä¸ºhttp://www.csdn.net 
 */
 
 
 /*
-Ò»£ºÒ»°ãµÄ·ÀµÁÁ´ÈçÏÂ£º 
+ä¸€ï¼šä¸€èˆ¬çš„é˜²ç›—é“¾å¦‚ä¸‹ï¼š 
 location ~* \.(gif|jpg|png|swf|flv)$ { 
 valid_referers none blocked www.jb51.net jb51.net ; 
 if ($invalid_referer) { 
@@ -135,14 +135,14 @@ rewrite ^/ http://www.jb51.net/retrun.html;
 } 
 
 
-µÚÒ»ĞĞ£ºgif|jpg|png|swf|flv 
-±íÊ¾¶Ôgif¡¢jpg¡¢png¡¢swf¡¢flvºó×ºµÄÎÄ¼şÊµĞĞ·ÀµÁÁ´ 
-µÚ¶şĞĞ£º ±íÊ¾¶Ôwww.ingnix.comÕâ2¸öÀ´Â·½øĞĞÅĞ¶Ï 
-if{}ÀïÃæÄÚÈİµÄÒâË¼ÊÇ£¬Èç¹ûÀ´Â·²»ÊÇÖ¸¶¨À´Â·¾ÍÌø×ªµ½http://www.jb51.net/retrun.htmlÒ³Ãæ£¬µ±È»Ö±½Ó·µ»Ø403Ò²ÊÇ¿ÉÒÔµÄ¡£ 
+ç¬¬ä¸€è¡Œï¼šgif|jpg|png|swf|flv 
+è¡¨ç¤ºå¯¹gifã€jpgã€pngã€swfã€flvåç¼€çš„æ–‡ä»¶å®è¡Œé˜²ç›—é“¾ 
+ç¬¬äºŒè¡Œï¼š è¡¨ç¤ºå¯¹www.ingnix.comè¿™2ä¸ªæ¥è·¯è¿›è¡Œåˆ¤æ–­ 
+if{}é‡Œé¢å†…å®¹çš„æ„æ€æ˜¯ï¼Œå¦‚æœæ¥è·¯ä¸æ˜¯æŒ‡å®šæ¥è·¯å°±è·³è½¬åˆ°http://www.jb51.net/retrun.htmlé¡µé¢ï¼Œå½“ç„¶ç›´æ¥è¿”å›403ä¹Ÿæ˜¯å¯ä»¥çš„ã€‚ 
 
-¶ş£ºÕë¶ÔÍ¼Æ¬Ä¿Â¼·ÀÖ¹µÁÁ´ 
+äºŒï¼šé’ˆå¯¹å›¾ç‰‡ç›®å½•é˜²æ­¢ç›—é“¾ 
 
-¸´ÖÆ´úÂë ´úÂëÈçÏÂ:
+å¤åˆ¶ä»£ç  ä»£ç å¦‚ä¸‹:
 
 
 location /images/ { 
@@ -152,28 +152,28 @@ if ($invalid_referer) {return 403;}
 } 
 
 
-Èı£ºÊ¹ÓÃµÚÈı·½Ä£¿éngx_http_accesskey_moduleÊµÏÖNginx·ÀµÁÁ´ 
-ÊµÏÖ·½·¨ÈçÏÂ£º 
+ä¸‰ï¼šä½¿ç”¨ç¬¬ä¸‰æ–¹æ¨¡å—ngx_http_accesskey_moduleå®ç°Nginxé˜²ç›—é“¾ 
+å®ç°æ–¹æ³•å¦‚ä¸‹ï¼š 
 
-ÊµÏÖ·½·¨ÈçÏÂ£º
-1. ÏÂÔØNginxHttpAccessKeyModuleÄ£¿éÎÄ¼ş£ºNginx-accesskey-2.0.3.tar.gz£»
-2. ½âÑ¹´ËÎÄ¼şºó£¬ÕÒµ½nginx-accesskey-2.0.3ÏÂµÄconfigÎÄ¼ş¡£±à¼­´ËÎÄ¼ş£ºÌæ»»ÆäÖĞµÄ¡±$HTTP_ACCESSKEY_MODULE¡±Îª¡±ngx_http_accesskey_module¡±£»
-3. ÓÃÒ»ÏÂ²ÎÊıÖØĞÂ±àÒënginx£º
+å®ç°æ–¹æ³•å¦‚ä¸‹ï¼š
+1. ä¸‹è½½NginxHttpAccessKeyModuleæ¨¡å—æ–‡ä»¶ï¼šNginx-accesskey-2.0.3.tar.gzï¼›
+2. è§£å‹æ­¤æ–‡ä»¶åï¼Œæ‰¾åˆ°nginx-accesskey-2.0.3ä¸‹çš„configæ–‡ä»¶ã€‚ç¼–è¾‘æ­¤æ–‡ä»¶ï¼šæ›¿æ¢å…¶ä¸­çš„â€$HTTP_ACCESSKEY_MODULEâ€ä¸ºâ€ngx_http_accesskey_moduleâ€ï¼›
+3. ç”¨ä¸€ä¸‹å‚æ•°é‡æ–°ç¼–è¯‘nginxï¼š
 ./configure --add-module=path/to/nginx-accesskey
-4. ĞŞ¸ÄnginxµÄconfÎÄ¼ş£¬Ìí¼ÓÒÔÏÂ¼¸ĞĞ£º
+4. ä¿®æ”¹nginxçš„confæ–‡ä»¶ï¼Œæ·»åŠ ä»¥ä¸‹å‡ è¡Œï¼š
 location /download {
   accesskey             on;
   accesskey_hashmethod  md5;
   accesskey_arg         "key";
   accesskey_signature   "mypass$remote_addr";
 }
-ÆäÖĞ£º
-accesskeyÎªÄ£¿é¿ª¹Ø£»
-accesskey_hashmethodÎª¼ÓÃÜ·½Ê½MD5»òÕßSHA-1£»
-accesskey_argÎªurlÖĞµÄ¹Ø¼ü×Ö²ÎÊı£»
-accesskey_signatureÎª¼ÓÃÜÖµ£¬´Ë´¦ÎªmypassºÍ·ÃÎÊIP¹¹³ÉµÄ×Ö·û´®¡£
+å…¶ä¸­ï¼š
+accesskeyä¸ºæ¨¡å—å¼€å…³ï¼›
+accesskey_hashmethodä¸ºåŠ å¯†æ–¹å¼MD5æˆ–è€…SHA-1ï¼›
+accesskey_argä¸ºurlä¸­çš„å…³é”®å­—å‚æ•°ï¼›
+accesskey_signatureä¸ºåŠ å¯†å€¼ï¼Œæ­¤å¤„ä¸ºmypasså’Œè®¿é—®IPæ„æˆçš„å­—ç¬¦ä¸²ã€‚
 
-·ÃÎÊ²âÊÔ½Å±¾download.php£º
+è®¿é—®æµ‹è¯•è„šæœ¬download.phpï¼š
 <?
 $ipkey= md5("mypass".$_SERVER['REMOTE_ADDR']);
 $output_add_key="<a href=http://www.jb51.net/download/G3200507120520LM.rar?key=".$ipkey.">download_add_key</a><br />";
@@ -181,16 +181,16 @@ $output_org_url="<a href=http://www.jb51.net/download/G3200507120520LM.rar>downl
 echo $output_add_key;
 echo $output_org_url;
 ?>
-·ÃÎÊµÚÒ»¸ödownload_add_keyÁ´½Ó¿ÉÒÔÕı³£ÏÂÔØ£¬µÚ¶ş¸öÁ´½Ódownload_org_path»á·µ»Ø403 Forbidden´íÎó¡£
+è®¿é—®ç¬¬ä¸€ä¸ªdownload_add_keyé“¾æ¥å¯ä»¥æ­£å¸¸ä¸‹è½½ï¼Œç¬¬äºŒä¸ªé“¾æ¥download_org_pathä¼šè¿”å›403 Forbiddené”™è¯¯ã€‚
 
 */
-//ngx_http_secure_link_moduleÏÖÔÚ¿ÉÒÔ´úÌængx_http_accesskey_module£¬ËûÃÇ¹¦ÄÜÀàËÆ   ngx_http_secure_link_module NginxµÄ°²È«Ä£¿é,ÃâµÃ±ğÈËÄÃwebserverÈ¨ÏŞ¡£
-//ngx_http_referer_module¾ßÓĞÆÕÍ¨·ÀµÁÁ´¹¦ÄÜ
+//ngx_http_secure_link_moduleç°åœ¨å¯ä»¥ä»£æ›¿ngx_http_accesskey_moduleï¼Œä»–ä»¬åŠŸèƒ½ç±»ä¼¼   ngx_http_secure_link_module Nginxçš„å®‰å…¨æ¨¡å—,å…å¾—åˆ«äººæ‹¿webserveræƒé™ã€‚
+//ngx_http_referer_moduleå…·æœ‰æ™®é€šé˜²ç›—é“¾åŠŸèƒ½
 
-//$invalid_referer±äÁ¿£¬Empty string, if the ¡°Referer¡± request header field value is considered valid, otherwise '1' ¼ûngx_http_valid_referers
+//$invalid_refererå˜é‡ï¼ŒEmpty string, if the â€œRefererâ€ request header field value is considered valid, otherwise '1' è§ngx_http_valid_referers
 static ngx_command_t  ngx_http_referer_commands[] = {
 
-    { ngx_string("valid_referers"),//¸Ã±äÁ¿Öµ»ñÈ¡ÉúĞ§ÔÚngx_http_referer_variable
+    { ngx_string("valid_referers"),//è¯¥å˜é‡å€¼è·å–ç”Ÿæ•ˆåœ¨ngx_http_referer_variable
       NGX_HTTP_SRV_CONF|NGX_HTTP_LOC_CONF|NGX_CONF_1MORE,
       ngx_http_valid_referers,
       NGX_HTTP_LOC_CONF_OFFSET,
@@ -198,8 +198,8 @@ static ngx_command_t  ngx_http_referer_commands[] = {
       NULL },
 
 /*
-ÕâÁ½¸öÖµµÄÉúĞ§Ô­Àí²Î¿¼ngx_hash_init_tÖĞmax_sizeºÍbucket_size
-referer_hash_max_sizeÅäÖÃ  Ä¬ÈÏ2048  ²¢²»ÊÇ±íÊ¾Êµ¼ÊĞèÒª2048¸öÍ°£¬Êµ¼ÊĞèÒª¶àÉÙ¸öÊÇËã¸ù¾İÓĞ¶àÉÙ¸ö³ÉÔ±Ìí¼Óµ½Í°ÖĞÀ´Ëã´¦ÀíµÄ£¬²Î¿¼ngx_hash_init
+è¿™ä¸¤ä¸ªå€¼çš„ç”Ÿæ•ˆåŸç†å‚è€ƒngx_hash_init_tä¸­max_sizeå’Œbucket_size
+referer_hash_max_sizeé…ç½®  é»˜è®¤2048  å¹¶ä¸æ˜¯è¡¨ç¤ºå®é™…éœ€è¦2048ä¸ªæ¡¶ï¼Œå®é™…éœ€è¦å¤šå°‘ä¸ªæ˜¯ç®—æ ¹æ®æœ‰å¤šå°‘ä¸ªæˆå‘˜æ·»åŠ åˆ°æ¡¶ä¸­æ¥ç®—å¤„ç†çš„ï¼Œå‚è€ƒngx_hash_init
  */
     { ngx_string("referer_hash_max_size"),
       NGX_HTTP_SRV_CONF|NGX_HTTP_LOC_CONF|NGX_CONF_TAKE1,
@@ -233,8 +233,8 @@ static ngx_http_module_t  ngx_http_referer_module_ctx = {
     ngx_http_referer_merge_conf            /* merge location configuration */
 };
 
-//ngx_http_secure_link_moduleÏÖÔÚ¿ÉÒÔ´úÌængx_http_accesskey_module£¬ËûÃÇ¹¦ÄÜÀàËÆ   ngx_http_secure_link_module NginxµÄ°²È«Ä£¿é,ÃâµÃ±ğÈËÄÃwebserverÈ¨ÏŞ¡£
-//ngx_http_referer_module¾ßÓĞÆÕÍ¨·ÀµÁÁ´¹¦ÄÜ
+//ngx_http_secure_link_moduleç°åœ¨å¯ä»¥ä»£æ›¿ngx_http_accesskey_moduleï¼Œä»–ä»¬åŠŸèƒ½ç±»ä¼¼   ngx_http_secure_link_module Nginxçš„å®‰å…¨æ¨¡å—,å…å¾—åˆ«äººæ‹¿webserveræƒé™ã€‚
+//ngx_http_referer_moduleå…·æœ‰æ™®é€šé˜²ç›—é“¾åŠŸèƒ½
 ngx_module_t  ngx_http_referer_module = {
     NGX_MODULE_V1,
     &ngx_http_referer_module_ctx,          /* module context */
@@ -250,7 +250,7 @@ ngx_module_t  ngx_http_referer_module = {
     NGX_MODULE_V1_PADDING
 };
 
-//$invalid_referer±äÁ¿¶ÔÓ¦µÄÖµ»ñÈ¡
+//$invalid_refererå˜é‡å¯¹åº”çš„å€¼è·å–
 static ngx_int_t
 ngx_http_referer_variable(ngx_http_request_t *r, ngx_http_variable_value_t *v,
      uintptr_t data)
@@ -521,7 +521,7 @@ ngx_http_referer_merge_conf(ngx_conf_t *cf, void *parent, void *child)
     hash.pool = cf->pool;
 
     if (conf->keys->keys.nelts) {
-        hash.hash = &conf->hash.hash; //¸ÃhashÖĞ´æ·ÅµÄÊÇngx_hash_keys_arrays_t->keys[]Êı×éÖĞµÄ³ÉÔ±
+        hash.hash = &conf->hash.hash; //è¯¥hashä¸­å­˜æ”¾çš„æ˜¯ngx_hash_keys_arrays_t->keys[]æ•°ç»„ä¸­çš„æˆå‘˜
         hash.temp_pool = NULL;
 
         if (ngx_hash_init(&hash, conf->keys->keys.elts, conf->keys->keys.nelts)
@@ -548,13 +548,13 @@ ngx_http_referer_merge_conf(ngx_conf_t *cf, void *parent, void *child)
             return NGX_CONF_ERROR;
         }
 
-        //¸Ãwc_head hashÖĞ´æ´¢µÄÊÇngx_hash_keys_arrays_t->dns_wc_headÊı×éÖĞµÄ³ÉÔ±
+        //è¯¥wc_head hashä¸­å­˜å‚¨çš„æ˜¯ngx_hash_keys_arrays_t->dns_wc_headæ•°ç»„ä¸­çš„æˆå‘˜
         conf->hash.wc_head = (ngx_hash_wildcard_t *) hash.hash;
     }
 
     if (conf->keys->dns_wc_tail.nelts) {
 
-        /* °ÑºóÖÃÍ¨Åä·ûÊı×édns_wc_tail[]¶ÔÓ¦µÄ×Ö·û´®½øĞĞÅÅĞò */
+        /* æŠŠåç½®é€šé…ç¬¦æ•°ç»„dns_wc_tail[]å¯¹åº”çš„å­—ç¬¦ä¸²è¿›è¡Œæ’åº */
         ngx_qsort(conf->keys->dns_wc_tail.elts,
                   (size_t) conf->keys->dns_wc_tail.nelts,
                   sizeof(ngx_hash_key_t),
@@ -570,7 +570,7 @@ ngx_http_referer_merge_conf(ngx_conf_t *cf, void *parent, void *child)
             return NGX_CONF_ERROR;
         }
 
-         //¸Ãwc_head hashÖĞ´æ´¢µÄÊÇngx_hash_keys_arrays_t->dns_wc_tailÊı×éÖĞµÄ³ÉÔ±
+         //è¯¥wc_head hashä¸­å­˜å‚¨çš„æ˜¯ngx_hash_keys_arrays_t->dns_wc_tailæ•°ç»„ä¸­çš„æˆå‘˜
         conf->hash.wc_tail = (ngx_hash_wildcard_t *) hash.hash;
     }
 
@@ -604,8 +604,8 @@ ngx_http_valid_referers(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
     ngx_uint_t                 i;
     ngx_http_variable_t       *var;
 
-    //$invalid_referer±äÁ¿£¬Empty string, if the ¡°Referer¡± request header field value is considered valid, otherwise ¡°1¡±. £¬¼ûngx_http_valid_referers
-    ngx_str_set(&name, "invalid_referer");     //¸Ã±äÁ¿Öµ»ñÈ¡ÉúĞ§ÔÚngx_http_referer_variable
+    //$invalid_refererå˜é‡ï¼ŒEmpty string, if the â€œRefererâ€ request header field value is considered valid, otherwise â€œ1â€. ï¼Œè§ngx_http_valid_referers
+    ngx_str_set(&name, "invalid_referer");     //è¯¥å˜é‡å€¼è·å–ç”Ÿæ•ˆåœ¨ngx_http_referer_variable
 
     var = ngx_http_add_variable(cf, &name, NGX_HTTP_VAR_CHANGEABLE);
     if (var == NULL) {
@@ -637,33 +637,33 @@ ngx_http_valid_referers(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
             return NGX_CONF_ERROR;
         }
 
-        //the ¡°Referer¡± field is missing in the request header; 
-        //Ò²¾ÍÊÇ²»´ørefererÍ·²¿ĞĞµÄÂú×ãvalid_referers 
+        //the â€œRefererâ€ field is missing in the request header; 
+        //ä¹Ÿå°±æ˜¯ä¸å¸¦refererå¤´éƒ¨è¡Œçš„æ»¡è¶³valid_referers 
         if (ngx_strcmp(value[i].data, "none") == 0) {
             rlcf->no_referer = 1;
             continue;
         }
 
         /*
-        the ¡°Referer¡± field is present in the request header, but its value has been deleted by a firewall or proxy server; 
-        such values are strings that do not start with ¡°http://¡± or ¡°https://¡±; 
+        the â€œRefererâ€ field is present in the request header, but its value has been deleted by a firewall or proxy server; 
+        such values are strings that do not start with â€œhttp://â€ or â€œhttps://â€; 
           */
         if (ngx_strcmp(value[i].data, "blocked") == 0) {
             rlcf->blocked_referer = 1;
             continue;
         }
 
-        //the ¡°Referer¡± request header field contains one of the server names; 
-        if (ngx_strcmp(value[i].data, "server_names") == 0) { //¸Ã²ÎÊıºóÃæ¸úÓòÃûĞÅÏ¢
+        //the â€œRefererâ€ request header field contains one of the server names; 
+        if (ngx_strcmp(value[i].data, "server_names") == 0) { //è¯¥å‚æ•°åé¢è·ŸåŸŸåä¿¡æ¯
             rlcf->server_names = 1;
             continue;
         }
 
 
 /*
-  arbitrary stringdefines a server name and an optional URI prefix. A server name can have an ¡°*¡± at the beginning or end. 
-  During the checking, the server¡¯s port in the ¡°Referer¡± field is ignored; regular expressionthe first symbol should be a ¡°~¡±. 
-  It should be noted that an expression will be matched against the text starting after the ¡°http://¡± or ¡°https://¡±. 
+  arbitrary stringdefines a server name and an optional URI prefix. A server name can have an â€œ*â€ at the beginning or end. 
+  During the checking, the serverâ€™s port in the â€œRefererâ€ field is ignored; regular expressionthe first symbol should be a â€œ~â€. 
+  It should be noted that an expression will be matched against the text starting after the â€œhttp://â€ or â€œhttps://â€. 
   
   
   Example: 
@@ -684,13 +684,13 @@ ngx_http_valid_referers(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
 
         p = (u_char *) ngx_strchr(value[i].data, '/');
 
-        if (p) {//Èç¹ûvalueÖĞ´øÓĞ/×Ö·û£¬Ôò½ØÈ¡ÆäºóµÄ×Ö·û´®£¬ÀıÈçwww.example.org/galleries/Ôòvalue»á±äÎª/galleries/
+        if (p) {//å¦‚æœvalueä¸­å¸¦æœ‰/å­—ç¬¦ï¼Œåˆ™æˆªå–å…¶åçš„å­—ç¬¦ä¸²ï¼Œä¾‹å¦‚www.example.org/galleries/åˆ™valueä¼šå˜ä¸º/galleries/
             uri.len = (value[i].data + value[i].len) - p;
             uri.data = p;
             value[i].len = p - value[i].data;
         }
 
-        //Èç¹ûserver_nameÖĞ°üº¬/×Ö·û£¬ÔòuriÎª/¿ªÍ·µÄ×Ö·û´®
+        //å¦‚æœserver_nameä¸­åŒ…å«/å­—ç¬¦ï¼Œåˆ™uriä¸º/å¼€å¤´çš„å­—ç¬¦ä¸²
         if (ngx_http_add_referer(cf, rlcf->keys, &value[i], &uri) != NGX_OK) {
             return NGX_CONF_ERROR;
         }

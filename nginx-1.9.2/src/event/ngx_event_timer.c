@@ -9,60 +9,60 @@
 #include <ngx_core.h>
 #include <ngx_event.h>
 
-//¶¨Ê±Æ÷ÊÇÍ¨¹ýÒ»¿ÃºìºÚÊ÷ÊµÏÖµÄ¡£ngx_event_timer_rbtree¾ÍÊÇËùÓÐ¶¨Ê±Æ÷ÊÂ¼þ×é³ÉµÄºìºÚÊ÷£¬¶øngx_event_timer_sentinel¾ÍÊÇÕâ¿ÃºìºÚÊ÷µÄÉÚ±ø½Úµã
+//å®šæ—¶å™¨æ˜¯é€šè¿‡ä¸€æ£µçº¢é»‘æ ‘å®žçŽ°çš„ã€‚ngx_event_timer_rbtreeå°±æ˜¯æ‰€æœ‰å®šæ—¶å™¨äº‹ä»¶ç»„æˆçš„çº¢é»‘æ ‘ï¼Œè€Œngx_event_timer_sentinelå°±æ˜¯è¿™æ£µçº¢é»‘æ ‘çš„å“¨å…µèŠ‚ç‚¹
 /*
-Õâ¿ÃºìºÚÊ÷ÖÐµÄÃ¿¸ö½Úµã¶¼ÊÇngx_event_tÊÂ¼þÖÐµÄtimer³ÉÔ±£¬¶øngx_rbtree_node-t½ÚµãµÄ¹Ø¼ü×Ö¾ÍÊÇÊÂ¼þµÄ³¬Ê±Ê±¼ä£¬ÒÔÕâ¸ö³¬Ê±Ê±¼äµÄ´óÐ¡×é³É
-ÁË¶þ²æÅÅÐòÊ÷ngx_event_timer rbtree¡£ÕâÑù£¬Èç¹ûÐèÒªÕÒ³ö×îÓÐ¿ÉÄÜ³¬Ê±µÄÊÂ¼þ£¬ÄÇÃ´½«ngx_event timer- rbtreeÊ÷ÖÐ×î×ó±ßµÄ½ÚµãÈ¡³öÀ´¼´¿É¡£
-Ö»ÒªÓÃµ±Ç°Ê±¼äÈ¥±È½ÏÕâ¸ö×î×ó±ß½ÚµãµÄ³¬Ê±Ê±¼ä£¬¾Í»áÖªµÀÕâ¸öÊÂ¼þÓÐÃ»ÓÐ´¥·¢³¬Ê±£¬Èç¹û»¹Ã»ÓÐ´¥·¢³¬Ê±£¬ÄÇÃ´»áÖªµÀ×îÉÙ»¹Òª¾­¹ý¶àÉÙºÁÃëÂú×ã³¬
-Ê±Ìõ¼þ¶ø´¥·¢³¬Ê±¡£ÏÈ¿´Ò»ÏÂ¶¨Ê±Æ÷µÄ²Ù×÷·½·¨£¬¼û±í9-5¡£±í9-5¶¨Ê±Æ÷µÄ²Ù×÷·½·¨
-©³©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©×©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©×©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©·
-©§    ·½·¨Ãû                                          ©§    ²ÎÊýº¬Òå                    ©§    Ö´ÐÐÒâÒå                        ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§ngx_int_t ngx_event_timer_init                      ©§  log×ã¿ÉÒÔ¼ÇÂ¼ÈÕÖ¾µÄngx_log_t  ©§  ³õÊ¼»¯¶¨Ê±Æ÷                      ©§
-©§(ngx_log_t *log);                                   ©§¶ÔÏó                            ©§                                    ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§ngx_msec_t ngx_event_find_timer(void);              ©§  ÎÞ                            ©§  ÕÒ³öºìºÚÊ÷ÖÐ×î×ó±ßµÄ½Úµã£¬Èç¹û    ©§
-©§                                                    ©§                                ©§ËüµÄ³¬Ê±Ê±¼ä´óÓÚµ±Ç°Ê±¼ä£¬Ò²¾Í±íÃ÷  ©§
-©§                                                    ©§                                ©§Ä¿Ç°µÄ¶¨Ê±Æ÷ÖÐÃ»ÓÐÒ»¸öÊÂ¼þÂú×ã´¥·¢  ©§
-©§                                                    ©§                                ©§Ìõ¼þ£¬ÕâÊ±·µ»ØÕâ¸ö³¬Ê±Óëµ±Ç°Ê±¼äµÄ  ©§
-©§                                     			    ©§                                ©§²îÖµ£¬Ò²¾ÍÊÇÐèÒª¾­¹ý¶àÉÙºÁÃë»áÓÐÊÂ  ©§
-©§                                                  I ©§                                ©§¼þ³¬Ê±´¥·¢£»Èç¹ûËüµÄ³¬Ê±Ê±¼äÐ¡ÓÚ»ò  ©§
-©§                                                    ©§                                ©§µÈÓÚµ±Ç°Ê±¼ä£¬Ôò·µ»Ø0£¬±íÊ¾¶¨Ê±Æ÷   ©§
-©§                                                    ©§                                ©§ÖÐÒÑ¾­´æÔÚ³¬Ê±ÐèÒª´¥·¢µÄÊÂ¼þ        ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§                                                    ©§                                ©§  ¼ì²é¶¨Ê±Æ÷ÖÐµÄËùÓÐÊÂ¼þ£¬°´ÕÕºì    ©§
-©§                                                    ©§                                ©§ºÚÊ÷¹Ø¼ü×ÖÓÉÐ¡µ½´óµÄË³ÐòÒÀ´Îµ÷ÓÃ    ©§
-©§ngx_event_expire_timers                             ©§  ÎÞ                            ©§                                    ©§
-©§                                                    ©§                                ©§ÒÑ¾­Âú×ã³¬Ê±Ìõ¼þÐèÒª±»´¥·¢ÊÂ¼þµÄ    ©§
-©§                                                    ©§                                ©§handler»Øµ÷·½·¨                     ©§
-©»©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ß©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ß©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¿
-©³©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©×©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©×©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©·
-©§    ·½·¨Ãû                      ©§    ²ÎÊýº¬Òå                    ©§    Ö´ÐÐÒâÒå                      ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§static ngx_inline void          ©§                                ©§                                  ©§
-©§ngx_event_del_timer             ©§  evÊÇÐèÒª²Ù×÷µÄÊÂ¼þ            ©§  ´Ó¶¨Ê±Æ÷ÖÐÒÆ³ýÒ»¸öÊÂ¼þ          ©§
-©§(ngx_event_t ev)                ©§                                ©§                                  ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§static ngx_inline void          ©§  evÊÇÐèÒª²Ù×÷µÄÊÂ¼þ£¬timerµÄ   ©§                                  ©§
-©§ngx_event_add_timer(ngx_        ©§µ¥Î»ÊÇºÁÃë£¬Ëü¸æËß¶¨Ê±Æ÷ÊÂ¼þev  ©§  Ìí¼ÓÒ»¸ö¶¨Ê±Æ÷ÊÂ¼þ£¬³¬Ê±Ê±¼äÎª  ©§
-©§                                ©§Ï£ÍûtimerºÁÃëºó³¬Ê±£¬Í¬Ê±ÐèÒª   ©§timerºÁÃë                         ©§
-©§event_t *ev, ngx_msec_t timer)  ©§                                ©§                                  ©§
-©§                                ©§»Øµ÷evµÄhandler·½·¨             ©§                                  ©§
-©»©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ß©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ß©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¿
-    ÊÂÊµÉÏ£¬»¹ÓÐÁ½¸öºêÓëngx_event add¡ªtimer·½·¨ºÍngx_event del timer·½·¨µÄÓÃ·¨ÊÇÍêÈ«Ò»ÑùµÄ£¬ÈçÏÂËùÊ¾¡£
+è¿™æ£µçº¢é»‘æ ‘ä¸­çš„æ¯ä¸ªèŠ‚ç‚¹éƒ½æ˜¯ngx_event_täº‹ä»¶ä¸­çš„timeræˆå‘˜ï¼Œè€Œngx_rbtree_node-tèŠ‚ç‚¹çš„å…³é”®å­—å°±æ˜¯äº‹ä»¶çš„è¶…æ—¶æ—¶é—´ï¼Œä»¥è¿™ä¸ªè¶…æ—¶æ—¶é—´çš„å¤§å°ç»„æˆ
+äº†äºŒå‰æŽ’åºæ ‘ngx_event_timer rbtreeã€‚è¿™æ ·ï¼Œå¦‚æžœéœ€è¦æ‰¾å‡ºæœ€æœ‰å¯èƒ½è¶…æ—¶çš„äº‹ä»¶ï¼Œé‚£ä¹ˆå°†ngx_event timer- rbtreeæ ‘ä¸­æœ€å·¦è¾¹çš„èŠ‚ç‚¹å–å‡ºæ¥å³å¯ã€‚
+åªè¦ç”¨å½“å‰æ—¶é—´åŽ»æ¯”è¾ƒè¿™ä¸ªæœ€å·¦è¾¹èŠ‚ç‚¹çš„è¶…æ—¶æ—¶é—´ï¼Œå°±ä¼šçŸ¥é“è¿™ä¸ªäº‹ä»¶æœ‰æ²¡æœ‰è§¦å‘è¶…æ—¶ï¼Œå¦‚æžœè¿˜æ²¡æœ‰è§¦å‘è¶…æ—¶ï¼Œé‚£ä¹ˆä¼šçŸ¥é“æœ€å°‘è¿˜è¦ç»è¿‡å¤šå°‘æ¯«ç§’æ»¡è¶³è¶…
+æ—¶æ¡ä»¶è€Œè§¦å‘è¶…æ—¶ã€‚å…ˆçœ‹ä¸€ä¸‹å®šæ—¶å™¨çš„æ“ä½œæ–¹æ³•ï¼Œè§è¡¨9-5ã€‚è¡¨9-5å®šæ—¶å™¨çš„æ“ä½œæ–¹æ³•
+â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”³â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”³â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”“
+â”ƒ    æ–¹æ³•å                                          â”ƒ    å‚æ•°å«ä¹‰                    â”ƒ    æ‰§è¡Œæ„ä¹‰                        â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒngx_int_t ngx_event_timer_init                      â”ƒ  logè¶³å¯ä»¥è®°å½•æ—¥å¿—çš„ngx_log_t  â”ƒ  åˆå§‹åŒ–å®šæ—¶å™¨                      â”ƒ
+â”ƒ(ngx_log_t *log);                                   â”ƒå¯¹è±¡                            â”ƒ                                    â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒngx_msec_t ngx_event_find_timer(void);              â”ƒ  æ—                             â”ƒ  æ‰¾å‡ºçº¢é»‘æ ‘ä¸­æœ€å·¦è¾¹çš„èŠ‚ç‚¹ï¼Œå¦‚æžœ    â”ƒ
+â”ƒ                                                    â”ƒ                                â”ƒå®ƒçš„è¶…æ—¶æ—¶é—´å¤§äºŽå½“å‰æ—¶é—´ï¼Œä¹Ÿå°±è¡¨æ˜Ž  â”ƒ
+â”ƒ                                                    â”ƒ                                â”ƒç›®å‰çš„å®šæ—¶å™¨ä¸­æ²¡æœ‰ä¸€ä¸ªäº‹ä»¶æ»¡è¶³è§¦å‘  â”ƒ
+â”ƒ                                                    â”ƒ                                â”ƒæ¡ä»¶ï¼Œè¿™æ—¶è¿”å›žè¿™ä¸ªè¶…æ—¶ä¸Žå½“å‰æ—¶é—´çš„  â”ƒ
+â”ƒ                                     			    â”ƒ                                â”ƒå·®å€¼ï¼Œä¹Ÿå°±æ˜¯éœ€è¦ç»è¿‡å¤šå°‘æ¯«ç§’ä¼šæœ‰äº‹  â”ƒ
+â”ƒ                                                  I â”ƒ                                â”ƒä»¶è¶…æ—¶è§¦å‘ï¼›å¦‚æžœå®ƒçš„è¶…æ—¶æ—¶é—´å°äºŽæˆ–  â”ƒ
+â”ƒ                                                    â”ƒ                                â”ƒç­‰äºŽå½“å‰æ—¶é—´ï¼Œåˆ™è¿”å›ž0ï¼Œè¡¨ç¤ºå®šæ—¶å™¨   â”ƒ
+â”ƒ                                                    â”ƒ                                â”ƒä¸­å·²ç»å­˜åœ¨è¶…æ—¶éœ€è¦è§¦å‘çš„äº‹ä»¶        â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ                                                    â”ƒ                                â”ƒ  æ£€æŸ¥å®šæ—¶å™¨ä¸­çš„æ‰€æœ‰äº‹ä»¶ï¼ŒæŒ‰ç…§çº¢    â”ƒ
+â”ƒ                                                    â”ƒ                                â”ƒé»‘æ ‘å…³é”®å­—ç”±å°åˆ°å¤§çš„é¡ºåºä¾æ¬¡è°ƒç”¨    â”ƒ
+â”ƒngx_event_expire_timers                             â”ƒ  æ—                             â”ƒ                                    â”ƒ
+â”ƒ                                                    â”ƒ                                â”ƒå·²ç»æ»¡è¶³è¶…æ—¶æ¡ä»¶éœ€è¦è¢«è§¦å‘äº‹ä»¶çš„    â”ƒ
+â”ƒ                                                    â”ƒ                                â”ƒhandlerå›žè°ƒæ–¹æ³•                     â”ƒ
+â”—â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”»â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”»â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”›
+â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”³â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”³â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”“
+â”ƒ    æ–¹æ³•å                      â”ƒ    å‚æ•°å«ä¹‰                    â”ƒ    æ‰§è¡Œæ„ä¹‰                      â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒstatic ngx_inline void          â”ƒ                                â”ƒ                                  â”ƒ
+â”ƒngx_event_del_timer             â”ƒ  evæ˜¯éœ€è¦æ“ä½œçš„äº‹ä»¶            â”ƒ  ä»Žå®šæ—¶å™¨ä¸­ç§»é™¤ä¸€ä¸ªäº‹ä»¶          â”ƒ
+â”ƒ(ngx_event_t ev)                â”ƒ                                â”ƒ                                  â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒstatic ngx_inline void          â”ƒ  evæ˜¯éœ€è¦æ“ä½œçš„äº‹ä»¶ï¼Œtimerçš„   â”ƒ                                  â”ƒ
+â”ƒngx_event_add_timer(ngx_        â”ƒå•ä½æ˜¯æ¯«ç§’ï¼Œå®ƒå‘Šè¯‰å®šæ—¶å™¨äº‹ä»¶ev  â”ƒ  æ·»åŠ ä¸€ä¸ªå®šæ—¶å™¨äº‹ä»¶ï¼Œè¶…æ—¶æ—¶é—´ä¸º  â”ƒ
+â”ƒ                                â”ƒå¸Œæœ›timeræ¯«ç§’åŽè¶…æ—¶ï¼ŒåŒæ—¶éœ€è¦   â”ƒtimeræ¯«ç§’                         â”ƒ
+â”ƒevent_t *ev, ngx_msec_t timer)  â”ƒ                                â”ƒ                                  â”ƒ
+â”ƒ                                â”ƒå›žè°ƒevçš„handleræ–¹æ³•             â”ƒ                                  â”ƒ
+â”—â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”»â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”»â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”›
+    äº‹å®žä¸Šï¼Œè¿˜æœ‰ä¸¤ä¸ªå®ä¸Žngx_event addâ€•timeræ–¹æ³•å’Œngx_event del timeræ–¹æ³•çš„ç”¨æ³•æ˜¯å®Œå…¨ä¸€æ ·çš„ï¼Œå¦‚ä¸‹æ‰€ç¤ºã€‚
 #define ngx_add_timer ngx_event_add_timer
 #define ngx_del_timer ngx_event_del timer
 */
 ngx_rbtree_t              ngx_event_timer_rbtree;
 static ngx_rbtree_node_t  ngx_event_timer_sentinel;
-//ÉÚ±ø½ÚµãÊÇËùÓÐ×îÏÂ²ãµÄÒ¶×Ó½Úµã¶¼Ö¸ÏòÒ»¸öNULL¿Õ½Úµã£¬Í¼ÐÎ»¯²Î¿¼:http://blog.csdn.net/xzongyuan/article/details/22389185
+//å“¨å…µèŠ‚ç‚¹æ˜¯æ‰€æœ‰æœ€ä¸‹å±‚çš„å¶å­èŠ‚ç‚¹éƒ½æŒ‡å‘ä¸€ä¸ªNULLç©ºèŠ‚ç‚¹ï¼Œå›¾å½¢åŒ–å‚è€ƒ:http://blog.csdn.net/xzongyuan/article/details/22389185
 
 /*
  * the event timer rbtree may contain the duplicate keys, however,
  * it should not be a problem, because we use the rbtree to find
  * a minimum timer value only
  */
-//³õÊ¼»¯ºìºÚÊ÷ÊµÏÖµÄ¶¨Ê±Æ÷¡£
+//åˆå§‹åŒ–çº¢é»‘æ ‘å®žçŽ°çš„å®šæ—¶å™¨ã€‚
 ngx_int_t
 ngx_event_timer_init(ngx_log_t *log)
 {
@@ -72,7 +72,7 @@ ngx_event_timer_init(ngx_log_t *log)
     return NGX_OK;
 }
 
-//»ñÈ¡ÀëÏÖÔÚ×î½üµÄ³¬Ê±¶¨Ê±Æ÷Ê±¼ä
+//èŽ·å–ç¦»çŽ°åœ¨æœ€è¿‘çš„è¶…æ—¶å®šæ—¶å™¨æ—¶é—´
 ngx_msec_t
 ngx_event_find_timer(void)
 {
@@ -94,13 +94,13 @@ ngx_event_find_timer(void)
 }
 
 /*
-1.ngx_event_s¿ÉÒÔÊÇÆÕÍ¨µÄepoll¶ÁÐ´ÊÂ¼þ(²Î¿¼ngx_event_connect_peer->ngx_add_conn»òÕßngx_add_event)£¬Í¨¹ý¶ÁÐ´ÊÂ¼þ´¥·¢
+1.ngx_event_så¯ä»¥æ˜¯æ™®é€šçš„epollè¯»å†™äº‹ä»¶(å‚è€ƒngx_event_connect_peer->ngx_add_connæˆ–è€…ngx_add_event)ï¼Œé€šè¿‡è¯»å†™äº‹ä»¶è§¦å‘
 
-2.Ò²¿ÉÒÔÊÇÆÕÍ¨¶¨Ê±Æ÷ÊÂ¼þ(²Î¿¼ngx_cache_manager_process_handler->ngx_add_timer(ngx_event_add_timer))£¬Í¨¹ýngx_process_events_and_timersÖÐµÄ
-epoll_wait·µ»Ø£¬¿ÉÒÔÊÇ¶ÁÐ´ÊÂ¼þ´¥·¢·µ»Ø£¬Ò²¿ÉÄÜÊÇÒòÎªÃ»»ñÈ¡µ½¹²ÏíËø£¬´Ó¶øµÈ´ý0.5s·µ»ØÖØÐÂ»ñÈ¡ËøÀ´¸úÐÂÊÂ¼þ²¢Ö´ÐÐ³¬Ê±ÊÂ¼þÀ´¸úÐÂÊÂ¼þ²¢ÇÒÅÐ¶Ï¶¨
-Ê±Æ÷Á´±íÖÐµÄ³¬Ê±ÊÂ¼þ£¬³¬Ê±ÔòÖ´ÐÐ´Ó¶øÖ¸ÏòeventµÄhandler£¬È»ºó½øÒ»²½Ö¸Ïò¶ÔÓ¦r»òÕßuµÄ->write_event_handler  read_event_handler
+2.ä¹Ÿå¯ä»¥æ˜¯æ™®é€šå®šæ—¶å™¨äº‹ä»¶(å‚è€ƒngx_cache_manager_process_handler->ngx_add_timer(ngx_event_add_timer))ï¼Œé€šè¿‡ngx_process_events_and_timersä¸­çš„
+epoll_waitè¿”å›žï¼Œå¯ä»¥æ˜¯è¯»å†™äº‹ä»¶è§¦å‘è¿”å›žï¼Œä¹Ÿå¯èƒ½æ˜¯å› ä¸ºæ²¡èŽ·å–åˆ°å…±äº«é”ï¼Œä»Žè€Œç­‰å¾…0.5sè¿”å›žé‡æ–°èŽ·å–é”æ¥è·Ÿæ–°äº‹ä»¶å¹¶æ‰§è¡Œè¶…æ—¶äº‹ä»¶æ¥è·Ÿæ–°äº‹ä»¶å¹¶ä¸”åˆ¤æ–­å®š
+æ—¶å™¨é“¾è¡¨ä¸­çš„è¶…æ—¶äº‹ä»¶ï¼Œè¶…æ—¶åˆ™æ‰§è¡Œä»Žè€ŒæŒ‡å‘eventçš„handlerï¼Œç„¶åŽè¿›ä¸€æ­¥æŒ‡å‘å¯¹åº”ræˆ–è€…uçš„->write_event_handler  read_event_handler
 
-3.Ò²¿ÉÒÔÊÇÀûÓÃ¶¨Ê±Æ÷expirtÊµÏÖµÄ¶ÁÐ´ÊÂ¼þ(²Î¿¼ngx_http_set_write_handler->ngx_add_timer(ngx_event_add_timer)),´¥·¢¹ý³Ì¼û2£¬Ö»ÊÇÔÚhandlerÖÐ²»»áÖ´ÐÐwrite_event_handler  read_event_handler
+3.ä¹Ÿå¯ä»¥æ˜¯åˆ©ç”¨å®šæ—¶å™¨expirtå®žçŽ°çš„è¯»å†™äº‹ä»¶(å‚è€ƒngx_http_set_write_handler->ngx_add_timer(ngx_event_add_timer)),è§¦å‘è¿‡ç¨‹è§2ï¼Œåªæ˜¯åœ¨handlerä¸­ä¸ä¼šæ‰§è¡Œwrite_event_handler  read_event_handler
 */
 
 void
@@ -144,7 +144,7 @@ ngx_event_expire_timers(void)
 
         ev->timedout = 1;
 
-        ev->handler(ev); //³¬Ê±µÄÊ±ºò³ö·¢¶ÁÐ´ÊÂ¼þ»Øµ÷º¯Êý£¬´Ó¶øÔÚÀïÃæÅÐ¶Ïtimedout±êÖ¾Î»
+        ev->handler(ev); //è¶…æ—¶çš„æ—¶å€™å‡ºå‘è¯»å†™äº‹ä»¶å›žè°ƒå‡½æ•°ï¼Œä»Žè€Œåœ¨é‡Œé¢åˆ¤æ–­timedoutæ ‡å¿—ä½
     }
 }
 

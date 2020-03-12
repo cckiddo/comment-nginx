@@ -13,14 +13,14 @@
 #include <ngx_core.h>
 
 /*
-ÔÚNginxµÄÁìÓòÖĞ£¬ngx_str_t½á¹¹¾ÍÊÇ×Ö·û´®¡£ngx_str_tµÄ¶¨ÒåÈçÏÂ£º
+åœ¨Nginxçš„é¢†åŸŸä¸­ï¼Œngx_str_tç»“æ„å°±æ˜¯å­—ç¬¦ä¸²ã€‚ngx_str_tçš„å®šä¹‰å¦‚ä¸‹ï¼š
 typedef struct {
     size_t      len;
     u_char     *data;
 } ngx_str_t;
 
-ngx_str_tÖ»ÓĞÁ½¸ö³ÉÔ±£¬ÆäÖĞdataÖ¸ÕëÖ¸Ïò×Ö·û´®ÆğÊ¼µØÖ·£¬len±íÊ¾×Ö·û´®µÄÓĞĞ§³¤¶È¡£×¢Òâ£¬ngx_str_tµÄdata³ÉÔ±Ö¸ÏòµÄ²¢²»ÊÇÆÕÍ¨µÄ×Ö·û´®£¬
-ÒòÎªÕâ¶Î×Ö·û´®Î´±Ø»áÒÔ'\0'×÷Îª½áÎ²£¬ËùÒÔÊ¹ÓÃÊ±±ØĞë¸ù¾İ³¤¶ÈlenÀ´Ê¹ÓÃdata³ÉÔ±¡£
+ngx_str_tåªæœ‰ä¸¤ä¸ªæˆå‘˜ï¼Œå…¶ä¸­dataæŒ‡é’ˆæŒ‡å‘å­—ç¬¦ä¸²èµ·å§‹åœ°å€ï¼Œlenè¡¨ç¤ºå­—ç¬¦ä¸²çš„æœ‰æ•ˆé•¿åº¦ã€‚æ³¨æ„ï¼Œngx_str_tçš„dataæˆå‘˜æŒ‡å‘çš„å¹¶ä¸æ˜¯æ™®é€šçš„å­—ç¬¦ä¸²ï¼Œ
+å› ä¸ºè¿™æ®µå­—ç¬¦ä¸²æœªå¿…ä¼šä»¥'\0'ä½œä¸ºç»“å°¾ï¼Œæ‰€ä»¥ä½¿ç”¨æ—¶å¿…é¡»æ ¹æ®é•¿åº¦lenæ¥ä½¿ç”¨dataæˆå‘˜ã€‚
  if (0 == ngx_strncmp(
    r->method_name.data,
    "PUT",
@@ -28,19 +28,19 @@ ngx_str_tÖ»ÓĞÁ½¸ö³ÉÔ±£¬ÆäÖĞdataÖ¸ÕëÖ¸Ïò×Ö·û´®ÆğÊ¼µØÖ·£¬len±íÊ¾×Ö·û´®µÄÓĞĞ§³¤¶È¡£
   )
  {...}
 
-ÕâÀï£¬ngx_strncmpÆäÊµ¾ÍÊÇstrncmpº¯Êı£¬ÎªÁË¿çÆ½Ì¨NginxÏ°¹ßĞÔµØ¶ÔÆä½øĞĞÁËÃû³ÆÉÏµÄ·â×°£¬ÏÂÃæ¿´Ò»ÏÂËüµÄ¶¨Òå£º
+è¿™é‡Œï¼Œngx_strncmpå…¶å®å°±æ˜¯strncmpå‡½æ•°ï¼Œä¸ºäº†è·¨å¹³å°Nginxä¹ æƒ¯æ€§åœ°å¯¹å…¶è¿›è¡Œäº†åç§°ä¸Šçš„å°è£…ï¼Œä¸‹é¢çœ‹ä¸€ä¸‹å®ƒçš„å®šä¹‰ï¼š
 
 #define ngx_strncmp(s1, s2, n)  strncmp((const char *) s1, (const char *) s2, n)
-ÈÎºÎÊÔÍ¼½«ngx_str_tµÄdata³ÉÔ±µ±×ö×Ö·û´®À´Ê¹ÓÃµÄÇé¿ö£¬¶¼¿ÉÄÜµ¼ÖÂÄÚ´æÔ½½ç£¡NginxÊ¹ÓÃngx_str_t¿ÉÒÔÓĞĞ§µØ½µµÍÄÚ´æÊ¹ÓÃÁ¿¡£ÀıÈç£¬
-ÓÃ»§ÇëÇó¡°GET /test?a=1 http/1.1\r\n¡±´æ´¢µ½ÄÚ´æµØÖ·0x1d0b0110ÉÏ£¬ÕâÊ±Ö»ĞèÒª°Ñr->method_nameÉèÖÃÎª{len = 3, data = 0x1d0b0110}
-¾Í¿ÉÒÔ±íÊ¾·½·¨Ãû¡°GET¡±£¬¶ø²»ĞèÒªµ¥¶ÀÎªmethod_nameÔÙ·ÖÅäÄÚ´æÈßÓàµÄ´æ´¢×Ö·û´®¡£
+ä»»ä½•è¯•å›¾å°†ngx_str_tçš„dataæˆå‘˜å½“åšå­—ç¬¦ä¸²æ¥ä½¿ç”¨çš„æƒ…å†µï¼Œéƒ½å¯èƒ½å¯¼è‡´å†…å­˜è¶Šç•Œï¼Nginxä½¿ç”¨ngx_str_tå¯ä»¥æœ‰æ•ˆåœ°é™ä½å†…å­˜ä½¿ç”¨é‡ã€‚ä¾‹å¦‚ï¼Œ
+ç”¨æˆ·è¯·æ±‚â€œGET /test?a=1 http/1.1\r\nâ€å­˜å‚¨åˆ°å†…å­˜åœ°å€0x1d0b0110ä¸Šï¼Œè¿™æ—¶åªéœ€è¦æŠŠr->method_nameè®¾ç½®ä¸º{len = 3, data = 0x1d0b0110}
+å°±å¯ä»¥è¡¨ç¤ºæ–¹æ³•åâ€œGETâ€ï¼Œè€Œä¸éœ€è¦å•ç‹¬ä¸ºmethod_nameå†åˆ†é…å†…å­˜å†—ä½™çš„å­˜å‚¨å­—ç¬¦ä¸²ã€‚
 */
 typedef struct {
     size_t      len;
     u_char     *data;
 } ngx_str_t;
 
-//¿ÉÒÔ²Î¿¼ngx_conf_set_keyval_slot
+//å¯ä»¥å‚è€ƒngx_conf_set_keyval_slot
 typedef struct {
     ngx_str_t   key;
     ngx_str_t   value;
@@ -48,27 +48,27 @@ typedef struct {
 
 
 /*
-    ngx_http_core_main_conf_t->variabelsÊı×é³ÉÔ±µÄ½á¹¹Ê½ngx_http_variable_s£¬ ngx_http_request_s->variabelsÊı×é³ÉÔ±½á¹¹ÊÇ
-ngx_variable_value_tÕâÁ½¸ö½á¹¹µÄ¹ØÏµºÜÃÜÇĞ£¬Ò»¸öËùÎ½±äÁ¿£¬Ò»¸öËùÎ½±äÁ¿Öµ
+    ngx_http_core_main_conf_t->variabelsæ•°ç»„æˆå‘˜çš„ç»“æ„å¼ngx_http_variable_sï¼Œ ngx_http_request_s->variabelsæ•°ç»„æˆå‘˜ç»“æ„æ˜¯
+ngx_variable_value_tè¿™ä¸¤ä¸ªç»“æ„çš„å…³ç³»å¾ˆå¯†åˆ‡ï¼Œä¸€ä¸ªæ‰€è°“å˜é‡ï¼Œä¸€ä¸ªæ‰€è°“å˜é‡å€¼
 
-    r->variablesÕâ¸ö±äÁ¿ºÍcmcf->variablesÊÇÒ»Ò»¶ÔÓ¦µÄ£¬ĞÎ³Évar_ nameÓëvar_value¶Ô£¬ËùÒÔÁ½¸öÊı×éÀïµÄÍ¬Ò»¸öÏÂ±êÎ»ÖÃÔªËØ¸ÕºÃ¾ÍÊÇ
-Ïà»¥¶ÔÓ¦µÄ±äÁ¿ÃûºÍ±äÁ¿Öµ£¬¶øÎÒÃÇÔÚÊ¹ÓÃÄ³¸ö±äÁ¿Ê±×Ü»áÏÈÍ¨¹ıº¯Êıngx_http_get_variable_index»ñµÃËüÔÚ±äÁ¿ÃûÊı×éÀïµÄindexÏÂ±ê£¬Ò²¾ÍÊÇ±ä
-Á¿ÃûÀïµÄindex×Ö¶ÎÖµ£¬È»ºóÀûÓÃÕâ¸öindexÏÂ±ê½ø¶øÈ¥±äÁ¿ÖµÊı×éÀïÈ¡¶ÔÓ¦µÄÖµ
-*/ //²Î¿¼<ÊäÈëÆÊÎönginx-±äÁ¿>
+    r->variablesè¿™ä¸ªå˜é‡å’Œcmcf->variablesæ˜¯ä¸€ä¸€å¯¹åº”çš„ï¼Œå½¢æˆvar_ nameä¸var_valueå¯¹ï¼Œæ‰€ä»¥ä¸¤ä¸ªæ•°ç»„é‡Œçš„åŒä¸€ä¸ªä¸‹æ ‡ä½ç½®å…ƒç´ åˆšå¥½å°±æ˜¯
+ç›¸äº’å¯¹åº”çš„å˜é‡åå’Œå˜é‡å€¼ï¼Œè€Œæˆ‘ä»¬åœ¨ä½¿ç”¨æŸä¸ªå˜é‡æ—¶æ€»ä¼šå…ˆé€šè¿‡å‡½æ•°ngx_http_get_variable_indexè·å¾—å®ƒåœ¨å˜é‡åæ•°ç»„é‡Œçš„indexä¸‹æ ‡ï¼Œä¹Ÿå°±æ˜¯å˜
+é‡åé‡Œçš„indexå­—æ®µå€¼ï¼Œç„¶ååˆ©ç”¨è¿™ä¸ªindexä¸‹æ ‡è¿›è€Œå»å˜é‡å€¼æ•°ç»„é‡Œå–å¯¹åº”çš„å€¼
+*/ //å‚è€ƒ<è¾“å…¥å‰–ænginx-å˜é‡>
 typedef struct {
-    unsigned    len:28;  /* ±äÁ¿ÖµµÄ³¤¶È */  
+    unsigned    len:28;  /* å˜é‡å€¼çš„é•¿åº¦ */  
 
-    unsigned    valid:1;   /* ±äÁ¿ÊÇ·ñÓĞĞ§ */  
+    unsigned    valid:1;   /* å˜é‡æ˜¯å¦æœ‰æ•ˆ */  
     /* 
-      ±äÁ¿ÊÇ·ñÊÇ¿É»º´æµÄ£¬Ò»°ãÀ´Ëµ£¬Ä³Ğ©±äÁ¿ÔÚµÚÒ»´ÎµÃµ½±äÁ¿Öµºó£¬ºóÃæÔÙ´ÎÓÃµ½Ê±£¬¿ÉÒÔÖ±½ÓÊ¹ÓÃÉÏ  
-      ¶ø¶ÔÓÚÒ»Ğ©ËùÎ½µÄno_cacheableµÄ±äÁ¿£¬ÔòĞèÒªÔÚÃ¿´ÎÊ¹ÓÃµÄÊ±ºò£¬¶¼ÒªÍ¨¹ıget_handlerÖ®Àà²Ù×÷£¬ÔÙ´Î»ñÈ¡  
+      å˜é‡æ˜¯å¦æ˜¯å¯ç¼“å­˜çš„ï¼Œä¸€èˆ¬æ¥è¯´ï¼ŒæŸäº›å˜é‡åœ¨ç¬¬ä¸€æ¬¡å¾—åˆ°å˜é‡å€¼åï¼Œåé¢å†æ¬¡ç”¨åˆ°æ—¶ï¼Œå¯ä»¥ç›´æ¥ä½¿ç”¨ä¸Š  
+      è€Œå¯¹äºä¸€äº›æ‰€è°“çš„no_cacheableçš„å˜é‡ï¼Œåˆ™éœ€è¦åœ¨æ¯æ¬¡ä½¿ç”¨çš„æ—¶å€™ï¼Œéƒ½è¦é€šè¿‡get_handlerä¹‹ç±»æ“ä½œï¼Œå†æ¬¡è·å–  
     */
     unsigned    no_cacheable:1;  
             
-    unsigned    not_found:1; /* ±äÁ¿Ã»ÓĞÕÒµ½£¬Ò»°ãÊÇÖ¸Ä³¸ö±äÁ¿Ã»ÓÃÄÜ¹»Í¨¹ıget»ñÈ¡µ½Æä±äÁ¿Öµ£¬¼ûngx_http_variable_not_found */  
-    unsigned    escape:1;  /* ±äÁ¿ÖµÊÇ·ñĞèÒª×÷×ªÒå´¦Àí*/  
+    unsigned    not_found:1; /* å˜é‡æ²¡æœ‰æ‰¾åˆ°ï¼Œä¸€èˆ¬æ˜¯æŒ‡æŸä¸ªå˜é‡æ²¡ç”¨èƒ½å¤Ÿé€šè¿‡getè·å–åˆ°å…¶å˜é‡å€¼ï¼Œè§ngx_http_variable_not_found */  
+    unsigned    escape:1;  /* å˜é‡å€¼æ˜¯å¦éœ€è¦ä½œè½¬ä¹‰å¤„ç†*/  
 
-    u_char     *data;  /* ±äÁ¿Öµ */  
+    u_char     *data;  /* å˜é‡å€¼ */  
 } ngx_variable_value_t;
 
 
@@ -95,7 +95,7 @@ void ngx_strlow(u_char *dst, u_char *src, size_t n);
 #define ngx_strstr(s1, s2)  strstr((const char *) s1, (const char *) s2)
 #define ngx_strlen(s)       strlen((const char *) s)
 
-//²éÕÒ×Ö·û´®sÖĞÊ×´Î³öÏÖ×Ö·ûcµÄÎ»ÖÃ
+//æŸ¥æ‰¾å­—ç¬¦ä¸²sä¸­é¦–æ¬¡å‡ºç°å­—ç¬¦cçš„ä½ç½®
 #define ngx_strchr(s1, c)   strchr((const char *) s1, (int) c)
 
 static ngx_inline u_char *
@@ -147,7 +147,7 @@ void *ngx_memcpy(void *dst, const void *src, size_t n);
  * the simple inline cycle copies the variable length strings up to 16
  * bytes faster than icc8 autodetecting _intel_fast_memcpy()
  */
-//·µ»ØµØÖ·ÊÇcopyºóµÄ×Ö½ÚÄ©Î²´¦
+//è¿”å›åœ°å€æ˜¯copyåçš„å­—èŠ‚æœ«å°¾å¤„
 static ngx_inline u_char *
 ngx_copy(u_char *dst, u_char *src, size_t len)
 {
@@ -262,13 +262,13 @@ void ngx_sort(void *base, size_t n, size_t size,
     ngx_int_t (*cmp)(const void *, const void *));
 
 /*
-¹¦ ÄÜ£º Ê¹ÓÃ¿ìËÙÅÅĞòÀı³Ì½øĞĞÅÅĞò
-Í·ÎÄ¼ş£ºstdlib.h
-ÓÃ ·¨£ºvoid qsort(void *base,int nelem,int width,int (*fcmp)(const void *,const void *));
-²ÎÊı£º 1 ´ıÅÅĞòÊı×éÊ×µØÖ·
-2 Êı×éÖĞ´ıÅÅĞòÔªËØÊıÁ¿
-3 ¸÷ÔªËØµÄÕ¼ÓÃ¿Õ¼ä´óĞ¡
-4 Ö¸Ïòº¯ÊıµÄÖ¸Õë£¬ÓÃÓÚÈ·¶¨ÅÅĞòµÄË³Ğò
+åŠŸ èƒ½ï¼š ä½¿ç”¨å¿«é€Ÿæ’åºä¾‹ç¨‹è¿›è¡Œæ’åº
+å¤´æ–‡ä»¶ï¼šstdlib.h
+ç”¨ æ³•ï¼švoid qsort(void *base,int nelem,int width,int (*fcmp)(const void *,const void *));
+å‚æ•°ï¼š 1 å¾…æ’åºæ•°ç»„é¦–åœ°å€
+2 æ•°ç»„ä¸­å¾…æ’åºå…ƒç´ æ•°é‡
+3 å„å…ƒç´ çš„å ç”¨ç©ºé—´å¤§å°
+4 æŒ‡å‘å‡½æ•°çš„æŒ‡é’ˆï¼Œç”¨äºç¡®å®šæ’åºçš„é¡ºåº
 */
 #define ngx_qsort             qsort
 

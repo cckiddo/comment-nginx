@@ -38,9 +38,9 @@ ngx_unix_send(ngx_connection_t *c, u_char *buf, size_t size)
                        "send: fd:%d %d of %d", c->fd, n, size);
 
         if (n > 0) {
-            //ÆÚ´ı·¢ËÍ1000×Ö½Ú£¬Êµ¼ÊÉÏ·µ»Ø500×Ö½Ú£¬ËµÃ÷ÄÚºË»º³åÇø½ÓÊÕµ½Õâ500×Ö½ÚºóÒÑ¾­ÂúÁË£¬²»ÄÜÔÚĞ´, readÎª0£¬Ö»ÓĞµÈepollĞ´ÊÂ¼ş´¥·¢ read
-            //µ«ÊÇ£¬½ÓÊÕÈç¹ûÆÚ´ı½ÓÊÕ1000×Ö½Ú£¬·µ»Ø500×Ö½ÚÔòËµÃ÷ÎÒÄÚºË»º³åÇøÖĞÖ»ÓĞ500×Ö½Ú£¬Òò´Ë¿ÉÒÔ¼ÌĞørecv£¬ready»¹ÊÇÎª1
-            if (n < (ssize_t) size) { //ËµÃ÷·¢ËÍÁËn×Ö½Úµ½»º³åÇøºó£¬»º³åÇøÂúÁË
+            //æœŸå¾…å‘é€1000å­—èŠ‚ï¼Œå®é™…ä¸Šè¿”å›500å­—èŠ‚ï¼Œè¯´æ˜å†…æ ¸ç¼“å†²åŒºæ¥æ”¶åˆ°è¿™500å­—èŠ‚åå·²ç»æ»¡äº†ï¼Œä¸èƒ½åœ¨å†™, readä¸º0ï¼Œåªæœ‰ç­‰epollå†™äº‹ä»¶è§¦å‘ read
+            //ä½†æ˜¯ï¼Œæ¥æ”¶å¦‚æœæœŸå¾…æ¥æ”¶1000å­—èŠ‚ï¼Œè¿”å›500å­—èŠ‚åˆ™è¯´æ˜æˆ‘å†…æ ¸ç¼“å†²åŒºä¸­åªæœ‰500å­—èŠ‚ï¼Œå› æ­¤å¯ä»¥ç»§ç»­recvï¼Œreadyè¿˜æ˜¯ä¸º1
+            if (n < (ssize_t) size) { //è¯´æ˜å‘é€äº†nå­—èŠ‚åˆ°ç¼“å†²åŒºåï¼Œç¼“å†²åŒºæ»¡äº†
                 wev->ready = 0;
             }
 
@@ -54,7 +54,7 @@ ngx_unix_send(ngx_connection_t *c, u_char *buf, size_t size)
 
         err = ngx_socket_errno;
 
-        if (n == 0) { //recv·µ»Ø0£¬±íÊ¾Á¬½Ó¶Ï¿ª£¬send·µ»Ø0µ±×÷Õı³£Çé¿ö´¦Àí
+        if (n == 0) { //recvè¿”å›0ï¼Œè¡¨ç¤ºè¿æ¥æ–­å¼€ï¼Œsendè¿”å›0å½“ä½œæ­£å¸¸æƒ…å†µå¤„ç†
             ngx_log_error(NGX_LOG_ALERT, c->log, err, "send() returned zero, ready:0");
             wev->ready = 0;
             return n;
@@ -66,7 +66,7 @@ ngx_unix_send(ngx_connection_t *c, u_char *buf, size_t size)
             ngx_log_debug0(NGX_LOG_DEBUG_EVENT, c->log, err,
                            "send() not ready, ready:0");
 
-            if (err == NGX_EAGAIN) { //ÄÚºË»º³åÇøÒÑÂú
+            if (err == NGX_EAGAIN) { //å†…æ ¸ç¼“å†²åŒºå·²æ»¡
                 return NGX_AGAIN;
             }
 

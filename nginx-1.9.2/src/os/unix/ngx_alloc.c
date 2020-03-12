@@ -8,16 +8,16 @@
 #include <ngx_config.h>
 #include <ngx_core.h>
 
-//getconf PAGE_SIZE ÃüÁî¿ÉÒÔ²é¿´
-ngx_uint_t  ngx_pagesize;//¼ûngx_os_init  ·µ»ØÒ»¸ö·ÖÒ³µÄ´óĞ¡£¬µ¥Î»Îª×Ö½Ú(Byte)¡£¸ÃÖµÎªÏµÍ³µÄ·ÖÒ³´óĞ¡£¬²»Ò»¶¨»áºÍÓ²¼ş·ÖÒ³´óĞ¡ÏàÍ¬¡£
-//ngx_pagesizeÎª4M£¬ngx_pagesize_shiftÓ¦¸ÃÎª12
-ngx_uint_t  ngx_pagesize_shift; //ngx_pagesize½øĞĞÒÆÎ»µÄ´ÎÊı£¬¼ûfor (n = ngx_pagesize; n >>= 1; ngx_pagesize_shift++) { /* void */ }
+//getconf PAGE_SIZE å‘½ä»¤å¯ä»¥æŸ¥çœ‹
+ngx_uint_t  ngx_pagesize;//è§ngx_os_init  è¿”å›ä¸€ä¸ªåˆ†é¡µçš„å¤§å°ï¼Œå•ä½ä¸ºå­—èŠ‚(Byte)ã€‚è¯¥å€¼ä¸ºç³»ç»Ÿçš„åˆ†é¡µå¤§å°ï¼Œä¸ä¸€å®šä¼šå’Œç¡¬ä»¶åˆ†é¡µå¤§å°ç›¸åŒã€‚
+//ngx_pagesizeä¸º4Mï¼Œngx_pagesize_shiftåº”è¯¥ä¸º12
+ngx_uint_t  ngx_pagesize_shift; //ngx_pagesizeè¿›è¡Œç§»ä½çš„æ¬¡æ•°ï¼Œè§for (n = ngx_pagesize; n >>= 1; ngx_pagesize_shift++) { /* void */ }
 
 /*
-Èç¹ûÄÜÖªµÀCPU cacheĞĞµÄ´óĞ¡£¬ÄÇÃ´¾Í¿ÉÒÔÓĞÕë¶ÔĞÔµØÉèÖÃÄÚ´æµÄ¶ÔÆëÖµ£¬ÕâÑù¿ÉÒÔÌá¸ß³ÌĞòµÄĞ§ÂÊ¡£
-NginxÓĞ·ÖÅäÄÚ´æ³ØµÄ½Ó¿Ú£¬Nginx»á½«ÄÚ´æ³Ø±ß½ç¶ÔÆëµ½ CPU cacheĞĞ´óĞ¡  32Î»Æ½Ì¨£¬ngx_cacheline_size=32
+å¦‚æœèƒ½çŸ¥é“CPU cacheè¡Œçš„å¤§å°ï¼Œé‚£ä¹ˆå°±å¯ä»¥æœ‰é’ˆå¯¹æ€§åœ°è®¾ç½®å†…å­˜çš„å¯¹é½å€¼ï¼Œè¿™æ ·å¯ä»¥æé«˜ç¨‹åºçš„æ•ˆç‡ã€‚
+Nginxæœ‰åˆ†é…å†…å­˜æ± çš„æ¥å£ï¼ŒNginxä¼šå°†å†…å­˜æ± è¾¹ç•Œå¯¹é½åˆ° CPU cacheè¡Œå¤§å°  32ä½å¹³å°ï¼Œngx_cacheline_size=32
 */
-ngx_uint_t  ngx_cacheline_size;//32Î»Æ½Ì¨£¬ngx_cacheline_size=32
+ngx_uint_t  ngx_cacheline_size;//32ä½å¹³å°ï¼Œngx_cacheline_size=32
 
 
 void *
@@ -60,7 +60,7 @@ ngx_memalign(size_t alignment, size_t size, ngx_log_t *log)
     void  *p;
     int    err;
 
-    err = posix_memalign(&p, alignment, size);// ·ÖÅäÒ»¿é size ´óĞ¡µÄÄÚ´æ
+    err = posix_memalign(&p, alignment, size);// åˆ†é…ä¸€å— size å¤§å°çš„å†…å­˜
 
     if (err) {
         ngx_log_error(NGX_LOG_EMERG, log, err,

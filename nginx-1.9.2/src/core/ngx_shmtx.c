@@ -9,119 +9,119 @@
 #include <ngx_core.h>
 
 /*
-ÐÅºÅÁ¿µÄÊý¾ÝÀàÐÍÎª½á¹¹sem_t£¬Ëü±¾ÖÊÉÏÊÇÒ»¸ö³¤ÕûÐÍµÄÊý¡£º¯Êýsem_init£¨£©ÓÃÀ´³õÊ¼»¯Ò»¸öÐÅºÅÁ¿¡£ËüµÄÔ­ÐÍÎª£º¡¡¡¡ 
-extern int sem_init __P ((sem_t *__sem, int __pshared, unsigned int __value));¡¡¡¡
+ä¿¡å·é‡çš„æ•°æ®ç±»åž‹ä¸ºç»“æž„sem_tï¼Œå®ƒæœ¬è´¨ä¸Šæ˜¯ä¸€ä¸ªé•¿æ•´åž‹çš„æ•°ã€‚å‡½æ•°sem_initï¼ˆï¼‰ç”¨æ¥åˆå§‹åŒ–ä¸€ä¸ªä¿¡å·é‡ã€‚å®ƒçš„åŽŸåž‹ä¸ºï¼šã€€ã€€ 
+extern int sem_init __P ((sem_t *__sem, int __pshared, unsigned int __value));ã€€ã€€
 
-semÎªÖ¸ÏòÐÅºÅÁ¿½á¹¹µÄÒ»¸öÖ¸Õë£»pshared²»Îª£°Ê±´ËÐÅºÅÁ¿ÔÚ½ø³Ì¼ä¹²Ïí£¬·ñÔòÖ»ÄÜÎªµ±Ç°½ø³ÌµÄËùÓÐÏß³Ì¹²Ïí£»value¸ø³öÁËÐÅºÅÁ¿µÄ³õÊ¼Öµ¡£¡¡¡¡
+semä¸ºæŒ‡å‘ä¿¡å·é‡ç»“æž„çš„ä¸€ä¸ªæŒ‡é’ˆï¼›psharedä¸ä¸ºï¼æ—¶æ­¤ä¿¡å·é‡åœ¨è¿›ç¨‹é—´å…±äº«ï¼Œå¦åˆ™åªèƒ½ä¸ºå½“å‰è¿›ç¨‹çš„æ‰€æœ‰çº¿ç¨‹å…±äº«ï¼›valueç»™å‡ºäº†ä¿¡å·é‡çš„åˆå§‹å€¼ã€‚ã€€ã€€
 
-º¯Êýsem_post( sem_t *sem )ÓÃÀ´Ôö¼ÓÐÅºÅÁ¿µÄÖµ¡£µ±ÓÐÏß³Ì×èÈûÔÚÕâ¸öÐÅºÅÁ¿ÉÏÊ±£¬µ÷ÓÃÕâ¸öº¯Êý»áÊ¹ÆäÖÐµÄÒ»¸öÏß³Ì²»ÔÚ×èÈû£¬Ñ¡Ôñ»úÖÆÍ¬ÑùÊÇÓÉÏß³ÌµÄµ÷¶È²ßÂÔ¾ö¶¨µÄ¡£¡¡¡¡
+å‡½æ•°sem_post( sem_t *sem )ç”¨æ¥å¢žåŠ ä¿¡å·é‡çš„å€¼ã€‚å½“æœ‰çº¿ç¨‹é˜»å¡žåœ¨è¿™ä¸ªä¿¡å·é‡ä¸Šæ—¶ï¼Œè°ƒç”¨è¿™ä¸ªå‡½æ•°ä¼šä½¿å…¶ä¸­çš„ä¸€ä¸ªçº¿ç¨‹ä¸åœ¨é˜»å¡žï¼Œé€‰æ‹©æœºåˆ¶åŒæ ·æ˜¯ç”±çº¿ç¨‹çš„è°ƒåº¦ç­–ç•¥å†³å®šçš„ã€‚ã€€ã€€
 
-º¯Êýsem_wait( sem_t *sem )±»ÓÃÀ´×èÈûµ±Ç°Ïß³ÌÖ±µ½ÐÅºÅÁ¿semµÄÖµ´óÓÚ0£¬½â³ý×èÈûºó½«semµÄÖµ¼õÒ»£¬±íÃ÷¹«¹²×ÊÔ´¾­Ê¹ÓÃºó¼õÉÙ¡£º¯Êýsem_trywait ( sem_t *sem )ÊÇº¯Êýsem_wait£¨£©µÄ·Ç×èÈû°æ±¾£¬ËüÖ±½Ó½«ÐÅºÅÁ¿semµÄÖµ¼õÒ»¡£¡¡¡¡
+å‡½æ•°sem_wait( sem_t *sem )è¢«ç”¨æ¥é˜»å¡žå½“å‰çº¿ç¨‹ç›´åˆ°ä¿¡å·é‡semçš„å€¼å¤§äºŽ0ï¼Œè§£é™¤é˜»å¡žåŽå°†semçš„å€¼å‡ä¸€ï¼Œè¡¨æ˜Žå…¬å…±èµ„æºç»ä½¿ç”¨åŽå‡å°‘ã€‚å‡½æ•°sem_trywait ( sem_t *sem )æ˜¯å‡½æ•°sem_waitï¼ˆï¼‰çš„éžé˜»å¡žç‰ˆæœ¬ï¼Œå®ƒç›´æŽ¥å°†ä¿¡å·é‡semçš„å€¼å‡ä¸€ã€‚ã€€ã€€
 
-º¯Êýsem_destroy(sem_t *sem)ÓÃÀ´ÊÍ·ÅÐÅºÅÁ¿sem¡£¡¡
+å‡½æ•°sem_destroy(sem_t *sem)ç”¨æ¥é‡Šæ”¾ä¿¡å·é‡semã€‚ã€€
 
-ÐÅºÅÁ¿ÓÃsem_initº¯Êý´´½¨µÄ£¬ÏÂÃæÊÇËüµÄËµÃ÷£º
+ä¿¡å·é‡ç”¨sem_initå‡½æ•°åˆ›å»ºçš„ï¼Œä¸‹é¢æ˜¯å®ƒçš„è¯´æ˜Žï¼š
 #include<semaphore.h>
        int sem_init (sem_t *sem, int pshared, unsigned int value);
 
-       Õâ¸öº¯ÊýµÄ×÷ÓÃÊÇ¶ÔÓÉsemÖ¸¶¨µÄÐÅºÅÁ¿½øÐÐ³õÊ¼»¯£¬ÉèÖÃºÃËüµÄ ¹²ÏíÑ¡Ïî£¬²¢Ö¸¶¨Ò»¸öÕûÊýÀàÐÍµÄ³õÊ¼Öµ¡£pshared²ÎÊý¿ØÖÆ×ÅÐÅºÅÁ¿µÄÀàÐÍ¡£Èç¹û psharedµÄÖµÊÇ£°£¬¾Í±íÊ¾ËüÊÇµ±Ç°Àï³ÌµÄ¾Ö²¿ÐÅºÅÁ¿£»·ñÔò£¬ÆäËü½ø³Ì¾ÍÄÜ¹»¹²ÏíÕâ¸öÐÅºÅÁ¿¡£ÎÒÃÇÏÖÔÚÖ»¶Ô²»ÈÃ½ø³Ì¹²ÏíµÄÐÅºÅÁ¿¸ÐÐËÈ¤¡£¡¡£¨Õâ¸ö²ÎÊý ÊÜ°æ±¾Ó°Ïì£©£¬¡¡pshared´«µÝÒ»¸ö·ÇÁã½«»áÊ¹º¯Êýµ÷ÓÃÊ§°Ü¡£
+       è¿™ä¸ªå‡½æ•°çš„ä½œç”¨æ˜¯å¯¹ç”±semæŒ‡å®šçš„ä¿¡å·é‡è¿›è¡Œåˆå§‹åŒ–ï¼Œè®¾ç½®å¥½å®ƒçš„ å…±äº«é€‰é¡¹ï¼Œå¹¶æŒ‡å®šä¸€ä¸ªæ•´æ•°ç±»åž‹çš„åˆå§‹å€¼ã€‚psharedå‚æ•°æŽ§åˆ¶ç€ä¿¡å·é‡çš„ç±»åž‹ã€‚å¦‚æžœ psharedçš„å€¼æ˜¯ï¼ï¼Œå°±è¡¨ç¤ºå®ƒæ˜¯å½“å‰é‡Œç¨‹çš„å±€éƒ¨ä¿¡å·é‡ï¼›å¦åˆ™ï¼Œå…¶å®ƒè¿›ç¨‹å°±èƒ½å¤Ÿå…±äº«è¿™ä¸ªä¿¡å·é‡ã€‚æˆ‘ä»¬çŽ°åœ¨åªå¯¹ä¸è®©è¿›ç¨‹å…±äº«çš„ä¿¡å·é‡æ„Ÿå…´è¶£ã€‚ã€€ï¼ˆè¿™ä¸ªå‚æ•° å—ç‰ˆæœ¬å½±å“ï¼‰ï¼Œã€€psharedä¼ é€’ä¸€ä¸ªéžé›¶å°†ä¼šä½¿å‡½æ•°è°ƒç”¨å¤±è´¥ã€‚
 
-ÕâÁ½¸öº¯Êý¿ØÖÆ×ÅÐÅºÅÁ¿µÄÖµ£¬ËüÃÇµÄ¶¨ÒåÈçÏÂËùÊ¾£º 
+è¿™ä¸¤ä¸ªå‡½æ•°æŽ§åˆ¶ç€ä¿¡å·é‡çš„å€¼ï¼Œå®ƒä»¬çš„å®šä¹‰å¦‚ä¸‹æ‰€ç¤ºï¼š 
 
 #include <semaphore.h> 
 int sem_wait(sem_t * sem);
 int sem_post(sem_t * sem);
-ÕâÁ½¸öº¯Êý¶¼ÒªÓÃÒ»¸öÓÉsem_initµ÷ÓÃ³õÊ¼»¯µÄÐÅºÅÁ¿¶ÔÏóµÄÖ¸Õë×ö²ÎÊý¡£
-sem_postº¯ÊýµÄ×÷ÓÃÊÇ¸øÐÅºÅÁ¿µÄÖµ¼ÓÉÏÒ»¸ö¡°1¡±£¬ËüÊÇ Ò»¸ö¡°Ô­×Ó²Ù×÷¡±£­£­£­¼´Í¬Ê±¶ÔÍ¬Ò»¸öÐÅºÅÁ¿×ö¼Ó¡°1¡±²Ù×÷µÄÁ½¸öÏß³ÌÊÇ²»»á³åÍ»µÄ£»¶øÍ¬ Ê±¶ÔÍ¬Ò»¸öÎÄ¼þ½øÐÐ¶Á¡¢¼ÓºÍÐ´²Ù×÷µÄÁ½¸ö³ÌÐò¾ÍÓÐ¿ÉÄÜ»áÒýÆð³åÍ»¡£ÐÅºÅÁ¿µÄÖµÓÀÔ¶»áÕýÈ·µØ¼ÓÒ»¸ö¡°2¡±£­£­ÒòÎªÓÐÁ½¸öÏß³ÌÊÔÍ¼¸Ä±äËü¡£
-sem_waitº¯ÊýÒ²ÊÇÒ»¸öÔ­×Ó²Ù×÷£¬ËüµÄ×÷ÓÃÊÇ´ÓÐÅºÅÁ¿µÄÖµ ¼õÈ¥Ò»¸ö¡°1¡±£¬µ«ËüÓÀÔ¶»áÏÈµÈ´ý¸ÃÐÅºÅÁ¿ÎªÒ»¸ö·ÇÁãÖµ²Å¿ªÊ¼×ö¼õ·¨¡£Ò²¾ÍÊÇËµ£¬Èç¹ûÄã¶Ô Ò»¸öÖµÎª2µÄÐÅºÅÁ¿µ÷ÓÃsem_wait(),Ïß³Ì½«»á¼ÌÐøÖ´ÐÐ£¬½éÐÅºÅÁ¿µÄÖµ½«¼õµ½1¡£Èç¹û¶ÔÒ»¸öÖµÎª0µÄÐÅºÅÁ¿µ÷ÓÃsem_wait()£¬Õâ¸öº¯Êý¾Í »áµØµÈ´ýÖ±µ½ÓÐÆäËüÏß³ÌÔö¼ÓÁËÕâ¸öÖµÊ¹Ëü²»ÔÙÊÇ0ÎªÖ¹¡£Èç¹ûÓÐÁ½¸öÏß³Ì¶¼ÔÚsem_wait()ÖÐµÈ´ýÍ¬Ò»¸öÐÅºÅÁ¿±ä³É·ÇÁãÖµ£¬ÄÇÃ´µ±Ëü±»µÚÈý¸öÏß³ÌÔö¼Ó Ò»¸ö¡°1¡±Ê±£¬µÈ´ýÏß³ÌÖÐÖ»ÓÐÒ»¸öÄÜ¹»¶ÔÐÅºÅÁ¿×ö¼õ·¨²¢¼ÌÐøÖ´ÐÐ£¬ÁíÒ»¸ö»¹½«´¦ÓÚµÈ´ý×´Ì¬¡£
-ÐÅºÅÁ¿ÕâÖÖ¡°Ö»ÓÃÒ»¸öº¯Êý¾ÍÄÜÔ­×Ó»¯µØ²âÊÔºÍÉèÖÃ¡±µÄÄÜÁ¦ÏÂÕýÊÇËüµÄ¼ÛÖµËùÔÚ¡£ »¹ÓÐÁíÍâÒ»¸öÐÅºÅÁ¿º¯Êýsem_trywait£¬ËüÊÇsem_waitµÄ·Ç×èÈû´îµµ¡£
+è¿™ä¸¤ä¸ªå‡½æ•°éƒ½è¦ç”¨ä¸€ä¸ªç”±sem_initè°ƒç”¨åˆå§‹åŒ–çš„ä¿¡å·é‡å¯¹è±¡çš„æŒ‡é’ˆåšå‚æ•°ã€‚
+sem_postå‡½æ•°çš„ä½œç”¨æ˜¯ç»™ä¿¡å·é‡çš„å€¼åŠ ä¸Šä¸€ä¸ªâ€œ1â€ï¼Œå®ƒæ˜¯ ä¸€ä¸ªâ€œåŽŸå­æ“ä½œâ€ï¼ï¼ï¼å³åŒæ—¶å¯¹åŒä¸€ä¸ªä¿¡å·é‡åšåŠ â€œ1â€æ“ä½œçš„ä¸¤ä¸ªçº¿ç¨‹æ˜¯ä¸ä¼šå†²çªçš„ï¼›è€ŒåŒ æ—¶å¯¹åŒä¸€ä¸ªæ–‡ä»¶è¿›è¡Œè¯»ã€åŠ å’Œå†™æ“ä½œçš„ä¸¤ä¸ªç¨‹åºå°±æœ‰å¯èƒ½ä¼šå¼•èµ·å†²çªã€‚ä¿¡å·é‡çš„å€¼æ°¸è¿œä¼šæ­£ç¡®åœ°åŠ ä¸€ä¸ªâ€œ2â€ï¼ï¼å› ä¸ºæœ‰ä¸¤ä¸ªçº¿ç¨‹è¯•å›¾æ”¹å˜å®ƒã€‚
+sem_waitå‡½æ•°ä¹Ÿæ˜¯ä¸€ä¸ªåŽŸå­æ“ä½œï¼Œå®ƒçš„ä½œç”¨æ˜¯ä»Žä¿¡å·é‡çš„å€¼ å‡åŽ»ä¸€ä¸ªâ€œ1â€ï¼Œä½†å®ƒæ°¸è¿œä¼šå…ˆç­‰å¾…è¯¥ä¿¡å·é‡ä¸ºä¸€ä¸ªéžé›¶å€¼æ‰å¼€å§‹åšå‡æ³•ã€‚ä¹Ÿå°±æ˜¯è¯´ï¼Œå¦‚æžœä½ å¯¹ ä¸€ä¸ªå€¼ä¸º2çš„ä¿¡å·é‡è°ƒç”¨sem_wait(),çº¿ç¨‹å°†ä¼šç»§ç»­æ‰§è¡Œï¼Œä»‹ä¿¡å·é‡çš„å€¼å°†å‡åˆ°1ã€‚å¦‚æžœå¯¹ä¸€ä¸ªå€¼ä¸º0çš„ä¿¡å·é‡è°ƒç”¨sem_wait()ï¼Œè¿™ä¸ªå‡½æ•°å°± ä¼šåœ°ç­‰å¾…ç›´åˆ°æœ‰å…¶å®ƒçº¿ç¨‹å¢žåŠ äº†è¿™ä¸ªå€¼ä½¿å®ƒä¸å†æ˜¯0ä¸ºæ­¢ã€‚å¦‚æžœæœ‰ä¸¤ä¸ªçº¿ç¨‹éƒ½åœ¨sem_wait()ä¸­ç­‰å¾…åŒä¸€ä¸ªä¿¡å·é‡å˜æˆéžé›¶å€¼ï¼Œé‚£ä¹ˆå½“å®ƒè¢«ç¬¬ä¸‰ä¸ªçº¿ç¨‹å¢žåŠ  ä¸€ä¸ªâ€œ1â€æ—¶ï¼Œç­‰å¾…çº¿ç¨‹ä¸­åªæœ‰ä¸€ä¸ªèƒ½å¤Ÿå¯¹ä¿¡å·é‡åšå‡æ³•å¹¶ç»§ç»­æ‰§è¡Œï¼Œå¦ä¸€ä¸ªè¿˜å°†å¤„äºŽç­‰å¾…çŠ¶æ€ã€‚
+ä¿¡å·é‡è¿™ç§â€œåªç”¨ä¸€ä¸ªå‡½æ•°å°±èƒ½åŽŸå­åŒ–åœ°æµ‹è¯•å’Œè®¾ç½®â€çš„èƒ½åŠ›ä¸‹æ­£æ˜¯å®ƒçš„ä»·å€¼æ‰€åœ¨ã€‚ è¿˜æœ‰å¦å¤–ä¸€ä¸ªä¿¡å·é‡å‡½æ•°sem_trywaitï¼Œå®ƒæ˜¯sem_waitçš„éžé˜»å¡žæ­æ¡£ã€‚
 
-×îºóÒ»¸öÐÅºÅÁ¿º¯ÊýÊÇsem_destroy¡£Õâ¸öº¯ÊýµÄ×÷ÓÃÊÇÔÚÎÒÃÇÓÃÍêÐÅºÅÁ¿¶ÔËü½øÐÐÇåÀí¡£ÏÂÃæµÄ¶¨Òå£º
+æœ€åŽä¸€ä¸ªä¿¡å·é‡å‡½æ•°æ˜¯sem_destroyã€‚è¿™ä¸ªå‡½æ•°çš„ä½œç”¨æ˜¯åœ¨æˆ‘ä»¬ç”¨å®Œä¿¡å·é‡å¯¹å®ƒè¿›è¡Œæ¸…ç†ã€‚ä¸‹é¢çš„å®šä¹‰ï¼š
  #include<semaphore.h>
  int sem_destroy (sem_t *sem);
- Õâ¸öº¯ÊýÒ²Ê¹ÓÃÒ»¸öÐÅºÅÁ¿Ö¸Õë×ö²ÎÊý£¬¹é»¹×Ô¼ºÕ½Ê¤µÄÒ»ÇÐ×ÊÔ´¡£ÔÚÇåÀíÐÅºÅÁ¿µÄÊ±ºòÈç¹û»¹ÓÐÏß³ÌÔÚµÈ´ýËü£¬ÓÃ»§¾Í»áÊÕµ½Ò»¸ö´íÎó¡£
-ÓëÆäËüµÄº¯ÊýÒ»Ñù£¬ÕâÐ©º¯ÊýÔÚ³É¹¦Ê±¶¼·µ»Ø¡°0¡±¡£
+ è¿™ä¸ªå‡½æ•°ä¹Ÿä½¿ç”¨ä¸€ä¸ªä¿¡å·é‡æŒ‡é’ˆåšå‚æ•°ï¼Œå½’è¿˜è‡ªå·±æˆ˜èƒœçš„ä¸€åˆ‡èµ„æºã€‚åœ¨æ¸…ç†ä¿¡å·é‡çš„æ—¶å€™å¦‚æžœè¿˜æœ‰çº¿ç¨‹åœ¨ç­‰å¾…å®ƒï¼Œç”¨æˆ·å°±ä¼šæ”¶åˆ°ä¸€ä¸ªé”™è¯¯ã€‚
+ä¸Žå…¶å®ƒçš„å‡½æ•°ä¸€æ ·ï¼Œè¿™äº›å‡½æ•°åœ¨æˆåŠŸæ—¶éƒ½è¿”å›žâ€œ0â€ã€‚
 
 
-ÐÅºÅÁ¿ÊÇÈçºÎÊµÏÖ»¥³âËø¹¦ÄÜµÄÄØ£¿ÀýÈç£¬×î³õµÄÐÅºÅÁ¿semÖµÎª0£¬µ÷ÓÃsem_post·½
-·¨½«»á°ÑsemÖµ¼Ó1£¬Õâ¸ö²Ù×÷²»»áÓÐÈÎºÎ×èÈû£»µ÷ÓÃsem__ wait·½ºÆ½«»á°ÑÐÅºÅÁ¿semµÄÖµ
-¼õl£¬Èç¹ûsemÖµÒÑ¾­Ð¡ÓÚ»òµÈÓÚ0ÁË£¬Ôò×èÈû×¡µ±Ç°½ø³Ì£¨½ø³Ì»á½øÈëË¯Ãß×´Ì¬£©£¬Ö±µ½
-ÆäËû½ø³Ì½«ÐÅºÅÁ¿semµÄÖµ¸Ä±äÎªÕýÊýºó£¬ÕâÊ±²ÅÄÜ¼ÌÐøÍ¨¹ý½«sem¼õ1¶øÊ¹µÃµ±Ç°½ø³Ì
-¼ÌÐøÏòÏÂÖ´ÐÐ¡£Òò´Ë£¬sem_post·½·¨¿ÉÒÔÊµÏÖ½âËøµÄ¹¦ÄÜ£¬¶øsem wait·½·¨¿ÉÒÔÊµÏÖ¼ÓËø
-µÄ¹¦ÄÜ¡£
+ä¿¡å·é‡æ˜¯å¦‚ä½•å®žçŽ°äº’æ–¥é”åŠŸèƒ½çš„å‘¢ï¼Ÿä¾‹å¦‚ï¼Œæœ€åˆçš„ä¿¡å·é‡semå€¼ä¸º0ï¼Œè°ƒç”¨sem_postæ–¹
+æ³•å°†ä¼šæŠŠsemå€¼åŠ 1ï¼Œè¿™ä¸ªæ“ä½œä¸ä¼šæœ‰ä»»ä½•é˜»å¡žï¼›è°ƒç”¨sem__ waitæ–¹æµ©å°†ä¼šæŠŠä¿¡å·é‡semçš„å€¼
+å‡lï¼Œå¦‚æžœsemå€¼å·²ç»å°äºŽæˆ–ç­‰äºŽ0äº†ï¼Œåˆ™é˜»å¡žä½å½“å‰è¿›ç¨‹ï¼ˆè¿›ç¨‹ä¼šè¿›å…¥ç¡çœ çŠ¶æ€ï¼‰ï¼Œç›´åˆ°
+å…¶ä»–è¿›ç¨‹å°†ä¿¡å·é‡semçš„å€¼æ”¹å˜ä¸ºæ­£æ•°åŽï¼Œè¿™æ—¶æ‰èƒ½ç»§ç»­é€šè¿‡å°†semå‡1è€Œä½¿å¾—å½“å‰è¿›ç¨‹
+ç»§ç»­å‘ä¸‹æ‰§è¡Œã€‚å› æ­¤ï¼Œsem_postæ–¹æ³•å¯ä»¥å®žçŽ°è§£é”çš„åŠŸèƒ½ï¼Œè€Œsem waitæ–¹æ³•å¯ä»¥å®žçŽ°åŠ é”
+çš„åŠŸèƒ½ã€‚
 
-nginxÊÇÔ­×Ó±äÁ¿ºÍÐÅºÅÁ¿ºÏ×÷ÒÔÊµÏÖ¸ßÐ§»¥³âËøµÄ
+nginxæ˜¯åŽŸå­å˜é‡å’Œä¿¡å·é‡åˆä½œä»¥å®žçŽ°é«˜æ•ˆäº’æ–¥é”çš„
 
-±í14-1»¥³âËøµÄ5ÖÖ²Ù×÷·½·¨
-©³©¥©¥©¥©¥©¥©¥©¥©¥©¥©×©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©×©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©·
-©§    ·½·¨Ãû        ©§    ²ÎÊý                                      ©§    ÒâÒå                        ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§                  ©§  ²ÎÊýmtx±íÊ¾´ý²Ù×÷µÄngx_shmtx_tÀàÐÍ»¥³âËø£»  ©§                                ©§
-©§                  ©§µ±»¥³âËøÓÉÔ­×Ó±äÁ¿ÊµÏÖÊ±£¬²ÎÊýaddr±íÊ¾Òª²Ù×÷  ©§                                ©§
-©§ngx_shmtx_create  ©§µÄÔ­×Ó±äÁ¿Ëø£¬¶ø»¥³âËøÓÉÎÄ¼þÊµÏÖÊ±£¬²ÎÊýaddr  ©§  ³õÊ¼»¯mtx»¥³âËø               ©§
-©§                  ©§Ã»ÓÐÈÎºÎÒâÒå£»²ÎÊýname½öµ±»¥³âËøÓÉÎÄ¼þÊµÏÖÊ±  ©§                                ©§
-©§                  ©§²ÅÓÐÒâÒå£¬Ëü±íÊ¾Õâ¸öÎÄ¼þËùÔÚµÄÂ·¾¶¼°ÎÄ¼þÃû    ©§                                ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§ngx_shmtx_destory ©§  ²ÎÊýmtx±íÊ¾´ý²Ù×÷µÄngx_shmtx_tÀàÐÍ»¥³âËø    ©§  Ïú»Ùmtx»¥³âËø                 ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§                  ©§                                              ©§  ÎÞ×èÈûµØÊÔÍ¼»ñÈ¡»¥³âËø£¬·µ»Ø  ©§
-©§ngx_shmtx_trylock ©§  ²ÎÊýmtx±íÊ¾´ý²Ù×÷µÄngx_shmtx_tÀàÐÍ»¥³âËø    ©§1±íÊ¾»ñÈ¡»¥³âËø³É¹¦£¬·µ»Ø0±íÊ¾  ©§
-©§                  ©§                                              ©§»ñÈ¡»¥³âËøÊ§°Ü                  ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§                  ©§                                              ©§  ÒÔ×èÈû½ø³ÌµÄ·½Îä»ñÈ¡»¥³âËø£¬  ©§
-©§ngx_shmtx_lock    ©§  ²ÎÊýmtx±íÊ¾´ý²Ù×÷µÄngx_shmtx_tÀàÐÍ»¥³âËø    ©§                                ©§
-©§                  ©§                                              ©§ÔÚ·½·¨·µ»ØÊ±¾ÍÒÑ¾­³ÖÓÐ»¥³âËøÁË  ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§ngx_shmtx_unlock  ©§  ²ÎÊýmtx±íÊ¾´ý²Ù×÷µÄngx_shmtx_tÀàÐÍ»¥³âËø    ©§  ÊÍ·Å»¥³âËø                    ©§
-©»©¥©¥©¥©¥©¥©¥©¥©¥©¥©ß©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ß©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¿
+è¡¨14-1äº’æ–¥é”çš„5ç§æ“ä½œæ–¹æ³•
+â”â”â”â”â”â”â”â”â”â”â”³â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”³â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”“
+â”ƒ    æ–¹æ³•å        â”ƒ    å‚æ•°                                      â”ƒ    æ„ä¹‰                        â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ                  â”ƒ  å‚æ•°mtxè¡¨ç¤ºå¾…æ“ä½œçš„ngx_shmtx_tç±»åž‹äº’æ–¥é”ï¼›  â”ƒ                                â”ƒ
+â”ƒ                  â”ƒå½“äº’æ–¥é”ç”±åŽŸå­å˜é‡å®žçŽ°æ—¶ï¼Œå‚æ•°addrè¡¨ç¤ºè¦æ“ä½œ  â”ƒ                                â”ƒ
+â”ƒngx_shmtx_create  â”ƒçš„åŽŸå­å˜é‡é”ï¼Œè€Œäº’æ–¥é”ç”±æ–‡ä»¶å®žçŽ°æ—¶ï¼Œå‚æ•°addr  â”ƒ  åˆå§‹åŒ–mtxäº’æ–¥é”               â”ƒ
+â”ƒ                  â”ƒæ²¡æœ‰ä»»ä½•æ„ä¹‰ï¼›å‚æ•°nameä»…å½“äº’æ–¥é”ç”±æ–‡ä»¶å®žçŽ°æ—¶  â”ƒ                                â”ƒ
+â”ƒ                  â”ƒæ‰æœ‰æ„ä¹‰ï¼Œå®ƒè¡¨ç¤ºè¿™ä¸ªæ–‡ä»¶æ‰€åœ¨çš„è·¯å¾„åŠæ–‡ä»¶å    â”ƒ                                â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒngx_shmtx_destory â”ƒ  å‚æ•°mtxè¡¨ç¤ºå¾…æ“ä½œçš„ngx_shmtx_tç±»åž‹äº’æ–¥é”    â”ƒ  é”€æ¯mtxäº’æ–¥é”                 â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ                  â”ƒ                                              â”ƒ  æ— é˜»å¡žåœ°è¯•å›¾èŽ·å–äº’æ–¥é”ï¼Œè¿”å›ž  â”ƒ
+â”ƒngx_shmtx_trylock â”ƒ  å‚æ•°mtxè¡¨ç¤ºå¾…æ“ä½œçš„ngx_shmtx_tç±»åž‹äº’æ–¥é”    â”ƒ1è¡¨ç¤ºèŽ·å–äº’æ–¥é”æˆåŠŸï¼Œè¿”å›ž0è¡¨ç¤º  â”ƒ
+â”ƒ                  â”ƒ                                              â”ƒèŽ·å–äº’æ–¥é”å¤±è´¥                  â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ                  â”ƒ                                              â”ƒ  ä»¥é˜»å¡žè¿›ç¨‹çš„æ–¹æ­¦èŽ·å–äº’æ–¥é”ï¼Œ  â”ƒ
+â”ƒngx_shmtx_lock    â”ƒ  å‚æ•°mtxè¡¨ç¤ºå¾…æ“ä½œçš„ngx_shmtx_tç±»åž‹äº’æ–¥é”    â”ƒ                                â”ƒ
+â”ƒ                  â”ƒ                                              â”ƒåœ¨æ–¹æ³•è¿”å›žæ—¶å°±å·²ç»æŒæœ‰äº’æ–¥é”äº†  â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒngx_shmtx_unlock  â”ƒ  å‚æ•°mtxè¡¨ç¤ºå¾…æ“ä½œçš„ngx_shmtx_tç±»åž‹äº’æ–¥é”    â”ƒ  é‡Šæ”¾äº’æ–¥é”                    â”ƒ
+â”—â”â”â”â”â”â”â”â”â”â”»â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”»â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”›
 */
 
-#if (NGX_HAVE_ATOMIC_OPS) //Ö§³ÖÔ­×Ó²Ù×÷  //Ö§³ÖÔ­×Ó²Ù×÷£¬ÔòÍ¨¹ýÔ­×Ó²Ù×÷ÊµÏÖËø
+#if (NGX_HAVE_ATOMIC_OPS) //æ”¯æŒåŽŸå­æ“ä½œ  //æ”¯æŒåŽŸå­æ“ä½œï¼Œåˆ™é€šè¿‡åŽŸå­æ“ä½œå®žçŽ°é”
 
 
 static void ngx_shmtx_wakeup(ngx_shmtx_t *mtx);
 /*
-ngx_shmtx_t½á¹¹ÌåÉæ¼°Á½¸öºê£ºNGX_HAVE_ATOMIC_OPS¡¢NGX_HAVE_POSIX_SEM£¬ÕâÁ½¸öºê¶ÔÓ¦×Å»¥³âËøµÄ3ÖÖ²»Í¬ÊµÏÖ¡£
-    µÚ1ÖÖÊµÏÖ£¬µ±²»Ö§³ÖÔ­×Ó²Ù×÷Ê±£¬»áÊ¹ÓÃÎÄ¼þËøÀ´ÊµÏÖngx_shmtx_t»¥³âËø£¬ÕâÊ±Ëü½öÓÐfdºÍname³ÉÔ±£¨Êµ¼ÊÉÏ»¹ÓÐspin³ÉÔ±£¬
-    µ«ÕâÊ±Ã»ÓÐÈÎºÎÒâÒå£©¡£ÕâÁ½¸ö³ÉÔ±Ê¹ÓÃÎÄ¼þËøÀ´Ìá¹©×èÈû¡¢·Ç×èÈûµÄ»¥³âËø¡£
-    µÚ2ÖÖÊµÏÖ£¬Ö§³ÖÔ­×Ó²Ù×÷È´ÓÖ²»Ö§³ÖÐÅºÅÁ¿¡£
-    µÚ3ÖÖÊµÏÖ£¬ÔÚÖ§³ÖÔ­×Ó²Ù×÷µÄÍ¬Ê±£¬²Ù×÷ÏµÍ³Ò²Ö§³ÖÐÅºÅÁ¿¡£
-    ºóÁ½ÖÖÊµÏÖµÄÎ¨Ò»Çø±ðÊÇngx_shmtx_lock·½·¨Ö´ÐÐÊ±µÄÐ§¹û£¬Ò²¾ÍÊÇËµ£¬Ö§³ÖÐÅºÅÁ¿
-Ö»»áÓ°Ïì×èÈû½ø³ÌµÄngx_shmtx_lock·½·¨³ÖÓÐËøµÄ·½Ê½¡£µ±²»Ö§³ÖÐÅºÅÁ¿Ê±£¬ngx_shmtx_
-lockÈ¡ËøÓë×ÔÐýËøÊÇÒ»ÖÂµÄ£¬¶øÖ§³ÖÐÅºÅÁ¿ºó£¬ngx_shmtx_lock½«ÔÚspin
-Ö¸¶¨µÄÒ»¶ÎÊ±¼äÄÚ×ÔÐýµÈ´ýÆäËû´¦ÀíÆ÷ÊÍ·ÅËø£¬Èç¹û´ïµ½spinÉÏÏÞ»¹Ã»ÓÐ»ñÈ¡µ½Ëø£¬ÄÇÃ´½«
-»áÊ¹ÓÃsem_waitÊ¹µÃÛ»Ç°½ø³Ì½øÈëË¯Ãß×´Ì¬£¬µÈÆäËû½ø³ÌÊÍ·ÅÁËËøÄÚºËºó²Å»á»½ÐÑÕâ¸ö½ø
-³Ì¡£µ±È»£¬ÔÚÊµ¼ÊÊµÏÖ¹ý³ÌÖÐ£¬Nginx×öÁË·Ç³£ÇÉÃîµÄÉè¼Æ£¬ËüÊ¹µÃngx_shmtx_lock·½·¨ÔÚ
-ÔËÐÐÒ»¶ÎÊ±¼äºó£¬Èç¹ûÆäËû½ø³ÌÊ¼ÖÕ²»·ÅÆúËø£¬ÄÇÃ´µ±Ç°½ø³Ì½«ÓÐ¿ÉÄÜÇ¿ÖÆÐÔµØ»ñµÃµ½Õâ°Ñ
-Ëø£¬ÕâÒ²ÊÇ³öÓÚNginx²»ÒËÊ¹ÓÃ×èÈû½ø³ÌµÄË¯ÃßËø·½ÃæµÄ¿¼ÂÇ¡£
+ngx_shmtx_tç»“æž„ä½“æ¶‰åŠä¸¤ä¸ªå®ï¼šNGX_HAVE_ATOMIC_OPSã€NGX_HAVE_POSIX_SEMï¼Œè¿™ä¸¤ä¸ªå®å¯¹åº”ç€äº’æ–¥é”çš„3ç§ä¸åŒå®žçŽ°ã€‚
+    ç¬¬1ç§å®žçŽ°ï¼Œå½“ä¸æ”¯æŒåŽŸå­æ“ä½œæ—¶ï¼Œä¼šä½¿ç”¨æ–‡ä»¶é”æ¥å®žçŽ°ngx_shmtx_täº’æ–¥é”ï¼Œè¿™æ—¶å®ƒä»…æœ‰fdå’Œnameæˆå‘˜ï¼ˆå®žé™…ä¸Šè¿˜æœ‰spinæˆå‘˜ï¼Œ
+    ä½†è¿™æ—¶æ²¡æœ‰ä»»ä½•æ„ä¹‰ï¼‰ã€‚è¿™ä¸¤ä¸ªæˆå‘˜ä½¿ç”¨æ–‡ä»¶é”æ¥æä¾›é˜»å¡žã€éžé˜»å¡žçš„äº’æ–¥é”ã€‚
+    ç¬¬2ç§å®žçŽ°ï¼Œæ”¯æŒåŽŸå­æ“ä½œå´åˆä¸æ”¯æŒä¿¡å·é‡ã€‚
+    ç¬¬3ç§å®žçŽ°ï¼Œåœ¨æ”¯æŒåŽŸå­æ“ä½œçš„åŒæ—¶ï¼Œæ“ä½œç³»ç»Ÿä¹Ÿæ”¯æŒä¿¡å·é‡ã€‚
+    åŽä¸¤ç§å®žçŽ°çš„å”¯ä¸€åŒºåˆ«æ˜¯ngx_shmtx_lockæ–¹æ³•æ‰§è¡Œæ—¶çš„æ•ˆæžœï¼Œä¹Ÿå°±æ˜¯è¯´ï¼Œæ”¯æŒä¿¡å·é‡
+åªä¼šå½±å“é˜»å¡žè¿›ç¨‹çš„ngx_shmtx_lockæ–¹æ³•æŒæœ‰é”çš„æ–¹å¼ã€‚å½“ä¸æ”¯æŒä¿¡å·é‡æ—¶ï¼Œngx_shmtx_
+lockå–é”ä¸Žè‡ªæ—‹é”æ˜¯ä¸€è‡´çš„ï¼Œè€Œæ”¯æŒä¿¡å·é‡åŽï¼Œngx_shmtx_lockå°†åœ¨spin
+æŒ‡å®šçš„ä¸€æ®µæ—¶é—´å†…è‡ªæ—‹ç­‰å¾…å…¶ä»–å¤„ç†å™¨é‡Šæ”¾é”ï¼Œå¦‚æžœè¾¾åˆ°spinä¸Šé™è¿˜æ²¡æœ‰èŽ·å–åˆ°é”ï¼Œé‚£ä¹ˆå°†
+ä¼šä½¿ç”¨sem_waitä½¿å¾—åˆå‰è¿›ç¨‹è¿›å…¥ç¡çœ çŠ¶æ€ï¼Œç­‰å…¶ä»–è¿›ç¨‹é‡Šæ”¾äº†é”å†…æ ¸åŽæ‰ä¼šå”¤é†’è¿™ä¸ªè¿›
+ç¨‹ã€‚å½“ç„¶ï¼Œåœ¨å®žé™…å®žçŽ°è¿‡ç¨‹ä¸­ï¼ŒNginxåšäº†éžå¸¸å·§å¦™çš„è®¾è®¡ï¼Œå®ƒä½¿å¾—ngx_shmtx_lockæ–¹æ³•åœ¨
+è¿è¡Œä¸€æ®µæ—¶é—´åŽï¼Œå¦‚æžœå…¶ä»–è¿›ç¨‹å§‹ç»ˆä¸æ”¾å¼ƒé”ï¼Œé‚£ä¹ˆå½“å‰è¿›ç¨‹å°†æœ‰å¯èƒ½å¼ºåˆ¶æ€§åœ°èŽ·å¾—åˆ°è¿™æŠŠ
+é”ï¼Œè¿™ä¹Ÿæ˜¯å‡ºäºŽNginxä¸å®œä½¿ç”¨é˜»å¡žè¿›ç¨‹çš„ç¡çœ é”æ–¹é¢çš„è€ƒè™‘ã€‚
 */
-//addrÎª¹²ÏíÄÚ´ængx_shm_alloc¿ª±ÙµÄ¿Õ¼äÖÐµÄÒ»¸ö128×Ö½ÚÊ×µØÖ·  nginxÊÇÔ­×Ó±äÁ¿ºÍÐÅºÅÁ¿ºÏ×÷ÒÔÊµÏÖ¸ßÐ§»¥³âËøµÄ
+//addrä¸ºå…±äº«å†…å­˜ngx_shm_allocå¼€è¾Ÿçš„ç©ºé—´ä¸­çš„ä¸€ä¸ª128å­—èŠ‚é¦–åœ°å€  nginxæ˜¯åŽŸå­å˜é‡å’Œä¿¡å·é‡åˆä½œä»¥å®žçŽ°é«˜æ•ˆäº’æ–¥é”çš„
 ngx_int_t
 ngx_shmtx_create(ngx_shmtx_t *mtx, ngx_shmtx_sh_t *addr, u_char *name)
 {
-    mtx->lock = &addr->lock;    //Ö±½ÓÖ´ÐÐ¹²ÏíÄÚ´æ¿Õ¼äaddrÖÐµÄlockÇø¼äÖÐ
+    mtx->lock = &addr->lock;    //ç›´æŽ¥æ‰§è¡Œå…±äº«å†…å­˜ç©ºé—´addrä¸­çš„lockåŒºé—´ä¸­
 
-    if (mtx->spin == (ngx_uint_t) -1) { //×¢Òâ£¬µ±spinÖµÎª-1Ê±£¬±íÊ¾²»ÄÜÊ¹ÓÃÐÅºÅÁ¿£¬ÕâÊ±Ö±½Ó·µ»Ø³É¹¦
+    if (mtx->spin == (ngx_uint_t) -1) { //æ³¨æ„ï¼Œå½“spinå€¼ä¸º-1æ—¶ï¼Œè¡¨ç¤ºä¸èƒ½ä½¿ç”¨ä¿¡å·é‡ï¼Œè¿™æ—¶ç›´æŽ¥è¿”å›žæˆåŠŸ
         return NGX_OK;
     }
 
-    mtx->spin = 2048; //spinÖµÄ¬ÈÏÎª2048
+    mtx->spin = 2048; //spinå€¼é»˜è®¤ä¸º2048
 
-//Í¬Ê±Ê¹ÓÃÐÅºÅÁ¿
+//åŒæ—¶ä½¿ç”¨ä¿¡å·é‡
 #if (NGX_HAVE_POSIX_SEM)
     mtx->wait = &addr->wait;
 
     /*
     int  sem init (sem_t  sem,  int pshared,  unsigned int value) ,
-    ÆäÖÐ£¬²ÎÊýsem¼´ÎªÎÒÃÇ¶¨ÒåµÄÐÅºÅÁ¿£¬¶ø²ÎÊýpshared½«Ö¸Ã÷semÐÅºÅÁ¿ÊÇÓÃÓÚ½ø³Ì¼äÍ¬²½»¹ÊÇÓÃÓÚÏß³Ì¼äÍ¬²½£¬µ±psharedÎª0Ê±±íÊ¾Ïß³Ì¼äÍ¬²½£¬
-    ¶øpsharedÎª1Ê±±íÊ¾½ø³Ì¼äÍ¬²½¡£ÓÉÓÚNginxµÄÃ¿¸ö½ø³Ì¶¼ÊÇµ¥Ïß³ÌµÄ£¬Òò´Ë½«²ÎÊýpsharedÉèÎª1¼´¿É¡£²ÎÊývalue±íÊ¾ÐÅºÅÁ¿semµÄ³õÊ¼Öµ¡£
+    å…¶ä¸­ï¼Œå‚æ•°semå³ä¸ºæˆ‘ä»¬å®šä¹‰çš„ä¿¡å·é‡ï¼Œè€Œå‚æ•°psharedå°†æŒ‡æ˜Žsemä¿¡å·é‡æ˜¯ç”¨äºŽè¿›ç¨‹é—´åŒæ­¥è¿˜æ˜¯ç”¨äºŽçº¿ç¨‹é—´åŒæ­¥ï¼Œå½“psharedä¸º0æ—¶è¡¨ç¤ºçº¿ç¨‹é—´åŒæ­¥ï¼Œ
+    è€Œpsharedä¸º1æ—¶è¡¨ç¤ºè¿›ç¨‹é—´åŒæ­¥ã€‚ç”±äºŽNginxçš„æ¯ä¸ªè¿›ç¨‹éƒ½æ˜¯å•çº¿ç¨‹çš„ï¼Œå› æ­¤å°†å‚æ•°psharedè®¾ä¸º1å³å¯ã€‚å‚æ•°valueè¡¨ç¤ºä¿¡å·é‡semçš„åˆå§‹å€¼ã€‚
      */
-    //ÒÔ¶à½ø³ÌÊ¹ÓÃµÄ·½Ê½³õÊ¼»¯semÐÅºÅÁ¿£¬sem³õÊ¼ÖµÎª0
+    //ä»¥å¤šè¿›ç¨‹ä½¿ç”¨çš„æ–¹å¼åˆå§‹åŒ–semä¿¡å·é‡ï¼Œsemåˆå§‹å€¼ä¸º0
     if (sem_init(&mtx->sem, 1, 0) == -1) {
         ngx_log_error(NGX_LOG_ALERT, ngx_cycle->log, ngx_errno,
                       "sem_init() failed");
     } else {
-        mtx->semaphore = 1; //ÔÚÐÅºÅÁ¿³õÊ¼»¯³É¹¦ºó£¬ÉèÖÃsemaphore±êÖ¾Î»Îª1
+        mtx->semaphore = 1; //åœ¨ä¿¡å·é‡åˆå§‹åŒ–æˆåŠŸåŽï¼Œè®¾ç½®semaphoreæ ‡å¿—ä½ä¸º1
     }
 
 #endif
@@ -133,10 +133,10 @@ ngx_shmtx_create(ngx_shmtx_t *mtx, ngx_shmtx_sh_t *addr, u_char *name)
 void
 ngx_shmtx_destroy(ngx_shmtx_t *mtx)
 {
-#if (NGX_HAVE_POSIX_SEM) //Ö§³ÖÐÅºÅÁ¿Ê±²ÅÓÐ´úÂëÐèÒªÖ´ÐÐ
+#if (NGX_HAVE_POSIX_SEM) //æ”¯æŒä¿¡å·é‡æ—¶æ‰æœ‰ä»£ç éœ€è¦æ‰§è¡Œ
 
-    if (mtx->semaphore) { //µ±Õâ°ÑËøµÄspinÖµ²»Îª(ngx_uint_t)    -1Ê±£¬ÇÒ³õÊ¼»¯ÐÅºÅÁ¿³É¹¦£¬semaphore±êÖ¾Î»²ÅÎªl
-        if (sem_destroy(&mtx->sem) == -1) { //Ïú»ÙÐÅºÅÁ¿
+    if (mtx->semaphore) { //å½“è¿™æŠŠé”çš„spinå€¼ä¸ä¸º(ngx_uint_t)    -1æ—¶ï¼Œä¸”åˆå§‹åŒ–ä¿¡å·é‡æˆåŠŸï¼Œsemaphoreæ ‡å¿—ä½æ‰ä¸ºl
+        if (sem_destroy(&mtx->sem) == -1) { //é”€æ¯ä¿¡å·é‡
             ngx_log_error(NGX_LOG_ALERT, ngx_cycle->log, ngx_errno,
                           "sem_destroy() failed");
         }
@@ -146,9 +146,9 @@ ngx_shmtx_destroy(ngx_shmtx_t *mtx)
 }
 
 /*
-Ê×ÏÈÊÇÅÐ¶ÏmtxµÄlockÓòÊÇ·ñµÈÓÚ0£¬Èç¹û²»µÈÓÚ£¬ÄÇÃ´¾ÍÖ±½Ó·µ»ØfalseºÃÁË£¬Èç¹ûµÈÓÚµÄ»°£¬ÄÇÃ´¾ÍÒªµ÷ÓÃÔ­×Ó²Ù×÷ngx_atomic_cmp_setÁË£¬
-ËüÓÃÓÚ±È½ÏmtxµÄlockÓò£¬Èç¹ûµÈÓÚÁã£¬ÄÇÃ´ÉèÖÃÎªµ±Ç°½ø³ÌµÄ½ø³ÌidºÅ£¬·ñÔò·µ»Øfalse¡£
-*/ //²»¹ÜÄÜ²»ÄÜ»ñµÃµ½Ëø¶¼·µ»Ø  nginxÊÇÔ­×Ó±äÁ¿ºÍÐÅºÅÁ¿ºÏ×÷ÒÔÊµÏÖ¸ßÐ§»¥³âËøµÄ
+é¦–å…ˆæ˜¯åˆ¤æ–­mtxçš„lockåŸŸæ˜¯å¦ç­‰äºŽ0ï¼Œå¦‚æžœä¸ç­‰äºŽï¼Œé‚£ä¹ˆå°±ç›´æŽ¥è¿”å›žfalseå¥½äº†ï¼Œå¦‚æžœç­‰äºŽçš„è¯ï¼Œé‚£ä¹ˆå°±è¦è°ƒç”¨åŽŸå­æ“ä½œngx_atomic_cmp_setäº†ï¼Œ
+å®ƒç”¨äºŽæ¯”è¾ƒmtxçš„lockåŸŸï¼Œå¦‚æžœç­‰äºŽé›¶ï¼Œé‚£ä¹ˆè®¾ç½®ä¸ºå½“å‰è¿›ç¨‹çš„è¿›ç¨‹idå·ï¼Œå¦åˆ™è¿”å›žfalseã€‚
+*/ //ä¸ç®¡èƒ½ä¸èƒ½èŽ·å¾—åˆ°é”éƒ½è¿”å›ž  nginxæ˜¯åŽŸå­å˜é‡å’Œä¿¡å·é‡åˆä½œä»¥å®žçŽ°é«˜æ•ˆäº’æ–¥é”çš„
 ngx_uint_t
 ngx_shmtx_trylock(ngx_shmtx_t *mtx)
 {
@@ -156,10 +156,10 @@ ngx_shmtx_trylock(ngx_shmtx_t *mtx)
 }
 
 /*
-×èÈûÊ½»ñÈ¡»¥³âËøµÄngx_shmtx_lock·½·¨½ÏÎª¸´ÔÓ£¬ÔÚ²»Ö§³ÖÐÅºÅÁ¿Ê±ËüÓë14.3.3½Ú½éÉÜµÄ×ÔÐýËø¼¸ºõÍêÈ«ÏàÍ¬£¬µ«ÔÚÖ§³ÖÁËÐÅºÅÁ¿ºó£¬Ëü
-½«ÓÐ¿ÉÄÜÊ¹½ø³Ì½øÈëË¯Ãß×´Ì¬¡£
+é˜»å¡žå¼èŽ·å–äº’æ–¥é”çš„ngx_shmtx_lockæ–¹æ³•è¾ƒä¸ºå¤æ‚ï¼Œåœ¨ä¸æ”¯æŒä¿¡å·é‡æ—¶å®ƒä¸Ž14.3.3èŠ‚ä»‹ç»çš„è‡ªæ—‹é”å‡ ä¹Žå®Œå…¨ç›¸åŒï¼Œä½†åœ¨æ”¯æŒäº†ä¿¡å·é‡åŽï¼Œå®ƒ
+å°†æœ‰å¯èƒ½ä½¿è¿›ç¨‹è¿›å…¥ç¡çœ çŠ¶æ€ã€‚
 */
-//ÕâÀï¿ÉÒÔ¿´³öÖ§³ÖÔ­×Ó²Ù×÷µÄÏµÍ³£¬ËûµÄÐÅºÅÁ¿ÆäÊµ¾ÍÊÇ×ÔÐýºÍÐÅºÅÁ¿µÄ½áºÏ   nginxÊÇÔ­×Ó±äÁ¿ºÍÐÅºÅÁ¿ºÏ×÷ÒÔÊµÏÖ¸ßÐ§»¥³âËøµÄ
+//è¿™é‡Œå¯ä»¥çœ‹å‡ºæ”¯æŒåŽŸå­æ“ä½œçš„ç³»ç»Ÿï¼Œä»–çš„ä¿¡å·é‡å…¶å®žå°±æ˜¯è‡ªæ—‹å’Œä¿¡å·é‡çš„ç»“åˆ   nginxæ˜¯åŽŸå­å˜é‡å’Œä¿¡å·é‡åˆä½œä»¥å®žçŽ°é«˜æ•ˆäº’æ–¥é”çš„
 void
 ngx_shmtx_lock(ngx_shmtx_t *mtx)
 {
@@ -167,23 +167,23 @@ ngx_shmtx_lock(ngx_shmtx_t *mtx)
 
     ngx_log_debug0(NGX_LOG_DEBUG_CORE, ngx_cycle->log, 0, "shmtx lock");
     
-    //Ò»¸öËÀÑ­»·£¬²»¶ÏµÄÈ¥¿´ÊÇ·ñ»ñÈ¡ÁËËø£¬Ö±µ½»ñÈ¡ÁËÖ®ºó²ÅÍË³ö   
-    //ËùÒÔÖ§³ÖÔ­×Ó±äÁ¿µÄ
+    //ä¸€ä¸ªæ­»å¾ªçŽ¯ï¼Œä¸æ–­çš„åŽ»çœ‹æ˜¯å¦èŽ·å–äº†é”ï¼Œç›´åˆ°èŽ·å–äº†ä¹‹åŽæ‰é€€å‡º   
+    //æ‰€ä»¥æ”¯æŒåŽŸå­å˜é‡çš„
     for ( ;; ) {
- //lockÖµÊÇµ±Ç°µÄËø×´Ì¬¡£×¢Òâ£¬lockÒ»°ãÊÇÔÚ¹²ÏíÄÚ´æÖÐµÄ£¬Ëü¿ÉÄÜ»áÊ±¿Ì±ä»¯£¬¶øvalÊÇµ±Ç°½ø³ÌµÄÕ»ÖÐ±äÁ¿£¬ÏÂÃæ´úÂëµÄÖ´ÐÐÖÐËü¿ÉÄÜÓëlockÖµ²»Ò»ÖÂ
+ //lockå€¼æ˜¯å½“å‰çš„é”çŠ¶æ€ã€‚æ³¨æ„ï¼Œlockä¸€èˆ¬æ˜¯åœ¨å…±äº«å†…å­˜ä¸­çš„ï¼Œå®ƒå¯èƒ½ä¼šæ—¶åˆ»å˜åŒ–ï¼Œè€Œvalæ˜¯å½“å‰è¿›ç¨‹çš„æ ˆä¸­å˜é‡ï¼Œä¸‹é¢ä»£ç çš„æ‰§è¡Œä¸­å®ƒå¯èƒ½ä¸Žlockå€¼ä¸ä¸€è‡´
         if (*mtx->lock == 0 && ngx_atomic_cmp_set(mtx->lock, 0, ngx_pid)) {
             return;
         }
-        //½öÔÚ¶à´¦ÀíÆ÷×´Ì¬ÏÂspinÖµ²ÅÓÐÒâÒå£¬·ñÔòPAUSEÖ¸ÁîÊÇ²»»áÖ´ÐÐµÄ
+        //ä»…åœ¨å¤šå¤„ç†å™¨çŠ¶æ€ä¸‹spinå€¼æ‰æœ‰æ„ä¹‰ï¼Œå¦åˆ™PAUSEæŒ‡ä»¤æ˜¯ä¸ä¼šæ‰§è¡Œçš„
         if (ngx_ncpu > 1) {
-            //Ñ­»·Ö´ÐÐPAUSE£¬¼ì²éËøÊÇ·ñÒÑ¾­ÊÍ·Å
+            //å¾ªçŽ¯æ‰§è¡ŒPAUSEï¼Œæ£€æŸ¥é”æ˜¯å¦å·²ç»é‡Šæ”¾
             for (n = 1; n < mtx->spin; n <<= 1) {
-                //Ëæ×Å³¤Ê±¼äÃ»ÓÐ»ñµÃµ½Ëø£¬½«»áÖ´ÐÐ¸ü¶à´ÎPAUSE²Å»á¼ì²éËø
+                //éšç€é•¿æ—¶é—´æ²¡æœ‰èŽ·å¾—åˆ°é”ï¼Œå°†ä¼šæ‰§è¡Œæ›´å¤šæ¬¡PAUSEæ‰ä¼šæ£€æŸ¥é”
                 for (i = 0; i < n; i++) {
                     ngx_cpu_pause();
                 }
 
-                //ÔÙ´ÎÓÉ¹²ÏíÄÚ´æÖÐ»ñµÃlockÔ­×Ó±äÁ¿µÄÖµ
+                //å†æ¬¡ç”±å…±äº«å†…å­˜ä¸­èŽ·å¾—lockåŽŸå­å˜é‡çš„å€¼
                 if (*mtx->lock == 0
                     && ngx_atomic_cmp_set(mtx->lock, 0, ngx_pid))
                 {
@@ -192,12 +192,12 @@ ngx_shmtx_lock(ngx_shmtx_t *mtx)
             }
         }
 
-#if (NGX_HAVE_POSIX_SEM) //Ö§³ÖÐÅºÅÁ¿Ê±²Å¼ÌÐøÖ´ÐÐ
+#if (NGX_HAVE_POSIX_SEM) //æ”¯æŒä¿¡å·é‡æ—¶æ‰ç»§ç»­æ‰§è¡Œ
 
-        if (mtx->semaphore) {//semaphore±êÖ¾Î»Îª1²ÅÊ¹ÓÃÐÅºÅÁ¿
+        if (mtx->semaphore) {//semaphoreæ ‡å¿—ä½ä¸º1æ‰ä½¿ç”¨ä¿¡å·é‡
             (void) ngx_atomic_fetch_add(mtx->wait, 1);
 
-            //ÖØÐÂ»ñÈ¡Ò»´Î¿ÉÄÜÐé¹²ÏíÄÚ´æÖÐµÄlockÔ­×Ó±äÁ¿
+            //é‡æ–°èŽ·å–ä¸€æ¬¡å¯èƒ½è™šå…±äº«å†…å­˜ä¸­çš„lockåŽŸå­å˜é‡
             if (*mtx->lock == 0 && ngx_atomic_cmp_set(mtx->lock, 0, ngx_pid)) {
                 (void) ngx_atomic_fetch_add(mtx->wait, -1);
                 return;
@@ -206,18 +206,18 @@ ngx_shmtx_lock(ngx_shmtx_t *mtx)
             ngx_log_debug1(NGX_LOG_DEBUG_CORE, ngx_cycle->log, 0,
                            "shmtx wait %uA", *mtx->wait);
 
-            //Èç¹ûÃ»ÓÐÄÃµ½Ëø£¬ÕâÊ±Nginx½ø³Ì½«»áË¯Ãß£¬Ö±µ½ÆäËû½ø³ÌÊÍ·ÅÁËËø
+            //å¦‚æžœæ²¡æœ‰æ‹¿åˆ°é”ï¼Œè¿™æ—¶Nginxè¿›ç¨‹å°†ä¼šç¡çœ ï¼Œç›´åˆ°å…¶ä»–è¿›ç¨‹é‡Šæ”¾äº†é”
             /*
-                ¼ì²éÐÅºÅÁ¿semµÄÖµ£¬Èç¹ûsemÖµÎªÕýÊý£¬ÔòsemÖµ¼õ1£¬±íÊ¾ÄÃµ½ÁËÐÅºÅÁ¿»¥³âËø£¬Í¬Ê±sem wait·½·¨·µ»Øo¡£Èç¹ûsemÖµÎª0»ò
-                Õß¸ºÊý£¬Ôòµ±Ç°½ø³Ì½øÈëË¯Ãß×´Ì¬£¬µÈ´ýÆäËû½ø³ÌÊ¹ÓÃngx_shmtx_unlock·½·¨ÊÍ·ÅËø£¨µÈ´ýsemÐÅºÅÁ¿±äÎªÕýÊý£©£¬µ½Ê±LinuxÄÚºË
-                »áÖØÐÂµ÷¶Èµ±Ç°½ø³Ì£¬¼ÌÐø¼ì²ésemÖµÊÇ·ñÎªÕý£¬ÖØ¸´ÒÔÉÏÁ÷³Ì
+                æ£€æŸ¥ä¿¡å·é‡semçš„å€¼ï¼Œå¦‚æžœsemå€¼ä¸ºæ­£æ•°ï¼Œåˆ™semå€¼å‡1ï¼Œè¡¨ç¤ºæ‹¿åˆ°äº†ä¿¡å·é‡äº’æ–¥é”ï¼ŒåŒæ—¶sem waitæ–¹æ³•è¿”å›žoã€‚å¦‚æžœsemå€¼ä¸º0æˆ–
+                è€…è´Ÿæ•°ï¼Œåˆ™å½“å‰è¿›ç¨‹è¿›å…¥ç¡çœ çŠ¶æ€ï¼Œç­‰å¾…å…¶ä»–è¿›ç¨‹ä½¿ç”¨ngx_shmtx_unlockæ–¹æ³•é‡Šæ”¾é”ï¼ˆç­‰å¾…semä¿¡å·é‡å˜ä¸ºæ­£æ•°ï¼‰ï¼Œåˆ°æ—¶Linuxå†…æ ¸
+                ä¼šé‡æ–°è°ƒåº¦å½“å‰è¿›ç¨‹ï¼Œç»§ç»­æ£€æŸ¥semå€¼æ˜¯å¦ä¸ºæ­£ï¼Œé‡å¤ä»¥ä¸Šæµç¨‹
                */
             while (sem_wait(&mtx->sem) == -1) {
                 ngx_err_t  err;
 
                 err = ngx_errno;
 
-                if (err != NGX_EINTR) {//µ±EINTRÐÅºÅ³öÏÖÊ±£¬±íÊ¾sem waitÖ»ÊÇ±»´ò¶Ï£¬²¢²»ÊÇ³ö´í
+                if (err != NGX_EINTR) {//å½“EINTRä¿¡å·å‡ºçŽ°æ—¶ï¼Œè¡¨ç¤ºsem waitåªæ˜¯è¢«æ‰“æ–­ï¼Œå¹¶ä¸æ˜¯å‡ºé”™
                     ngx_log_error(NGX_LOG_ALERT, ngx_cycle->log, err,
                                   "sem_wait() failed while waiting on shmtx");
                     break;
@@ -227,21 +227,21 @@ ngx_shmtx_lock(ngx_shmtx_t *mtx)
             ngx_log_debug0(NGX_LOG_DEBUG_CORE, ngx_cycle->log, 0,
                            "shmtx awoke");
 
-            continue; //Ñ­»·¼ì²élockËøµÄÖµ£¬×¢Òâ£¬µ±Ê¹ÓÃÐÅºÅÁ¿ºó²»»áµ÷ÓÃsched_yield
+            continue; //å¾ªçŽ¯æ£€æŸ¥locké”çš„å€¼ï¼Œæ³¨æ„ï¼Œå½“ä½¿ç”¨ä¿¡å·é‡åŽä¸ä¼šè°ƒç”¨sched_yield
         }
 
 #endif
 
-        ngx_sched_yield(); //ÔÚ²»Ê¹ÓÃÐÅºÅÁ¿Ê±£¬µ÷ÓÃsched_yield½«»áÊ¹µ±Ç°½ø³ÌÔÝÊ±¡°ÈÃ³ö¡±´¦ÀíÆ÷
+        ngx_sched_yield(); //åœ¨ä¸ä½¿ç”¨ä¿¡å·é‡æ—¶ï¼Œè°ƒç”¨sched_yieldå°†ä¼šä½¿å½“å‰è¿›ç¨‹æš‚æ—¶â€œè®©å‡ºâ€å¤„ç†å™¨
     }
 }
 
 /*
-ngx_shmtx_unlock·½·¨»áÊÍ·ÅËø£¬ËäÈ»Õâ¸öÊÍ·Å¹ý³Ì²»»á×èÈû½ø³Ì£¬µ«ÉèÖÃÔ­×Ó±äÁ¿lockÖµÊ±ÊÇ¿ÉÄÜÊ§°ÜµÄ£¬ÒòÎª¶à½ø³ÌÔÚÍ¬Ê±ÐÞ¸ÄlockÖµ£¬
-¶øngx_atomic_cmp_s et·½·¨ÒªÇó²ÎÊýoldµÄÖµÓëlockÖµÏàÍ¬Ê±²ÅÄÜÐÞ¸Ä³É¹¦£¬Òò´Ë£¬ngx_atomic_cmp_set·½·¨»áÔÚÑ­»·ÖÐ·´¸´Ö´ÐÐ£¬Ö±µ½·µ»Ø
-³É¹¦ÎªÖ¹¡£
+ngx_shmtx_unlockæ–¹æ³•ä¼šé‡Šæ”¾é”ï¼Œè™½ç„¶è¿™ä¸ªé‡Šæ”¾è¿‡ç¨‹ä¸ä¼šé˜»å¡žè¿›ç¨‹ï¼Œä½†è®¾ç½®åŽŸå­å˜é‡lockå€¼æ—¶æ˜¯å¯èƒ½å¤±è´¥çš„ï¼Œå› ä¸ºå¤šè¿›ç¨‹åœ¨åŒæ—¶ä¿®æ”¹lockå€¼ï¼Œ
+è€Œngx_atomic_cmp_s etæ–¹æ³•è¦æ±‚å‚æ•°oldçš„å€¼ä¸Žlockå€¼ç›¸åŒæ—¶æ‰èƒ½ä¿®æ”¹æˆåŠŸï¼Œå› æ­¤ï¼Œngx_atomic_cmp_setæ–¹æ³•ä¼šåœ¨å¾ªçŽ¯ä¸­åå¤æ‰§è¡Œï¼Œç›´åˆ°è¿”å›ž
+æˆåŠŸä¸ºæ­¢ã€‚
 */
-//ÅÐ¶ÏËøµÄlockÓòÓëµ±Ç°½ø³ÌµÄ½ø³ÌidÊÇ·ñÏàµÈ£¬Èç¹ûÏàµÈµÄ»°£¬ÄÇÃ´¾Í½«lockÉèÖÃÎª0£¬È»ºó¾ÍÏàµ±ÓÚÊÍ·ÅÁËËø¡£
+//åˆ¤æ–­é”çš„lockåŸŸä¸Žå½“å‰è¿›ç¨‹çš„è¿›ç¨‹idæ˜¯å¦ç›¸ç­‰ï¼Œå¦‚æžœç›¸ç­‰çš„è¯ï¼Œé‚£ä¹ˆå°±å°†lockè®¾ç½®ä¸º0ï¼Œç„¶åŽå°±ç›¸å½“äºŽé‡Šæ”¾äº†é”ã€‚
 void
 ngx_shmtx_unlock(ngx_shmtx_t *mtx)
 {
@@ -283,7 +283,7 @@ ngx_shmtx_wakeup(ngx_shmtx_t *mtx)
     for ( ;; ) {
 
         wait = *mtx->wait;
-        //Èç¹ûlockËøÔ­ÏÈµÄÖµÎªo£¬Ò²¾ÍÊÇËµ£¬²¢Ã»ÓÐÈÃÄ³¸ö½ø³Ì³ÖÓÐËø£¬ÕâÊ±Ö±½Ó·µ»Ø£»»òÕß£¬semaphore±êÖ¾Î»Îª0£¬±íÊ¾²»ÐèÒªÊ¹ÓÃÐÅºÅÁ¿£¬Ò²Á¢¼´·µ»Ø
+        //å¦‚æžœlocké”åŽŸå…ˆçš„å€¼ä¸ºoï¼Œä¹Ÿå°±æ˜¯è¯´ï¼Œå¹¶æ²¡æœ‰è®©æŸä¸ªè¿›ç¨‹æŒæœ‰é”ï¼Œè¿™æ—¶ç›´æŽ¥è¿”å›žï¼›æˆ–è€…ï¼Œsemaphoreæ ‡å¿—ä½ä¸º0ï¼Œè¡¨ç¤ºä¸éœ€è¦ä½¿ç”¨ä¿¡å·é‡ï¼Œä¹Ÿç«‹å³è¿”å›ž
         if ((ngx_atomic_int_t) wait <= 0) {
             return;
         }
@@ -296,8 +296,8 @@ ngx_shmtx_wakeup(ngx_shmtx_t *mtx)
     ngx_log_debug1(NGX_LOG_DEBUG_CORE, ngx_cycle->log, 0,
                    "shmtx wake %uA", wait);
 
-    //ÊÍ·ÅÐÅºÅÁ¿ËøÊ±ÊÇ²»»áÊ¹½ø³ÌË¯ÃßµÄ
-    //Í¨¹ýsem_post½«ÐÅºÅÁ¿sem¼Ó1£¬±íÊ¾µ±Ç°½ø³ÌÊÍ·ÅÁËÐÅºÅÁ¿»¥³âËø£¬Í¨ÖªÆäËû½ø³ÌµÄsem_wait¼ÌÐøÖ´ÐÐ
+    //é‡Šæ”¾ä¿¡å·é‡é”æ—¶æ˜¯ä¸ä¼šä½¿è¿›ç¨‹ç¡çœ çš„
+    //é€šè¿‡sem_postå°†ä¿¡å·é‡semåŠ 1ï¼Œè¡¨ç¤ºå½“å‰è¿›ç¨‹é‡Šæ”¾äº†ä¿¡å·é‡äº’æ–¥é”ï¼Œé€šçŸ¥å…¶ä»–è¿›ç¨‹çš„sem_waitç»§ç»­æ‰§è¡Œ
     if (sem_post(&mtx->sem) == -1) {
         ngx_log_error(NGX_LOG_ALERT, ngx_cycle->log, ngx_errno,
                       "sem_post() failed while wake shmtx");
@@ -307,24 +307,24 @@ ngx_shmtx_wakeup(ngx_shmtx_t *mtx)
 }
 
 
-#else  //elseºóµÄËøÊÇÎÄ¼þËøÊµÏÖµÄngx_shmtx_tËø   //²»Ö§³ÖÔ­×Ó²Ù×÷£¬ÔòÍ¨¹ýÎÄ¼þËøÊµÏÖ
+#else  //elseåŽçš„é”æ˜¯æ–‡ä»¶é”å®žçŽ°çš„ngx_shmtx_té”   //ä¸æ”¯æŒåŽŸå­æ“ä½œï¼Œåˆ™é€šè¿‡æ–‡ä»¶é”å®žçŽ°
 
 
 ngx_int_t
 ngx_shmtx_create(ngx_shmtx_t *mtx, ngx_shmtx_sh_t *addr, u_char *name)
 {
-    //²»ÓÃÔÚµ÷ÓÃngx_shmtx_create·½·¨Ç°ÏÈÐÐ¸³Öµ¸øngx_shmtx_t½á¹¹ÌåÖÐµÄ³ÉÔ±
+    //ä¸ç”¨åœ¨è°ƒç”¨ngx_shmtx_createæ–¹æ³•å‰å…ˆè¡Œèµ‹å€¼ç»™ngx_shmtx_tç»“æž„ä½“ä¸­çš„æˆå‘˜
     if (mtx->name) {
         /*
-         Èç¹ûngx_shmtx_tÖÐµÄname³ÉÔ±ÓÐÖµ£¬ÄÇÃ´Èç¹ûÓëname²ÎÊýÏàÍ¬£¬ÒâÎ¶×Åmtx»¥³âËøÒÑ¾­³õÊ¼»¯¹ýÁË£»·ñÔò£¬ÐèÒªÏÈÏú»ÙmtxÖÐµÄ»¥³âËøÔÙÖØÐÂ·ÖÅämtx
+         å¦‚æžœngx_shmtx_tä¸­çš„nameæˆå‘˜æœ‰å€¼ï¼Œé‚£ä¹ˆå¦‚æžœä¸Žnameå‚æ•°ç›¸åŒï¼Œæ„å‘³ç€mtxäº’æ–¥é”å·²ç»åˆå§‹åŒ–è¿‡äº†ï¼›å¦åˆ™ï¼Œéœ€è¦å…ˆé”€æ¯mtxä¸­çš„äº’æ–¥é”å†é‡æ–°åˆ†é…mtx
           */
         if (ngx_strcmp(name, mtx->name) == 0) {
-            mtx->name = name; //Èç¹ûname²ÎÊýÓëngx_shmtx_tÖÐµÄname³ÉÔ±Í©Í¬£¬Ôò±íÊ¾ÒÑ¾­³õÊ¼»¯ÁË
-            return NGX_OK; //¼ÈÈ»Ôø¾­³õÊ¼»¯¹ý£¬Ö¤Ã÷fd¾ä±úÒÑ¾­´ò¿ª¹ý£¬Ö±½Ó·µ»Ø³É¹¦¼´¿É
+            mtx->name = name; //å¦‚æžœnameå‚æ•°ä¸Žngx_shmtx_tä¸­çš„nameæˆå‘˜æ¡åŒï¼Œåˆ™è¡¨ç¤ºå·²ç»åˆå§‹åŒ–äº†
+            return NGX_OK; //æ—¢ç„¶æ›¾ç»åˆå§‹åŒ–è¿‡ï¼Œè¯æ˜Žfdå¥æŸ„å·²ç»æ‰“å¼€è¿‡ï¼Œç›´æŽ¥è¿”å›žæˆåŠŸå³å¯
         }
 
         /*
-           Èç¹ûngx_s hmtx_tÖÐµÄnameÓë²ÎÊýname²»Ò»ÖÂ£¬ËµÃ÷ÕâÒ»´ÎÊ¹ÓÃÁËÒ»¸öÐÂµÄÎÄ¼þ×÷ÎªÎÄ¼þËø£¬ÄÇÃ´ÏÈµ÷ÓÃngx_shmtx_destory·½·¨Ïú»ÙÔ­ÎÄ¼þËø
+           å¦‚æžœngx_s hmtx_tä¸­çš„nameä¸Žå‚æ•°nameä¸ä¸€è‡´ï¼Œè¯´æ˜Žè¿™ä¸€æ¬¡ä½¿ç”¨äº†ä¸€ä¸ªæ–°çš„æ–‡ä»¶ä½œä¸ºæ–‡ä»¶é”ï¼Œé‚£ä¹ˆå…ˆè°ƒç”¨ngx_shmtx_destoryæ–¹æ³•é”€æ¯åŽŸæ–‡ä»¶é”
           */
         ngx_shmtx_destroy(mtx);
     }
@@ -332,13 +332,13 @@ ngx_shmtx_create(ngx_shmtx_t *mtx, ngx_shmtx_sh_t *addr, u_char *name)
     mtx->fd = ngx_open_file(name, NGX_FILE_RDWR, NGX_FILE_CREATE_OR_OPEN,
                             NGX_FILE_DEFAULT_ACCESS);
 
-    if (mtx->fd == NGX_INVALID_FILE) { //Ò»µ©ÎÄ¼þÒòÎª¸÷ÖÖÔ­Òò£¨ÈçÈ¨ÏÞ²»¹»£©ÎÞ·¨´ò¿ª£¬Í¨³£»á³öÏÖÎÞ·¨ÔËÐÐ´íÎó
+    if (mtx->fd == NGX_INVALID_FILE) { //ä¸€æ—¦æ–‡ä»¶å› ä¸ºå„ç§åŽŸå› ï¼ˆå¦‚æƒé™ä¸å¤Ÿï¼‰æ— æ³•æ‰“å¼€ï¼Œé€šå¸¸ä¼šå‡ºçŽ°æ— æ³•è¿è¡Œé”™è¯¯
         ngx_log_error(NGX_LOG_EMERG, ngx_cycle->log, ngx_errno,
                       ngx_open_file_n " \"%s\" failed", name);
         return NGX_ERROR;
     }
 
-    //ÓÉÓÚÖ»ÐèÒªÕâ¸öÎÄ¼þÔÚÄÚºËÖÐµÄINODEÐÅÏ¢£¬ËùÒÔ¿ÉÒÔ°ÑÎÄ¼þÉ¾³ý£¬Ö»Òªfd¿ÉÓÃ¾ÍÐÐ
+    //ç”±äºŽåªéœ€è¦è¿™ä¸ªæ–‡ä»¶åœ¨å†…æ ¸ä¸­çš„INODEä¿¡æ¯ï¼Œæ‰€ä»¥å¯ä»¥æŠŠæ–‡ä»¶åˆ é™¤ï¼Œåªè¦fdå¯ç”¨å°±è¡Œ
     if (ngx_delete_file(name) == NGX_FILE_ERROR) {
         ngx_log_error(NGX_LOG_ALERT, ngx_cycle->log, ngx_errno,
                       ngx_delete_file_n " \"%s\" failed", name);
@@ -359,21 +359,21 @@ ngx_shmtx_destroy(ngx_shmtx_t *mtx)
     }
 }
 
-//ngx_shmtx_trylock·½·¨ÊÔÍ¼Ê¹ÓÃ·Ç×èÈûµÄ·½Ê½»ñµÃËø£¬·µ»Ø1Ê±±íÊ¾»ñÈ¡Ëø³É¹¦£¬·µ»Ø0±íÊ¾»ñÈ¡ËøÊ§°Ü
+//ngx_shmtx_trylockæ–¹æ³•è¯•å›¾ä½¿ç”¨éžé˜»å¡žçš„æ–¹å¼èŽ·å¾—é”ï¼Œè¿”å›ž1æ—¶è¡¨ç¤ºèŽ·å–é”æˆåŠŸï¼Œè¿”å›ž0è¡¨ç¤ºèŽ·å–é”å¤±è´¥
 ngx_uint_t
-ngx_shmtx_trylock(ngx_shmtx_t *mtx)  //ngx_shmtx_unlockºÍngx_shmtx_lock¶ÔÓ¦
+ngx_shmtx_trylock(ngx_shmtx_t *mtx)  //ngx_shmtx_unlockå’Œngx_shmtx_lockå¯¹åº”
 {
     ngx_err_t  err;
     printf("yang test xxxxxxxxxxxxxxxxxxxxxx 1111111111111111111111\r\n");
 
-    //ÓÉ14.7½Ú½éÉÜ¹ýµÄngx_t rylock_fd·½·¨ÊµÏÖ·Ç×èÈû»¥³âÎÄ¼þËøµÄ»ñÈ¡
+    //ç”±14.7èŠ‚ä»‹ç»è¿‡çš„ngx_t rylock_fdæ–¹æ³•å®žçŽ°éžé˜»å¡žäº’æ–¥æ–‡ä»¶é”çš„èŽ·å–
     err = ngx_trylock_fd(mtx->fd);
 
     if (err == 0) {
         return 1;
     }
 
-    if (err == NGX_EAGAIN) { //Èç¹ûerr´íÎóÂëÊÇNGX EAGAIN£¬ÔòÅ©Ê¾ÏÖÔÚËøÒÑ¾­±»ÆäËû½ø³Ì³ÖÓÐÁË
+    if (err == NGX_EAGAIN) { //å¦‚æžœerré”™è¯¯ç æ˜¯NGX EAGAINï¼Œåˆ™å†œç¤ºçŽ°åœ¨é”å·²ç»è¢«å…¶ä»–è¿›ç¨‹æŒæœ‰äº†
         return 0;
     }
 
@@ -391,25 +391,25 @@ ngx_shmtx_trylock(ngx_shmtx_t *mtx)  //ngx_shmtx_unlockºÍngx_shmtx_lock¶ÔÓ¦
 }
 
 /*
-ngx_shmtx_lock·½·¨½«»áÔÚ»ñÈ¡ËøÊ§°ÜÊ±×èÈû´úÂëµÄ¼ÌÐøÖ´ÐÐ£¬Ëü»áÊ¹µ±Ç°½ø³Ì´¦ÓÚË¯Ãß×´Ì¬£¬µÈ´ýÆäËû½ø³ÌÊÍ·ÅËøºóÄÚºË»½ÐÑËü¡£
-¿É¼û£¬ËüÊÇÍ¨¹ý14.7½Ú½éÉÜµÄngx_lock_fd·½·¨ÊµÏÖµÄ£¬ÈçÏÂËùÊ¾¡£
+ngx_shmtx_lockæ–¹æ³•å°†ä¼šåœ¨èŽ·å–é”å¤±è´¥æ—¶é˜»å¡žä»£ç çš„ç»§ç»­æ‰§è¡Œï¼Œå®ƒä¼šä½¿å½“å‰è¿›ç¨‹å¤„äºŽç¡çœ çŠ¶æ€ï¼Œç­‰å¾…å…¶ä»–è¿›ç¨‹é‡Šæ”¾é”åŽå†…æ ¸å”¤é†’å®ƒã€‚
+å¯è§ï¼Œå®ƒæ˜¯é€šè¿‡14.7èŠ‚ä»‹ç»çš„ngx_lock_fdæ–¹æ³•å®žçŽ°çš„ï¼Œå¦‚ä¸‹æ‰€ç¤ºã€‚
 */
 void
-ngx_shmtx_lock(ngx_shmtx_t *mtx) //ngx_shmtx_unlockºÍngx_shmtx_lock¶ÔÓ¦
+ngx_shmtx_lock(ngx_shmtx_t *mtx) //ngx_shmtx_unlockå’Œngx_shmtx_lockå¯¹åº”
 {
     ngx_err_t  err;
 
     err = ngx_lock_fd(mtx->fd);
 
-    if (err == 0) { //ngx_lock_fd·½·¨·µ»Ø0Ê±±íÊ¾³É¹¦µØ³ÖÓÐËø£¬·µ»Ø-1Ê±±íÊ¾³öÏÖ´íÎó
+    if (err == 0) { //ngx_lock_fdæ–¹æ³•è¿”å›ž0æ—¶è¡¨ç¤ºæˆåŠŸåœ°æŒæœ‰é”ï¼Œè¿”å›ž-1æ—¶è¡¨ç¤ºå‡ºçŽ°é”™è¯¯
         return;
     }
 
     ngx_log_abort(err, ngx_lock_fd_n " %s failed", mtx->name);
 }
 
-//ngx_shmtx_lock·½·¨Ã»ÓÐ·µ»ØÖµ£¬ÒòÎªËüÒ»µ©·µ»Ø¾ÍÏàµ±ÓÚ»ñÈ¡µ½»¥³âËøÁË£¬Õâ»áÊ¹µÃ´úÂë¼ÌÐøÏòÏÂÖ´ÐÐ¡£
-//ngx_shmtx unlock·½·¨Í¨¹ýµ÷ÓÃngx_unlock_fd·½·¨À´ÊÍ·ÅÎÄ¼þËø
+//ngx_shmtx_lockæ–¹æ³•æ²¡æœ‰è¿”å›žå€¼ï¼Œå› ä¸ºå®ƒä¸€æ—¦è¿”å›žå°±ç›¸å½“äºŽèŽ·å–åˆ°äº’æ–¥é”äº†ï¼Œè¿™ä¼šä½¿å¾—ä»£ç ç»§ç»­å‘ä¸‹æ‰§è¡Œã€‚
+//ngx_shmtx unlockæ–¹æ³•é€šè¿‡è°ƒç”¨ngx_unlock_fdæ–¹æ³•æ¥é‡Šæ”¾æ–‡ä»¶é”
 void
 ngx_shmtx_unlock(ngx_shmtx_t *mtx)
 {

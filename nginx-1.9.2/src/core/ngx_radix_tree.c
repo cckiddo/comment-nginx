@@ -5,10 +5,10 @@
  */
 
 /*
-ngx_radix_tree_t»ùÊýÊ÷Óëngx_rbtree_tºìºÚÊ÷Ò»Ñù¶¼ÊÇ¶þ²æ²éÕÒÊ÷£¬ngx_rbtree_tºìºÚÊ÷¾ß±¸µÄÓÅµã£¬ngx_radix_tree t»ùÊýÊ÷Í¬ÑùÒ²ÓÐ£¬
-µ«ngx_radix_treej»ùÊýÊ÷µÄÓ¦ÓÃ·¶Î§Òª±Èngx_rbtree_tºìºÚÊ÷Ð¡£¬ÒòÎªngx_radix_treejÒªÇóÔªËØ±ØÐëÒÔÕûÐÍÊý¾Ý×÷Îª¹Ø¼ü×Ö£¬ËùÒÔ´ó´ó¼õÉÙ
-ÁËËüµÄÓ¦ÓÃ³¡¾°¡£È»¶ø£¬ÓÉÓÚngx_radix_tree_tÄ¹ÊýÊ÷ÔÚ²åÈë¡¢É¾³ýÔªËØÊ±²»ÐèÒª×öÐý×ª²Ù×÷£¬Òò´ËËüµÄ²åÈë¡¢É¾³ýÐ§ÂÊÒ»°ãÒª±Èngx_rbtree_t
-ºìºÚÊ÷¸ß¡£Ñ¡ÔñÊ¹ÓÃÄÄÖÖ¶þ²æ²éÕÒÊ÷È¡¾öÓÚÊµ¼ÊµÄÓ¦ÓÃ³¡¾°¡£²»¹ý£¬ngx_radix_tree_t»ùÊýÊ÷µÄÓÃ·¨Òª±Èngx_rbtree_tºìºÚÊ÷¼òµ¥Ðí¶à¡£
+ngx_radix_tree_tåŸºæ•°æ ‘ä¸Žngx_rbtree_tçº¢é»‘æ ‘ä¸€æ ·éƒ½æ˜¯äºŒå‰æŸ¥æ‰¾æ ‘ï¼Œngx_rbtree_tçº¢é»‘æ ‘å…·å¤‡çš„ä¼˜ç‚¹ï¼Œngx_radix_tree tåŸºæ•°æ ‘åŒæ ·ä¹Ÿæœ‰ï¼Œ
+ä½†ngx_radix_treejåŸºæ•°æ ‘çš„åº”ç”¨èŒƒå›´è¦æ¯”ngx_rbtree_tçº¢é»‘æ ‘å°ï¼Œå› ä¸ºngx_radix_treejè¦æ±‚å…ƒç´ å¿…é¡»ä»¥æ•´åž‹æ•°æ®ä½œä¸ºå…³é”®å­—ï¼Œæ‰€ä»¥å¤§å¤§å‡å°‘
+äº†å®ƒçš„åº”ç”¨åœºæ™¯ã€‚ç„¶è€Œï¼Œç”±äºŽngx_radix_tree_tå¢“æ•°æ ‘åœ¨æ’å…¥ã€åˆ é™¤å…ƒç´ æ—¶ä¸éœ€è¦åšæ—‹è½¬æ“ä½œï¼Œå› æ­¤å®ƒçš„æ’å…¥ã€åˆ é™¤æ•ˆçŽ‡ä¸€èˆ¬è¦æ¯”ngx_rbtree_t
+çº¢é»‘æ ‘é«˜ã€‚é€‰æ‹©ä½¿ç”¨å“ªç§äºŒå‰æŸ¥æ‰¾æ ‘å–å†³äºŽå®žé™…çš„åº”ç”¨åœºæ™¯ã€‚ä¸è¿‡ï¼Œngx_radix_tree_tåŸºæ•°æ ‘çš„ç”¨æ³•è¦æ¯”ngx_rbtree_tçº¢é»‘æ ‘ç®€å•è®¸å¤šã€‚
 */
 #include <ngx_config.h>
 #include <ngx_core.h>
@@ -17,7 +17,7 @@ ngx_radix_tree_t»ùÊýÊ÷Óëngx_rbtree_tºìºÚÊ÷Ò»Ñù¶¼ÊÇ¶þ²æ²éÕÒÊ÷£¬ngx_rbtree_tºìºÚÊ÷
 static ngx_radix_node_t *ngx_radix_alloc(ngx_radix_tree_t *tree);
 
 /*
-½«Ô¤·ÖÅä½Úµã¼òµ¥µØÉèÖÃÎª-1£¬ÕâÑùpoolÄÚ´æ³ØÖÐ¾Í»áÖ»Ê¹ÓÃ1¸öÒ³ÃæÀ´¾¡¿ÉÄÜµØ·ÖÅä»ùÊýÊ÷½Úµã
+å°†é¢„åˆ†é…èŠ‚ç‚¹ç®€å•åœ°è®¾ç½®ä¸º-1ï¼Œè¿™æ ·poolå†…å­˜æ± ä¸­å°±ä¼šåªä½¿ç”¨1ä¸ªé¡µé¢æ¥å°½å¯èƒ½åœ°åˆ†é…åŸºæ•°æ ‘èŠ‚ç‚¹
 */
 ngx_radix_tree_t *
 ngx_radix_tree_create(ngx_pool_t *pool, ngx_int_t preallocate)

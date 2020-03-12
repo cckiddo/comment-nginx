@@ -16,26 +16,26 @@ typedef ngx_int_t (*ngx_http_set_header_pt)(ngx_http_request_t *r,
     ngx_http_header_val_t *hv, ngx_str_t *value);
 
 
-typedef struct { //ngx_http_set_headersÖÐ»áÓÃ
+typedef struct { //ngx_http_set_headersä¸­ä¼šç”¨
     ngx_str_t                  name;
     ngx_uint_t                 offset;
     ngx_http_set_header_pt     handler;
 } ngx_http_set_header_t;
 
 
-struct ngx_http_header_val_s { //´´½¨¿Õ¼äºÍ¸³Öµ¼ûngx_http_headers_add
-    ngx_http_complex_value_t   value;//add_header name valueÖÐµÄvalue
-    ngx_str_t                  key;//add_header name value;ÖÐµÄname
-    //Ä¬ÈÏngx_http_add_header  £¬Èç¹ûadd_header name value;ÖÐµÄnameºÍngx_http_set_headersÖÐµÄÅä¶Ô£¬Ôò¶ÔÓ¦handerÎªngx_http_set_headersÖÐµÄhandler
+struct ngx_http_header_val_s { //åˆ›å»ºç©ºé—´å’Œèµ‹å€¼è§ngx_http_headers_add
+    ngx_http_complex_value_t   value;//add_header name valueä¸­çš„value
+    ngx_str_t                  key;//add_header name value;ä¸­çš„name
+    //é»˜è®¤ngx_http_add_header  ï¼Œå¦‚æžœadd_header name value;ä¸­çš„nameå’Œngx_http_set_headersä¸­çš„é…å¯¹ï¼Œåˆ™å¯¹åº”handerä¸ºngx_http_set_headersä¸­çš„handler
     ngx_http_set_header_pt     handler; 
-    //Èç¹ûadd_header name value;ÖÐµÄnameºÍngx_http_set_headersÖÐµÄÅä¶Ô£¬Ôò¶ÔÓ¦handerÎªngx_http_set_headersÖÐµÄhandler
-    ngx_uint_t                 offset; //¶ÔÓ¦ngx_http_set_headersÖÐµÄoffset
+    //å¦‚æžœadd_header name value;ä¸­çš„nameå’Œngx_http_set_headersä¸­çš„é…å¯¹ï¼Œåˆ™å¯¹åº”handerä¸ºngx_http_set_headersä¸­çš„handler
+    ngx_uint_t                 offset; //å¯¹åº”ngx_http_set_headersä¸­çš„offset
     ////add_header name value always;
     ngx_uint_t                 always;  /* unsigned  always:1 */
 }; 
 
 
-typedef enum { //ÉúÐ§¼ûngx_http_headers_expires  ngx_http_parse_expires
+typedef enum { //ç”Ÿæ•ˆè§ngx_http_headers_expires  ngx_http_parse_expires
     NGX_HTTP_EXPIRES_OFF,  //expire modified off
     NGX_HTTP_EXPIRES_EPOCH, //expire modified epoch
     NGX_HTTP_EXPIRES_MAX,   //expire modified max
@@ -45,17 +45,17 @@ typedef enum { //ÉúÐ§¼ûngx_http_headers_expires  ngx_http_parse_expires
     NGX_HTTP_EXPIRES_UNSET
 } ngx_http_expires_t;
 
-//expires xxÅäÖÃ´æ´¢º¯ÊýÎªngx_http_headers_expires£¬ÕæÕý×é°üÉúÐ§º¯ÊýÎªngx_http_set_expires
-typedef struct {//ÕæÕý·¢ËÍ¸ø¿Í»§¶ËµÄÍ·²¿×é×°ÔÚngx_http_headers_filter
-    //expires timeÈç¹û²»´øÓÐ±äÁ¿ÀàÐÍÔò´æ´¢ÔÚexpires ºÍ expires_timeÖÐ
-    ngx_http_expires_t         expires; //expires timeÀàÐÍ£¬¸³ÖµÎªngx_http_expires_t  £¬¼ûngx_http_set_expires
-    time_t                     expires_time; //expires timeÖÐµÄtime£¬¼ûngx_http_set_expires
+//expires xxé…ç½®å­˜å‚¨å‡½æ•°ä¸ºngx_http_headers_expiresï¼ŒçœŸæ­£ç»„åŒ…ç”Ÿæ•ˆå‡½æ•°ä¸ºngx_http_set_expires
+typedef struct {//çœŸæ­£å‘é€ç»™å®¢æˆ·ç«¯çš„å¤´éƒ¨ç»„è£…åœ¨ngx_http_headers_filter
+    //expires timeå¦‚æžœä¸å¸¦æœ‰å˜é‡ç±»åž‹åˆ™å­˜å‚¨åœ¨expires å’Œ expires_timeä¸­
+    ngx_http_expires_t         expires; //expires timeç±»åž‹ï¼Œèµ‹å€¼ä¸ºngx_http_expires_t  ï¼Œè§ngx_http_set_expires
+    time_t                     expires_time; //expires timeä¸­çš„timeï¼Œè§ngx_http_set_expires
 
-    //expires timeÈç¹û´øÓÐ±äÁ¿ÀàÐÍÔò´æ´¢ÔÚexpires_valueÖÐ
+    //expires timeå¦‚æžœå¸¦æœ‰å˜é‡ç±»åž‹åˆ™å­˜å‚¨åœ¨expires_valueä¸­
     ngx_http_complex_value_t  *expires_value;
 
-    //add_header name value;ÅäÖÃ          ÕæÕý·¢ËÍ¸ø¿Í»§¶ËµÄÍ·²¿×é×°ÔÚngx_http_headers_filter
-    ngx_array_t               *headers; //¼ûngx_http_headers_add   ³ÉÔ±ÀàÐÍngx_http_header_val_t
+    //add_header name value;é…ç½®          çœŸæ­£å‘é€ç»™å®¢æˆ·ç«¯çš„å¤´éƒ¨ç»„è£…åœ¨ngx_http_headers_filter
+    ngx_array_t               *headers; //è§ngx_http_headers_add   æˆå‘˜ç±»åž‹ngx_http_header_val_t
 } ngx_http_headers_conf_t;
 
 
@@ -81,13 +81,13 @@ static char *ngx_http_headers_expires(ngx_conf_t *cf, ngx_command_t *cmd,
 static char *ngx_http_headers_add(ngx_conf_t *cf, ngx_command_t *cmd,
     void *conf);
 
-//add_header name value;ÖÐµÄname¿ÉÒÔÎªÏÂÃæÕâ¼¸¸ö
+//add_header name value;ä¸­çš„nameå¯ä»¥ä¸ºä¸‹é¢è¿™å‡ ä¸ª
 static ngx_http_set_header_t  ngx_http_set_headers[] = {
 
     { ngx_string("Cache-Control"), 0, ngx_http_add_cache_control },
 /*
-nginxÅäÖÃexpireºó»áÔÚÓ¦´ðÍ·²¿ÐÐÖÐÌí¼ÓÕâ¼¸¸öCache-Control¡¢Last-Modified¡¢expireÍ·²¿ÐÐ,¿Í»§¶ËÔÙ´ÎÇëÇóºó»áÐ¯´øIf-Modified-Since(ÄÚÈÝ¾ÍÊÇnginxÖ®Ç°´«ËÍµÄLast-ModifiedÄÚÈÝ)
-·þÎñÆ÷ÊÕµ½Õâ¸öIf-Modified-Sinceºó½øÐÐÅÐ¶Ï£¬¿´ÎÄ¼þÊÇ·ñÓÐ¸ü¸Ä(expireÉèÖÃµÄÊ±¼ä)£¬Ã»ÓÐÔòÖ±½Ó·µ»Ø304 Not modified ²Î¿¼http://www.fastcache.com.cn/html/3264072438.html
+nginxé…ç½®expireåŽä¼šåœ¨åº”ç­”å¤´éƒ¨è¡Œä¸­æ·»åŠ è¿™å‡ ä¸ªCache-Controlã€Last-Modifiedã€expireå¤´éƒ¨è¡Œ,å®¢æˆ·ç«¯å†æ¬¡è¯·æ±‚åŽä¼šæºå¸¦If-Modified-Since(å†…å®¹å°±æ˜¯nginxä¹‹å‰ä¼ é€çš„Last-Modifiedå†…å®¹)
+æœåŠ¡å™¨æ”¶åˆ°è¿™ä¸ªIf-Modified-SinceåŽè¿›è¡Œåˆ¤æ–­ï¼Œçœ‹æ–‡ä»¶æ˜¯å¦æœ‰æ›´æ”¹(expireè®¾ç½®çš„æ—¶é—´)ï¼Œæ²¡æœ‰åˆ™ç›´æŽ¥è¿”å›ž304 Not modified å‚è€ƒhttp://www.fastcache.com.cn/html/3264072438.html
  */
     { ngx_string("Last-Modified"),
                  offsetof(ngx_http_headers_out_t, last_modified),
@@ -101,62 +101,62 @@ nginxÅäÖÃexpireºó»áÔÚÓ¦´ðÍ·²¿ÐÐÖÐÌí¼ÓÕâ¼¸¸öCache-Control¡¢Last-Modified¡¢expireÍ
 };
 
 /*
-ngx_http_headers_moduleÄ£¿éÌá¹©ÁËÁ½¸öÖØÒªµÄÖ¸Áîadd_headerºÍexpires£¬À´Ìí¼Ó ¡°Expires¡± ºÍ ¡°Cache-Control¡± Í·×Ö¶Î£¬¶ÔÏìÓ¦Í·Ìí
-¼ÓÈÎºÎÓò×Ö¶Î¡£add_header¿ÉÒÔÓÃÀ´±êÊ¾ÇëÇó·ÃÎÊµ½ÄÄÌ¨·þÎñÆ÷ÉÏ£¬Õâ¸öÒ²¿ÉÒÔÍ¨¹ýnginxÄ£¿énginx-http-footer-filterÑÐ¾¿Ê¹ÓÃÀ´ÊµÏÖ¡£
-expiresÖ¸ÁîÓÃÀ´¶Ôä¯ÀÀÆ÷±¾µØ»º´æµÄ¿ØÖÆ¡£
+ngx_http_headers_moduleæ¨¡å—æä¾›äº†ä¸¤ä¸ªé‡è¦çš„æŒ‡ä»¤add_headerå’Œexpiresï¼Œæ¥æ·»åŠ  â€œExpiresâ€ å’Œ â€œCache-Controlâ€ å¤´å­—æ®µï¼Œå¯¹å“åº”å¤´æ·»
+åŠ ä»»ä½•åŸŸå­—æ®µã€‚add_headerå¯ä»¥ç”¨æ¥æ ‡ç¤ºè¯·æ±‚è®¿é—®åˆ°å“ªå°æœåŠ¡å™¨ä¸Šï¼Œè¿™ä¸ªä¹Ÿå¯ä»¥é€šè¿‡nginxæ¨¡å—nginx-http-footer-filterç ”ç©¶ä½¿ç”¨æ¥å®žçŽ°ã€‚
+expiresæŒ‡ä»¤ç”¨æ¥å¯¹æµè§ˆå™¨æœ¬åœ°ç¼“å­˜çš„æŽ§åˆ¶ã€‚
 */
 
 static ngx_command_t  ngx_http_headers_filter_commands[] = {
 /*
-¶ÔÓÚÕ¾µãÖÐ²»¾­³£ÐÞ¸ÄµÄ¾²Ì¬ÄÚÈÝ£¨ÈçÍ¼Æ¬£¬js£¬css£©£¬¿ÉÒÔÔÚ·þÎñÆ÷ÖÐÉèÖÃexpires¹ýÆÚÊ±¼ä£¬¿ØÖÆä¯ÀÀÆ÷»º´æ£¬´ïµ½ÓÐÐ§¼õÐ¡´ø¿íÁ÷Á¿£¬½µµÍ·þÎñÆ÷Ñ¹Á¦µÄÄ¿µÄ¡£ 
+å¯¹äºŽç«™ç‚¹ä¸­ä¸ç»å¸¸ä¿®æ”¹çš„é™æ€å†…å®¹ï¼ˆå¦‚å›¾ç‰‡ï¼Œjsï¼Œcssï¼‰ï¼Œå¯ä»¥åœ¨æœåŠ¡å™¨ä¸­è®¾ç½®expiresè¿‡æœŸæ—¶é—´ï¼ŒæŽ§åˆ¶æµè§ˆå™¨ç¼“å­˜ï¼Œè¾¾åˆ°æœ‰æ•ˆå‡å°å¸¦å®½æµé‡ï¼Œé™ä½ŽæœåŠ¡å™¨åŽ‹åŠ›çš„ç›®çš„ã€‚ 
 
-ÒÔnginx·þÎñÆ÷ÎªÀý£º
+ä»¥nginxæœåŠ¡å™¨ä¸ºä¾‹ï¼š
 
 location ~ .*\.(gif|jpg|jpeg|png|bmp|swf)$ 
 { 
-#¹ýÆÚÊ±¼äÎª30Ìì£¬ #Í¼Æ¬ÎÄ¼þ²»ÔõÃ´¸üÐÂ£¬¹ýÆÚ¿ÉÒÔÉè´óÒ»µã£¬ #Èç¹ûÆµ·±¸üÐÂ£¬Ôò¿ÉÒÔÉèÖÃµÃÐ¡Ò»µã¡£ 
+#è¿‡æœŸæ—¶é—´ä¸º30å¤©ï¼Œ #å›¾ç‰‡æ–‡ä»¶ä¸æ€Žä¹ˆæ›´æ–°ï¼Œè¿‡æœŸå¯ä»¥è®¾å¤§ä¸€ç‚¹ï¼Œ #å¦‚æžœé¢‘ç¹æ›´æ–°ï¼Œåˆ™å¯ä»¥è®¾ç½®å¾—å°ä¸€ç‚¹ã€‚ 
 expires 30d; } 
 
 location ~ .*\.(js|css)$ 
-{ expires 10d; }¡¾±³¾°¡¿£ºexpiresÊÇweb·þÎñÆ÷ÏìÓ¦ÏûÏ¢Í·×Ö¶Î£¬ÔÚÏìÓ¦httpÇëÇóÊ±¸æËßä¯ÀÀÆ÷ÔÚ¹ýÆÚÊ±¼äÇ°ä¯ÀÀÆ÷¿ÉÒÔÖ±½Ó´Óä¯ÀÀÆ÷»º´æÈ¡Êý¾Ý£¬
-¶øÎÞÐèÔÙ´ÎÇëÇó¡£ 
+{ expires 10d; }ã€èƒŒæ™¯ã€‘ï¼šexpiresæ˜¯webæœåŠ¡å™¨å“åº”æ¶ˆæ¯å¤´å­—æ®µï¼Œåœ¨å“åº”httpè¯·æ±‚æ—¶å‘Šè¯‰æµè§ˆå™¨åœ¨è¿‡æœŸæ—¶é—´å‰æµè§ˆå™¨å¯ä»¥ç›´æŽ¥ä»Žæµè§ˆå™¨ç¼“å­˜å–æ•°æ®ï¼Œ
+è€Œæ— éœ€å†æ¬¡è¯·æ±‚ã€‚ 
 
-¡¾Ïà¹Ø×ÊÁÏ¡¿1¡¢cache-control²ßÂÔcache-controlÓëexpiresµÄ×÷ÓÃÒ»ÖÂ£¬¶¼ÊÇÖ¸Ã÷µ±Ç°×ÊÔ´µÄÓÐÐ§ÆÚ£¬¿ØÖÆä¯ÀÀÆ÷ÊÇ·ñÖ±½Ó´Óä¯ÀÀÆ÷»º´æÈ¡Êý¾Ý»¹ÊÇ
-ÖØÐÂ·¢ÇëÇóµ½·þÎñÆ÷È¡Êý¾Ý¡£Ö»²»¹ýcache-controlµÄÑ¡Ôñ¸ü¶à£¬ÉèÖÃ¸üÏ¸ÖÂ£¬Èç¹ûÍ¬Ê±ÉèÖÃµÄ»°£¬ÆäÓÅÏÈ¼¶¸ßÓÚexpires¡£ 
+ã€ç›¸å…³èµ„æ–™ã€‘1ã€cache-controlç­–ç•¥cache-controlä¸Žexpiresçš„ä½œç”¨ä¸€è‡´ï¼Œéƒ½æ˜¯æŒ‡æ˜Žå½“å‰èµ„æºçš„æœ‰æ•ˆæœŸï¼ŒæŽ§åˆ¶æµè§ˆå™¨æ˜¯å¦ç›´æŽ¥ä»Žæµè§ˆå™¨ç¼“å­˜å–æ•°æ®è¿˜æ˜¯
+é‡æ–°å‘è¯·æ±‚åˆ°æœåŠ¡å™¨å–æ•°æ®ã€‚åªä¸è¿‡cache-controlçš„é€‰æ‹©æ›´å¤šï¼Œè®¾ç½®æ›´ç»†è‡´ï¼Œå¦‚æžœåŒæ—¶è®¾ç½®çš„è¯ï¼Œå…¶ä¼˜å…ˆçº§é«˜äºŽexpiresã€‚ 
 
 
-Óï·¨: expires [modified] time;
+è¯­æ³•: expires [modified] time;
 expires epoch | max | off;
-Ä¬ÈÏÖµ: expires off;
-ÅäÖÃ¶Î: http, server, location, if in location
-ÔÚ¶ÔÏìÓ¦´úÂëÎª200£¬201£¬204£¬206£¬301£¬302£¬303£¬304£¬»ò307Í·²¿ÖÐÊÇ·ñ¿ªÆô¶Ô¡°Expires¡±ºÍ¡°Cache-Control¡±µÄÔö¼ÓºÍÐÞ¸Ä²Ù×÷¡£
-¿ÉÒÔÖ¸¶¨Ò»¸öÕý»ò¸ºµÄÊ±¼äÖµ£¬ExpiresÍ·ÖÐµÄÊ±¼ä¸ù¾ÝÄ¿Ç°Ê±¼äºÍÖ¸ÁîÖÐÖ¸¶¨µÄÊ±¼äµÄºÍÀ´»ñµÃ¡£
+é»˜è®¤å€¼: expires off;
+é…ç½®æ®µ: http, server, location, if in location
+åœ¨å¯¹å“åº”ä»£ç ä¸º200ï¼Œ201ï¼Œ204ï¼Œ206ï¼Œ301ï¼Œ302ï¼Œ303ï¼Œ304ï¼Œæˆ–307å¤´éƒ¨ä¸­æ˜¯å¦å¼€å¯å¯¹â€œExpiresâ€å’Œâ€œCache-Controlâ€çš„å¢žåŠ å’Œä¿®æ”¹æ“ä½œã€‚
+å¯ä»¥æŒ‡å®šä¸€ä¸ªæ­£æˆ–è´Ÿçš„æ—¶é—´å€¼ï¼ŒExpireså¤´ä¸­çš„æ—¶é—´æ ¹æ®ç›®å‰æ—¶é—´å’ŒæŒ‡ä»¤ä¸­æŒ‡å®šçš„æ—¶é—´çš„å’Œæ¥èŽ·å¾—ã€‚
 
-epoch±íÊ¾×Ô1970ÄêÒ»ÔÂÒ»ÈÕ00:00:01 GMTµÄ¾ø¶ÔÊ±¼ä£¬maxÖ¸¶¨ExpiresµÄÖµÎª2037Äê12ÔÂ31ÈÕ23:59:59£¬Cache-ControlµÄÖµÎª10 years¡£
-Cache-ControlÍ·µÄÄÚÈÝËæÔ¤ÉèµÄÊ±¼ä±êÊ¶Ö¸¶¨£º
-¡¤ÉèÖÃÎª¸ºÊýµÄÊ±¼äÖµ:Cache-Control: no-cache¡£
-¡¤ÉèÖÃÎªÕýÊý»ò0µÄÊ±¼äÖµ£ºCache-Control: max-age = #£¬ÕâÀï#µÄµ¥Î»ÎªÃë£¬ÔÚÖ¸ÁîÖÐÖ¸¶¨¡£
-²ÎÊýoff½ûÖ¹ÐÞ¸ÄÓ¦´ðÍ·ÖÐµÄ"Expires"ºÍ"Cache-Control"¡£
+epochè¡¨ç¤ºè‡ª1970å¹´ä¸€æœˆä¸€æ—¥00:00:01 GMTçš„ç»å¯¹æ—¶é—´ï¼ŒmaxæŒ‡å®šExpiresçš„å€¼ä¸º2037å¹´12æœˆ31æ—¥23:59:59ï¼ŒCache-Controlçš„å€¼ä¸º10 yearsã€‚
+Cache-Controlå¤´çš„å†…å®¹éšé¢„è®¾çš„æ—¶é—´æ ‡è¯†æŒ‡å®šï¼š
+ãƒ»è®¾ç½®ä¸ºè´Ÿæ•°çš„æ—¶é—´å€¼:Cache-Control: no-cacheã€‚
+ãƒ»è®¾ç½®ä¸ºæ­£æ•°æˆ–0çš„æ—¶é—´å€¼ï¼šCache-Control: max-age = #ï¼Œè¿™é‡Œ#çš„å•ä½ä¸ºç§’ï¼Œåœ¨æŒ‡ä»¤ä¸­æŒ‡å®šã€‚
+å‚æ•°offç¦æ­¢ä¿®æ”¹åº”ç­”å¤´ä¸­çš„"Expires"å’Œ"Cache-Control"ã€‚
 
-ÊµÀýÒ»£º¶ÔÍ¼Æ¬£¬flashÎÄ¼þÔÚä¯ÀÀÆ÷±¾µØ»º´æ30Ìì
+å®žä¾‹ä¸€ï¼šå¯¹å›¾ç‰‡ï¼Œflashæ–‡ä»¶åœ¨æµè§ˆå™¨æœ¬åœ°ç¼“å­˜30å¤©
 
 location ~ .*\.(gif|jpg|jpeg|png|bmp|swf)$
  {
            expires 30d;
  }
 
-ÊµÀý¶þ£º¶Ôjs£¬cssÎÄ¼þÔÚä¯ÀÀÆ÷±¾µØ»º´æ1Ð¡Ê±
+å®žä¾‹äºŒï¼šå¯¹jsï¼Œcssæ–‡ä»¶åœ¨æµè§ˆå™¨æœ¬åœ°ç¼“å­˜1å°æ—¶
 
 location ~ .*\.(js|css)$
  {
             expires 1h;
  }
 
-ExpiresÊÇ¸øÒ»¸ö×ÊÔ´Éè¶¨Ò»¸ö¹ýÆÚÊ±¼ä£¬Ò²¾ÍÊÇËµÎÞÐèÈ¥·þÎñ¶ËÑéÖ¤£¬Ö±½ÓÍ¨¹ýä¯ÀÀÆ÷×ÔÉíÈ·ÈÏÊÇ·ñ¹ýÆÚ¼´¿É£¬ËùÒÔ²»»á²úÉú¶îÍâµÄÁ÷Á¿¡£´ËÖÖ·½·¨·Ç³£ÊÊºÏ
-²»¾­³£±ä¶¯µÄ×ÊÔ´¡£Èç¹ûÎÄ¼þ±ä¶¯½ÏÆµ·±£¬²»ÒªÊ¹ÓÃExpiresÀ´»º´æ¡£
+Expiresæ˜¯ç»™ä¸€ä¸ªèµ„æºè®¾å®šä¸€ä¸ªè¿‡æœŸæ—¶é—´ï¼Œä¹Ÿå°±æ˜¯è¯´æ— éœ€åŽ»æœåŠ¡ç«¯éªŒè¯ï¼Œç›´æŽ¥é€šè¿‡æµè§ˆå™¨è‡ªèº«ç¡®è®¤æ˜¯å¦è¿‡æœŸå³å¯ï¼Œæ‰€ä»¥ä¸ä¼šäº§ç”Ÿé¢å¤–çš„æµé‡ã€‚æ­¤ç§æ–¹æ³•éžå¸¸é€‚åˆ
+ä¸ç»å¸¸å˜åŠ¨çš„èµ„æºã€‚å¦‚æžœæ–‡ä»¶å˜åŠ¨è¾ƒé¢‘ç¹ï¼Œä¸è¦ä½¿ç”¨Expiresæ¥ç¼“å­˜ã€‚
 
 syntax:  add_header name value;
-default:  ¡ª  
+default:  â€•  
 context:  http, server, location
  
 Adds the specified field to a response header provided that the response code equals 200, 204, 206, 301, 302, 303, 304, or 307. 
@@ -170,38 +170,38 @@ default:  expires off;
 context:  http, server, location
  
 
-Enables or disables adding or modifying the ¡°Expires¡± and ¡°Cache-Control¡± response header fields. A parameter can be a positive 
+Enables or disables adding or modifying the â€œExpiresâ€ and â€œCache-Controlâ€ response header fields. A parameter can be a positive 
 or negative time. 
 
-A time in the ¡°Expires¡± field is computed as a sum of the current time and time specified in the directive. If the modified parameter 
-is used (0.7.0, 0.6.32) then time is computed as a sum of the file¡¯s modification time and time specified in the directive. 
+A time in the â€œExpiresâ€ field is computed as a sum of the current time and time specified in the directive. If the modified parameter 
+is used (0.7.0, 0.6.32) then time is computed as a sum of the fileâ€™s modification time and time specified in the directive. 
 
-In addition, it is possible to specify a time of the day using the ¡°@¡± prefix (0.7.9, 0.6.34): 
+In addition, it is possible to specify a time of the day using the â€œ@â€ prefix (0.7.9, 0.6.34): 
 
 expires @15h30m;
 
 
-The epoch parameter corresponds to the absolute time ¡°Thu, 01 Jan 1970 00:00:01 GMT¡±. The contents of the ¡°Cache-Control¡± field 
+The epoch parameter corresponds to the absolute time â€œThu, 01 Jan 1970 00:00:01 GMTâ€. The contents of the â€œCache-Controlâ€ field 
 depends on the sign of the specified time: 
-? time is negative ¡ª ¡°Cache-Control: no-cache¡±. 
-? time is positive or zero ¡ª ¡°Cache-Control: max-age=t¡±, where t is a time specified in the directive, in seconds. 
+? time is negative â€• â€œCache-Control: no-cacheâ€. 
+? time is positive or zero â€• â€œCache-Control: max-age=tâ€, where t is a time specified in the directive, in seconds. 
 
 
-The max parameter sets ¡°Expires¡± to the value ¡°Thu, 31 Dec 2037 23:55:55 GMT¡±, and ¡°Cache-Control¡± to 10 years. 
-The off parameter disables adding or modifying the ¡°Expires¡± and ¡°Cache-Control¡± response header fields. 
+The max parameter sets â€œExpiresâ€ to the value â€œThu, 31 Dec 2037 23:55:55 GMTâ€, and â€œCache-Controlâ€ to 10 years. 
+The off parameter disables adding or modifying the â€œExpiresâ€ and â€œCache-Controlâ€ response header fields. 
 
 
 
-*/  //¸ÃÅäÖÃ»áÐÞ¸ÄÓ¦´ðÍ·ÖÐµÄCache-ControlÍ·²¿ÐÐ£¬´Ó¶øä¯ÀÀÆ÷¿ÉÒÔ»ñÈ¡µ½¸ÃÎÄ¼þµÄ»º´æÊ±¼ä£¬Èç¹ûÔÚÕâ¶ÎÊ±¼äÄÚµã»÷ä¯ÀÀÆ÷ÔÙ´Î»ñÈ¡¸ÃÎÄ¼þ£¬
-//Èç¹ûä¯ÀÀÆ÷Ö§³Öexpires£¬Ôò×Ô¼ºÅÐ¶ÏÃ»ÓÐ¹ýÆÚ£¬ä¯ÀÀÆ÷²»»á·¢ËÍÇëÇóµ½nginx£¬ä¯ÀÀÆ÷Ê¹ÓÃ±¾µØ»º´æ¡£Ò²¾ÍÊÇä¯ÀÀÆ÷¸ù¾Ý¸ÃÊ±¼ä¶ÎÄÚÖ±½Ó»ñÈ¡±¾µØä¯ÀÀÆ÷»º´æ£¬¶ø²»ÊÇ´Ónginx´ÓÐÂ»ñÈ¡£¬´Ó¶øÌá¸ßÐ§ÂÊ 
-//Èç¹ûä¯ÀÀÆ÷²»Ö§³Ö£¬Ð¯´øÇëÇó¹ýÀ´£¬ÎÒÃÇ¿ÉÒÔÖ±½Ó»ØÓ¦304 Not Modified£¬±íÊ¾Ã»±ä¶¯¡£ÕâÑùä¯ÀÀÆ÷¾ÍÅÐ¶ÏÖ±½ÓÊ¹ÓÃä¯ÀÀÆ÷±¾µØ»º´æ
+*/  //è¯¥é…ç½®ä¼šä¿®æ”¹åº”ç­”å¤´ä¸­çš„Cache-Controlå¤´éƒ¨è¡Œï¼Œä»Žè€Œæµè§ˆå™¨å¯ä»¥èŽ·å–åˆ°è¯¥æ–‡ä»¶çš„ç¼“å­˜æ—¶é—´ï¼Œå¦‚æžœåœ¨è¿™æ®µæ—¶é—´å†…ç‚¹å‡»æµè§ˆå™¨å†æ¬¡èŽ·å–è¯¥æ–‡ä»¶ï¼Œ
+//å¦‚æžœæµè§ˆå™¨æ”¯æŒexpiresï¼Œåˆ™è‡ªå·±åˆ¤æ–­æ²¡æœ‰è¿‡æœŸï¼Œæµè§ˆå™¨ä¸ä¼šå‘é€è¯·æ±‚åˆ°nginxï¼Œæµè§ˆå™¨ä½¿ç”¨æœ¬åœ°ç¼“å­˜ã€‚ä¹Ÿå°±æ˜¯æµè§ˆå™¨æ ¹æ®è¯¥æ—¶é—´æ®µå†…ç›´æŽ¥èŽ·å–æœ¬åœ°æµè§ˆå™¨ç¼“å­˜ï¼Œè€Œä¸æ˜¯ä»Žnginxä»Žæ–°èŽ·å–ï¼Œä»Žè€Œæé«˜æ•ˆçŽ‡ 
+//å¦‚æžœæµè§ˆå™¨ä¸æ”¯æŒï¼Œæºå¸¦è¯·æ±‚è¿‡æ¥ï¼Œæˆ‘ä»¬å¯ä»¥ç›´æŽ¥å›žåº”304 Not Modifiedï¼Œè¡¨ç¤ºæ²¡å˜åŠ¨ã€‚è¿™æ ·æµè§ˆå™¨å°±åˆ¤æ–­ç›´æŽ¥ä½¿ç”¨æµè§ˆå™¨æœ¬åœ°ç¼“å­˜
 
     /*
-    nginxÅäÖÃexpireºó»áÔÚÓ¦´ðÍ·²¿ÐÐÖÐÌí¼ÓÕâ¼¸¸öCache-Control¡¢Last-Modified¡¢expireÍ·²¿ÐÐ,¿Í»§¶ËÔÙ´ÎÇëÇóºó»áÐ¯´øIf-Modified-Since(ÄÚÈÝ¾ÍÊÇnginxÖ®Ç°´«ËÍµÄLast-ModifiedÄÚÈÝ)
-    ·þÎñÆ÷ÊÕµ½Õâ¸öIf-Modified-Sinceºó½øÐÐÅÐ¶Ï£¬¿´ÎÄ¼þÊÇ·ñÓÐ¸ü¸Ä(expireÉèÖÃµÄÊ±¼ä)£¬Ã»ÓÐÔòÖ±½Ó·µ»Ø304 Not modified 
-    ²Î¿¼http://www.fastcache.com.cn/html/3264072438.html
+    nginxé…ç½®expireåŽä¼šåœ¨åº”ç­”å¤´éƒ¨è¡Œä¸­æ·»åŠ è¿™å‡ ä¸ªCache-Controlã€Last-Modifiedã€expireå¤´éƒ¨è¡Œ,å®¢æˆ·ç«¯å†æ¬¡è¯·æ±‚åŽä¼šæºå¸¦If-Modified-Since(å†…å®¹å°±æ˜¯nginxä¹‹å‰ä¼ é€çš„Last-Modifiedå†…å®¹)
+    æœåŠ¡å™¨æ”¶åˆ°è¿™ä¸ªIf-Modified-SinceåŽè¿›è¡Œåˆ¤æ–­ï¼Œçœ‹æ–‡ä»¶æ˜¯å¦æœ‰æ›´æ”¹(expireè®¾ç½®çš„æ—¶é—´)ï¼Œæ²¡æœ‰åˆ™ç›´æŽ¥è¿”å›ž304 Not modified 
+    å‚è€ƒhttp://www.fastcache.com.cn/html/3264072438.html
      */
-    { ngx_string("expires"), //Ò²¾ÍÊÇÔÚÏìÓ¦ÖÐÊÇ·ñÐ¯´øÍ·²¿ÐÐ:Expires: Thu, 01 Dec 2010 16:00:00 GMTµÈÐÅÏ¢
+    { ngx_string("expires"), //ä¹Ÿå°±æ˜¯åœ¨å“åº”ä¸­æ˜¯å¦æºå¸¦å¤´éƒ¨è¡Œ:Expires: Thu, 01 Dec 2010 16:00:00 GMTç­‰ä¿¡æ¯
       NGX_HTTP_MAIN_CONF|NGX_HTTP_SRV_CONF|NGX_HTTP_LOC_CONF|NGX_HTTP_LIF_CONF
                         |NGX_CONF_TAKE12,
       ngx_http_headers_expires,
@@ -210,17 +210,17 @@ The off parameter disables adding or modifying the ¡°Expires¡± and ¡°Cache-Contr
       NULL},
 
 /*
-add_headerÖ¸Áî
-Óï·¨: add_header name value;
-Ä¬ÈÏÖµ: ¡ª
-ÅäÖÃ¶Î: http, server, location, if in location
-¶ÔÏìÓ¦´úÂëÎª200£¬201£¬204£¬206£¬301£¬302£¬303£¬304£¬»ò307µÄÏìÓ¦±¨ÎÄÍ·×Ö¶ÎÌí¼ÓÈÎÒâÓò¡£Èç£º
+add_headeræŒ‡ä»¤
+è¯­æ³•: add_header name value;
+é»˜è®¤å€¼: â€•
+é…ç½®æ®µ: http, server, location, if in location
+å¯¹å“åº”ä»£ç ä¸º200ï¼Œ201ï¼Œ204ï¼Œ206ï¼Œ301ï¼Œ302ï¼Œ303ï¼Œ304ï¼Œæˆ–307çš„å“åº”æŠ¥æ–‡å¤´å­—æ®µæ·»åŠ ä»»æ„åŸŸã€‚å¦‚ï¼š
 add_header From ttlsa.com
 
 
 syntax:  add_header name value;
  
-default:  ¡ª  
+default:  â€•  
 context:  http, server, location
 
 Adds the specified field to a response header provided that the response code equals 200, 204, 206, 301, 302, 303, 304, or 307. A value can contain variables. 
@@ -252,69 +252,69 @@ static ngx_http_module_t  ngx_http_headers_filter_module_ctx = {
 };
 
 /*
-±í6-1  Ä¬ÈÏ¼´±àÒë½øNginxµÄHTTP¹ýÂËÄ£¿é
-©³©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©×©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©·
-©§Ä¬ÈÏ¼´±àÒë½øNginxµÄHTTP¹ýÂËÄ£¿é     ©§    ¹¦ÄÜ                                                          ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§                                    ©§  ½ö¶ÔHTTPÍ·²¿×ö´¦Àí¡£ÔÚ·µ»Ø200³É¹¦Ê±£¬¸ù¾ÝÇëÇóÖÐIf-              ©§
-©§                                    ©§Modified-Since»òÕßIf-Unmodified-SinceÍ·²¿È¡µÃä¯ÀÀÆ÷»º´æÎÄ¼þµÄÊ±   ©§
-©§ngx_http_not_modified_filter_module ©§                                                                  ©§
-©§                                    ©§¼ä£¬ÔÙ·ÖÎö·µ»ØÓÃ»§ÎÄ¼þµÄ×îºóÐÞ¸ÄÊ±¼ä£¬ÒÔ´Ë¾ö¶¨ÊÇ·ñÖ±½Ó·¢ËÍ304     ©§
-©§                                    ©§ Not ModifiedÏìÓ¦¸øÓÃ»§                                           ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§                                    ©§  ´¦ÀíÇëÇóÖÐµÄRangeÐÅÏ¢£¬¸ù¾ÝRangeÖÐµÄÒªÇó·µ»ØÎÄ¼þµÄÒ»²¿·Ö¸ø      ©§
-©§ngx_http_range_body_filter_module   ©§                                                                  ©§
-©§                                    ©§ÓÃ»§                                                              ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§                                    ©§  ½ö¶ÔHTTP°üÌå×ö´¦Àí¡£½«ÓÃ»§·¢ËÍµÄngx_chain_t½á¹¹µÄHTTP°ü         ©§
-©§                                    ©§Ìå¸´ÖÆµ½ÐÂµÄngx_chain_t½á¹¹ÖÐ£¨¶¼ÊÇ¸÷ÖÖÖ¸ÕëµÄ¸´ÖÆ£¬²»°üÀ¨Êµ¼Ê     ©§
-©§ngx_http_copy_filter_module         ©§                                                                  ©§
-©§                                    ©§HTTPÏìÓ¦ÄÚÈÝ£©£¬ºóÐøµÄHTTP¹ýÂËÄ£¿é´¦ÂñµÄngx_chain_tÀàÐÍµÄ³É       ©§
-©§                                    ©§Ô±¶¼ÊÇngx_http_copy_filter_moduleÄ£¿é´¦ÀíºóµÄ±äÁ¿                 ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§                                    ©§  ½ö¶ÔHTTPÍ·²¿×ö´¦Àí¡£ÔÊÐíÍ¨¹ýÐÞ¸Änginx.confÅäÖÃÎÄ¼þ£¬ÔÚ·µ»Ø      ©§
-©§ngx_http_headers_filter_module      ©§                                                                  ©§
-©§                                    ©§¸øÓÃ»§µÄÏìÓ¦ÖÐÌí¼ÓÈÎÒâµÄHTTPÍ·²¿                                  ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§                                    ©§  ½ö¶ÔHTTPÍ·²¿×ö´¦Àí¡£Õâ¾ÍÊÇÖ´ÐÐconfigureÃüÁîÊ±Ìáµ½µÄhttp_        ©§
-©§ngx_http_userid_filter_module       ©§                                                                  ©§
-©§                                    ©§userid moduleÄ£¿é£¬Ëü»ùÓÚcookieÌá¹©ÁË¼òµ¥µÄÈÏÖ¤¹ÜÀí¹¦ÄÜ           ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§                                    ©§  ¿ÉÒÔ½«ÎÄ±¾ÀàÐÍ·µ»Ø¸øÓÃ»§µÄÏìÓ¦°ü£¬°´ÕÕnginx£®confÖÐµÄÅäÖÃÖØÐÂ   ©§
-©§ngx_http_charset_filter_module      ©§                                                                  ©§
-©§                                    ©§½øÐÐ±àÂë£¬ÔÙ·µ»Ø¸øÓÃ»§                                            ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§                                    ©§  Ö§³ÖSSI£¨Server Side Include£¬·þÎñÆ÷¶ËÇ¶Èë£©¹¦ÄÜ£¬½«ÎÄ¼þÄÚÈÝ°ü  ©§
-©§ngx_http_ssi_filter_module          ©§                                                                  ©§
-©§                                    ©§º¬µ½ÍøÒ³ÖÐ²¢·µ»Ø¸øÓÃ»§                                            ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§                                    ©§  ½ö¶ÔHTTP°üÌå×ö´¦Àí¡£5.5.2½ÚÏêÏ¸½éÉÜ¹ý¸Ã¹ýÂËÄ£¿é¡£Ëü½öÓ¦ÓÃÓÚ     ©§
-©§ngx_http_postpone_filter_module     ©§subrequest²úÉúµÄ×ÓÇëÇó¡£ËüÊ¹µÃ¶à¸ö×ÓÇëÇóÍ¬Ê±Ïò¿Í»§¶Ë·¢ËÍÏìÓ¦Ê±    ©§
-©§                                    ©§ÄÜ¹»ÓÐÐò£¬ËùÎ½µÄ¡°ÓÐÐò¡±ÊÇ¿«°´ÕÕ¹¹Ôì×ÓÇëÇóµÄË³Ðò·¢ËÍÏìÓ¦            ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§                                    ©§  ¶ÔÌØ¶¨µÄHTTPÏìÓ¦°üÌå£¨ÈçÍøÒ³»òÕßÎÄ±¾ÎÄ¼þ£©½øÐÐgzipÑ¹Ëõ£¬ÔÙ      ©§
-©§ngx_http_gzip_filter_module         ©§                                                                  ©§
-©§                                    ©§°ÑÑ¹ËõºóµÄÄÚÈÝ·µ»Ø¸øÓÃ»§                                          ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§ngx_http_range_header_filter_module ©§  Ö§³ÖrangeÐ­Òé                                                   ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§ngx_http_chunked_filter_module      ©§  Ö§³Öchunk±àÂë                                                   ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§                                    ©§  ½ö¶ÔHTTPÍ·²¿×ö´¦Àí¡£¸Ã¹ýÂËÄ£¿é½«»á°Ñr->headers out½á¹¹Ìå        ©§
-©§                                    ©§ÖÐµÄ³ÉÔ±ÐòÁÐ»¯Îª·µ»Ø¸øÓÃ»§µÄHTTPÏìÓ¦×Ö·ûÁ÷£¬°üÀ¨ÏìÓ¦ÐÐ(Èç         ©§
-©§ngx_http_header_filter_module       ©§                                                                  ©§
-©§                                    ©§HTTP/I.1 200 0K)ºÍÏìÓ¦Í·²¿£¬²¢Í¨¹ýµ÷ÓÃngx_http_write filter       ©§
-©§                                    ©§ module¹ýÂËÄ£¿éÖÐµÄ¹ýÂË·½·¨Ö±½Ó½«HTTP°üÍ··¢ËÍµ½¿Í»§¶Ë             ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§ngx_http_write_filter_module        ©§  ½ö¶ÔHTTP°üÌå×ö´¦Àí¡£¸ÃÄ£¿é¸ºÔðÏò¿Í»§¶Ë·¢ËÍHTTPÏìÓ¦              ©§
-©»©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ß©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¿
+è¡¨6-1  é»˜è®¤å³ç¼–è¯‘è¿›Nginxçš„HTTPè¿‡æ»¤æ¨¡å—
+â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”³â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”“
+â”ƒé»˜è®¤å³ç¼–è¯‘è¿›Nginxçš„HTTPè¿‡æ»¤æ¨¡å—     â”ƒ    åŠŸèƒ½                                                          â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ                                    â”ƒ  ä»…å¯¹HTTPå¤´éƒ¨åšå¤„ç†ã€‚åœ¨è¿”å›ž200æˆåŠŸæ—¶ï¼Œæ ¹æ®è¯·æ±‚ä¸­If-              â”ƒ
+â”ƒ                                    â”ƒModified-Sinceæˆ–è€…If-Unmodified-Sinceå¤´éƒ¨å–å¾—æµè§ˆå™¨ç¼“å­˜æ–‡ä»¶çš„æ—¶   â”ƒ
+â”ƒngx_http_not_modified_filter_module â”ƒ                                                                  â”ƒ
+â”ƒ                                    â”ƒé—´ï¼Œå†åˆ†æžè¿”å›žç”¨æˆ·æ–‡ä»¶çš„æœ€åŽä¿®æ”¹æ—¶é—´ï¼Œä»¥æ­¤å†³å®šæ˜¯å¦ç›´æŽ¥å‘é€304     â”ƒ
+â”ƒ                                    â”ƒ Not Modifiedå“åº”ç»™ç”¨æˆ·                                           â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ                                    â”ƒ  å¤„ç†è¯·æ±‚ä¸­çš„Rangeä¿¡æ¯ï¼Œæ ¹æ®Rangeä¸­çš„è¦æ±‚è¿”å›žæ–‡ä»¶çš„ä¸€éƒ¨åˆ†ç»™      â”ƒ
+â”ƒngx_http_range_body_filter_module   â”ƒ                                                                  â”ƒ
+â”ƒ                                    â”ƒç”¨æˆ·                                                              â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ                                    â”ƒ  ä»…å¯¹HTTPåŒ…ä½“åšå¤„ç†ã€‚å°†ç”¨æˆ·å‘é€çš„ngx_chain_tç»“æž„çš„HTTPåŒ…         â”ƒ
+â”ƒ                                    â”ƒä½“å¤åˆ¶åˆ°æ–°çš„ngx_chain_tç»“æž„ä¸­ï¼ˆéƒ½æ˜¯å„ç§æŒ‡é’ˆçš„å¤åˆ¶ï¼Œä¸åŒ…æ‹¬å®žé™…     â”ƒ
+â”ƒngx_http_copy_filter_module         â”ƒ                                                                  â”ƒ
+â”ƒ                                    â”ƒHTTPå“åº”å†…å®¹ï¼‰ï¼ŒåŽç»­çš„HTTPè¿‡æ»¤æ¨¡å—å¤„åŸ‹çš„ngx_chain_tç±»åž‹çš„æˆ       â”ƒ
+â”ƒ                                    â”ƒå‘˜éƒ½æ˜¯ngx_http_copy_filter_moduleæ¨¡å—å¤„ç†åŽçš„å˜é‡                 â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ                                    â”ƒ  ä»…å¯¹HTTPå¤´éƒ¨åšå¤„ç†ã€‚å…è®¸é€šè¿‡ä¿®æ”¹nginx.confé…ç½®æ–‡ä»¶ï¼Œåœ¨è¿”å›ž      â”ƒ
+â”ƒngx_http_headers_filter_module      â”ƒ                                                                  â”ƒ
+â”ƒ                                    â”ƒç»™ç”¨æˆ·çš„å“åº”ä¸­æ·»åŠ ä»»æ„çš„HTTPå¤´éƒ¨                                  â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ                                    â”ƒ  ä»…å¯¹HTTPå¤´éƒ¨åšå¤„ç†ã€‚è¿™å°±æ˜¯æ‰§è¡Œconfigureå‘½ä»¤æ—¶æåˆ°çš„http_        â”ƒ
+â”ƒngx_http_userid_filter_module       â”ƒ                                                                  â”ƒ
+â”ƒ                                    â”ƒuserid moduleæ¨¡å—ï¼Œå®ƒåŸºäºŽcookieæä¾›äº†ç®€å•çš„è®¤è¯ç®¡ç†åŠŸèƒ½           â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ                                    â”ƒ  å¯ä»¥å°†æ–‡æœ¬ç±»åž‹è¿”å›žç»™ç”¨æˆ·çš„å“åº”åŒ…ï¼ŒæŒ‰ç…§nginxï¼Žconfä¸­çš„é…ç½®é‡æ–°   â”ƒ
+â”ƒngx_http_charset_filter_module      â”ƒ                                                                  â”ƒ
+â”ƒ                                    â”ƒè¿›è¡Œç¼–ç ï¼Œå†è¿”å›žç»™ç”¨æˆ·                                            â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ                                    â”ƒ  æ”¯æŒSSIï¼ˆServer Side Includeï¼ŒæœåŠ¡å™¨ç«¯åµŒå…¥ï¼‰åŠŸèƒ½ï¼Œå°†æ–‡ä»¶å†…å®¹åŒ…  â”ƒ
+â”ƒngx_http_ssi_filter_module          â”ƒ                                                                  â”ƒ
+â”ƒ                                    â”ƒå«åˆ°ç½‘é¡µä¸­å¹¶è¿”å›žç»™ç”¨æˆ·                                            â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ                                    â”ƒ  ä»…å¯¹HTTPåŒ…ä½“åšå¤„ç†ã€‚5.5.2èŠ‚è¯¦ç»†ä»‹ç»è¿‡è¯¥è¿‡æ»¤æ¨¡å—ã€‚å®ƒä»…åº”ç”¨äºŽ     â”ƒ
+â”ƒngx_http_postpone_filter_module     â”ƒsubrequestäº§ç”Ÿçš„å­è¯·æ±‚ã€‚å®ƒä½¿å¾—å¤šä¸ªå­è¯·æ±‚åŒæ—¶å‘å®¢æˆ·ç«¯å‘é€å“åº”æ—¶    â”ƒ
+â”ƒ                                    â”ƒèƒ½å¤Ÿæœ‰åºï¼Œæ‰€è°“çš„â€œæœ‰åºâ€æ˜¯æ©æŒ‰ç…§æž„é€ å­è¯·æ±‚çš„é¡ºåºå‘é€å“åº”            â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ                                    â”ƒ  å¯¹ç‰¹å®šçš„HTTPå“åº”åŒ…ä½“ï¼ˆå¦‚ç½‘é¡µæˆ–è€…æ–‡æœ¬æ–‡ä»¶ï¼‰è¿›è¡ŒgzipåŽ‹ç¼©ï¼Œå†      â”ƒ
+â”ƒngx_http_gzip_filter_module         â”ƒ                                                                  â”ƒ
+â”ƒ                                    â”ƒæŠŠåŽ‹ç¼©åŽçš„å†…å®¹è¿”å›žç»™ç”¨æˆ·                                          â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒngx_http_range_header_filter_module â”ƒ  æ”¯æŒrangeåè®®                                                   â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒngx_http_chunked_filter_module      â”ƒ  æ”¯æŒchunkç¼–ç                                                    â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ                                    â”ƒ  ä»…å¯¹HTTPå¤´éƒ¨åšå¤„ç†ã€‚è¯¥è¿‡æ»¤æ¨¡å—å°†ä¼šæŠŠr->headers outç»“æž„ä½“        â”ƒ
+â”ƒ                                    â”ƒä¸­çš„æˆå‘˜åºåˆ—åŒ–ä¸ºè¿”å›žç»™ç”¨æˆ·çš„HTTPå“åº”å­—ç¬¦æµï¼ŒåŒ…æ‹¬å“åº”è¡Œ(å¦‚         â”ƒ
+â”ƒngx_http_header_filter_module       â”ƒ                                                                  â”ƒ
+â”ƒ                                    â”ƒHTTP/I.1 200 0K)å’Œå“åº”å¤´éƒ¨ï¼Œå¹¶é€šè¿‡è°ƒç”¨ngx_http_write filter       â”ƒ
+â”ƒ                                    â”ƒ moduleè¿‡æ»¤æ¨¡å—ä¸­çš„è¿‡æ»¤æ–¹æ³•ç›´æŽ¥å°†HTTPåŒ…å¤´å‘é€åˆ°å®¢æˆ·ç«¯             â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒngx_http_write_filter_module        â”ƒ  ä»…å¯¹HTTPåŒ…ä½“åšå¤„ç†ã€‚è¯¥æ¨¡å—è´Ÿè´£å‘å®¢æˆ·ç«¯å‘é€HTTPå“åº”              â”ƒ
+â”—â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”»â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”›
 
 */
 
 /*
-ngx_http_headers_moduleÄ£¿éÌá¹©ÁËÁ½¸öÖØÒªµÄÖ¸Áîadd_headerºÍexpires£¬À´Ìí¼Ó ¡°Expires¡± ºÍ ¡°Cache-Control¡± Í·×Ö¶Î£¬¶ÔÏìÓ¦Í·Ìí
-¼ÓÈÎºÎÓò×Ö¶Î¡£add_header¿ÉÒÔÓÃÀ´±êÊ¾ÇëÇó·ÃÎÊµ½ÄÄÌ¨·þÎñÆ÷ÉÏ£¬Õâ¸öÒ²¿ÉÒÔÍ¨¹ýnginxÄ£¿énginx-http-footer-filterÑÐ¾¿Ê¹ÓÃÀ´ÊµÏÖ¡£
-expiresÖ¸ÁîÓÃÀ´¶Ôä¯ÀÀÆ÷±¾µØ»º´æµÄ¿ØÖÆ¡£
+ngx_http_headers_moduleæ¨¡å—æä¾›äº†ä¸¤ä¸ªé‡è¦çš„æŒ‡ä»¤add_headerå’Œexpiresï¼Œæ¥æ·»åŠ  â€œExpiresâ€ å’Œ â€œCache-Controlâ€ å¤´å­—æ®µï¼Œå¯¹å“åº”å¤´æ·»
+åŠ ä»»ä½•åŸŸå­—æ®µã€‚add_headerå¯ä»¥ç”¨æ¥æ ‡ç¤ºè¯·æ±‚è®¿é—®åˆ°å“ªå°æœåŠ¡å™¨ä¸Šï¼Œè¿™ä¸ªä¹Ÿå¯ä»¥é€šè¿‡nginxæ¨¡å—nginx-http-footer-filterç ”ç©¶ä½¿ç”¨æ¥å®žçŽ°ã€‚
+expiresæŒ‡ä»¤ç”¨æ¥å¯¹æµè§ˆå™¨æœ¬åœ°ç¼“å­˜çš„æŽ§åˆ¶ã€‚
 */
 ngx_module_t  ngx_http_headers_filter_module = {
     NGX_MODULE_V1,
@@ -346,7 +346,7 @@ ngx_http_headers_filter(ngx_http_request_t *r)
     conf = ngx_http_get_module_loc_conf(r, ngx_http_headers_filter_module);
 
     if ((conf->expires == NGX_HTTP_EXPIRES_OFF && conf->headers == NULL)
-        || r != r->main) //expires off²¢ÇÒÃ»ÓÐÅäÖÃadd_header£¬»òÕßÎª×ÓÇëÇó
+        || r != r->main) //expires offå¹¶ä¸”æ²¡æœ‰é…ç½®add_headerï¼Œæˆ–è€…ä¸ºå­è¯·æ±‚
     {
         return ngx_http_next_header_filter(r);
     }
@@ -397,8 +397,8 @@ ngx_http_headers_filter(ngx_http_request_t *r)
     return ngx_http_next_header_filter(r);
 }
 
-//expiresÅäÖÃ½âÎö£¬»á´¥·¢´´½¨ÉèÖÃr->headers_out.expires r->headers_out.cache_control
-static ngx_int_t //expires xxÅäÖÃ´æ´¢º¯ÊýÎªngx_http_headers_expires£¬ÕæÕý×é°üÉúÐ§º¯ÊýÎªngx_http_set_expires
+//expiresé…ç½®è§£æžï¼Œä¼šè§¦å‘åˆ›å»ºè®¾ç½®r->headers_out.expires r->headers_out.cache_control
+static ngx_int_t //expires xxé…ç½®å­˜å‚¨å‡½æ•°ä¸ºngx_http_headers_expiresï¼ŒçœŸæ­£ç»„åŒ…ç”Ÿæ•ˆå‡½æ•°ä¸ºngx_http_set_expires
 ngx_http_set_expires(ngx_http_request_t *r, ngx_http_headers_conf_t *conf)
 {
     char                *err;
@@ -413,7 +413,7 @@ ngx_http_set_expires(ngx_http_request_t *r, ngx_http_headers_conf_t *conf)
     expires = conf->expires;
     expires_time = conf->expires_time;
 
-    if (conf->expires_value != NULL) { //ËµÃ÷expiresÅäÖÃµÄÊÇ±äÁ¿ÀàÐÍ
+    if (conf->expires_value != NULL) { //è¯´æ˜Žexpiresé…ç½®çš„æ˜¯å˜é‡ç±»åž‹
 
         if (ngx_http_complex_value(r, conf->expires_value, &value) != NGX_OK) {
             return NGX_ERROR;
@@ -483,14 +483,14 @@ ngx_http_set_expires(ngx_http_request_t *r, ngx_http_headers_conf_t *conf)
 
     if (expires == NGX_HTTP_EXPIRES_EPOCH) {
         e->value.data = (u_char *) "Thu, 01 Jan 1970 00:00:01 GMT";
-        ngx_str_set(&cc->value, "no-cache");//ÉèÖÃr->headers_out.cache_control
+        ngx_str_set(&cc->value, "no-cache");//è®¾ç½®r->headers_out.cache_control
         return NGX_OK;
     }
 
     if (expires == NGX_HTTP_EXPIRES_MAX) {
         e->value.data = (u_char *) "Thu, 31 Dec 2037 23:55:55 GMT";
         /* 10 years */
-        ngx_str_set(&cc->value, "max-age=315360000");//ÉèÖÃr->headers_out.cache_control
+        ngx_str_set(&cc->value, "max-age=315360000");//è®¾ç½®r->headers_out.cache_control
         return NGX_OK;
     }
 
@@ -502,7 +502,7 @@ ngx_http_set_expires(ngx_http_request_t *r, ngx_http_headers_conf_t *conf)
     if (expires_time == 0 && expires != NGX_HTTP_EXPIRES_DAILY) {
         ngx_memcpy(e->value.data, ngx_cached_http_time.data,
                    ngx_cached_http_time.len + 1);
-        ngx_str_set(&cc->value, "max-age=0");//ÉèÖÃr->headers_out.cache_control
+        ngx_str_set(&cc->value, "max-age=0");//è®¾ç½®r->headers_out.cache_control
         return NGX_OK;
     }
 
@@ -526,11 +526,11 @@ ngx_http_set_expires(ngx_http_request_t *r, ngx_http_headers_conf_t *conf)
     ngx_http_time(e->value.data, expires_time);
 
     if (conf->expires_time < 0 || max_age < 0) {
-        ngx_str_set(&cc->value, "no-cache");//ÉèÖÃr->headers_out.cache_control
+        ngx_str_set(&cc->value, "no-cache");//è®¾ç½®r->headers_out.cache_control
         return NGX_OK;
     }
 
-    //ÉèÖÃr->headers_out.cache_control
+    //è®¾ç½®r->headers_out.cache_control
     cc->value.data = ngx_pnalloc(r->pool,
                                  sizeof("max-age=") + NGX_TIME_T_LEN + 1);
     if (cc->value.data == NULL) {
@@ -543,7 +543,7 @@ ngx_http_set_expires(ngx_http_request_t *r, ngx_http_headers_conf_t *conf)
     return NGX_OK;
 }
 
-//»ñÈ¡expiresÅäÖÃµÄÊ±¼ä
+//èŽ·å–expiresé…ç½®çš„æ—¶é—´
 static ngx_int_t
 ngx_http_parse_expires(ngx_str_t *value, ngx_http_expires_t *expires,
     time_t *expires_time, char **err)
@@ -608,7 +608,7 @@ ngx_http_parse_expires(ngx_str_t *value, ngx_http_expires_t *expires,
         return NGX_ERROR;
     }
 
-    if (minus) { //Ê±¼äÎª¸ºÊý£¬×ªÎªÕûÊý
+    if (minus) { //æ—¶é—´ä¸ºè´Ÿæ•°ï¼Œè½¬ä¸ºæ•´æ•°
         *expires_time = - *expires_time;
     }
 
@@ -791,32 +791,32 @@ ngx_http_headers_filter_init(ngx_conf_t *cf)
 
 /*
 expires
-Óï·¨£º expires [time|epoch|max|off]
+è¯­æ³•ï¼š expires [time|epoch|max|off]
 
-Ä¬ÈÏÖµ£º expires off
+é»˜è®¤å€¼ï¼š expires off
 
-×÷ÓÃÓò£º http, server, location
+ä½œç”¨åŸŸï¼š http, server, location
 
-Ê¹ÓÃ±¾Ö¸Áî¿ÉÒÔ¿ØÖÆHTTPÓ¦´ðÖÐµÄ¡°Expires¡±ºÍ¡°Cache-Control¡±µÄÍ·±ê£¬£¨Æðµ½¿ØÖÆÒ³Ãæ»º´æµÄ×÷ÓÃ£©¡£
+ä½¿ç”¨æœ¬æŒ‡ä»¤å¯ä»¥æŽ§åˆ¶HTTPåº”ç­”ä¸­çš„â€œExpiresâ€å’Œâ€œCache-Controlâ€çš„å¤´æ ‡ï¼Œï¼ˆèµ·åˆ°æŽ§åˆ¶é¡µé¢ç¼“å­˜çš„ä½œç”¨ï¼‰ã€‚
 
-¿ÉÒÔÔÚtimeÖµÖÐÊ¹ÓÃÕýÊý»ò¸ºÊý¡£¡°Expires¡±Í·±êµÄÖµ½«Í¨¹ýµ±Ç°ÏµÍ³Ê±¼ä¼ÓÉÏÄúÉè¶¨µÄ time ÖµÀ´»ñµÃ¡£
+å¯ä»¥åœ¨timeå€¼ä¸­ä½¿ç”¨æ­£æ•°æˆ–è´Ÿæ•°ã€‚â€œExpiresâ€å¤´æ ‡çš„å€¼å°†é€šè¿‡å½“å‰ç³»ç»Ÿæ—¶é—´åŠ ä¸Šæ‚¨è®¾å®šçš„ time å€¼æ¥èŽ·å¾—ã€‚
 
-epoch Ö¸¶¨¡°Expires¡±µÄÖµÎª 1 January, 1970, 00:00:01 GMT¡£
+epoch æŒ‡å®šâ€œExpiresâ€çš„å€¼ä¸º 1 January, 1970, 00:00:01 GMTã€‚
 
-max Ö¸¶¨¡°Expires¡±µÄÖµÎª 31 December 2037 23:59:59 GMT£¬¡°Cache-Control¡±µÄÖµÎª10Äê¡£
+max æŒ‡å®šâ€œExpiresâ€çš„å€¼ä¸º 31 December 2037 23:59:59 GMTï¼Œâ€œCache-Controlâ€çš„å€¼ä¸º10å¹´ã€‚
 
--1 Ö¸¶¨¡°Expires¡±µÄÖµÎª ·þÎñÆ÷µ±Ç°Ê±¼ä -1s,¼´ÓÀÔ¶¹ýÆÚ
+-1 æŒ‡å®šâ€œExpiresâ€çš„å€¼ä¸º æœåŠ¡å™¨å½“å‰æ—¶é—´ -1s,å³æ°¸è¿œè¿‡æœŸ
 
-¡°Cache-Control¡±Í·±êµÄÖµÓÉÄúÖ¸¶¨µÄÊ±¼äÀ´¾ö¶¨£º
+â€œCache-Controlâ€å¤´æ ‡çš„å€¼ç”±æ‚¨æŒ‡å®šçš„æ—¶é—´æ¥å†³å®šï¼š
 
-¸ºÊý£ºCache-Control: no-cache
-ÕýÊý»òÁã£ºCache-Control: max-age = #, # ÎªÄúÖ¸¶¨Ê±¼äµÄÃëÊý¡£
-"off" ±íÊ¾²»ÐÞ¸Ä¡°Expires¡±ºÍ¡°Cache-Control¡±µÄÖµ
+è´Ÿæ•°ï¼šCache-Control: no-cache
+æ­£æ•°æˆ–é›¶ï¼šCache-Control: max-age = #, # ä¸ºæ‚¨æŒ‡å®šæ—¶é—´çš„ç§’æ•°ã€‚
+"off" è¡¨ç¤ºä¸ä¿®æ”¹â€œExpiresâ€å’Œâ€œCache-Controlâ€çš„å€¼
 */
 
 /*
 syntax:  add_header name value;
-default:  ¡ª  
+default:  â€•  
 context:  http, server, location
  
 Adds the specified field to a response header provided that the response code equals 200, 204, 206, 301, 302, 303, 304, or 307. 
@@ -830,29 +830,29 @@ default:  expires off;
 context:  http, server, location
  
 
-Enables or disables adding or modifying the ¡°Expires¡± and ¡°Cache-Control¡± response header fields. A parameter can be a positive 
+Enables or disables adding or modifying the â€œExpiresâ€ and â€œCache-Controlâ€ response header fields. A parameter can be a positive 
 or negative time. 
 
-A time in the ¡°Expires¡± field is computed as a sum of the current time and time specified in the directive. If the modified parameter 
-is used (0.7.0, 0.6.32) then time is computed as a sum of the file¡¯s modification time and time specified in the directive. 
+A time in the â€œExpiresâ€ field is computed as a sum of the current time and time specified in the directive. If the modified parameter 
+is used (0.7.0, 0.6.32) then time is computed as a sum of the fileâ€™s modification time and time specified in the directive. 
 
-In addition, it is possible to specify a time of the day using the ¡°@¡± prefix (0.7.9, 0.6.34): 
+In addition, it is possible to specify a time of the day using the â€œ@â€ prefix (0.7.9, 0.6.34): 
 
 expires @15h30m;
 
 
-The epoch parameter corresponds to the absolute time ¡°Thu, 01 Jan 1970 00:00:01 GMT¡±. The contents of the ¡°Cache-Control¡± field 
+The epoch parameter corresponds to the absolute time â€œThu, 01 Jan 1970 00:00:01 GMTâ€. The contents of the â€œCache-Controlâ€ field 
 depends on the sign of the specified time: 
-? time is negative ¡ª ¡°Cache-Control: no-cache¡±. 
-? time is positive or zero ¡ª ¡°Cache-Control: max-age=t¡±, where t is a time specified in the directive, in seconds. 
+? time is negative â€• â€œCache-Control: no-cacheâ€. 
+? time is positive or zero â€• â€œCache-Control: max-age=tâ€, where t is a time specified in the directive, in seconds. 
 
 
-The max parameter sets ¡°Expires¡± to the value ¡°Thu, 31 Dec 2037 23:55:55 GMT¡±, and ¡°Cache-Control¡± to 10 years. 
-The off parameter disables adding or modifying the ¡°Expires¡± and ¡°Cache-Control¡± response header fields. 
+The max parameter sets â€œExpiresâ€ to the value â€œThu, 31 Dec 2037 23:55:55 GMTâ€, and â€œCache-Controlâ€ to 10 years. 
+The off parameter disables adding or modifying the â€œExpiresâ€ and â€œCache-Controlâ€ response header fields. 
 */
 static char *
 ngx_http_headers_expires(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
-{ //expires xxÅäÖÃ´æ´¢º¯ÊýÎªngx_http_headers_expires£¬ÕæÕý×é°üÉúÐ§º¯ÊýÎªngx_http_set_expires
+{ //expires xxé…ç½®å­˜å‚¨å‡½æ•°ä¸ºngx_http_headers_expiresï¼ŒçœŸæ­£ç»„åŒ…ç”Ÿæ•ˆå‡½æ•°ä¸ºngx_http_set_expires
     ngx_http_headers_conf_t *hcf = conf;
 
     char                              *err;
@@ -862,19 +862,19 @@ ngx_http_headers_expires(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
     ngx_http_complex_value_t           cv;
     ngx_http_compile_complex_value_t   ccv;
 
-    if (hcf->expires != NGX_HTTP_EXPIRES_UNSET) { //ËµÃ÷Ö®Ç°ÉèÖÃ¹ý
+    if (hcf->expires != NGX_HTTP_EXPIRES_UNSET) { //è¯´æ˜Žä¹‹å‰è®¾ç½®è¿‡
         return "is duplicate";
     }
 
     value = cf->args->elts;
 
-    if (cf->args->nelts == 2) { //expiresºóÃæÖ±½Ó¸úÁËÊ±¼ä
+    if (cf->args->nelts == 2) { //expiresåŽé¢ç›´æŽ¥è·Ÿäº†æ—¶é—´
 
         hcf->expires = NGX_HTTP_EXPIRES_ACCESS;
 
         n = 1;
 
-    } else { /* cf->args->nelts == 3 */  //expires modified xxx   ²Î¿¼ngx_http_parse_expires
+    } else { /* cf->args->nelts == 3 */  //expires modified xxx   å‚è€ƒngx_http_parse_expires
  
         if (ngx_strcmp(value[1].data, "modified") != 0) {
             return "invalid value";
@@ -944,7 +944,7 @@ ngx_http_headers_add(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
         return NGX_CONF_ERROR;
     }
 
-    hv->key = value[1]; //add_header name value;ÖÐµÄname
+    hv->key = value[1]; //add_header name value;ä¸­çš„name
     hv->handler = ngx_http_add_header;
     hv->offset = 0;
     hv->always = 0;
@@ -955,9 +955,9 @@ ngx_http_headers_add(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
             continue;
         }
 
-        //Èç¹ûadd_header name value;ÖÐµÄnameºÍngx_http_set_headersÖÐµÄÅä¶Ô£¬Ôò¶ÔÓ¦offsetÎªngx_http_set_headersÖÐµÄoffset
+        //å¦‚æžœadd_header name value;ä¸­çš„nameå’Œngx_http_set_headersä¸­çš„é…å¯¹ï¼Œåˆ™å¯¹åº”offsetä¸ºngx_http_set_headersä¸­çš„offset
         hv->offset = set[i].offset;
-        //Èç¹ûadd_header name value;ÖÐµÄnameºÍngx_http_set_headersÖÐµÄÅä¶Ô£¬Ôò¶ÔÓ¦handerÎªngx_http_set_headersÖÐµÄhandler
+        //å¦‚æžœadd_header name value;ä¸­çš„nameå’Œngx_http_set_headersä¸­çš„é…å¯¹ï¼Œåˆ™å¯¹åº”handerä¸ºngx_http_set_headersä¸­çš„handler
         hv->handler = set[i].handler;
 
         break;
@@ -972,7 +972,7 @@ ngx_http_headers_add(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
 
     ccv.cf = cf;
     ccv.value = &value[2];
-    ccv.complex_value = &hv->value; //°Ñ//add_header name value;ÖÐµÄvalue½âÎö³öÀ´¸¶¸øhv->value
+    ccv.complex_value = &hv->value; //æŠŠ//add_header name value;ä¸­çš„valueè§£æžå‡ºæ¥ä»˜ç»™hv->value
 
     if (ngx_http_compile_complex_value(&ccv) != NGX_OK) {
         return NGX_CONF_ERROR;

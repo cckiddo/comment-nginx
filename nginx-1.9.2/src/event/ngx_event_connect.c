@@ -22,9 +22,9 @@ ngx_event_connect_peer(ngx_peer_connection_t *pc)
     ngx_connection_t  *c;
 
     /*ngx_http_upstream_get_round_robin_peer ngx_http_upstream_get_least_conn_peer ngx_http_upstream_get_hash_peer  
-    ngx_http_upstream_get_ip_hash_peer ngx_http_upstream_get_keepalive_peerµÈ */
-    rc = pc->get(pc, pc->data);//ngx_http_upstream_get_round_robin_peer»ñÈ¡Ò»¸öpeer
-    if (rc != NGX_OK) {/* ËµÃ÷ºó¶Ë·şÎñÆ÷È«²¿downµô£¬»òÕßÅäÖÃµÄÊÇkeepalive·½Ê½£¬Ö±½ÓÑ¡ÔñÄ³¸öpeerÉÏÃæÒÑÓĞµÄ³¤Á¬½ÓÀ´·¢ËÍÊı¾İ£¬ÔòÖ±½Ó´ÓÕâÀï·µ»Ø */
+    ngx_http_upstream_get_ip_hash_peer ngx_http_upstream_get_keepalive_peerç­‰ */
+    rc = pc->get(pc, pc->data);//ngx_http_upstream_get_round_robin_peerè·å–ä¸€ä¸ªpeer
+    if (rc != NGX_OK) {/* è¯´æ˜åç«¯æœåŠ¡å™¨å…¨éƒ¨downæ‰ï¼Œæˆ–è€…é…ç½®çš„æ˜¯keepaliveæ–¹å¼ï¼Œç›´æ¥é€‰æ‹©æŸä¸ªpeerä¸Šé¢å·²æœ‰çš„é•¿è¿æ¥æ¥å‘é€æ•°æ®ï¼Œåˆ™ç›´æ¥ä»è¿™é‡Œè¿”å› */
         return rc;
     }
 
@@ -39,8 +39,8 @@ ngx_event_connect_peer(ngx_peer_connection_t *pc)
     }
 
     /*
-     ÓÉÓÚNginxµÄÊÂ¼ş¿ò¼ÜÒªÇóÃ¿¸öÁ¬½Ó¶¼ÓÉÒ»¸öngx_connection-t½á¹¹ÌåÀ´³ĞÔØ£¬Òò´ËÕâÒ»²½½«µ÷ÓÃngx_get_connection·½·¨£¬ÓÉngx_cycle_t
- ºËĞÄ½á¹¹ÌåÖĞfree_connectionsÖ¸ÏòµÄ¿ÕÏĞÁ¬½Ó³Ø´¦»ñÈ¡µ½Ò»¸öngx_connection_t½á¹¹Ìå£¬×÷Îª³ĞÔØNginxÓëÉÏÓÎ·şÎñÆ÷¼äµÄTCPÁ¬½Ó
+     ç”±äºNginxçš„äº‹ä»¶æ¡†æ¶è¦æ±‚æ¯ä¸ªè¿æ¥éƒ½ç”±ä¸€ä¸ªngx_connection-tç»“æ„ä½“æ¥æ‰¿è½½ï¼Œå› æ­¤è¿™ä¸€æ­¥å°†è°ƒç”¨ngx_get_connectionæ–¹æ³•ï¼Œç”±ngx_cycle_t
+ æ ¸å¿ƒç»“æ„ä½“ä¸­free_connectionsæŒ‡å‘çš„ç©ºé—²è¿æ¥æ± å¤„è·å–åˆ°ä¸€ä¸ªngx_connection_tç»“æ„ä½“ï¼Œä½œä¸ºæ‰¿è½½Nginxä¸ä¸Šæ¸¸æœåŠ¡å™¨é—´çš„TCPè¿æ¥
      */
     c = ngx_get_connection(s, pc->log);
 
@@ -63,7 +63,7 @@ ngx_event_connect_peer(ngx_peer_connection_t *pc)
         }
     }
 
-    if (ngx_nonblocking(s) == -1) { //½¨Á¢Ò»¸öTCPÌ×½Ó×Ö£¬Í¬Ê±£¬Õâ¸öÌ×½Ó×ÖĞèÒªÉèÖÃÎª·Ç×èÈûÄ£Ê½¡£
+    if (ngx_nonblocking(s) == -1) { //å»ºç«‹ä¸€ä¸ªTCPå¥—æ¥å­—ï¼ŒåŒæ—¶ï¼Œè¿™ä¸ªå¥—æ¥å­—éœ€è¦è®¾ç½®ä¸ºéé˜»å¡æ¨¡å¼ã€‚
         ngx_log_error(NGX_LOG_ALERT, pc->log, ngx_socket_errno,
                       ngx_nonblocking_n " failed");
 
@@ -85,9 +85,9 @@ ngx_event_connect_peer(ngx_peer_connection_t *pc)
     c->send_chain = ngx_send_chain;
 
     /*
-       ºÍºó¶ËµÄngx_connection_tÔÚngx_event_connect_peerÕâÀïÖÃÎª1£¬µ«ÔÚngx_http_upstream_connectÖĞc->sendfile &= r->connection->sendfile;£¬
-       ºÍ¿Í»§¶Ëä¯ÀÀÆ÷µÄngx_connextion_tµÄsendfileĞèÒªÔÚngx_http_update_location_configÖĞÅĞ¶Ï£¬Òò´Ë×îÖÕÊÇÓÉÊÇ·ñÔÚconfigureµÄÊ±ºòÊÇ·ñÓĞ¼Ó
-       sendfileÑ¡ÏîÀ´¾ö¶¨ÊÇÖÃ1»¹ÊÇÖÃ0
+       å’Œåç«¯çš„ngx_connection_tåœ¨ngx_event_connect_peerè¿™é‡Œç½®ä¸º1ï¼Œä½†åœ¨ngx_http_upstream_connectä¸­c->sendfile &= r->connection->sendfile;ï¼Œ
+       å’Œå®¢æˆ·ç«¯æµè§ˆå™¨çš„ngx_connextion_tçš„sendfileéœ€è¦åœ¨ngx_http_update_location_configä¸­åˆ¤æ–­ï¼Œå› æ­¤æœ€ç»ˆæ˜¯ç”±æ˜¯å¦åœ¨configureçš„æ—¶å€™æ˜¯å¦æœ‰åŠ 
+       sendfileé€‰é¡¹æ¥å†³å®šæ˜¯ç½®1è¿˜æ˜¯ç½®0
     */
     c->sendfile = 1;
 
@@ -114,13 +114,13 @@ ngx_event_connect_peer(ngx_peer_connection_t *pc)
     c->number = ngx_atomic_fetch_add(ngx_connection_counter, 1);
 
     /*
-     ÊÂ¼şÄ£¿éµÄngx_event_actions½Ó¿Ú£¬ÆäÖĞµÄadd_conn·½·¨¿ÉÒÔ½«TCPÌ×½Ó×ÖÒÔÆÚ´ı¿É¶Á¡¢¿ÉĞ´ÊÂ¼şµÄ·½Ê½Ìí¼Óµ½ÊÂ¼şËÑ¼¯Æ÷ÖĞ¡£¶ÔÓÚ
-     epollÊÂ¼şÄ£¿éÀ´Ëµ£¬add_conn·½·¨¾ÍÊÇ°ÑÌ×½Ó×ÖÒÔÆÚ´ıEPOLLIN EPOLLOUTÊÂ¼şµÄ·½Ê½¼ÓÈëepollÖĞ£¬ÕâÒ»²½¼´µ÷ÓÃadd_conn·½·¨°Ñ¸Õ¸Õ
-     ½¨Á¢µÄÌ×½Ó×ÖÌí¼Óµ½epollÖĞ£¬±íÊ¾Èç¹ûÕâ¸öÌ×½Ó×ÖÉÏ³öÏÖÁËÔ¤ÆÚµÄÍøÂçÊÂ¼ş£¬ÔòÏ£ÍûepollÄÜ¹»»Øµ÷ËüµÄhandler·½·¨¡£
+     äº‹ä»¶æ¨¡å—çš„ngx_event_actionsæ¥å£ï¼Œå…¶ä¸­çš„add_connæ–¹æ³•å¯ä»¥å°†TCPå¥—æ¥å­—ä»¥æœŸå¾…å¯è¯»ã€å¯å†™äº‹ä»¶çš„æ–¹å¼æ·»åŠ åˆ°äº‹ä»¶æœé›†å™¨ä¸­ã€‚å¯¹äº
+     epolläº‹ä»¶æ¨¡å—æ¥è¯´ï¼Œadd_connæ–¹æ³•å°±æ˜¯æŠŠå¥—æ¥å­—ä»¥æœŸå¾…EPOLLIN EPOLLOUTäº‹ä»¶çš„æ–¹å¼åŠ å…¥epollä¸­ï¼Œè¿™ä¸€æ­¥å³è°ƒç”¨add_connæ–¹æ³•æŠŠåˆšåˆš
+     å»ºç«‹çš„å¥—æ¥å­—æ·»åŠ åˆ°epollä¸­ï¼Œè¡¨ç¤ºå¦‚æœè¿™ä¸ªå¥—æ¥å­—ä¸Šå‡ºç°äº†é¢„æœŸçš„ç½‘ç»œäº‹ä»¶ï¼Œåˆ™å¸Œæœ›epollèƒ½å¤Ÿå›è°ƒå®ƒçš„handleræ–¹æ³•ã€‚
      */
     if (ngx_add_conn) {
         /*
-        ½«Õâ¸öÁ¬½Óngx_connection tÉÏµÄ¶Á£¯Ğ´ÊÂ¼şµÄhandler»Øµ÷·½·¨¶¼ÉèÖÃÎªngx_http_upstream_handler¡££¬¼ûº¯ÊıÍâ²ãµÄngx_http_upstream_connect
+        å°†è¿™ä¸ªè¿æ¥ngx_connection tä¸Šçš„è¯»ï¼å†™äº‹ä»¶çš„handlerå›è°ƒæ–¹æ³•éƒ½è®¾ç½®ä¸ºngx_http_upstream_handlerã€‚ï¼Œè§å‡½æ•°å¤–å±‚çš„ngx_http_upstream_connect
          */
         if (ngx_add_conn(c) == NGX_ERROR) {
             goto failed;
@@ -131,17 +131,17 @@ ngx_event_connect_peer(ngx_peer_connection_t *pc)
                    "connect to %V, fd:%d #%uA", pc->name, s, c->number);
 
     /*
-     µ÷ÓÃconnect·½·¨ÏòÉÏÓÎ·şÎñÆ÷·¢ÆğTCPÁ¬½Ó£¬×÷Îª·Ç×èÈûÌ×½Ó×Ö£¬connect·½·¨¿ÉÄÜÁ¢¿Ì·µ»ØÁ¬½Ó½¨Á¢³É¹¦£¬Ò²¿ÉÄÜ¸æËßÓÃ»§¼ÌĞøµÈ´ıÉÏÓÎ·şÎñÆ÷µÄÏìÓ¦
-     ¶ÔconnectÁ¬½ÓÊÇ·ñ½¨Á¢³É¹¦µÄ¼ì²é»áÔÚº¯ÊıÍâÃæµÄu->read_event_handler = ngx_http_upstream_process_header;¼ûº¯ÊıÍâ²ãµÄngx_http_upstream_connect
+     è°ƒç”¨connectæ–¹æ³•å‘ä¸Šæ¸¸æœåŠ¡å™¨å‘èµ·TCPè¿æ¥ï¼Œä½œä¸ºéé˜»å¡å¥—æ¥å­—ï¼Œconnectæ–¹æ³•å¯èƒ½ç«‹åˆ»è¿”å›è¿æ¥å»ºç«‹æˆåŠŸï¼Œä¹Ÿå¯èƒ½å‘Šè¯‰ç”¨æˆ·ç»§ç»­ç­‰å¾…ä¸Šæ¸¸æœåŠ¡å™¨çš„å“åº”
+     å¯¹connectè¿æ¥æ˜¯å¦å»ºç«‹æˆåŠŸçš„æ£€æŸ¥ä¼šåœ¨å‡½æ•°å¤–é¢çš„u->read_event_handler = ngx_http_upstream_process_header;è§å‡½æ•°å¤–å±‚çš„ngx_http_upstream_connect
      */
      /*
-        Õë¶Ô·Ç×èÈûI/OÖ´ĞĞµÄÏµÍ³µ÷ÓÃÔò×ÜÊÇÁ¢¼´·µ»Ø£¬¶ø²»¹ÜÊÂ¼ş×ã·ñÒÑ¾­·¢Éú¡£Èç¹ûÊÂ¼şÃ»ÓĞíõ¼´·¢Éú£¬ÕâĞ©ÏµÍ³µ÷ÓÃ¾Í
-    ·µ»Ø¡ª1£®ºÍ³ö´íµÄÇé¿öÒ»Ñù¡£´ËÊ±ÎÒÃÇ±ØĞë¸ù¾İerrnoÀ´Çø·ÖÕâÁ½ÖÖÇé¿ö¡£¶Ôaccept¡¢sendºÍrecv¶øÑÔ£¬ÊÂ¼şÎ´·¢Å£Ê±errno
-    Í¨³£±»ÉèÖÃ³ÉEAGAIN£¨ÒâÎª¡°ÔÙÀ´Ò»´Î¡±£©»òÕßEWOULDBLOCK£¨ÒâÎª¡°ÆÚ´ı×èÈû¡±£©£º¶Ôconncct¶øÑÔ£¬errnoÔò±»
-    ÉèÖÃ³ÉEINPROGRESS£¨ÒâÎª¡°ÔÚ´¦ÀíÖĞ"£©¡£
-      */ //connectµÄÊ±ºò·µ»Ø³É¹¦ºóÊ¹ÓÃµÄsock¾ÍÊÇsocket´´½¨µÄsock£¬ÕâºÍ·şÎñÆ÷¶Ëaccept³É¹¦·µ»ØÒ»¸öĞÂµÄsock²»Ò»Ñù
-      //ÉÏÃæµÄngx_add_connÒÑ¾­°Ñ¶ÁĞ´ÊÂ¼şÒ»ÆğÌí¼Óµ½ÁËepollÖĞ
-    rc = connect(s, pc->sockaddr, pc->socklen); //connect·µ»ØÖµ¿ÉÒÔ²Î¿¼<linux¸ßĞÔÄÜ·şÎñÆ÷¿ª·¢> 9.5½Ú
+        é’ˆå¯¹éé˜»å¡I/Oæ‰§è¡Œçš„ç³»ç»Ÿè°ƒç”¨åˆ™æ€»æ˜¯ç«‹å³è¿”å›ï¼Œè€Œä¸ç®¡äº‹ä»¶è¶³å¦å·²ç»å‘ç”Ÿã€‚å¦‚æœäº‹ä»¶æ²¡æœ‰çœ­å³å‘ç”Ÿï¼Œè¿™äº›ç³»ç»Ÿè°ƒç”¨å°±
+    è¿”å›â€•1ï¼å’Œå‡ºé”™çš„æƒ…å†µä¸€æ ·ã€‚æ­¤æ—¶æˆ‘ä»¬å¿…é¡»æ ¹æ®errnoæ¥åŒºåˆ†è¿™ä¸¤ç§æƒ…å†µã€‚å¯¹acceptã€sendå’Œrecvè€Œè¨€ï¼Œäº‹ä»¶æœªå‘ç‰›æ—¶errno
+    é€šå¸¸è¢«è®¾ç½®æˆEAGAINï¼ˆæ„ä¸ºâ€œå†æ¥ä¸€æ¬¡â€ï¼‰æˆ–è€…EWOULDBLOCKï¼ˆæ„ä¸ºâ€œæœŸå¾…é˜»å¡â€ï¼‰ï¼šå¯¹conncctè€Œè¨€ï¼Œerrnoåˆ™è¢«
+    è®¾ç½®æˆEINPROGRESSï¼ˆæ„ä¸ºâ€œåœ¨å¤„ç†ä¸­"ï¼‰ã€‚
+      */ //connectçš„æ—¶å€™è¿”å›æˆåŠŸåä½¿ç”¨çš„sockå°±æ˜¯socketåˆ›å»ºçš„sockï¼Œè¿™å’ŒæœåŠ¡å™¨ç«¯acceptæˆåŠŸè¿”å›ä¸€ä¸ªæ–°çš„sockä¸ä¸€æ ·
+      //ä¸Šé¢çš„ngx_add_connå·²ç»æŠŠè¯»å†™äº‹ä»¶ä¸€èµ·æ·»åŠ åˆ°äº†epollä¸­
+    rc = connect(s, pc->sockaddr, pc->socklen); //connectè¿”å›å€¼å¯ä»¥å‚è€ƒ<linuxé«˜æ€§èƒ½æœåŠ¡å™¨å¼€å‘> 9.5èŠ‚
 
     if (rc == -1) {
         err = ngx_socket_errno;
@@ -186,8 +186,8 @@ ngx_event_connect_peer(ngx_peer_connection_t *pc)
 
     if (ngx_add_conn) {
         if (rc == -1) {
-        //Õâ¸ö±íÊ¾·¢³öÁËÁ¬½ÓÈı²½ÎÕÊÖÖĞµÄSYN£¬µ¥»¹Ã»ÓĞµÈ´ı¶Ô·½ÍêÈ«Ó¦´ğ»ØÀ´±íÊ¾Á¬½Ó³É¹¦Í¨¹ıÍâ²ãµÄ
-        //c->write->handler = ngx_http_upstream_handler;  u->write_event_handler = ngx_http_upstream_send_request_handler´Ù·¢·µ»Ø³É¹¦
+        //è¿™ä¸ªè¡¨ç¤ºå‘å‡ºäº†è¿æ¥ä¸‰æ­¥æ¡æ‰‹ä¸­çš„SYNï¼Œå•è¿˜æ²¡æœ‰ç­‰å¾…å¯¹æ–¹å®Œå…¨åº”ç­”å›æ¥è¡¨ç¤ºè¿æ¥æˆåŠŸé€šè¿‡å¤–å±‚çš„
+        //c->write->handler = ngx_http_upstream_handler;  u->write_event_handler = ngx_http_upstream_send_request_handlerä¿ƒå‘è¿”å›æˆåŠŸ
             /* NGX_EINPROGRESS */
 
             return NGX_AGAIN;
@@ -256,8 +256,8 @@ ngx_event_connect_peer(ngx_peer_connection_t *pc)
             goto failed;
         }
 
-        return NGX_AGAIN; //Õâ¸ö±íÊ¾·¢³öÁËÁ¬½ÓÈı²½ÎÕÊÖÖĞµÄSYN£¬µ¥»¹Ã»ÓĞµÈ´ı¶Ô·½ÍêÈ«Ó¦´ğ»ØÀ´±íÊ¾Á¬½Ó³É¹¦
-        //Í¨¹ıÍâ²ãµÄ c->write->handler = ngx_http_upstream_handler;  u->write_event_handler = ngx_http_upstream_send_request_handler´Ù·¢·µ»Ø³É¹¦
+        return NGX_AGAIN; //è¿™ä¸ªè¡¨ç¤ºå‘å‡ºäº†è¿æ¥ä¸‰æ­¥æ¡æ‰‹ä¸­çš„SYNï¼Œå•è¿˜æ²¡æœ‰ç­‰å¾…å¯¹æ–¹å®Œå…¨åº”ç­”å›æ¥è¡¨ç¤ºè¿æ¥æˆåŠŸ
+        //é€šè¿‡å¤–å±‚çš„ c->write->handler = ngx_http_upstream_handler;  u->write_event_handler = ngx_http_upstream_send_request_handlerä¿ƒå‘è¿”å›æˆåŠŸ
     }
 
     ngx_log_debug0(NGX_LOG_DEBUG_EVENT, pc->log, 0, "connected");

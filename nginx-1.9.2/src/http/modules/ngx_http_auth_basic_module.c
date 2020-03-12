@@ -75,7 +75,7 @@ static ngx_http_module_t  ngx_http_auth_basic_module_ctx = {
     ngx_http_auth_basic_merge_loc_conf     /* merge location configuration */
 };
 
-//·ÃÎÊÈ¨ÏŞ¿ØÖÆÏà¹ØÄ£¿é:nginx½øĞĞ·ÃÎÊÏŞÖÆµÄÓĞngx_http_access_moduleÄ£¿éºÍ ngx_http_auth_basic_moduleÄ£¿é   ngx_http_secure_link_module
+//è®¿é—®æƒé™æ§åˆ¶ç›¸å…³æ¨¡å—:nginxè¿›è¡Œè®¿é—®é™åˆ¶çš„æœ‰ngx_http_access_moduleæ¨¡å—å’Œ ngx_http_auth_basic_moduleæ¨¡å—   ngx_http_secure_link_module
 ngx_module_t  ngx_http_auth_basic_module = {
     NGX_MODULE_V1,
     &ngx_http_auth_basic_module_ctx,       /* module context */

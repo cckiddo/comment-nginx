@@ -60,7 +60,7 @@
 #define NGX_SHUTDOWN_SIGNAL      QUIT
 #define NGX_TERMINATE_SIGNAL     TERM
 #define NGX_NOACCEPT_SIGNAL      WINCH
-#define NGX_RECONFIGURE_SIGNAL   HUP  //nginx -s reload�ᴥ�����º�
+#define NGX_RECONFIGURE_SIGNAL   HUP  //nginx -s reload会触发该新号
 
 #if (NGX_LINUXTHREADS)
 #define NGX_REOPEN_SIGNAL        INFO
@@ -76,7 +76,7 @@
 #endif
 
 /*
-������linux��ͷ�ļ��в���������͵Ķ��壬��/usr/include/stdint.h���ͷ�ļ����ҵ���������͵Ķ��壨��֪����ô���������ͼƬ������ʹ�����֣���
+于是在linux的头文件中查找这个类型的定义，在/usr/include/stdint.h这个头文件中找到了这个类型的定义（不知道怎么在这里插入图片，所以使用文字）：
                            
 [cpp] view plaincopy
 117  Types for `void *' pointers.  
@@ -94,26 +94,26 @@
 129 typedef unsigned int        uintptr_t;  
 130 #endif  
 
-������intptr_t����ָ�����ͣ������ϱߵ�һ��ע�ͣ� Types for `void *' pointers. �����˺��ɻ󡣼�Ȼ����ָ�����ͣ�����Ϊʲô˵������Ϊ�ˡ�void *��ָ�룿 
-�ֲ���һ���ڡ��������Linux�ں�Դ�롷���ҵ��˴𰸣�ԭ���������£�
+很明显intptr_t不是指针类型，但是上边的一句注释（ Types for `void *' pointers. ）让人很疑惑。既然不是指针类型，但是为什么说类型是为了“void *”指针？ 
+又查了一下在《深入分析Linux内核源码》中找到了答案，原文描述如下：
 
-�����ڻ�ϲ�ͬ��������ʱ�����С��, ��ʱ�кܺõ�����������. һ���������Ϊ�ڴ��ȡ, ���ں����ʱ�������. ������, ���ܵ�ַ��ָ��, 
-�ڴ��������ʹ��һ���޷��ŵ��������͸��õ����; �ں˶Դ������ڴ���ͬһ��������, �����ڴ��ַֻ��һ����������. ��һ����, һ��ָ�����׽�����; 
-��ֱ�Ӵ����ڴ��ȡʱ, �㼸���Ӳ��������ַ�ʽ������. ʹ��һ���������ͱ��������ֽ�����, ��˱����� bug. ���, �ں���ͨ�����ڴ��ַ������ unsigned long, 
-������ָ��ͳ�����һֱ����ͬ��С�������ʵ, ������ Linux Ŀǰ֧�ֵ�����ƽ̨��.
+尽管在混合不同数据类型时你必须小心, 有时有很好的理由这样做. 一种情况是因为内存存取, 与内核相关时是特殊的. 概念上, 尽管地址是指针, 
+内存管理常常使用一个无符号的整数类型更好地完成; 内核对待物理内存如同一个大数组, 并且内存地址只是一个数组索引. 进一步地, 一个指针容易解引用; 
+当直接处理内存存取时, 你几乎从不想以这种方式解引用. 使用一个整数类型避免了这种解引用, 因此避免了 bug. 因此, 内核中通常的内存地址常常是 unsigned long, 
+利用了指针和长整型一直是相同大小的这个事实, 至少在 Linux 目前支持的所有平台上.
 
-��Ϊ����ֵ��ԭ��, C99 ��׼������ intptr_t �� uintptr_t ���͸�һ�����Գ���һ��ָ��ֵ�����ͱ���. ����, ��Щ���ͼ���û�� 2.6 �ں���ʹ��
+因为其所值的原因, C99 标准定义了 intptr_t 和 uintptr_t 类型给一个可以持有一个指针值的整型变量. 但是, 这些类型几乎没在 2.6 内核中使用
 */
 /* 
-Nginxʹ��ngx_int_t��װ�з������ͣ�ʹ��ngx_uint_t��װ�޷������͡�Nginx��ģ��ı������嶼�����ʹ�õģ������������Nginx��ϰ�ߣ��Դ����int��unsinged int��
+Nginx使用ngx_int_t封装有符号整型，使用ngx_uint_t封装无符号整型。Nginx各模块的变量定义都是如此使用的，建议读者沿用Nginx的习惯，以此替代int和unsinged int。
 
-��Linuxƽ̨�£�Nginx��ngx_int_t��ngx_uint_t�Ķ������£�
+在Linux平台下，Nginx对ngx_int_t和ngx_uint_t的定义如下：
 typedef intptr_t        ngx_int_t;
 typedef uintptr_t       ngx_uint_t;
 */
 typedef intptr_t        ngx_int_t;
 typedef uintptr_t       ngx_uint_t;
-typedef intptr_t        ngx_flag_t; //һ�������������е� ON | OFFѡ����  1����ON 0����OFF  ��ʼֵһ��Ҫ����ΪNGX_CONF_UNSET�����򱨴�����ngx_conf_set_flag_slot
+typedef intptr_t        ngx_flag_t; //一般用用配置项中的 ON | OFF选项标记  1代表ON 0代表OFF  初始值一定要设置为NGX_CONF_UNSET，否则报错，见ngx_conf_set_flag_slot
 
 #define NGX_INT32_LEN   (sizeof("-2147483648") - 1)
 #define NGX_INT64_LEN   (sizeof("-9223372036854775808") - 1)
@@ -133,7 +133,7 @@ typedef intptr_t        ngx_flag_t; //һ�������������е� ON | OFFѡ����  1����
 #endif
 
 #define ngx_align(d, a)     (((d) + (a - 1)) & ~(a - 1))
-//// �� m ���䵽�ڴ�����ַ 
+//// 将 m 对其到内存对齐地址 
 #define ngx_align_ptr(p, a)                                                    \
     (u_char *) (((uintptr_t) (p) + ((uintptr_t) a - 1)) & ~((uintptr_t) a - 1))
 

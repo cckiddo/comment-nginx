@@ -13,35 +13,35 @@
 #include <ngx_core.h>
 
 
-typedef struct ngx_list_part_s  ngx_list_part_t; //ngx_list_part_tÖ»ÃèÊöÁ´±íµÄÒ»¸öÔªËØ
+typedef struct ngx_list_part_s  ngx_list_part_t; //ngx_list_part_tåªæè¿°é“¾è¡¨çš„ä¸€ä¸ªå…ƒç´ 
 
-//Á´±íÍ¼ĞÎ»¯¼û<<ÊäÈëÀí½ânginx>> 3.2.3¡¡ngx_list_tÊı¾İ½á¹¹
-//ÄÚ´æ·ÖÅä²Î¿¼ngx_list_push
-struct ngx_list_part_s { //ngx_list_part_tÖ»ÃèÊöÁ´±íµÄÒ»¸öÔªËØ   Êı¾İ²¿·Ö×ÜµÄ¿Õ¼ä´óĞ¡Îªsize * nalloc×Ö½Ú
-    void             *elts; //Ö¸ÏòÊı×éµÄÆğÊ¼µØÖ·¡£
-    ngx_uint_t        nelts; //Êı×éµ±Ç°ÒÑÊ¹ÓÃÁË¶àÉÙÈİÁ¿  ±íÊ¾Êı×éÖĞÒÑ¾­Ê¹ÓÃÁË¶àÉÙ¸öÔªËØ¡£µ±È»£¬nelts±ØĞëĞ¡ÓÚngx_list_t ½á¹¹ÌåÖĞµÄnalloc¡£
-    ngx_list_part_t  *next; //ÏÂÒ»¸öÁ´±íÔªËØngx_list_part_tµÄµØÖ·¡£
+//é“¾è¡¨å›¾å½¢åŒ–è§<<è¾“å…¥ç†è§£nginx>> 3.2.3ã€€ngx_list_tæ•°æ®ç»“æ„
+//å†…å­˜åˆ†é…å‚è€ƒngx_list_push
+struct ngx_list_part_s { //ngx_list_part_tåªæè¿°é“¾è¡¨çš„ä¸€ä¸ªå…ƒç´    æ•°æ®éƒ¨åˆ†æ€»çš„ç©ºé—´å¤§å°ä¸ºsize * nallocå­—èŠ‚
+    void             *elts; //æŒ‡å‘æ•°ç»„çš„èµ·å§‹åœ°å€ã€‚
+    ngx_uint_t        nelts; //æ•°ç»„å½“å‰å·²ä½¿ç”¨äº†å¤šå°‘å®¹é‡  è¡¨ç¤ºæ•°ç»„ä¸­å·²ç»ä½¿ç”¨äº†å¤šå°‘ä¸ªå…ƒç´ ã€‚å½“ç„¶ï¼Œneltså¿…é¡»å°äºngx_list_t ç»“æ„ä½“ä¸­çš„nallocã€‚
+    ngx_list_part_t  *next; //ä¸‹ä¸€ä¸ªé“¾è¡¨å…ƒç´ ngx_list_part_tçš„åœ°å€ã€‚
 };
 
-/* ngx_list_tºÍngx_queue_tµÄÈ´±ğÔÚÓÚ:ngx_list_tĞèÒª¸ºÔğÈİÆ÷ÄÚ³ÉÔ±½ÚµãÄÚ´æ·ÖÅä£¬¶øngx_queue_t²»ĞèÒª */
-//ÓÃ·¨ºÍÊı×é±éÀú·½·¨¿ÉÒÔ²Î¿¼//ngx_http_request_s->headers_in.headers£¬ÀıÈç¿ÉÒÔ²Î¿¼º¯Êıngx_http_fastcgi_create_request
-typedef struct { //ngx_list_tÃèÊöÕû¸öÁ´±í
-    ngx_list_part_t  *last; //Ö¸ÏòÁ´±íµÄ×îºóÒ»¸öÊı×éÔªËØ¡£
-    ngx_list_part_t   part; //Á´±íµÄÊ×¸öÊı×éÔªËØ¡£ part¿ÉÄÜÖ¸Ïò¶à¸öÊı×é£¬Í¨¹ıpart->nextÀ´Ö¸Ïòµ±Ç°Êı×éËùÔÚµÄÏÂÒ»¸öÊı×éµÄÍ·²¿
+/* ngx_list_tå’Œngx_queue_tçš„å´åˆ«åœ¨äº:ngx_list_téœ€è¦è´Ÿè´£å®¹å™¨å†…æˆå‘˜èŠ‚ç‚¹å†…å­˜åˆ†é…ï¼Œè€Œngx_queue_tä¸éœ€è¦ */
+//ç”¨æ³•å’Œæ•°ç»„éå†æ–¹æ³•å¯ä»¥å‚è€ƒ//ngx_http_request_s->headers_in.headersï¼Œä¾‹å¦‚å¯ä»¥å‚è€ƒå‡½æ•°ngx_http_fastcgi_create_request
+typedef struct { //ngx_list_tæè¿°æ•´ä¸ªé“¾è¡¨
+    ngx_list_part_t  *last; //æŒ‡å‘é“¾è¡¨çš„æœ€åä¸€ä¸ªæ•°ç»„å…ƒç´ ã€‚
+    ngx_list_part_t   part; //é“¾è¡¨çš„é¦–ä¸ªæ•°ç»„å…ƒç´ ã€‚ partå¯èƒ½æŒ‡å‘å¤šä¸ªæ•°ç»„ï¼Œé€šè¿‡part->nextæ¥æŒ‡å‘å½“å‰æ•°ç»„æ‰€åœ¨çš„ä¸‹ä¸€ä¸ªæ•°ç»„çš„å¤´éƒ¨
     /*
-    Á´±íÖĞµÄÃ¿¸öngx_list_part_tÔªËØ¶¼ÊÇÒ»¸öÊı×é¡£ÒòÎªÊı×é´æ´¢µÄÊÇÄ³ÖÖÀàĞÍµÄÊı¾İ½á¹¹£¬ÇÒngx_list_t ÊÇ·Ç³£Áé»îµÄÊı¾İ½á¹¹£¬ËùÒÔËü²»»áÏŞÖÆ´æ´¢
-    Ê²Ã´ÑùµÄÊı¾İ£¬Ö»ÊÇÍ¨¹ısizeÏŞÖÆÃ¿Ò»¸öÊı×éÔªËØµÄÕ¼ÓÃµÄ¿Õ¼ä´óĞ¡£¬Ò²¾ÍÊÇÓÃ»§Òª´æ´¢µÄÒ»¸öÊı¾İËùÕ¼ÓÃµÄ×Ö½ÚÊı±ØĞëĞ¡ÓÚ»òµÈÓÚsize¡£
-    */ //size¾ÍÊÇÊı×éÔªËØÖĞµÄÃ¿¸ö×ÓÔªËØµÄ´óĞ¡×î´óÕâÃ´´ó
-    size_t            size;  //´´½¨listµÄÊ±ºòÔÚngx_list_create->ngx_list_initÖĞĞèÒªÖÆ¶¨nºÍsize´óĞ¡
-    ngx_uint_t        nalloc; //Á´±íµÄÊı×éÔªËØÒ»µ©·ÖÅäºóÊÇ²»¿É¸ü¸ÄµÄ¡£nalloc±íÊ¾Ã¿¸öngx_list_part_tÊı×éµÄÈİÁ¿£¬¼´×î¶à¿É´æ´¢¶àÉÙ¸öÊı¾İ¡£
-    ngx_pool_t       *pool; //Á´±íÖĞ¹ÜÀíÄÚ´æ·ÖÅäµÄÄÚ´æ³Ø¶ÔÏó¡£ÓÃ»§Òª´æ·ÅµÄÊı¾İÕ¼ÓÃµÄÄÚ´æ¶¼ÊÇÓÉpool·ÖÅäµÄ£¬ÏÂÎÄÖĞ»áÏêÏ¸½éÉÜ¡£
+    é“¾è¡¨ä¸­çš„æ¯ä¸ªngx_list_part_tå…ƒç´ éƒ½æ˜¯ä¸€ä¸ªæ•°ç»„ã€‚å› ä¸ºæ•°ç»„å­˜å‚¨çš„æ˜¯æŸç§ç±»å‹çš„æ•°æ®ç»“æ„ï¼Œä¸”ngx_list_t æ˜¯éå¸¸çµæ´»çš„æ•°æ®ç»“æ„ï¼Œæ‰€ä»¥å®ƒä¸ä¼šé™åˆ¶å­˜å‚¨
+    ä»€ä¹ˆæ ·çš„æ•°æ®ï¼Œåªæ˜¯é€šè¿‡sizeé™åˆ¶æ¯ä¸€ä¸ªæ•°ç»„å…ƒç´ çš„å ç”¨çš„ç©ºé—´å¤§å°ï¼Œä¹Ÿå°±æ˜¯ç”¨æˆ·è¦å­˜å‚¨çš„ä¸€ä¸ªæ•°æ®æ‰€å ç”¨çš„å­—èŠ‚æ•°å¿…é¡»å°äºæˆ–ç­‰äºsizeã€‚
+    */ //sizeå°±æ˜¯æ•°ç»„å…ƒç´ ä¸­çš„æ¯ä¸ªå­å…ƒç´ çš„å¤§å°æœ€å¤§è¿™ä¹ˆå¤§
+    size_t            size;  //åˆ›å»ºlistçš„æ—¶å€™åœ¨ngx_list_create->ngx_list_initä¸­éœ€è¦åˆ¶å®šnå’Œsizeå¤§å°
+    ngx_uint_t        nalloc; //é“¾è¡¨çš„æ•°ç»„å…ƒç´ ä¸€æ—¦åˆ†é…åæ˜¯ä¸å¯æ›´æ”¹çš„ã€‚nallocè¡¨ç¤ºæ¯ä¸ªngx_list_part_tæ•°ç»„çš„å®¹é‡ï¼Œå³æœ€å¤šå¯å­˜å‚¨å¤šå°‘ä¸ªæ•°æ®ã€‚
+    ngx_pool_t       *pool; //é“¾è¡¨ä¸­ç®¡ç†å†…å­˜åˆ†é…çš„å†…å­˜æ± å¯¹è±¡ã€‚ç”¨æˆ·è¦å­˜æ”¾çš„æ•°æ®å ç”¨çš„å†…å­˜éƒ½æ˜¯ç”±poolåˆ†é…çš„ï¼Œä¸‹æ–‡ä¸­ä¼šè¯¦ç»†ä»‹ç»ã€‚
 } ngx_list_t;
 
-//n size·Ö±ğ¶ÔÓ¦ngx_list_tÖĞµÄsizeºÍnalloc
+//n sizeåˆ†åˆ«å¯¹åº”ngx_list_tä¸­çš„sizeå’Œnalloc
 ngx_list_t *ngx_list_create(ngx_pool_t *pool, ngx_uint_t n, size_t size);
 
 static ngx_inline ngx_int_t
-ngx_list_init(ngx_list_t *list, ngx_pool_t *pool, ngx_uint_t n, size_t size) //n size·Ö±ğ¶ÔÓ¦ngx_list_tÖĞµÄsizeºÍnalloc
+ngx_list_init(ngx_list_t *list, ngx_pool_t *pool, ngx_uint_t n, size_t size) //n sizeåˆ†åˆ«å¯¹åº”ngx_list_tä¸­çš„sizeå’Œnalloc
 {
     list->part.elts = ngx_palloc(pool, n * size); 
     if (list->part.elts == NULL) {
@@ -59,7 +59,7 @@ ngx_list_init(ngx_list_t *list, ngx_pool_t *pool, ngx_uint_t n, size_t size) //n
 }
 
 
-/* ±éÀúlistÁ´±í
+/* éå†listé“¾è¡¨
  *
  *  the iteration through the list:
  *

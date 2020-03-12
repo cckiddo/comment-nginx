@@ -10,17 +10,17 @@
 #include <nginx.h>
 
 
-ngx_int_t   ngx_ncpu; //cpu¸öÊı
-ngx_int_t   ngx_max_sockets;//Ã¿¸ö½ø³ÌÄÜ´ò¿ªµÄ×î¶àÎÄ¼şÊı¡£ 
+ngx_int_t   ngx_ncpu; //cpuä¸ªæ•°
+ngx_int_t   ngx_max_sockets;//æ¯ä¸ªè¿›ç¨‹èƒ½æ‰“å¼€çš„æœ€å¤šæ–‡ä»¶æ•°ã€‚ 
 ngx_uint_t  ngx_inherited_nonblocking;
 ngx_uint_t  ngx_tcp_nodelay_and_tcp_nopush;
 
 
-struct rlimit  rlmt; //Ã¿¸ö½ø³ÌÄÜ´ò¿ªµÄ×î¶àÎÄ¼şÊı¡£ 
+struct rlimit  rlmt; //æ¯ä¸ªè¿›ç¨‹èƒ½æ‰“å¼€çš„æœ€å¤šæ–‡ä»¶æ•°ã€‚ 
 
 
 
-ngx_os_io_t ngx_os_io = {//Èç¹ûÊÇlinux²¢ÇÒ±àÒë¹ı³ÌÊ¹ÄÜÁËsendfileÕâÀïÃængx_os_specific_init¸³Öµngx_os_io = ngx_linux_io;
+ngx_os_io_t ngx_os_io = {//å¦‚æœæ˜¯linuxå¹¶ä¸”ç¼–è¯‘è¿‡ç¨‹ä½¿èƒ½äº†sendfileè¿™é‡Œé¢ngx_os_specific_initèµ‹å€¼ngx_os_io = ngx_linux_io;
     ngx_unix_recv,
     ngx_readv_chain,
     ngx_udp_unix_recv,
@@ -29,14 +29,14 @@ ngx_os_io_t ngx_os_io = {//Èç¹ûÊÇlinux²¢ÇÒ±àÒë¹ı³ÌÊ¹ÄÜÁËsendfileÕâÀïÃængx_os_spe
     0
 };
 
-//µ÷ÓÃngx_os_init()³õÊ¼»¯ÏµÍ³Ïà¹Ø±äÁ¿£¬ÈçÄÚ´æÒ³Ãæ´óĞ¡ngx_pagesize,ngx_cacheline_size,×î´óÁ¬½ÓÊıngx_max_socketsµÈ£»
+//è°ƒç”¨ngx_os_init()åˆå§‹åŒ–ç³»ç»Ÿç›¸å…³å˜é‡ï¼Œå¦‚å†…å­˜é¡µé¢å¤§å°ngx_pagesize,ngx_cacheline_size,æœ€å¤§è¿æ¥æ•°ngx_max_socketsç­‰ï¼›
 ngx_int_t
 ngx_os_init(ngx_log_t *log)
 {
     ngx_uint_t  n;
 
 #if (NGX_HAVE_OS_SPECIFIC_INIT)
-    if (ngx_os_specific_init(log) != NGX_OK) { //Èç¹ûÊÇlinux£¬ÕâÀïÃæ¸³Öµngx_os_io = ngx_linux_io;
+    if (ngx_os_specific_init(log) != NGX_OK) { //å¦‚æœæ˜¯linuxï¼Œè¿™é‡Œé¢èµ‹å€¼ngx_os_io = ngx_linux_io;
         return NGX_ERROR;
     }
 #endif
@@ -46,7 +46,7 @@ ngx_os_init(ngx_log_t *log)
     }
 
     /*
-    ·µ»ØÒ»¸ö·ÖÒ³µÄ´óĞ¡£¬µ¥Î»Îª×Ö½Ú(Byte)¡£¸ÃÖµÎªÏµÍ³µÄ·ÖÒ³´óĞ¡£¬²»Ò»¶¨»áºÍÓ²¼ş·ÖÒ³´óĞ¡ÏàÍ¬¡£ 
+    è¿”å›ä¸€ä¸ªåˆ†é¡µçš„å¤§å°ï¼Œå•ä½ä¸ºå­—èŠ‚(Byte)ã€‚è¯¥å€¼ä¸ºç³»ç»Ÿçš„åˆ†é¡µå¤§å°ï¼Œä¸ä¸€å®šä¼šå’Œç¡¬ä»¶åˆ†é¡µå¤§å°ç›¸åŒã€‚ 
     */
     ngx_pagesize = getpagesize();
     ngx_cacheline_size = NGX_CPU_CACHE_LINE;
@@ -55,7 +55,7 @@ ngx_os_init(ngx_log_t *log)
 
 #if (NGX_HAVE_SC_NPROCESSORS_ONLN)
     if (ngx_ncpu == 0) {
-        ngx_ncpu = sysconf(_SC_NPROCESSORS_ONLN); //»ñÈ¡ÏµÍ³ÖĞ¿ÉÓÃµÄ CPU ÊıÁ¿, Ã»ÓĞ±»¼¤»îµÄ CPU Ôò²»Í³¼Æ ÔÚÄÚ, ÀıÈçÈÈÌí¼Óºó»¹Ã»ÓĞ¼¤»îµÄ. 
+        ngx_ncpu = sysconf(_SC_NPROCESSORS_ONLN); //è·å–ç³»ç»Ÿä¸­å¯ç”¨çš„ CPU æ•°é‡, æ²¡æœ‰è¢«æ¿€æ´»çš„ CPU åˆ™ä¸ç»Ÿè®¡ åœ¨å†…, ä¾‹å¦‚çƒ­æ·»åŠ åè¿˜æ²¡æœ‰æ¿€æ´»çš„. 
     }
 #endif
 
@@ -65,7 +65,7 @@ ngx_os_init(ngx_log_t *log)
 
     ngx_cpuinfo();
 
-    if (getrlimit(RLIMIT_NOFILE, &rlmt) == -1) { // Ã¿¸ö½ø³ÌÄÜ´ò¿ªµÄ×î¶àÎÄ¼şÊı¡£ 
+    if (getrlimit(RLIMIT_NOFILE, &rlmt) == -1) { // æ¯ä¸ªè¿›ç¨‹èƒ½æ‰“å¼€çš„æœ€å¤šæ–‡ä»¶æ•°ã€‚ 
         
         ngx_log_error(NGX_LOG_ALERT, log, errno,
                       "getrlimit(RLIMIT_NOFILE) failed)");

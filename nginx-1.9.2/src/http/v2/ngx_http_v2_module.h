@@ -15,32 +15,32 @@
 
 
 typedef struct {
-    //ÉèÖÃÃ¿Ò»¸öworkerµÄÊäÈë»º³åÇø´óĞ¡
-    size_t                          recv_buffer_size; //http2_recv_buffer_sizeÅäÖÃÏîÖ¸¶¨  Ä¬ÈÏÖµ256 * 1024
-    u_char                         *recv_buffer; //¸ù¾İrecv_buffer_size·ÖÅäÄÚ´æ£¬¸³Öµ¼ûngx_http_v2_init
+    //è®¾ç½®æ¯ä¸€ä¸ªworkerçš„è¾“å…¥ç¼“å†²åŒºå¤§å°
+    size_t                          recv_buffer_size; //http2_recv_buffer_sizeé…ç½®é¡¹æŒ‡å®š  é»˜è®¤å€¼256 * 1024
+    u_char                         *recv_buffer; //æ ¹æ®recv_buffer_sizeåˆ†é…å†…å­˜ï¼Œèµ‹å€¼è§ngx_http_v2_init
 } ngx_http_v2_main_conf_t;
 
 
 typedef struct {
-    size_t                          pool_size; //http2_pool_sizeÅäÖÃÏîÖ¸¶¨£¬¿Õ¼ä·ÖÅäÔÚngx_http_v2_init
-    /* Ò»¸öÁ¬½ÓÉÏÍ¬Ê±´¦ÀíµÄÁ÷×î´óÏŞ¶È£¬ÉúĞ§¼ûngx_http_v2_state_headers */
-    ngx_uint_t                      concurrent_streams; //http2_max_concurrent_streamsÅäÖÃÏîÖ¸¶¨ Ä¬ÈÏ128
-    //ÏŞÖÆ¾­¹ıHPACKÑ¹ËõºóÇëÇóÍ·ÖĞµ¥¸öname:value×Ö¶ÎµÄ×î´ó³ß´ç¡£
-    size_t                          max_field_size; //http2_max_field_sizeÅäÖÃÏîÖ¸¶¨  Ä¬ÈÏ4096
-    /* headerÄÚÈİÖĞµÄËùÓĞname+valueÖ®ºÍ³¤¶È×î´óÖµ£¬ÉúĞ§¼ûngx_http_v2_state_process_header 
-    ÏŞÖÆ¾­¹ıHPACKÑ¹ËõºóÍêÕûÇëÇóÍ·µÄ×î´ó³ß´ç¡£
+    size_t                          pool_size; //http2_pool_sizeé…ç½®é¡¹æŒ‡å®šï¼Œç©ºé—´åˆ†é…åœ¨ngx_http_v2_init
+    /* ä¸€ä¸ªè¿æ¥ä¸ŠåŒæ—¶å¤„ç†çš„æµæœ€å¤§é™åº¦ï¼Œç”Ÿæ•ˆè§ngx_http_v2_state_headers */
+    ngx_uint_t                      concurrent_streams; //http2_max_concurrent_streamsé…ç½®é¡¹æŒ‡å®š é»˜è®¤128
+    //é™åˆ¶ç»è¿‡HPACKå‹ç¼©åè¯·æ±‚å¤´ä¸­å•ä¸ªname:valueå­—æ®µçš„æœ€å¤§å°ºå¯¸ã€‚
+    size_t                          max_field_size; //http2_max_field_sizeé…ç½®é¡¹æŒ‡å®š  é»˜è®¤4096
+    /* headerå†…å®¹ä¸­çš„æ‰€æœ‰name+valueä¹‹å’Œé•¿åº¦æœ€å¤§å€¼ï¼Œç”Ÿæ•ˆè§ngx_http_v2_state_process_header 
+    é™åˆ¶ç»è¿‡HPACKå‹ç¼©åå®Œæ•´è¯·æ±‚å¤´çš„æœ€å¤§å°ºå¯¸ã€‚
     */
-    size_t                          max_header_size; //http2_max_header_sizeÅäÖÃÏîÖ¸¶¨ Ä¬ÈÏ16384
-    ngx_uint_t                      streams_index_mask; //http2_streams_index_sizeÅäÖÃÏîÖ¸¶¨ Ä¬ÈÏ32-1
-    ngx_msec_t                      recv_timeout; //http2_recv_timeoutÅäÖÃÏîÖ¸¶¨  Ä¬ÈÏ30000
-    /* ÉèÖÃ¿ÕÏĞÁ¬½Ó¹Ø±ÕµÄ³¬Ê±Ê±¼ä¡£ */
-    ngx_msec_t                      idle_timeout; //http2_idle_timeoutÅäÖÃÏîÖ¸¶¨  Ä¬ÈÏ180000
+    size_t                          max_header_size; //http2_max_header_sizeé…ç½®é¡¹æŒ‡å®š é»˜è®¤16384
+    ngx_uint_t                      streams_index_mask; //http2_streams_index_sizeé…ç½®é¡¹æŒ‡å®š é»˜è®¤32-1
+    ngx_msec_t                      recv_timeout; //http2_recv_timeouté…ç½®é¡¹æŒ‡å®š  é»˜è®¤30000
+    /* è®¾ç½®ç©ºé—²è¿æ¥å…³é—­çš„è¶…æ—¶æ—¶é—´ã€‚ */
+    ngx_msec_t                      idle_timeout; //http2_idle_timeouté…ç½®é¡¹æŒ‡å®š  é»˜è®¤180000
 } ngx_http_v2_srv_conf_t;
 
 typedef struct {
-    /* ÉèÖÃÏìÓ¦±¨ÎÄÄÚÈİ£¨response body£©·ÖÆ¬µÄ×î´ó³¤¶È¡£Èç¹ûÕâ¸öÖµ¹ıĞ¡£¬½«»á´øÀ´¸ü¸ßµÄ¿ªÏú£¬
-        Èç¹ûÖµ¹ı´ó£¬Ôò»áµ¼ÖÂÏßÍ·×èÈûµÄÎÊÌâ¡£Ä¬ÈÏ´óĞ¡8k¡£ */
-    size_t                          chunk_size; //http2_chunk_sizeÅäÖÃÏîÖ¸¶¨
+    /* è®¾ç½®å“åº”æŠ¥æ–‡å†…å®¹ï¼ˆresponse bodyï¼‰åˆ†ç‰‡çš„æœ€å¤§é•¿åº¦ã€‚å¦‚æœè¿™ä¸ªå€¼è¿‡å°ï¼Œå°†ä¼šå¸¦æ¥æ›´é«˜çš„å¼€é”€ï¼Œ
+        å¦‚æœå€¼è¿‡å¤§ï¼Œåˆ™ä¼šå¯¼è‡´çº¿å¤´é˜»å¡çš„é—®é¢˜ã€‚é»˜è®¤å¤§å°8kã€‚ */
+    size_t                          chunk_size; //http2_chunk_sizeé…ç½®é¡¹æŒ‡å®š
 } ngx_http_v2_loc_conf_t;
 
 

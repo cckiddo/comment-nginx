@@ -22,48 +22,48 @@ typedef u_char *(*ngx_http_log_op_run_pt) (ngx_http_request_t *r, u_char *buf,
 typedef size_t (*ngx_http_log_op_getlen_pt) (ngx_http_request_t *r,
     uintptr_t data);
 
-//¸³Öµ¼ûngx_http_log_compile_format£¬È¡ÖµÉúĞ§¼ûngx_http_log_handler
-struct ngx_http_log_op_s { //·Çngx_http_log_vars±äÁ¿¸³Öµ¼ûngx_http_log_variable_compile»òÕßngx_http_log_vars±äÁ¿¸³ÖµÖ±½ÓÔÚngx_http_log_compile_format
+//èµ‹å€¼è§ngx_http_log_compile_formatï¼Œå–å€¼ç”Ÿæ•ˆè§ngx_http_log_handler
+struct ngx_http_log_op_s { //éngx_http_log_varså˜é‡èµ‹å€¼è§ngx_http_log_variable_compileæˆ–è€…ngx_http_log_varså˜é‡èµ‹å€¼ç›´æ¥åœ¨ngx_http_log_compile_format
     size_t                      len;
     ngx_http_log_op_getlen_pt   getlen;
     ngx_http_log_op_run_pt      run;
     uintptr_t                   data;
 };
 
-//´´½¨¿Õ¼äºÍ¸³Öµ¼ûngx_http_log_set_format  ngx_http_log_set_format->ngx_http_log_compile_format
+//åˆ›å»ºç©ºé—´å’Œèµ‹å€¼è§ngx_http_log_set_format  ngx_http_log_set_format->ngx_http_log_compile_format
 typedef struct {
-    ngx_str_t                   name;//log_format combined ¡®$remote_addr $remote_user [$time_local]¡¯ÖĞµÄcombined£¬±êÊ¶½ÓÈëÈÕÖ¾µÄ¸ñÊ½Ãû
-    ngx_array_t                *flushes;//³ÉÔ±ÀàĞÍngx_int_t£¬±£´æµÄÊÇ·Çngx_http_log_vars±äÁ¿ÔÚ±äÁ¿Êı×éÖĞµÄ´æ´¢ĞòºÅindex,¼ûngx_http_log_variable_compile 
-    //log_format combined ¡®$remote_addr $remote_user [$time_local]¡¯ÖĞµÄ$remote_addr $remote_user [$time_local]£¬±êÊ¶½ÓÈëÈÕÖ¾µÄ¸ñÊ½
-    ngx_array_t                *ops;        /* array of ngx_http_log_op_t */ //ÓÃÓÚ½âÎö±äÁ¿¶ÔÓ¦µÄvalue ngx_http_log_set_format->ngx_http_log_compile_format
+    ngx_str_t                   name;//log_format combined â€˜$remote_addr $remote_user [$time_local]â€™ä¸­çš„combinedï¼Œæ ‡è¯†æ¥å…¥æ—¥å¿—çš„æ ¼å¼å
+    ngx_array_t                *flushes;//æˆå‘˜ç±»å‹ngx_int_tï¼Œä¿å­˜çš„æ˜¯éngx_http_log_varså˜é‡åœ¨å˜é‡æ•°ç»„ä¸­çš„å­˜å‚¨åºå·index,è§ngx_http_log_variable_compile 
+    //log_format combined â€˜$remote_addr $remote_user [$time_local]â€™ä¸­çš„$remote_addr $remote_user [$time_local]ï¼Œæ ‡è¯†æ¥å…¥æ—¥å¿—çš„æ ¼å¼
+    ngx_array_t                *ops;        /* array of ngx_http_log_op_t */ //ç”¨äºè§£æå˜é‡å¯¹åº”çš„value ngx_http_log_set_format->ngx_http_log_compile_format
 } ngx_http_log_fmt_t;
 
 
 typedef struct {
-    //ngx_http_log_set_formatÖĞ½øĞĞ²ÎÊıÉèÖÃ´´½¨¿Õ¼ä²¢¸³Öµ£¬¼ûngx_http_log_set_format£¬»òÕßÄ¬ÈÏÎªngx_http_combined_fmt£¬¼ûngx_http_log_init
+    //ngx_http_log_set_formatä¸­è¿›è¡Œå‚æ•°è®¾ç½®åˆ›å»ºç©ºé—´å¹¶èµ‹å€¼ï¼Œè§ngx_http_log_set_formatï¼Œæˆ–è€…é»˜è®¤ä¸ºngx_http_combined_fmtï¼Œè§ngx_http_log_init
     ngx_array_t                 formats;    /* array of ngx_http_log_fmt_t */
-    //access_log /path/xxx combinedÔòÖÃ1£¬¼ûngx_http_log_set_log£¬ÔòformatsÄ¬ÈÏÎªngx_http_combined_fmt
+    //access_log /path/xxx combinedåˆ™ç½®1ï¼Œè§ngx_http_log_set_logï¼Œåˆ™formatsé»˜è®¤ä¸ºngx_http_combined_fmt
     ngx_uint_t                  combined_used; /* unsigned  combined_used:1 */
 } ngx_http_log_main_conf_t;
 
-//access_log /path buffer=xxµÄÊ±ºò´´½¨¿Õ¼äºÍ¸³Öµ£¬¼ûngx_http_log_set_log
+//access_log /path buffer=xxçš„æ—¶å€™åˆ›å»ºç©ºé—´å’Œèµ‹å€¼ï¼Œè§ngx_http_log_set_log
 typedef struct {
     u_char                     *start;
     u_char                     *pos;
     u_char                     *last;
 
-    ngx_event_t                *event; //Èç¹ûÅäÖÃ´øÓĞfluash£¬ÔòÆô¶¯¶¨Ê±Æ÷ ¼ûngx_http_log_set_log
-    ngx_msec_t                  flush; //flush½ÓÈëÈÕÖ¾µ½´ÅÅÌµÄÊ±¼ä  ÔÚngx_http_log_handlerÖĞÍ¨¹ı¶¨Ê±Æ÷ÉúĞ§
+    ngx_event_t                *event; //å¦‚æœé…ç½®å¸¦æœ‰fluashï¼Œåˆ™å¯åŠ¨å®šæ—¶å™¨ è§ngx_http_log_set_log
+    ngx_msec_t                  flush; //flushæ¥å…¥æ—¥å¿—åˆ°ç£ç›˜çš„æ—¶é—´  åœ¨ngx_http_log_handlerä¸­é€šè¿‡å®šæ—¶å™¨ç”Ÿæ•ˆ
     ngx_int_t                   gzip; //access_log /path buffer=xxx gzip=xx
 } ngx_http_log_buf_t;
 
 
 /*
-»ù±¾Ã¿¸ö°üº¬ÓĞ±äÁ¿²ÎÊıµÄÅäÖÃÖ¸ÁîÏîµÄ´¦ÀíÄ£Ê½¶¼´óÍ¬Ğ¡Òì£º
-1.¶ÔÓÚÄÜ¹»½ÓÊÕ±äÁ¿²ÎÊıµÄÖ¸Áî£¬ÏÈ¶¨ÒåºÍÅäÖÃÖ¸ÁîÏà¹ØµÄÓÃÓÚ´æ´¢´¦ÀíºóµÄ±äÁ¿´¦Àí½Å±¾µÄ½á¹¹Ìå (ngx_http_log_script_t)¡£Ã¿¸ö±äÁ¿²ÎÊı¶ÔÓ¦Ò»¸ö´ËÀàĞÍ¶ÔÏó¡£
-2.½âÎöÊ±ÅĞ¶Ï²ÎÊıÊÇ·ñº¬ÓĞ±äÁ¿ (ngx_http_script_variables_count)
-3.Èç¹û²ÎÊıº¬ÓĞ±äÁ¿£¬½«´Ë²ÎÊıºÍ±äÁ¿´¦Àí½Å±¾´æ´¢½á¹¹ÌåÍ¨¹ı½Å±¾±àÒëÆ÷µÄÊäÈë½á¹¹ ngx_http_script_compile_t ½»ÓÉ ngx_http_script_compile ½øĞĞ´¦Àí¡£
-ngx_http_script_compile º¯Êı¶Ô²ÎÊıÏî½øĞĞÕûÀí£¬´æÈë ngx_http_log_script_t ±äÁ¿ÖĞ£º
+åŸºæœ¬æ¯ä¸ªåŒ…å«æœ‰å˜é‡å‚æ•°çš„é…ç½®æŒ‡ä»¤é¡¹çš„å¤„ç†æ¨¡å¼éƒ½å¤§åŒå°å¼‚ï¼š
+1.å¯¹äºèƒ½å¤Ÿæ¥æ”¶å˜é‡å‚æ•°çš„æŒ‡ä»¤ï¼Œå…ˆå®šä¹‰å’Œé…ç½®æŒ‡ä»¤ç›¸å…³çš„ç”¨äºå­˜å‚¨å¤„ç†åçš„å˜é‡å¤„ç†è„šæœ¬çš„ç»“æ„ä½“ (ngx_http_log_script_t)ã€‚æ¯ä¸ªå˜é‡å‚æ•°å¯¹åº”ä¸€ä¸ªæ­¤ç±»å‹å¯¹è±¡ã€‚
+2.è§£ææ—¶åˆ¤æ–­å‚æ•°æ˜¯å¦å«æœ‰å˜é‡ (ngx_http_script_variables_count)
+3.å¦‚æœå‚æ•°å«æœ‰å˜é‡ï¼Œå°†æ­¤å‚æ•°å’Œå˜é‡å¤„ç†è„šæœ¬å­˜å‚¨ç»“æ„ä½“é€šè¿‡è„šæœ¬ç¼–è¯‘å™¨çš„è¾“å…¥ç»“æ„ ngx_http_script_compile_t äº¤ç”± ngx_http_script_compile è¿›è¡Œå¤„ç†ã€‚
+ngx_http_script_compile å‡½æ•°å¯¹å‚æ•°é¡¹è¿›è¡Œæ•´ç†ï¼Œå­˜å…¥ ngx_http_log_script_t å˜é‡ä¸­ï¼š
 */
 typedef struct {
     ngx_array_t                *lengths;
@@ -72,30 +72,30 @@ typedef struct {
 
 
 typedef struct {
-    //µ±access_logÖ¸¶¨Â·¾¶ÊÇ³£Á¿µÄÊ±ºòÊ¹ÓÃfile¼ÇÂ¼£¬Õâ¸öÎÄ¼ş¼ÇÂ¼»á·ÅÈëµ½cycle->open_files
+    //å½“access_logæŒ‡å®šè·¯å¾„æ˜¯å¸¸é‡çš„æ—¶å€™ä½¿ç”¨fileè®°å½•ï¼Œè¿™ä¸ªæ–‡ä»¶è®°å½•ä¼šæ”¾å…¥åˆ°cycle->open_files
     ngx_open_file_t            *file;
-    //µ±access_logÖ¸¶¨Â·¾¶ÊÇ±äÁ¿µÄÊ±ºòÊ¹ÓÃscript¼ÇÂ¼
+    //å½“access_logæŒ‡å®šè·¯å¾„æ˜¯å˜é‡çš„æ—¶å€™ä½¿ç”¨scriptè®°å½•
     ngx_http_log_script_t      *script;
     time_t                      disk_full_time;
     time_t                      error_log_time;
     ngx_syslog_peer_t          *syslog_peer;
     ngx_http_log_fmt_t         *format;
-    ngx_http_complex_value_t   *filter; //access_log xxx if=yyyÅäÖÃÖĞµÄyyy´æ´¢ÔÚfilterÖĞ
+    ngx_http_complex_value_t   *filter; //access_log xxx if=yyyé…ç½®ä¸­çš„yyyå­˜å‚¨åœ¨filterä¸­
 } ngx_http_log_t;
 
 /*
-¶¼½«ĞÅÏ¢·ÅÈëÁË ngx_http_log_loc_conf_tµÄlogsÕâ¸öÊı×éÀï½øĞĞ¹ÜÀí£¬logsÊı×éµÄÔªËØÊÇngx_http_log_t¡£
+éƒ½å°†ä¿¡æ¯æ”¾å…¥äº† ngx_http_log_loc_conf_tçš„logsè¿™ä¸ªæ•°ç»„é‡Œè¿›è¡Œç®¡ç†ï¼Œlogsæ•°ç»„çš„å…ƒç´ æ˜¯ngx_http_log_tã€‚
 */
 typedef struct {
-    //access_logÅäÖÃĞÅÏ¢¶¼½«´æÈëlogsÕâ¸öÊı×éÀï½øĞĞ¹ÜÀí   ´´½¨¿Õ¼ä¼°³õÊ¼»¯¼ûngx_http_log_set_log
+    //access_logé…ç½®ä¿¡æ¯éƒ½å°†å­˜å…¥logsè¿™ä¸ªæ•°ç»„é‡Œè¿›è¡Œç®¡ç†   åˆ›å»ºç©ºé—´åŠåˆå§‹åŒ–è§ngx_http_log_set_log
     ngx_array_t                *logs;       /* array of ngx_http_log_t */
 
     ngx_open_file_cache_t      *open_file_cache;
     time_t                      open_file_cache_valid;
     ngx_uint_t                  open_file_cache_min_uses;
 
-    //ngx_http_log_handlerÈç¹ûÅäÖÃÎªoff,Ôò²»Ğ´Èë½ÓÈëÈÕÖ¾
-    ngx_uint_t                  off;        /* unsigned  off:1 */  //ÅäÖÃaccess_log offÖÃ1
+    //ngx_http_log_handlerå¦‚æœé…ç½®ä¸ºoff,åˆ™ä¸å†™å…¥æ¥å…¥æ—¥å¿—
+    ngx_uint_t                  off;        /* unsigned  off:1 */  //é…ç½®access_log offç½®1
 } ngx_http_log_loc_conf_t;
 
 
@@ -166,7 +166,7 @@ static ngx_int_t ngx_http_log_init(ngx_conf_t *cf);
 
 
 /*
-ÅäÖÃÊµÀı
+é…ç½®å®ä¾‹
 log_format gzip '$remote_addr - $remote_user [$time_local] '
                 '"$request" $status $bytes_sent '
                 '"$http_referer" "$http_user_agent" "$gzip_ratio"';
@@ -177,29 +177,29 @@ access_log /spool/logs/nginx-access.log gzip buffer=32k;
 static ngx_command_t  ngx_http_log_commands[] = {
 
 /*
-Óï·¨:  log_format name string ...;
-Ä¬ÈÏÖµ:  log_format combined "..."; 
-ÉÏÏÂÎÄ:  http
+è¯­æ³•:  log_format name string ...;
+é»˜è®¤å€¼:  log_format combined "..."; 
+ä¸Šä¸‹æ–‡:  http
  
 
-Ö¸¶¨ÈÕÖ¾µÄ¸ñÊ½¡£ 
+æŒ‡å®šæ—¥å¿—çš„æ ¼å¼ã€‚ 
 
-ÈÕÖ¾¸ñÊ½ÔÊĞí°üº¬ÆÕÍ¨±äÁ¿ºÍÖ»ÔÚÈÕÖ¾Ğ´ÈëÊ±´æÔÚµÄ±äÁ¿£º  Ò»ÏÂ±äÁ¿²Î¿¼ngx_http_core_variables
-$body_bytes_sent·¢ËÍ¸ø¿Í»§¶ËµÄ×Ö½ÚÊı£¬²»°üÀ¨ÏìÓ¦Í·µÄ´óĞ¡£» ¸Ã±äÁ¿ÓëApacheÄ£¿émod_log_configÀïµÄ¡°%B¡±²ÎÊı¼æÈİ¡£ 
-$bytes_sent·¢ËÍ¸ø¿Í»§¶ËµÄ×Ü×Ö½ÚÊı¡£ 
-$connectionÁ¬½ÓµÄĞòÁĞºÅ¡£ 
-$connection_requestsµ±Ç°Í¨¹ıÒ»¸öÁ¬½Ó»ñµÃµÄÇëÇóÊıÁ¿¡£ 
-$msecÈÕÖ¾Ğ´ÈëÊ±¼ä¡£µ¥Î»ÎªÃë£¬¾«¶ÈÊÇºÁÃë¡£ 
-$pipeÈç¹ûÇëÇóÊÇÍ¨¹ıHTTPÁ÷Ë®Ïß(pipelined)·¢ËÍ£¬pipeÖµÎª¡°p¡±£¬·ñÔòÎª¡°.¡±¡£ 
-$request_lengthÇëÇóµÄ³¤¶È£¨°üÀ¨ÇëÇóĞĞ£¬ÇëÇóÍ·ºÍÇëÇóÕıÎÄ£©¡£ 
-$request_timeÇëÇó´¦ÀíÊ±¼ä£¬µ¥Î»ÎªÃë£¬¾«¶ÈºÁÃë£» ´Ó¶ÁÈë¿Í»§¶ËµÄµÚÒ»¸ö×Ö½Ú¿ªÊ¼£¬Ö±µ½°Ñ×îºóÒ»¸ö×Ö·û·¢ËÍ¸ø¿Í»§¶Ëºó½øĞĞÈÕÖ¾Ğ´ÈëÎªÖ¹¡£ 
-$statusÏìÓ¦×´Ì¬¡£ 
-$time_iso8601ISO8601±ê×¼¸ñÊ½ÏÂµÄ±¾µØÊ±¼ä¡£
-$time_localÍ¨ÓÃÈÕÖ¾¸ñÊ½ÏÂµÄ±¾µØÊ±¼ä¡£ 
+æ—¥å¿—æ ¼å¼å…è®¸åŒ…å«æ™®é€šå˜é‡å’Œåªåœ¨æ—¥å¿—å†™å…¥æ—¶å­˜åœ¨çš„å˜é‡ï¼š  ä¸€ä¸‹å˜é‡å‚è€ƒngx_http_core_variables
+$body_bytes_sentå‘é€ç»™å®¢æˆ·ç«¯çš„å­—èŠ‚æ•°ï¼Œä¸åŒ…æ‹¬å“åº”å¤´çš„å¤§å°ï¼› è¯¥å˜é‡ä¸Apacheæ¨¡å—mod_log_configé‡Œçš„â€œ%Bâ€å‚æ•°å…¼å®¹ã€‚ 
+$bytes_sentå‘é€ç»™å®¢æˆ·ç«¯çš„æ€»å­—èŠ‚æ•°ã€‚ 
+$connectionè¿æ¥çš„åºåˆ—å·ã€‚ 
+$connection_requestså½“å‰é€šè¿‡ä¸€ä¸ªè¿æ¥è·å¾—çš„è¯·æ±‚æ•°é‡ã€‚ 
+$msecæ—¥å¿—å†™å…¥æ—¶é—´ã€‚å•ä½ä¸ºç§’ï¼Œç²¾åº¦æ˜¯æ¯«ç§’ã€‚ 
+$pipeå¦‚æœè¯·æ±‚æ˜¯é€šè¿‡HTTPæµæ°´çº¿(pipelined)å‘é€ï¼Œpipeå€¼ä¸ºâ€œpâ€ï¼Œå¦åˆ™ä¸ºâ€œ.â€ã€‚ 
+$request_lengthè¯·æ±‚çš„é•¿åº¦ï¼ˆåŒ…æ‹¬è¯·æ±‚è¡Œï¼Œè¯·æ±‚å¤´å’Œè¯·æ±‚æ­£æ–‡ï¼‰ã€‚ 
+$request_timeè¯·æ±‚å¤„ç†æ—¶é—´ï¼Œå•ä½ä¸ºç§’ï¼Œç²¾åº¦æ¯«ç§’ï¼› ä»è¯»å…¥å®¢æˆ·ç«¯çš„ç¬¬ä¸€ä¸ªå­—èŠ‚å¼€å§‹ï¼Œç›´åˆ°æŠŠæœ€åä¸€ä¸ªå­—ç¬¦å‘é€ç»™å®¢æˆ·ç«¯åè¿›è¡Œæ—¥å¿—å†™å…¥ä¸ºæ­¢ã€‚ 
+$statuså“åº”çŠ¶æ€ã€‚ 
+$time_iso8601ISO8601æ ‡å‡†æ ¼å¼ä¸‹çš„æœ¬åœ°æ—¶é—´ã€‚
+$time_localé€šç”¨æ—¥å¿—æ ¼å¼ä¸‹çš„æœ¬åœ°æ—¶é—´ã€‚ 
 
-·¢ËÍ¸ø¿Í»§¶ËµÄÏìÓ¦Í·ÓµÓĞ¡°sent_http_¡±Ç°×º¡£ ±ÈÈç$sent_http_content_range¡£ 
+å‘é€ç»™å®¢æˆ·ç«¯çš„å“åº”å¤´æ‹¥æœ‰â€œsent_http_â€å‰ç¼€ã€‚ æ¯”å¦‚$sent_http_content_rangeã€‚ 
 
-ÅäÖÃÊ¼ÖÕ°üº¬Ô¤ÏÈ¶¨ÒåµÄ¡°combined¡±ÈÕÖ¾¸ñÊ½£º 
+é…ç½®å§‹ç»ˆåŒ…å«é¢„å…ˆå®šä¹‰çš„â€œcombinedâ€æ—¥å¿—æ ¼å¼ï¼š 
 
 log_format combined '$remote_addr - $remote_user [$time_local] '
                     '"$request" $status $body_bytes_sent '
@@ -227,28 +227,28 @@ access_log logs/access.log combined;
 Context: 
 http, server, location, if in location, limit_except 
 
-Óï·¨:  access_log path [format [buffer=size]];
+è¯­æ³•:  access_log path [format [buffer=size]];
 access_log off;
  
-Ä¬ÈÏÖµ:  access_log logs/access.log combined;
-ÉÏÏÂÎÄ:  http, server, location, if in location, limit_except
+é»˜è®¤å€¼:  access_log logs/access.log combined;
+ä¸Šä¸‹æ–‡:  http, server, location, if in location, limit_except
 
-Îª·ÃÎÊÈÕÖ¾ÉèÖÃÂ·¾¶£¬¸ñÊ½ºÍ»º³åÇø´óĞ¡£¨nginx·ÃÎÊÈÕÖ¾Ö§³Ö»º´æ£©¡£ ÔÚÍ¬Ò»¸öÅäÖÃ²ã¼¶Àï¿ÉÒÔÖ¸¶¨¶à¸öÈÕÖ¾¡£ ÌØ¶¨Öµoff»áÈ¡Ïûµ±Ç°ÅäÖÃ²ã
-¼¶ÀïµÄËùÓĞaccess_logÖ¸Áî¡£ Èç¹ûÃ»ÓĞÖ¸¶¨ÈÕÖ¾¸ñÊ½Ôò»áÊ¹ÓÃÔ¤¶¨ÒåµÄ¡°combined¡±¸ñÊ½¡£ 
+ä¸ºè®¿é—®æ—¥å¿—è®¾ç½®è·¯å¾„ï¼Œæ ¼å¼å’Œç¼“å†²åŒºå¤§å°ï¼ˆnginxè®¿é—®æ—¥å¿—æ”¯æŒç¼“å­˜ï¼‰ã€‚ åœ¨åŒä¸€ä¸ªé…ç½®å±‚çº§é‡Œå¯ä»¥æŒ‡å®šå¤šä¸ªæ—¥å¿—ã€‚ ç‰¹å®šå€¼offä¼šå–æ¶ˆå½“å‰é…ç½®å±‚
+çº§é‡Œçš„æ‰€æœ‰access_logæŒ‡ä»¤ã€‚ å¦‚æœæ²¡æœ‰æŒ‡å®šæ—¥å¿—æ ¼å¼åˆ™ä¼šä½¿ç”¨é¢„å®šä¹‰çš„â€œcombinedâ€æ ¼å¼ã€‚ 
 
-»º³åÇøµÄ´óĞ¡²»ÄÜ³¬¹ı´ÅÅÌÎÄ¼şÔ­×ÓĞÔĞ´ÈëµÄ´óĞ¡¡£ ¶ÔÓÚFreeBSDÀ´Ëµ»º³åÇø´óĞ¡ÊÇÎŞÏŞÖÆµÄ¡£ 
+ç¼“å†²åŒºçš„å¤§å°ä¸èƒ½è¶…è¿‡ç£ç›˜æ–‡ä»¶åŸå­æ€§å†™å…¥çš„å¤§å°ã€‚ å¯¹äºFreeBSDæ¥è¯´ç¼“å†²åŒºå¤§å°æ˜¯æ— é™åˆ¶çš„ã€‚ 
 
-ÈÕÖ¾ÎÄ¼şµÄÂ·¾¶¿ÉÒÔ°üº¬±äÁ¿£¨0.7.6+£©£¬ µ«´ËÀàÈÕÖ¾´æÔÚÒ»Ğ©ÏŞÖÆ£º 
-? ¹¤×÷½ø³ÌÊ¹ÓÃµÄuser Ó¦ÓµÓĞÔÚÄ¿Â¼Àï´´½¨ÎÄ¼şµÄÈ¨ÏŞ£» 
-? Ğ´»º³åÎŞĞ§£» 
-? Ã¿ÌõÈÕÖ¾Ğ´Èë¶¼»á´ò¿ªºÍ¹Ø±ÕÎÄ¼ş¡£È»¶ø£¬Æµ·±Ê¹ÓÃµÄÎÄ¼şÃèÊö·û¿ÉÒÔ´æ´¢ÔÚ»º´æÖĞ£¬ ÔÚopen_log_file_cacheÖ¸ÁîµÄvalid²ÎÊıÖ¸¶¨µÄÊ±¼äÀï£¬ Ğ´²Ù×÷ÄÜ³ÖĞøĞ´µ½¾ÉÎÄ¼ş¡£ 
-? Ã¿´ÎÈÕÖ¾Ğ´ÈëµÄ²Ù×÷¶¼»á¼ì²éÇëÇóµÄ ¸ùÄ¿Â¼ÊÇ·ñ´æÔÚ£¬ Èç¹û²»´æÔÚÔòÈÕÖ¾²»»á±»´´½¨¡£ Òò´ËÔÚÒ»¸ö²ã¼¶ÀïÍ¬Ê±Ö¸¶¨root ºÍaccess_logÊÇÒ»¸ö²»´íµÄÏë·¨£º 
+æ—¥å¿—æ–‡ä»¶çš„è·¯å¾„å¯ä»¥åŒ…å«å˜é‡ï¼ˆ0.7.6+ï¼‰ï¼Œ ä½†æ­¤ç±»æ—¥å¿—å­˜åœ¨ä¸€äº›é™åˆ¶ï¼š 
+? å·¥ä½œè¿›ç¨‹ä½¿ç”¨çš„user åº”æ‹¥æœ‰åœ¨ç›®å½•é‡Œåˆ›å»ºæ–‡ä»¶çš„æƒé™ï¼› 
+? å†™ç¼“å†²æ— æ•ˆï¼› 
+? æ¯æ¡æ—¥å¿—å†™å…¥éƒ½ä¼šæ‰“å¼€å’Œå…³é—­æ–‡ä»¶ã€‚ç„¶è€Œï¼Œé¢‘ç¹ä½¿ç”¨çš„æ–‡ä»¶æè¿°ç¬¦å¯ä»¥å­˜å‚¨åœ¨ç¼“å­˜ä¸­ï¼Œ åœ¨open_log_file_cacheæŒ‡ä»¤çš„validå‚æ•°æŒ‡å®šçš„æ—¶é—´é‡Œï¼Œ å†™æ“ä½œèƒ½æŒç»­å†™åˆ°æ—§æ–‡ä»¶ã€‚ 
+? æ¯æ¬¡æ—¥å¿—å†™å…¥çš„æ“ä½œéƒ½ä¼šæ£€æŸ¥è¯·æ±‚çš„ æ ¹ç›®å½•æ˜¯å¦å­˜åœ¨ï¼Œ å¦‚æœä¸å­˜åœ¨åˆ™æ—¥å¿—ä¸ä¼šè¢«åˆ›å»ºã€‚ å› æ­¤åœ¨ä¸€ä¸ªå±‚çº§é‡ŒåŒæ—¶æŒ‡å®šroot å’Œaccess_logæ˜¯ä¸€ä¸ªä¸é”™çš„æƒ³æ³•ï¼š 
 server {
     root       /spool/vhost/data/$host;
     access_log /spool/vhost/logs/$host;
     ...
 */
-//Èç¹ûÔÚÍ¬Ò»{}ÅäÖÃ¶à¸öaccess_log xxx,Ôò»áÔÚngx_http_log_handlerÖĞÎªÃ¿Ò»¸öÅäÖÃaccess_log¼ÇÂ¼£¬ÀıÈçÅäÖÃÁËaccess_log path1;Í¬Ê±ÅäÖÃaccess_log_path2,Ôò½ÓÈëÈÕÖ¾»áÔÚÀïÍ¬Ê±¼ÇÂ¼µ½path1ºÍpath2
+//å¦‚æœåœ¨åŒä¸€{}é…ç½®å¤šä¸ªaccess_log xxx,åˆ™ä¼šåœ¨ngx_http_log_handlerä¸­ä¸ºæ¯ä¸€ä¸ªé…ç½®access_logè®°å½•ï¼Œä¾‹å¦‚é…ç½®äº†access_log path1;åŒæ—¶é…ç½®access_log_path2,åˆ™æ¥å…¥æ—¥å¿—ä¼šåœ¨é‡ŒåŒæ—¶è®°å½•åˆ°path1å’Œpath2
     { ngx_string("access_log"),
       NGX_HTTP_MAIN_CONF|NGX_HTTP_SRV_CONF|NGX_HTTP_LOC_CONF|NGX_HTTP_LIF_CONF
                         |NGX_HTTP_LMT_CONF|NGX_CONF_1MORE,
@@ -258,25 +258,25 @@ server {
       NULL },
 
 /*
-Óï·¨:  open_log_file_cache max=N [inactive=time] [min_uses=N] [valid=time];
+è¯­æ³•:  open_log_file_cache max=N [inactive=time] [min_uses=N] [valid=time];
 open_log_file_cache off;
  
-Ä¬ÈÏÖµ:  open_log_file_cache off;
-ÉÏÏÂÎÄ:  http, server, location
+é»˜è®¤å€¼:  open_log_file_cache off;
+ä¸Šä¸‹æ–‡:  http, server, location
  
-¶¨ÒåÒ»¸ö»º´æ£¬ÓÃÀ´´æ´¢Æµ·±Ê¹ÓÃµÄÎÄ¼şÃûÖĞ°üº¬±äÁ¿µÄÈÕÖ¾ÎÄ¼şÃèÊö·û¡£ ¸ÃÖ¸Áî°üº¬ÒÔÏÂ²ÎÊı£º 
-maxÉèÖÃ»º´æÖĞÃèÊö·ûµÄ×î´óÊıÁ¿£»Èç¹û»º´æ±»Õ¼Âú£¬×î½ü×îÉÙÊ¹ÓÃ£¨LRU£©µÄÃèÊö·û½«±»¹Ø±Õ¡£ inactiveÉèÖÃ»º´æÎÄ¼şÃèÊö·ûÔÚ¶à³¤Ê±¼äÄÚ
-Ã»ÓĞ±»·ÃÎÊ¾Í¹Ø±Õ£» Ä¬ÈÏÎª10Ãë¡£ min_usesÉèÖÃÔÚinactive²ÎÊıÖ¸¶¨µÄÊ±¼äÀï£¬ ×îÉÙ·ÃÎÊ¶àÉÙ´Î²ÅÄÜÊ¹ÎÄ¼şÃèÊö·û±£ÁôÔÚ»º´æÖĞ£»Ä¬ÈÏÎª1¡£ 
-validÉèÖÃÒ»¶ÎÓÃÓÚ¼ì²é³¬Ê±ºóÎÄ¼şÊÇ·ñÈÔÒÔÍ¬ÑùÃû×Ö´æÔÚµÄÊ±¼ä£» Ä¬ÈÏÎª60Ãë¡£ off½ûÓÃ»º´æ¡£ 
+å®šä¹‰ä¸€ä¸ªç¼“å­˜ï¼Œç”¨æ¥å­˜å‚¨é¢‘ç¹ä½¿ç”¨çš„æ–‡ä»¶åä¸­åŒ…å«å˜é‡çš„æ—¥å¿—æ–‡ä»¶æè¿°ç¬¦ã€‚ è¯¥æŒ‡ä»¤åŒ…å«ä»¥ä¸‹å‚æ•°ï¼š 
+maxè®¾ç½®ç¼“å­˜ä¸­æè¿°ç¬¦çš„æœ€å¤§æ•°é‡ï¼›å¦‚æœç¼“å­˜è¢«å æ»¡ï¼Œæœ€è¿‘æœ€å°‘ä½¿ç”¨ï¼ˆLRUï¼‰çš„æè¿°ç¬¦å°†è¢«å…³é—­ã€‚ inactiveè®¾ç½®ç¼“å­˜æ–‡ä»¶æè¿°ç¬¦åœ¨å¤šé•¿æ—¶é—´å†…
+æ²¡æœ‰è¢«è®¿é—®å°±å…³é—­ï¼› é»˜è®¤ä¸º10ç§’ã€‚ min_usesè®¾ç½®åœ¨inactiveå‚æ•°æŒ‡å®šçš„æ—¶é—´é‡Œï¼Œ æœ€å°‘è®¿é—®å¤šå°‘æ¬¡æ‰èƒ½ä½¿æ–‡ä»¶æè¿°ç¬¦ä¿ç•™åœ¨ç¼“å­˜ä¸­ï¼›é»˜è®¤ä¸º1ã€‚ 
+validè®¾ç½®ä¸€æ®µç”¨äºæ£€æŸ¥è¶…æ—¶åæ–‡ä»¶æ˜¯å¦ä»ä»¥åŒæ ·åå­—å­˜åœ¨çš„æ—¶é—´ï¼› é»˜è®¤ä¸º60ç§’ã€‚ offç¦ç”¨ç¼“å­˜ã€‚ 
 
-Ê¹ÓÃÊµÀı£º open_log_file_cache max=1000 inactive=20s valid=1m min_uses=2;
+ä½¿ç”¨å®ä¾‹ï¼š open_log_file_cache max=1000 inactive=20s valid=1m min_uses=2;
 */
 
 /*
-nginxÓĞÁ½¸öÖ¸ÁîÊÇ¹ÜÀí»º´æÎÄ¼şÃèÊö·ûµÄ:Ò»¸ö¾ÍÊÇ±¾ÎÄÖĞËµµ½µÄngx_http_log_moduleÄ£¿éµÄopen_file_log_cacheÅäÖÃ;´æ´¢ÔÚngx_http_log_loc_conf_t->open_file_cache 
-ÁíÒ»¸öÊÇngx_http_core_moduleÄ£¿éµÄ open_file_cacheÅäÖÃ£¬´æ´¢ÔÚngx_http_core_loc_conf_t->open_file_cache;Ç°ÕßÊÇÖ»ÓÃÀ´¹ÜÀíaccess±äÁ¿ÈÕÖ¾ÎÄ¼ş¡£
-ºóÕßÓÃÀ´¹ÜÀíµÄ¾Í¶àÁË£¬°üÀ¨£ºstatic£¬index£¬tryfiles£¬gzip£¬mp4£¬flv£¬¶¼ÊÇ¾²Ì¬ÎÄ¼şÅ¶!
-ÕâÁ½¸öÖ¸ÁîµÄhandler¶¼µ÷ÓÃÁËº¯Êı ngx_open_file_cache_init £¬Õâ¾ÍÊÇÓÃÀ´¹ÜÀí»º´æÎÄ¼şÃèÊö·ûµÄµÚÒ»²½£º³õÊ¼»¯
+nginxæœ‰ä¸¤ä¸ªæŒ‡ä»¤æ˜¯ç®¡ç†ç¼“å­˜æ–‡ä»¶æè¿°ç¬¦çš„:ä¸€ä¸ªå°±æ˜¯æœ¬æ–‡ä¸­è¯´åˆ°çš„ngx_http_log_moduleæ¨¡å—çš„open_file_log_cacheé…ç½®;å­˜å‚¨åœ¨ngx_http_log_loc_conf_t->open_file_cache 
+å¦ä¸€ä¸ªæ˜¯ngx_http_core_moduleæ¨¡å—çš„ open_file_cacheé…ç½®ï¼Œå­˜å‚¨åœ¨ngx_http_core_loc_conf_t->open_file_cache;å‰è€…æ˜¯åªç”¨æ¥ç®¡ç†accesså˜é‡æ—¥å¿—æ–‡ä»¶ã€‚
+åè€…ç”¨æ¥ç®¡ç†çš„å°±å¤šäº†ï¼ŒåŒ…æ‹¬ï¼šstaticï¼Œindexï¼Œtryfilesï¼Œgzipï¼Œmp4ï¼Œflvï¼Œéƒ½æ˜¯é™æ€æ–‡ä»¶å“¦!
+è¿™ä¸¤ä¸ªæŒ‡ä»¤çš„handleréƒ½è°ƒç”¨äº†å‡½æ•° ngx_open_file_cache_init ï¼Œè¿™å°±æ˜¯ç”¨æ¥ç®¡ç†ç¼“å­˜æ–‡ä»¶æè¿°ç¬¦çš„ç¬¬ä¸€æ­¥ï¼šåˆå§‹åŒ–
 */
     { ngx_string("open_log_file_cache"),
       NGX_HTTP_MAIN_CONF|NGX_HTTP_SRV_CONF|NGX_HTTP_LOC_CONF|NGX_CONF_TAKE1234,
@@ -304,10 +304,10 @@ static ngx_http_module_t  ngx_http_log_module_ctx = {
 };
 
 /*
-NginxµÄÈÕÖ¾Ä£¿é£¨ÕâÀïËùËµµÄÈÕÖ¾Ä£¿éÊÇngx_errlog_moduleÄ£¿é£¬¶øngx_http_log_moduleÄ£¿éÊÇÓÃÓÚ¼ÇÂ¼HTTPÇëÇóµÄ·ÃÎÊÈÕÖ¾µÄ£¬
-Á½Õß¹¦ÄÜ²»Í¬£¬ÔÚÊµÏÖÉÏÒ²Ã»ÓĞÈÎºÎ¹ØÏµ£©ÎªÆäËûÄ£¿éÌá¹©ÁË»ù±¾µÄ¼ÇÂ¼ÈÕÖ¾¹¦ÄÜ
-ngx_http_log_moduleÄ£¿é°´Ö¸¶¨µÄ¸ñÊ½Ğ´·ÃÎÊÈÕÖ¾¡£ ÇëÇóÔÚ´¦Àí½áÊøÊ±£¬»á°´ÇëÇóÂ·¾¶µÄÅäÖÃÉÏÏÂÎÄ¼Ç·ÃÎÊÈÕÖ¾
-ngx_http_log_moduleÊÇÊôÓÚnginx×´Ì¬»ú×îºóÒ»¸ö½×¶ÎNGX_HTTP_LOG_PHASEµÄ´¦ÀíÄ£¿é£¬¼´Ò»¸öhttpÇëÇó½áÊøÊ±Ö´ĞĞµÄ£¬ËüµÄÈÎÎñ¾ÍÊÇ´òÓ¡Õâ´ÎrequestµÄ·ÃÎÊÇé¿ö¡£
+Nginxçš„æ—¥å¿—æ¨¡å—ï¼ˆè¿™é‡Œæ‰€è¯´çš„æ—¥å¿—æ¨¡å—æ˜¯ngx_errlog_moduleæ¨¡å—ï¼Œè€Œngx_http_log_moduleæ¨¡å—æ˜¯ç”¨äºè®°å½•HTTPè¯·æ±‚çš„è®¿é—®æ—¥å¿—çš„ï¼Œ
+ä¸¤è€…åŠŸèƒ½ä¸åŒï¼Œåœ¨å®ç°ä¸Šä¹Ÿæ²¡æœ‰ä»»ä½•å…³ç³»ï¼‰ä¸ºå…¶ä»–æ¨¡å—æä¾›äº†åŸºæœ¬çš„è®°å½•æ—¥å¿—åŠŸèƒ½
+ngx_http_log_moduleæ¨¡å—æŒ‰æŒ‡å®šçš„æ ¼å¼å†™è®¿é—®æ—¥å¿—ã€‚ è¯·æ±‚åœ¨å¤„ç†ç»“æŸæ—¶ï¼Œä¼šæŒ‰è¯·æ±‚è·¯å¾„çš„é…ç½®ä¸Šä¸‹æ–‡è®°è®¿é—®æ—¥å¿—
+ngx_http_log_moduleæ˜¯å±äºnginxçŠ¶æ€æœºæœ€åä¸€ä¸ªé˜¶æ®µNGX_HTTP_LOG_PHASEçš„å¤„ç†æ¨¡å—ï¼Œå³ä¸€ä¸ªhttpè¯·æ±‚ç»“æŸæ—¶æ‰§è¡Œçš„ï¼Œå®ƒçš„ä»»åŠ¡å°±æ˜¯æ‰“å°è¿™æ¬¡requestçš„è®¿é—®æƒ…å†µã€‚
 */
 ngx_module_t  ngx_http_log_module = {
     NGX_MODULE_V1,
@@ -354,13 +354,13 @@ static ngx_http_log_var_t  ngx_http_log_vars[] = {
 };
 
 /*
-ÔÚ11¸öngx_http_phases½×¶ÎÖĞ£¬×î¶ÜÒ»¸ö½×¶Î½Ğ×öNGX_HTTP_LOG_PHASE£¬ËüÊÇÓÃÀ´¼ÇÂ¼¿Í»§¶ËµÄ·ÃÎÊÈÕÖ¾µÄ¡£ÔÚÕâÒ»²½ÖèÖĞ£¬½«»áÒÀ´Îµ÷ÓÃ
-NGX_HTTP_LOG_PHASE½×¶ÎµÄËùÓĞ»Øµ÷·½·¨¼ÇÂ¼ÈÕÖ¾¡£¹Ù·½µÄngx_http_log_moduleÄ£¿é¾ÍÊÇÔÚÕâÀï¼ÇÂ¼access_logµÄ¡£ ´æ´¢ÔÚaccess_logËùÖ¸¶¨µÄÎÄ¼ş
+åœ¨11ä¸ªngx_http_phasesé˜¶æ®µä¸­ï¼Œæœ€ç›¾ä¸€ä¸ªé˜¶æ®µå«åšNGX_HTTP_LOG_PHASEï¼Œå®ƒæ˜¯ç”¨æ¥è®°å½•å®¢æˆ·ç«¯çš„è®¿é—®æ—¥å¿—çš„ã€‚åœ¨è¿™ä¸€æ­¥éª¤ä¸­ï¼Œå°†ä¼šä¾æ¬¡è°ƒç”¨
+NGX_HTTP_LOG_PHASEé˜¶æ®µçš„æ‰€æœ‰å›è°ƒæ–¹æ³•è®°å½•æ—¥å¿—ã€‚å®˜æ–¹çš„ngx_http_log_moduleæ¨¡å—å°±æ˜¯åœ¨è¿™é‡Œè®°å½•access_logçš„ã€‚ å­˜å‚¨åœ¨access_logæ‰€æŒ‡å®šçš„æ–‡ä»¶
 */
 
-//°´ÕÕaccess_logÅäÖÃ£¬°Ñ½ÓÈëÈÕÖ¾°´ÕÕÖ¸¶¨¸ñÊ½Ğ´ÈëÎÄ¼ş
+//æŒ‰ç…§access_logé…ç½®ï¼ŒæŠŠæ¥å…¥æ—¥å¿—æŒ‰ç…§æŒ‡å®šæ ¼å¼å†™å…¥æ–‡ä»¶
 static ngx_int_t
-ngx_http_log_handler(ngx_http_request_t *r) //ngx_http_log_requestÖĞÖ´ĞĞ
+ngx_http_log_handler(ngx_http_request_t *r) //ngx_http_log_requestä¸­æ‰§è¡Œ
 {
     u_char                   *line, *p;
     size_t                    len, size;
@@ -377,12 +377,12 @@ ngx_http_log_handler(ngx_http_request_t *r) //ngx_http_log_requestÖĞÖ´ĞĞ
 
     lcf = ngx_http_get_module_loc_conf(r, ngx_http_log_module);
 
-    if (lcf->off) { //ngx_http_log_handlerÈç¹ûÅäÖÃÎªoff,Ôò²»Ğ´Èë½ÓÈëÈÕÖ¾
+    if (lcf->off) { //ngx_http_log_handlerå¦‚æœé…ç½®ä¸ºoff,åˆ™ä¸å†™å…¥æ¥å…¥æ—¥å¿—
         return NGX_OK;
     }
 
     
-    //Èç¹ûÔÚÍ¬Ò»{}ÅäÖÃ¶à¸öaccess_log xxx,Ôò»áÔÚngx_http_log_handlerÖĞÎªÃ¿Ò»¸öÅäÖÃaccess_log¼ÇÂ¼£¬ÀıÈçÅäÖÃÁËaccess_log path1;Í¬Ê±ÅäÖÃaccess_log_path2,Ôò½ÓÈëÈÕÖ¾»áÔÚÀïÍ¬Ê±¼ÇÂ¼µ½path1ºÍpath2
+    //å¦‚æœåœ¨åŒä¸€{}é…ç½®å¤šä¸ªaccess_log xxx,åˆ™ä¼šåœ¨ngx_http_log_handlerä¸­ä¸ºæ¯ä¸€ä¸ªé…ç½®access_logè®°å½•ï¼Œä¾‹å¦‚é…ç½®äº†access_log path1;åŒæ—¶é…ç½®access_log_path2,åˆ™æ¥å…¥æ—¥å¿—ä¼šåœ¨é‡ŒåŒæ—¶è®°å½•åˆ°path1å’Œpath2
     log = lcf->logs->elts;
     for (l = 0; l < lcf->logs->nelts; l++) { 
 
@@ -1295,7 +1295,7 @@ ngx_http_log_set_log(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
         return NGX_CONF_ERROR;
     }
 
-//Èç¹ûÔÚÍ¬Ò»{}ÅäÖÃ¶à¸öaccess_log xxx,Ôò»áÔÚngx_http_log_handlerÖĞÎªÃ¿Ò»¸öÅäÖÃaccess_log¼ÇÂ¼£¬ÀıÈçÅäÖÃÁËaccess_log path1;Í¬Ê±ÅäÖÃaccess_log_path2,Ôò½ÓÈëÈÕÖ¾»áÔÚÀïÍ¬Ê±¼ÇÂ¼µ½path1ºÍpath2
+//å¦‚æœåœ¨åŒä¸€{}é…ç½®å¤šä¸ªaccess_log xxx,åˆ™ä¼šåœ¨ngx_http_log_handlerä¸­ä¸ºæ¯ä¸€ä¸ªé…ç½®access_logè®°å½•ï¼Œä¾‹å¦‚é…ç½®äº†access_log path1;åŒæ—¶é…ç½®access_log_path2,åˆ™æ¥å…¥æ—¥å¿—ä¼šåœ¨é‡ŒåŒæ—¶è®°å½•åˆ°path1å’Œpath2
     if (llcf->logs == NULL) { 
         llcf->logs = ngx_array_create(cf->pool, 2, sizeof(ngx_http_log_t));
         if (llcf->logs == NULL) {
@@ -1329,7 +1329,7 @@ ngx_http_log_set_log(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
         goto process_formats;
     }
 
-    n = ngx_http_script_variables_count(&value[1]); //²é¿´²ÎÊıÖĞÊÇ·ñ´øÓĞ$±äÁ¿
+    n = ngx_http_script_variables_count(&value[1]); //æŸ¥çœ‹å‚æ•°ä¸­æ˜¯å¦å¸¦æœ‰$å˜é‡
 
     if (n == 0) {
         log->file = ngx_conf_open_file(cf->cycle, &value[1]);
@@ -1339,8 +1339,8 @@ ngx_http_log_set_log(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
 
     } else {
         /*
-        ngx_conf_full_name ÔÚ "$host/access.log" Ç°Ìí¼Ó Nginx µÄ prefix Â·¾¶¡£º¯Êı³É¹¦·µ»Øºó£¬value[1] µÄÖµ½«±ä³É 
-        "/usr/local/nginx/conf/$host/access.log" (¼ÙÉèÎÒÃÇÊ¹ÓÃÄ¬ÈÏÑ¡Ïî£¬½« Nginx °²×°µ½ÁË/usr/local/nginx ÏÂ)¡£
+        ngx_conf_full_name åœ¨ "$host/access.log" å‰æ·»åŠ  Nginx çš„ prefix è·¯å¾„ã€‚å‡½æ•°æˆåŠŸè¿”å›åï¼Œvalue[1] çš„å€¼å°†å˜æˆ 
+        "/usr/local/nginx/conf/$host/access.log" (å‡è®¾æˆ‘ä»¬ä½¿ç”¨é»˜è®¤é€‰é¡¹ï¼Œå°† Nginx å®‰è£…åˆ°äº†/usr/local/nginx ä¸‹)ã€‚
          */
         if (ngx_conf_full_name(cf->cycle, &value[1], 0) != NGX_OK) {
             return NGX_CONF_ERROR;
@@ -1357,7 +1357,7 @@ ngx_http_log_set_log(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
         sc.source = &value[1];
         sc.lengths = &log->script->lengths;
         sc.values = &log->script->values;
-        sc.variables = n; //$±äÁ¿¸öÊı
+        sc.variables = n; //$å˜é‡ä¸ªæ•°
         sc.complete_lengths = 1;
         sc.complete_values = 1;
 
@@ -1368,20 +1368,20 @@ ngx_http_log_set_log(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
 
 process_formats:
 
-    if (cf->args->nelts >= 3) { //Èç¹ûÓĞÅäÖÃÈÕÖ¾¼ÇÂ¼¸ñÊ½
+    if (cf->args->nelts >= 3) { //å¦‚æœæœ‰é…ç½®æ—¥å¿—è®°å½•æ ¼å¼
         name = value[2];
 
         if (ngx_strcmp(name.data, "combined") == 0) {
             lmcf->combined_used = 1;
         }
 
-    } else { //Èç¹ûÃ»ÓĞÅäÖÃÈÕÖ¾¼ÇÂ¼¸ñÊ½£¬Ä¬ÈÏÊ¹ÓÃcombined
+    } else { //å¦‚æœæ²¡æœ‰é…ç½®æ—¥å¿—è®°å½•æ ¼å¼ï¼Œé»˜è®¤ä½¿ç”¨combined
         ngx_str_set(&name, "combined");
         lmcf->combined_used = 1;
     }
 
     fmt = lmcf->formats.elts;
-    for (i = 0; i < lmcf->formats.nelts; i++) { //access_log path formatÖĞµÄformat±ØĞëÓÉlog_formatÅäÖÃ¹ı£¬·ñÔò±¨´í
+    for (i = 0; i < lmcf->formats.nelts; i++) { //access_log path formatä¸­çš„formatå¿…é¡»ç”±log_formaté…ç½®è¿‡ï¼Œå¦åˆ™æŠ¥é”™
         if (fmt[i].name.len == name.len
             && ngx_strcasecmp(fmt[i].name.data, name.data) == 0)
         {
@@ -1422,8 +1422,8 @@ process_formats:
             continue;
         }
 
-        //Ö¸¶¨¶à¾Ã¶¨Ê±°ÑbufferÖĞ»º´æµÄÈÕÖ¾fluashµ½´ÅÅÌ
-        if (ngx_strncmp(value[i].data, "flush=", 6) == 0) { //¶à¾ÃÕæÕıÍ¨¹ıflushĞ´Èë´ÅÅÌ£¬write²¢²»ÊÇÒ»¶¨Ğ´Èë´ÅÅÌ£¬µ÷ÓÃwriteºóÒ»°ãÓÉ²Ù×÷ÏµÍ³¶¨Ê±Ğ´Èë´ÅÅÌ£¬¿ÉÒÔÍ¨¹ıflushÁ¢¿ÌĞ´Èë´ÅÅÌ
+        //æŒ‡å®šå¤šä¹…å®šæ—¶æŠŠbufferä¸­ç¼“å­˜çš„æ—¥å¿—fluashåˆ°ç£ç›˜
+        if (ngx_strncmp(value[i].data, "flush=", 6) == 0) { //å¤šä¹…çœŸæ­£é€šè¿‡flushå†™å…¥ç£ç›˜ï¼Œwriteå¹¶ä¸æ˜¯ä¸€å®šå†™å…¥ç£ç›˜ï¼Œè°ƒç”¨writeåä¸€èˆ¬ç”±æ“ä½œç³»ç»Ÿå®šæ—¶å†™å…¥ç£ç›˜ï¼Œå¯ä»¥é€šè¿‡flushç«‹åˆ»å†™å…¥ç£ç›˜
             s.len = value[i].len - 6;
             s.data = value[i].data + 6;
 
@@ -1508,7 +1508,7 @@ process_formats:
 
     if (size) {
 
-        if (log->script) {//buffer·½Ê½µÄ½ÓÈëÈÕÖ¾²»Ö§³Ö±äÁ¿ÎÄ¼şÃû
+        if (log->script) {//bufferæ–¹å¼çš„æ¥å…¥æ—¥å¿—ä¸æ”¯æŒå˜é‡æ–‡ä»¶å
             ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                                "buffered logs cannot have variables in name");
             return NGX_CONF_ERROR;
@@ -1538,7 +1538,7 @@ process_formats:
         }
 
 
-        //´´½¨»º´æ½ÓÈëÈÕÖ¾µÄbuffer
+        //åˆ›å»ºç¼“å­˜æ¥å…¥æ—¥å¿—çš„buffer
         buffer = ngx_pcalloc(cf->pool, sizeof(ngx_http_log_buf_t));
         if (buffer == NULL) {
             return NGX_CONF_ERROR;
@@ -1575,7 +1575,7 @@ process_formats:
     return NGX_CONF_OK;
 }
 
-//±£´ælog_formatÅäÖÃµÄĞÅÏ¢
+//ä¿å­˜log_formaté…ç½®çš„ä¿¡æ¯
 static char *
 ngx_http_log_set_format(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
 {
@@ -1723,7 +1723,7 @@ ngx_http_log_compile_format(ngx_conf_t *cf, ngx_array_t *flushes,
                         return NGX_CONF_ERROR;
                     }
 
-                    *flush = op->data; /* variable index */ //Èç¹ûlog_formatÅäÖÃµÄÊÇ³ıngx_http_log_varsÒÔÍâµÄ±äÁ¿µÄË÷Òı
+                    *flush = op->data; /* variable index */ //å¦‚æœlog_formaté…ç½®çš„æ˜¯é™¤ngx_http_log_varsä»¥å¤–çš„å˜é‡çš„ç´¢å¼•
                 }
 
             found:
@@ -1778,10 +1778,10 @@ invalid:
 }
 
 /*
-nginxÓĞÁ½¸öÖ¸ÁîÊÇ¹ÜÀí»º´æÎÄ¼şÃèÊö·ûµÄ:Ò»¸ö¾ÍÊÇ±¾ÎÄÖĞËµµ½µÄngx_http_log_moduleÄ£¿éµÄopen_file_log_cacheÅäÖÃ;´æ´¢ÔÚngx_http_log_loc_conf_t->open_file_cache 
-ÁíÒ»¸öÊÇngx_http_core_moduleÄ£¿éµÄ open_file_cacheÅäÖÃ£¬´æ´¢ÔÚngx_http_core_loc_conf_t->open_file_cache;Ç°ÕßÊÇÖ»ÓÃÀ´¹ÜÀíaccess±äÁ¿ÈÕÖ¾ÎÄ¼ş¡£
-ºóÕßÓÃÀ´¹ÜÀíµÄ¾Í¶àÁË£¬°üÀ¨£ºstatic£¬index£¬tryfiles£¬gzip£¬mp4£¬flv£¬¶¼ÊÇ¾²Ì¬ÎÄ¼şÅ¶!
-ÕâÁ½¸öÖ¸ÁîµÄhandler¶¼µ÷ÓÃÁËº¯Êı ngx_open_file_cache_init £¬Õâ¾ÍÊÇÓÃÀ´¹ÜÀí»º´æÎÄ¼şÃèÊö·ûµÄµÚÒ»²½£º³õÊ¼»¯
+nginxæœ‰ä¸¤ä¸ªæŒ‡ä»¤æ˜¯ç®¡ç†ç¼“å­˜æ–‡ä»¶æè¿°ç¬¦çš„:ä¸€ä¸ªå°±æ˜¯æœ¬æ–‡ä¸­è¯´åˆ°çš„ngx_http_log_moduleæ¨¡å—çš„open_file_log_cacheé…ç½®;å­˜å‚¨åœ¨ngx_http_log_loc_conf_t->open_file_cache 
+å¦ä¸€ä¸ªæ˜¯ngx_http_core_moduleæ¨¡å—çš„ open_file_cacheé…ç½®ï¼Œå­˜å‚¨åœ¨ngx_http_core_loc_conf_t->open_file_cache;å‰è€…æ˜¯åªç”¨æ¥ç®¡ç†accesså˜é‡æ—¥å¿—æ–‡ä»¶ã€‚
+åè€…ç”¨æ¥ç®¡ç†çš„å°±å¤šäº†ï¼ŒåŒ…æ‹¬ï¼šstaticï¼Œindexï¼Œtryfilesï¼Œgzipï¼Œmp4ï¼Œflvï¼Œéƒ½æ˜¯é™æ€æ–‡ä»¶å“¦!
+è¿™ä¸¤ä¸ªæŒ‡ä»¤çš„handleréƒ½è°ƒç”¨äº†å‡½æ•° ngx_open_file_cache_init ï¼Œè¿™å°±æ˜¯ç”¨æ¥ç®¡ç†ç¼“å­˜æ–‡ä»¶æè¿°ç¬¦çš„ç¬¬ä¸€æ­¥ï¼šåˆå§‹åŒ–
 */
 static char *
 ngx_http_log_open_file_cache(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
@@ -1930,7 +1930,7 @@ ngx_http_log_init(ngx_conf_t *cf)
         return NGX_ERROR;
     }
 
-    *h = ngx_http_log_handler; //ÔÚngx_http_log_requestÖĞÖ´ĞĞ
+    *h = ngx_http_log_handler; //åœ¨ngx_http_log_requestä¸­æ‰§è¡Œ
 
     return NGX_OK;
 }

@@ -52,22 +52,22 @@ static ngx_conf_post_handler_pt  ngx_http_accesskey_signature_p =
     ngx_http_accesskey_signature;
 
 /*
-ÎÒµÄÊµÏÖ·ÀµÁÁ´µÄ×ö·¨£¬Ò²ÊÇ²Î¿¼¸ÃÎ»Ç°±²µÄÎÄÕÂ¡£»ù±¾Ô­Àí¾ÍÊÇ¾ÍÊÇÒ»¾ä»°£ºÍ¨¹ıÅĞ¶ÏrequestÇëÇóÍ·µÄreferÊÇ·ñÀ´Ô´ÓÚ±¾Õ¾¡££¨µ±È»ÇëÇóÍ·ÊÇÀ´×ÔÓÚ¿Í»§¶ËµÄ£¬
-ÊÇ¿ÉÎ±ÔìµÄ£¬Ôİ²»ÔÚ±¾ÎÄÌÖÂÛ·¶Î§ÄÚ£©¡£
+æˆ‘çš„å®ç°é˜²ç›—é“¾çš„åšæ³•ï¼Œä¹Ÿæ˜¯å‚è€ƒè¯¥ä½å‰è¾ˆçš„æ–‡ç« ã€‚åŸºæœ¬åŸç†å°±æ˜¯å°±æ˜¯ä¸€å¥è¯ï¼šé€šè¿‡åˆ¤æ–­requestè¯·æ±‚å¤´çš„referæ˜¯å¦æ¥æºäºæœ¬ç«™ã€‚ï¼ˆå½“ç„¶è¯·æ±‚å¤´æ˜¯æ¥è‡ªäºå®¢æˆ·ç«¯çš„ï¼Œ
+æ˜¯å¯ä¼ªé€ çš„ï¼Œæš‚ä¸åœ¨æœ¬æ–‡è®¨è®ºèŒƒå›´å†…ï¼‰ã€‚
 
-2£®  Ê×ÏÈÎÒÃÇÈ¥ÁË½âÏÂÊ²Ã´ÊÇHTTP Referer¡£¼òÑÔÖ®£¬HTTP RefererÊÇheaderµÄÒ»²¿·Ö£¬µ±ä¯ÀÀÆ÷Ïòweb·şÎñÆ÷·¢ËÍÇëÇóµÄÊ±ºò£¬Ò»°ã»á´øÉÏReferer£¬¸æËß
-·şÎñÆ÷ÎÒÊÇ´ÓÄÄ¸öÒ³ÃæÁ´½Ó¹ıÀ´µÄ£¬·şÎñÆ÷¼®´Ë¿ÉÒÔ»ñµÃÒ»Ğ©ĞÅÏ¢ÓÃÓÚ´¦Àí¡£±ÈÈç´ÓÎÒÖ÷Ò³ÉÏÁ´½Óµ½Ò»¸öÅóÓÑÄÇÀï£¬ËûµÄ·şÎñÆ÷¾ÍÄÜ¹»´ÓHTTP RefererÖĞÍ³¼Æ
-³öÃ¿ÌìÓĞ¶àÉÙÓÃ»§µã»÷ÎÒÖ÷Ò³ÉÏµÄÁ´½Ó·ÃÎÊËûµÄÍøÕ¾¡££¨×¢£º¸ÃÎÄËùÓĞÓÃµÄÕ¾µã¾ù¼ÙÉèÒÔ http://blog.csdn.netÎªÀı£©
+2ï¼  é¦–å…ˆæˆ‘ä»¬å»äº†è§£ä¸‹ä»€ä¹ˆæ˜¯HTTP Refererã€‚ç®€è¨€ä¹‹ï¼ŒHTTP Refereræ˜¯headerçš„ä¸€éƒ¨åˆ†ï¼Œå½“æµè§ˆå™¨å‘webæœåŠ¡å™¨å‘é€è¯·æ±‚çš„æ—¶å€™ï¼Œä¸€èˆ¬ä¼šå¸¦ä¸ŠRefererï¼Œå‘Šè¯‰
+æœåŠ¡å™¨æˆ‘æ˜¯ä»å“ªä¸ªé¡µé¢é“¾æ¥è¿‡æ¥çš„ï¼ŒæœåŠ¡å™¨ç±æ­¤å¯ä»¥è·å¾—ä¸€äº›ä¿¡æ¯ç”¨äºå¤„ç†ã€‚æ¯”å¦‚ä»æˆ‘ä¸»é¡µä¸Šé“¾æ¥åˆ°ä¸€ä¸ªæœ‹å‹é‚£é‡Œï¼Œä»–çš„æœåŠ¡å™¨å°±èƒ½å¤Ÿä»HTTP Refererä¸­ç»Ÿè®¡
+å‡ºæ¯å¤©æœ‰å¤šå°‘ç”¨æˆ·ç‚¹å‡»æˆ‘ä¸»é¡µä¸Šçš„é“¾æ¥è®¿é—®ä»–çš„ç½‘ç«™ã€‚ï¼ˆæ³¨ï¼šè¯¥æ–‡æ‰€æœ‰ç”¨çš„ç«™ç‚¹å‡å‡è®¾ä»¥ http://blog.csdn.netä¸ºä¾‹ï¼‰
 
-¼ÙÈçÎÒÃÇÒª·ÃÎÊ×ÊÔ´£ºhttp://blog.csdn.net/Beacher_Ma ÓĞÁ½ÖÖÇé¿ö£º
-1£®  ÎÒÃÇÖ±½ÓÔÚä¯ÀÀÆ÷ÉÏÊäÈë¸ÃÍøÖ·¡£ÄÇÃ´¸ÃÇëÇóµÄHTTP Referer ¾ÍÎªnull
-2£®  Èç¹ûÎÒÃÇÔÚÆäËûÆäËûÒ³ÃæÖĞ£¬Í¨¹ıµã»÷£¬Èç http://www.csdn.net ÉÏÓĞÒ»¸ö http://blog.csdn.net/Beacher_Ma ÕâÑùµÄÁ´½Ó£¬ÄÇÃ´¸ÃÇëÇóµÄHTTP Referer 
-¾ÍÎªhttp://www.csdn.net 
+å‡å¦‚æˆ‘ä»¬è¦è®¿é—®èµ„æºï¼šhttp://blog.csdn.net/Beacher_Ma æœ‰ä¸¤ç§æƒ…å†µï¼š
+1ï¼  æˆ‘ä»¬ç›´æ¥åœ¨æµè§ˆå™¨ä¸Šè¾“å…¥è¯¥ç½‘å€ã€‚é‚£ä¹ˆè¯¥è¯·æ±‚çš„HTTP Referer å°±ä¸ºnull
+2ï¼  å¦‚æœæˆ‘ä»¬åœ¨å…¶ä»–å…¶ä»–é¡µé¢ä¸­ï¼Œé€šè¿‡ç‚¹å‡»ï¼Œå¦‚ http://www.csdn.net ä¸Šæœ‰ä¸€ä¸ª http://blog.csdn.net/Beacher_Ma è¿™æ ·çš„é“¾æ¥ï¼Œé‚£ä¹ˆè¯¥è¯·æ±‚çš„HTTP Referer 
+å°±ä¸ºhttp://www.csdn.net 
 */
 
 
 /*
-Ò»£ºÒ»°ãµÄ·ÀµÁÁ´ÈçÏÂ£º 
+ä¸€ï¼šä¸€èˆ¬çš„é˜²ç›—é“¾å¦‚ä¸‹ï¼š 
 location ~* \.(gif|jpg|png|swf|flv)$ { 
 valid_referers none blocked www.jb51.net jb51.net ; 
 if ($invalid_referer) { 
@@ -77,14 +77,14 @@ rewrite ^/ http://www.jb51.net/retrun.html;
 } 
 
 
-µÚÒ»ĞĞ£ºgif|jpg|png|swf|flv 
-±íÊ¾¶Ôgif¡¢jpg¡¢png¡¢swf¡¢flvºó×ºµÄÎÄ¼şÊµĞĞ·ÀµÁÁ´ 
-µÚ¶şĞĞ£º ±íÊ¾¶Ôwww.ingnix.comÕâ2¸öÀ´Â·½øĞĞÅĞ¶Ï 
-if{}ÀïÃæÄÚÈİµÄÒâË¼ÊÇ£¬Èç¹ûÀ´Â·²»ÊÇÖ¸¶¨À´Â·¾ÍÌø×ªµ½http://www.jb51.net/retrun.htmlÒ³Ãæ£¬µ±È»Ö±½Ó·µ»Ø403Ò²ÊÇ¿ÉÒÔµÄ¡£ 
+ç¬¬ä¸€è¡Œï¼šgif|jpg|png|swf|flv 
+è¡¨ç¤ºå¯¹gifã€jpgã€pngã€swfã€flvåç¼€çš„æ–‡ä»¶å®è¡Œé˜²ç›—é“¾ 
+ç¬¬äºŒè¡Œï¼š è¡¨ç¤ºå¯¹www.ingnix.comè¿™2ä¸ªæ¥è·¯è¿›è¡Œåˆ¤æ–­ 
+if{}é‡Œé¢å†…å®¹çš„æ„æ€æ˜¯ï¼Œå¦‚æœæ¥è·¯ä¸æ˜¯æŒ‡å®šæ¥è·¯å°±è·³è½¬åˆ°http://www.jb51.net/retrun.htmlé¡µé¢ï¼Œå½“ç„¶ç›´æ¥è¿”å›403ä¹Ÿæ˜¯å¯ä»¥çš„ã€‚ 
 
-¶ş£ºÕë¶ÔÍ¼Æ¬Ä¿Â¼·ÀÖ¹µÁÁ´ 
+äºŒï¼šé’ˆå¯¹å›¾ç‰‡ç›®å½•é˜²æ­¢ç›—é“¾ 
 
-¸´ÖÆ´úÂë ´úÂëÈçÏÂ:
+å¤åˆ¶ä»£ç  ä»£ç å¦‚ä¸‹:
 
 
 location /images/ { 
@@ -94,28 +94,28 @@ if ($invalid_referer) {return 403;}
 } 
 
 
-Èı£ºÊ¹ÓÃµÚÈı·½Ä£¿éngx_http_accesskey_moduleÊµÏÖNginx·ÀµÁÁ´ 
-ÊµÏÖ·½·¨ÈçÏÂ£º 
+ä¸‰ï¼šä½¿ç”¨ç¬¬ä¸‰æ–¹æ¨¡å—ngx_http_accesskey_moduleå®ç°Nginxé˜²ç›—é“¾ 
+å®ç°æ–¹æ³•å¦‚ä¸‹ï¼š 
 
-ÊµÏÖ·½·¨ÈçÏÂ£º
-1. ÏÂÔØNginxHttpAccessKeyModuleÄ£¿éÎÄ¼ş£ºNginx-accesskey-2.0.3.tar.gz£»
-2. ½âÑ¹´ËÎÄ¼şºó£¬ÕÒµ½nginx-accesskey-2.0.3ÏÂµÄconfigÎÄ¼ş¡£±à¼­´ËÎÄ¼ş£ºÌæ»»ÆäÖĞµÄ¡±$HTTP_ACCESSKEY_MODULE¡±Îª¡±ngx_http_accesskey_module¡±£»
-3. ÓÃÒ»ÏÂ²ÎÊıÖØĞÂ±àÒënginx£º
+å®ç°æ–¹æ³•å¦‚ä¸‹ï¼š
+1. ä¸‹è½½NginxHttpAccessKeyModuleæ¨¡å—æ–‡ä»¶ï¼šNginx-accesskey-2.0.3.tar.gzï¼›
+2. è§£å‹æ­¤æ–‡ä»¶åï¼Œæ‰¾åˆ°nginx-accesskey-2.0.3ä¸‹çš„configæ–‡ä»¶ã€‚ç¼–è¾‘æ­¤æ–‡ä»¶ï¼šæ›¿æ¢å…¶ä¸­çš„â€$HTTP_ACCESSKEY_MODULEâ€ä¸ºâ€ngx_http_accesskey_moduleâ€ï¼›
+3. ç”¨ä¸€ä¸‹å‚æ•°é‡æ–°ç¼–è¯‘nginxï¼š
 ./configure --add-module=path/to/nginx-accesskey
-4. ĞŞ¸ÄnginxµÄconfÎÄ¼ş£¬Ìí¼ÓÒÔÏÂ¼¸ĞĞ£º
+4. ä¿®æ”¹nginxçš„confæ–‡ä»¶ï¼Œæ·»åŠ ä»¥ä¸‹å‡ è¡Œï¼š
 location /download {
   accesskey             on;
   accesskey_hashmethod  md5;
   accesskey_arg         "key";
   accesskey_signature   "mypass$remote_addr";
 }
-ÆäÖĞ£º
-accesskeyÎªÄ£¿é¿ª¹Ø£»
-accesskey_hashmethodÎª¼ÓÃÜ·½Ê½MD5»òÕßSHA-1£»
-accesskey_argÎªurlÖĞµÄ¹Ø¼ü×Ö²ÎÊı£»
-accesskey_signatureÎª¼ÓÃÜÖµ£¬´Ë´¦ÎªmypassºÍ·ÃÎÊIP¹¹³ÉµÄ×Ö·û´®¡£
+å…¶ä¸­ï¼š
+accesskeyä¸ºæ¨¡å—å¼€å…³ï¼›
+accesskey_hashmethodä¸ºåŠ å¯†æ–¹å¼MD5æˆ–è€…SHA-1ï¼›
+accesskey_argä¸ºurlä¸­çš„å…³é”®å­—å‚æ•°ï¼›
+accesskey_signatureä¸ºåŠ å¯†å€¼ï¼Œæ­¤å¤„ä¸ºmypasså’Œè®¿é—®IPæ„æˆçš„å­—ç¬¦ä¸²ã€‚
 
-·ÃÎÊ²âÊÔ½Å±¾download.php£º
+è®¿é—®æµ‹è¯•è„šæœ¬download.phpï¼š
 <?
 $ipkey= md5("mypass".$_SERVER['REMOTE_ADDR']);
 $output_add_key="<a href=http://www.jb51.net/download/G3200507120520LM.rar?key=".$ipkey.">download_add_key</a><br />";
@@ -123,13 +123,13 @@ $output_org_url="<a href=http://www.jb51.net/download/G3200507120520LM.rar>downl
 echo $output_add_key;
 echo $output_org_url;
 ?>
-·ÃÎÊµÚÒ»¸ödownload_add_keyÁ´½Ó¿ÉÒÔÕı³£ÏÂÔØ£¬µÚ¶ş¸öÁ´½Ódownload_org_path»á·µ»Ø403 Forbidden´íÎó¡£
+è®¿é—®ç¬¬ä¸€ä¸ªdownload_add_keyé“¾æ¥å¯ä»¥æ­£å¸¸ä¸‹è½½ï¼Œç¬¬äºŒä¸ªé“¾æ¥download_org_pathä¼šè¿”å›403 Forbiddené”™è¯¯ã€‚
 
 */
-//ngx_http_secure_link_moduleÏÖÔÚ¿ÉÒÔ´úÌængx_http_accesskey_module£¬ËûÃÇ¹¦ÄÜÀàËÆ   ngx_http_secure_link_module NginxµÄ°²È«Ä£¿é,ÃâµÃ±ğÈËÄÃwebserverÈ¨ÏŞ¡£
-//ngx_http_referer_module¾ßÓĞÆÕÍ¨·ÀµÁÁ´¹¦ÄÜ
+//ngx_http_secure_link_moduleç°åœ¨å¯ä»¥ä»£æ›¿ngx_http_accesskey_moduleï¼Œä»–ä»¬åŠŸèƒ½ç±»ä¼¼   ngx_http_secure_link_module Nginxçš„å®‰å…¨æ¨¡å—,å…å¾—åˆ«äººæ‹¿webserveræƒé™ã€‚
+//ngx_http_referer_moduleå…·æœ‰æ™®é€šé˜²ç›—é“¾åŠŸèƒ½
 static ngx_command_t  ngx_http_accesskey_commands[] = {
-    { ngx_string("accesskey"), //on | off ÎªÄ£¿é¿ª¹Ø£»
+    { ngx_string("accesskey"), //on | off ä¸ºæ¨¡å—å¼€å…³ï¼›
       NGX_HTTP_MAIN_CONF|NGX_HTTP_SRV_CONF|NGX_HTTP_LOC_CONF|NGX_CONF_FLAG,
       ngx_conf_set_flag_slot,
       NGX_HTTP_LOC_CONF_OFFSET,
@@ -137,21 +137,21 @@ static ngx_command_t  ngx_http_accesskey_commands[] = {
       NULL },
 
     //accesskey_hashmethod md5 | sha1
-    { ngx_string("accesskey_hashmethod"), //ÎªĞ£Ñé·½Ê½MD5»òÕßSHA-1£»
+    { ngx_string("accesskey_hashmethod"), //ä¸ºæ ¡éªŒæ–¹å¼MD5æˆ–è€…SHA-1ï¼›
       NGX_HTTP_MAIN_CONF|NGX_HTTP_SRV_CONF|NGX_HTTP_LOC_CONF|NGX_CONF_TAKE1,
       ngx_http_accesskey_hashmethod,
       NGX_HTTP_LOC_CONF_OFFSET,
       0,
       NULL },
 
-    { ngx_string("accesskey_signature"), //accesskey_argÎªurlÖĞµÄ¹Ø¼ü×Ö²ÎÊı£»  accesskey_arg         "key";
+    { ngx_string("accesskey_signature"), //accesskey_argä¸ºurlä¸­çš„å…³é”®å­—å‚æ•°ï¼›  accesskey_arg         "key";
       NGX_HTTP_MAIN_CONF|NGX_HTTP_SRV_CONF|NGX_HTTP_LOC_CONF|NGX_CONF_TAKE1,
       ngx_conf_set_str_slot,
       NGX_HTTP_LOC_CONF_OFFSET,
       offsetof(ngx_http_accesskey_loc_conf_t, signature),
       &ngx_http_accesskey_signature_p },
 
-    { ngx_string("accesskey_arg"), // accesskey_signature   "mypass$remote_addr";Îª¼ÓÃÜÖµ£¬´Ë´¦ÎªmypassºÍ·ÃÎÊIP¹¹³ÉµÄ×Ö·û´®¡£
+    { ngx_string("accesskey_arg"), // accesskey_signature   "mypass$remote_addr";ä¸ºåŠ å¯†å€¼ï¼Œæ­¤å¤„ä¸ºmypasså’Œè®¿é—®IPæ„æˆçš„å­—ç¬¦ä¸²ã€‚
       NGX_HTTP_MAIN_CONF|NGX_HTTP_SRV_CONF|NGX_HTTP_LOC_CONF|NGX_CONF_TAKE1,
       ngx_conf_set_str_slot,
       NGX_HTTP_LOC_CONF_OFFSET,
@@ -176,8 +176,8 @@ static ngx_http_module_t  ngx_http_accesskey_module_ctx = {
     ngx_http_accesskey_merge_loc_conf         /* merge location configuration */
 };
 
-//ngx_http_secure_link_moduleÏÖÔÚ¿ÉÒÔ´úÌængx_http_accesskey_module£¬ËûÃÇ¹¦ÄÜÀàËÆ   ngx_http_secure_link_module NginxµÄ°²È«Ä£¿é,ÃâµÃ±ğÈËÄÃwebserverÈ¨ÏŞ¡£
-//ngx_http_referer_module¾ßÓĞÆÕÍ¨·ÀµÁÁ´¹¦ÄÜ
+//ngx_http_secure_link_moduleç°åœ¨å¯ä»¥ä»£æ›¿ngx_http_accesskey_moduleï¼Œä»–ä»¬åŠŸèƒ½ç±»ä¼¼   ngx_http_secure_link_module Nginxçš„å®‰å…¨æ¨¡å—,å…å¾—åˆ«äººæ‹¿webserveræƒé™ã€‚
+//ngx_http_referer_moduleå…·æœ‰æ™®é€šé˜²ç›—é“¾åŠŸèƒ½
 ngx_module_t  ngx_http_accesskey_module = {
     NGX_MODULE_V1,
     &ngx_http_accesskey_module_ctx,           /* module context */

@@ -13,11 +13,11 @@
 #include <ngx_core.h>
 
 /*
-�ܹ�ִ��ԭ�Ӳ�����ԭ�ӱ���ֻ�����ͣ������޷�������ngx_atomic_ uint_t���з�������ngx_atomic_t�����������Ͷ�ʹ����volatile�ؼ���
-����C��������Ҫ���Ż�
+能够执行原子操作的原子变量只有整型，包括无符号整型ngx_atomic_ uint_t和有符号整型ngx_atomic_t，这两种类型都使用了volatile关键字
+告诉C编译器不要做优化
 
-��Ҫʹ��ԭ�Ӳ������޸ġ���ȡ���ͱ�������Ȼ����ʹ�üӼ��ţ���Ҫʹ��Nginx�ṩ������������ngx_atomic_cmp_set��ngx_atomic_fetch_add��
-���������������������޸�ԭ�ӱ�����ֵ����ngx_atomic_cmp_set����ͬʱ�����ԱȽ�ԭ�ӱ�����ֵ
+想要使用原子操作来修改、获取整型变量，自然不能使用加减号，而要使用Nginx提供的两个方法：ngx_atomic_cmp_set和ngx_atomic_fetch_add。
+这两个方法都可以用来修改原子变量的值，而ngx_atomic_cmp_set方法同时还可以比较原子变量的值
 */
 
 #if (NGX_HAVE_LIBATOMIC)
@@ -104,7 +104,7 @@ typedef volatile ngx_atomic_uint_t  ngx_atomic_t;
 
 /* GCC 4.1 builtin atomic operations */
 
-#define NGX_HAVE_ATOMIC_OPS  1  //�������ʾϵͳ֧��ԭ�Ӳ���
+#define NGX_HAVE_ATOMIC_OPS  1  //走这里，表示系统支持原子操作
 
 typedef long                        ngx_atomic_int_t;
 typedef unsigned long               ngx_atomic_uint_t;
@@ -283,24 +283,24 @@ typedef volatile ngx_atomic_uint_t  ngx_atomic_t;
 typedef int32_t                     ngx_atomic_int_t;
 typedef uint32_t                    ngx_atomic_uint_t;
 /*
-��νԭ�Ӳ��������Ǹò�����������ִ�����ǰ���κ�����������¼���ϣ�Ҳ��˵��������С��ִ�е�λ���������б�����С��ִ�е�λ�����
-�����ԭ��ʵ����ʹ��������ѧ�������΢���ĸ��
+所谓原子操作，就是该操作绝不会在执行完毕前被任何其他任务或事件打断，也就说，它的最小的执行单位，不可能有比它更小的执行单位，因此
+这里的原子实际是使用了物理学里的物质微粒的概念。
 
-����ԭ�Ӳ�����ҪӲ����֧�֣�����Ǽܹ���صģ���API��ԭ�����͵Ķ��嶼�������ں�Դ������include/asm/atomic.h�ļ��У����Ƕ�ʹ��
-�������ʵ�֣���ΪC���Բ�����ʵ�������Ĳ�����
-����ԭ�Ӳ�����Ҫ����ʵ����Դ�������ܶ����ü���(refcnt)����ͨ��ԭ�Ӳ���ʵ�ֵġ�ԭ�����Ͷ������£�
+　　原子操作需要硬件的支持，因此是架构相关的，其API和原子类型的定义都定义在内核源码树的include/asm/atomic.h文件中，它们都使用
+汇编语言实现，因为C语言并不能实现这样的操作。
+　　原子操作主要用于实现资源计数，很多引用计数(refcnt)就是通过原子操作实现的。原子类型定义如下：
 typedef struct
  {
  volatile int counter;
  } atomic_t; 
 
-����volatile�����ֶθ���gcc��Ҫ�Ը����͵��������Ż������������ķ��ʶ��Ƕ��ڴ�ķ��ʣ������ǶԼĴ����ķ��ʡ�
+　　volatile修饰字段告诉gcc不要对该类型的数据做优化处理，对它的访问都是对内存的访问，而不是对寄存器的访问。
 */
 typedef volatile ngx_atomic_uint_t  ngx_atomic_t;
 #define NGX_ATOMIC_T_LEN            (sizeof("-2147483648") - 1)
 
 /*
-ngx_atomic_cmp_set�򷨻Ὣold������ԭ�ӱ���lock��ֵ���Ƚϣ����������ȣ����lock��Ϊ����set��ͬʱ��������1��������ǲ���ȣ������κ��޸ģ�����0
+ngx_atomic_cmp_set万法会将old参数与原子变量lock的值做比较，如果它们相等，则把lock设为参数set，同时方法返回1；如果它们不相等，则不做任何修改，返回0
 */
 static ngx_inline ngx_atomic_uint_t
 ngx_atomic_cmp_set(ngx_atomic_t *lock, ngx_atomic_uint_t old,
@@ -315,7 +315,7 @@ ngx_atomic_cmp_set(ngx_atomic_t *lock, ngx_atomic_uint_t old,
 }
 
 /*
-ԭ�ӱ���value��ֵ���ϲ���add��ͬʱ����֮ǰvalue��ֵ��
+原子变量value的值加上参数add，同时返回之前value的值。
 */
 static ngx_inline ngx_atomic_int_t
 ngx_atomic_fetch_add(ngx_atomic_t *value, ngx_atomic_int_t add)

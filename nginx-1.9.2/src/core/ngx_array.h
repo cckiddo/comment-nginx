@@ -12,14 +12,14 @@
 #include <ngx_config.h>
 #include <ngx_core.h>
 
-/*cookiesÊÇÒÔngx_array_tÊı×é´æ´¢µÄ£¬±¾ÕÂÏÈ²»½éÉÜÕâ¸öÊı¾İ½á¹¹£¬¸ĞĞËÈ¤µÄ»°¿ÉÒÔÖ±½ÓÌøµ½7.3½ÚÁË½ângx_array_tµÄÏà¹ØÓÃ·¨*/
-//Èç¹ûÄ³¸öÅäÖÃÏîÔÚnginx.confÎÄ¼şÖĞ¿ÉÄÜ³öÏÖ¶à´Î£¬ÔòÓÃÕâ¸öÀ´½øĞĞ¶¯Ì¬´æ´¢£¬²Î¿¼ngx_conf_set_str_array_slot
-typedef struct { //¿ÉÒÔÍ¨¹ıngx_array_createº¯Êı´´½¨¿Õ¼ä£¬²¢³õÊ¼»¯¸÷¸ö³ÉÔ±
-    void        *elts; //¿ÉÒÔÊÇngx_keyval_t  ngx_str_t  ngx_bufs_t ngx_hash_key_tµÈ
-    ngx_uint_t   nelts; //ÒÑ¾­Ê¹ÓÃÁË¶àÉÙ¸ö
-    size_t       size; //Ã¿¸öeltsµÄ¿Õ¼ä´óĞ¡£¬
-    ngx_uint_t   nalloc; //×î¶àÓĞ¶àÉÙ¸öeltsÔªËØ
-    ngx_pool_t  *pool; //¸³Öµ¼ûngx_init_cycle£¬ÎªcycleµÄÊ±ºò·ÖÅäµÄpool¿Õ¼ä
+/*cookiesæ˜¯ä»¥ngx_array_tæ•°ç»„å­˜å‚¨çš„ï¼Œæœ¬ç« å…ˆä¸ä»‹ç»è¿™ä¸ªæ•°æ®ç»“æ„ï¼Œæ„Ÿå…´è¶£çš„è¯å¯ä»¥ç›´æ¥è·³åˆ°7.3èŠ‚äº†è§£ngx_array_tçš„ç›¸å…³ç”¨æ³•*/
+//å¦‚æœæŸä¸ªé…ç½®é¡¹åœ¨nginx.confæ–‡ä»¶ä¸­å¯èƒ½å‡ºç°å¤šæ¬¡ï¼Œåˆ™ç”¨è¿™ä¸ªæ¥è¿›è¡ŒåŠ¨æ€å­˜å‚¨ï¼Œå‚è€ƒngx_conf_set_str_array_slot
+typedef struct { //å¯ä»¥é€šè¿‡ngx_array_createå‡½æ•°åˆ›å»ºç©ºé—´ï¼Œå¹¶åˆå§‹åŒ–å„ä¸ªæˆå‘˜
+    void        *elts; //å¯ä»¥æ˜¯ngx_keyval_t  ngx_str_t  ngx_bufs_t ngx_hash_key_tç­‰
+    ngx_uint_t   nelts; //å·²ç»ä½¿ç”¨äº†å¤šå°‘ä¸ª
+    size_t       size; //æ¯ä¸ªeltsçš„ç©ºé—´å¤§å°ï¼Œ
+    ngx_uint_t   nalloc; //æœ€å¤šæœ‰å¤šå°‘ä¸ªeltså…ƒç´ 
+    ngx_pool_t  *pool; //èµ‹å€¼è§ngx_init_cycleï¼Œä¸ºcycleçš„æ—¶å€™åˆ†é…çš„poolç©ºé—´
 } ngx_array_t;
 
 ngx_array_t *ngx_array_create(ngx_pool_t *p, ngx_uint_t n, size_t size);

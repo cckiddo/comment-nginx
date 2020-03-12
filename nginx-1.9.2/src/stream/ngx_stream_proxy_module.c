@@ -97,29 +97,29 @@ static ngx_command_t  ngx_stream_proxy_commands[] = {
 /*
 proxy_pass
 
-Óï·¨£ºproxy_pass URL;
+è¯­æ³•ï¼šproxy_pass URL;
 
-ÅäÖÃ¿é£ºlocation¡¢if
+é…ç½®å—ï¼šlocationã€if
 
-´ËÅäÖÃÏî½«µ±Ç°ÇëÇó·´Ïò´úÀíµ½URL²ÎÊýÖ¸¶¨µÄ·þÎñÆ÷ÉÏ£¬URL¿ÉÒÔÊÇÖ÷»úÃû»òIPµØÖ·¼Ó¶Ë¿ÚµÄÐÎÊ½£¬ÀýÈç£º
+æ­¤é…ç½®é¡¹å°†å½“å‰è¯·æ±‚åå‘ä»£ç†åˆ°URLå‚æ•°æŒ‡å®šçš„æœåŠ¡å™¨ä¸Šï¼ŒURLå¯ä»¥æ˜¯ä¸»æœºåæˆ–IPåœ°å€åŠ ç«¯å£çš„å½¢å¼ï¼Œä¾‹å¦‚ï¼š
 proxy_pass http://localhost:8000/uri/;
-Ò²¿ÉÒÔÊÇUNIX¾ä±ú£º
+ä¹Ÿå¯ä»¥æ˜¯UNIXå¥æŸ„ï¼š
 proxy_pass http://unix:/path/to/backend.socket:/uri/;
 
-»¹¿ÉÒÔÈçÉÏ½Ú¸ºÔØ¾ùºâÖÐËùÊ¾£¬Ö±½ÓÊ¹ÓÃupstream¿é£¬ÀýÈç£º
+è¿˜å¯ä»¥å¦‚ä¸ŠèŠ‚è´Ÿè½½å‡è¡¡ä¸­æ‰€ç¤ºï¼Œç›´æŽ¥ä½¿ç”¨upstreamå—ï¼Œä¾‹å¦‚ï¼š
 upstream backend {
-  ¡­
+  â€¦
 }
 server {
   location / {
     proxy_pass  http://backend;
   }
 }
-ÓÃ»§¿ÉÒÔ°ÑHTTP×ª»»³É¸ü°²È«µÄHTTPS£¬ÀýÈç£º
+ç”¨æˆ·å¯ä»¥æŠŠHTTPè½¬æ¢æˆæ›´å®‰å…¨çš„HTTPSï¼Œä¾‹å¦‚ï¼š
 
 proxy_pass https://192.168.0.1;
 
-Ä¬ÈÏÇé¿öÏÂ·´Ïò´úÀíÊÇ²»»á×ª·¢ÇëÇóÖÐµÄHostÍ·²¿µÄ¡£Èç¹ûÐèÒª×ª·¢£¬ÄÇÃ´±ØÐë¼ÓÉÏÅäÖÃ£º
+é»˜è®¤æƒ…å†µä¸‹åå‘ä»£ç†æ˜¯ä¸ä¼šè½¬å‘è¯·æ±‚ä¸­çš„Hostå¤´éƒ¨çš„ã€‚å¦‚æžœéœ€è¦è½¬å‘ï¼Œé‚£ä¹ˆå¿…é¡»åŠ ä¸Šé…ç½®ï¼š
 proxy_set_header Host $host;
 */
     { ngx_string("proxy_pass"),

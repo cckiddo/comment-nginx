@@ -17,10 +17,10 @@ typedef struct {
 } ngx_http_index_t;
 
 
-typedef struct { //¿Õ¼ä´´½¨ºÍ¸³Öµ¼ûngx_http_index_set_index
-    //°Ñindex  11.html 22.xxÖĞµÄ11.htmlºÍ22.xx×Ö·û´®±£´æµ½indicesÊı×é
-    ngx_array_t             *indices;    /* array of ngx_http_index_t */    //indicesÉÏÄ¬ÈÏÓĞÒ»¸öNGX_HTTP_DEFAULT_INDEX
-    size_t                   max_index_len; //¸ÃÖµÎªindicesÊı×éÖĞÖĞ×Ö·û´®×î´óµÄ³¤¶È
+typedef struct { //ç©ºé—´åˆ›å»ºå’Œèµ‹å€¼è§ngx_http_index_set_index
+    //æŠŠindex  11.html 22.xxä¸­çš„11.htmlå’Œ22.xxå­—ç¬¦ä¸²ä¿å­˜åˆ°indicesæ•°ç»„
+    ngx_array_t             *indices;    /* array of ngx_http_index_t */    //indicesä¸Šé»˜è®¤æœ‰ä¸€ä¸ªNGX_HTTP_DEFAULT_INDEX
+    size_t                   max_index_len; //è¯¥å€¼ä¸ºindicesæ•°ç»„ä¸­ä¸­å­—ç¬¦ä¸²æœ€å¤§çš„é•¿åº¦
 } ngx_http_index_loc_conf_t;
 
 
@@ -40,18 +40,18 @@ static char *ngx_http_index_set_index(ngx_conf_t *cf, ngx_command_t *cmd,
     void *conf);
 
 /*
-·ÃÎÊÊ×Ò³
-Óï·¨£ºindex file ...;
-Ä¬ÈÏ£ºindex index.html;
-ÅäÖÃ¿é£ºhttp¡¢server¡¢location
-ÓĞÊ±£¬·ÃÎÊÕ¾µãÊ±µÄURIÊÇ/£¬ÕâÊ±Ò»°ãÊÇ·µ»ØÍøÕ¾µÄÊ×Ò³£¬¶øÕâÓërootºÍalias¶¼²»Í¬¡£ÕâÀïÓÃngx_http_index_moduleÄ£¿éÌá¹©µÄindexÅäÖÃÊµÏÖ¡£indexºó¿ÉÒÔ¸ú
-¶à¸öÎÄ¼ş²ÎÊı£¬Nginx½«»á°´ÕÕË³ĞòÀ´·ÃÎÊÕâĞ©ÎÄ¼ş£¬ÀıÈç£º
+è®¿é—®é¦–é¡µ
+è¯­æ³•ï¼šindex file ...;
+é»˜è®¤ï¼šindex index.html;
+é…ç½®å—ï¼šhttpã€serverã€location
+æœ‰æ—¶ï¼Œè®¿é—®ç«™ç‚¹æ—¶çš„URIæ˜¯/ï¼Œè¿™æ—¶ä¸€èˆ¬æ˜¯è¿”å›ç½‘ç«™çš„é¦–é¡µï¼Œè€Œè¿™ä¸rootå’Œaliaséƒ½ä¸åŒã€‚è¿™é‡Œç”¨ngx_http_index_moduleæ¨¡å—æä¾›çš„indexé…ç½®å®ç°ã€‚indexåå¯ä»¥è·Ÿ
+å¤šä¸ªæ–‡ä»¶å‚æ•°ï¼ŒNginxå°†ä¼šæŒ‰ç…§é¡ºåºæ¥è®¿é—®è¿™äº›æ–‡ä»¶ï¼Œä¾‹å¦‚ï¼š
 location / {
     root   path;
     index /index.html /html/index.php /index.php;
 }
-½ÓÊÕµ½ÇëÇóºó£¬NginxÊ×ÏÈ»á³¢ÊÔ·ÃÎÊpath/index.phpÎÄ¼ş£¬Èç¹û¿ÉÒÔ·ÃÎÊ£¬¾ÍÖ±½Ó·µ»ØÎÄ¼şÄÚÈİ½áÊøÇëÇó£¬·ñÔòÔÙÊÔÍ¼·µ»Øpath/html/index.phpÎÄ¼şµÄÄÚÈİ£¬ÒÀ´ËÀàÍÆ¡£
-*/ //×¢Òâ:Èç¹ûURIÒÔĞ±Ïß½áÎ²£¬ÎÄ¼şÃû½«×·¼Óµ½URIºóÃæ£¬²Î¿¼ngx_http_index_handler
+æ¥æ”¶åˆ°è¯·æ±‚åï¼ŒNginxé¦–å…ˆä¼šå°è¯•è®¿é—®path/index.phpæ–‡ä»¶ï¼Œå¦‚æœå¯ä»¥è®¿é—®ï¼Œå°±ç›´æ¥è¿”å›æ–‡ä»¶å†…å®¹ç»“æŸè¯·æ±‚ï¼Œå¦åˆ™å†è¯•å›¾è¿”å›path/html/index.phpæ–‡ä»¶çš„å†…å®¹ï¼Œä¾æ­¤ç±»æ¨ã€‚
+*/ //æ³¨æ„:å¦‚æœURIä»¥æ–œçº¿ç»“å°¾ï¼Œæ–‡ä»¶åå°†è¿½åŠ åˆ°URIåé¢ï¼Œå‚è€ƒngx_http_index_handler
 static ngx_command_t  ngx_http_index_commands[] = {
 
     { ngx_string("index"),
@@ -81,14 +81,14 @@ static ngx_http_module_t  ngx_http_index_module_ctx = {
 
 /*
 location / {			
-    index index11.html	#±ØĞë±£Ö¤ĞÂuriËùÔÚÄ¿Â¼´æÔÚ²¢ÇÒ¸ÃÄ¿Â¼ÏÂÃæÃ»ÓĞindex11.html£¬autoindex¶ÔÓ¦µÄngx_http_autoindex_handler²Å»áÉúĞ§		
+    index index11.html	#å¿…é¡»ä¿è¯æ–°uriæ‰€åœ¨ç›®å½•å­˜åœ¨å¹¶ä¸”è¯¥ç›®å½•ä¸‹é¢æ²¡æœ‰index11.htmlï¼Œautoindexå¯¹åº”çš„ngx_http_autoindex_handleræ‰ä¼šç”Ÿæ•ˆ		
     autoindex on;		
 }
-Ö»ÓĞÔÚindex11.htmlÎÄ¼ş²»´æÔÚµÄÊ±ºò²Å»áÖ´ĞĞautoindex£¬Èç¹ûÃ»ÓĞÉèÖÃindexÔòÄ¬ÈÏ´ò¿ªindex.html£¬±ØĞë±£Ö¤index.htmlµÄuriÄ¿Â¼´æÔÚ£¬Èç¹û²»´æÔÚ£¬ÊÇÒ»¸ö²»´æÔÚµÄÄ¿Â¼Ò²²»»áÖ´ĞĞautoindex
+åªæœ‰åœ¨index11.htmlæ–‡ä»¶ä¸å­˜åœ¨çš„æ—¶å€™æ‰ä¼šæ‰§è¡Œautoindexï¼Œå¦‚æœæ²¡æœ‰è®¾ç½®indexåˆ™é»˜è®¤æ‰“å¼€index.htmlï¼Œå¿…é¡»ä¿è¯index.htmlçš„uriç›®å½•å­˜åœ¨ï¼Œå¦‚æœä¸å­˜åœ¨ï¼Œæ˜¯ä¸€ä¸ªä¸å­˜åœ¨çš„ç›®å½•ä¹Ÿä¸ä¼šæ‰§è¡Œautoindex
 
-Nginx Ò»°ã»áÔÚ content ½×¶Î°²ÅÅÈı¸öÕâÑùµÄ¾²Ì¬×ÊÔ´·şÎñÄ£¿é:ngx_index Ä£¿é£¬ ngx_autoindex Ä£¿é¡¢ngx_static Ä£¿é
-ngx_index ºÍ ngx_autoindex Ä£¿é¶¼Ö»»á×÷ÓÃÓÚÄÇĞ© URI ÒÔ / ½áÎ²µÄÇëÇó£¬ÀıÈçÇëÇó GET /cats/£¬¶ø¶ÔÓÚ²»ÒÔ / ½áÎ²µÄÇëÇóÔò»áÖ±½ÓºöÂÔ£¬
-Í¬Ê±°Ñ´¦ÀíÈ¨ÒÆ½»¸ø content ½×¶ÎµÄÏÂÒ»¸öÄ£¿é¡£¶ø ngx_static Ä£¿éÔò¸ÕºÃÏà·´£¬Ö±½ÓºöÂÔÄÇĞ© URI ÒÔ / ½áÎ²µÄÇëÇó¡£ 
+Nginx ä¸€èˆ¬ä¼šåœ¨ content é˜¶æ®µå®‰æ’ä¸‰ä¸ªè¿™æ ·çš„é™æ€èµ„æºæœåŠ¡æ¨¡å—:ngx_index æ¨¡å—ï¼Œ ngx_autoindex æ¨¡å—ã€ngx_static æ¨¡å—
+ngx_index å’Œ ngx_autoindex æ¨¡å—éƒ½åªä¼šä½œç”¨äºé‚£äº› URI ä»¥ / ç»“å°¾çš„è¯·æ±‚ï¼Œä¾‹å¦‚è¯·æ±‚ GET /cats/ï¼Œè€Œå¯¹äºä¸ä»¥ / ç»“å°¾çš„è¯·æ±‚åˆ™ä¼šç›´æ¥å¿½ç•¥ï¼Œ
+åŒæ—¶æŠŠå¤„ç†æƒç§»äº¤ç»™ content é˜¶æ®µçš„ä¸‹ä¸€ä¸ªæ¨¡å—ã€‚è€Œ ngx_static æ¨¡å—åˆ™åˆšå¥½ç›¸åï¼Œç›´æ¥å¿½ç•¥é‚£äº› URI ä»¥ / ç»“å°¾çš„è¯·æ±‚ã€‚ 
 */
 ngx_module_t  ngx_http_index_module = {
     NGX_MODULE_V1,
@@ -115,7 +115,7 @@ ngx_module_t  ngx_http_index_module = {
  * Unix has ENOTDIR error; however, it's less helpful than Win32's one:
  * it only indicates that path points to a regular file, not a directory.
  */
-/*  ÅäÖÃindex index.html index_large.html  gmime-gmime-cipher-context.html;
+/*  é…ç½®index index.html index_large.html  gmime-gmime-cipher-context.html;
 2025/02/14 08:24:04[   ngx_http_process_request_headers,  1412]  [debug] 2955#2955: *2 http header done
 2025/02/14 08:24:04[                ngx_event_del_timer,    39]  [debug] 2955#2955: *2 < ngx_http_process_request,  2013>  event timer del: 3: 30909486
 2025/02/14 08:24:04[        ngx_http_core_rewrite_phase,  1810]  [debug] 2955#2955: *2 rewrite phase: 0 (NGX_HTTP_SERVER_REWRITE_PHASE)
@@ -157,11 +157,11 @@ ngx_module_t  ngx_http_index_module = {
 2025/02/14 08:24:04[            ngx_http_static_handler,   145]  [debug] 2955#2955: *2 http static fd: 11
 2025/02/14 08:24:04[      ngx_http_discard_request_body,   734]  [debug] 2955#2955: *2 http set discard body
 */
-static ngx_int_t //Ö÷Òª¹¦ÄÜÊÇ¼ì²éuriÖĞµÄÎÄ¼şÊÇ·ñ´æÔÚ£¬²»´æÔÚÖ±½Ó¹Ø±ÕÁ¬½Ó£¬´æÔÚÔò×öÄÚ²¿ÖØ¶¨Ïò£¬ÖØ¶¨ÏòºóÓÉÓÚÊÇÎÄ¼şÂ·¾¶£¬Òò´ËÄ©Î²Ã»ÓĞ/£¬×ßµ½¸Ãº¯ÊıÖ±½ÓÍË³ö£¬È»ºóÔÚstatic-moduleÖĞ»ñÈ¡ÎÄ¼şÄÚÈİ
+static ngx_int_t //ä¸»è¦åŠŸèƒ½æ˜¯æ£€æŸ¥uriä¸­çš„æ–‡ä»¶æ˜¯å¦å­˜åœ¨ï¼Œä¸å­˜åœ¨ç›´æ¥å…³é—­è¿æ¥ï¼Œå­˜åœ¨åˆ™åšå†…éƒ¨é‡å®šå‘ï¼Œé‡å®šå‘åç”±äºæ˜¯æ–‡ä»¶è·¯å¾„ï¼Œå› æ­¤æœ«å°¾æ²¡æœ‰/ï¼Œèµ°åˆ°è¯¥å‡½æ•°ç›´æ¥é€€å‡ºï¼Œç„¶ååœ¨static-moduleä¸­è·å–æ–‡ä»¶å†…å®¹
 ngx_http_index_handler(ngx_http_request_t *r)
-{//×¢Òâ:ngx_http_static_handlerÈç¹ûuri²»ÊÇÒÔ/½áÎ²·µ»Ø£¬ngx_http_index_handler²»ÒÔ/½áÎ²·µ»Ø
-//Ñ­»·±éÀúindex index.html index_large.html  gmime-gmime-cipher-context.html;ÅäÖÃµÄÎÄ¼ş£¬´æÔÚÔò·µ»Ø£¬ÕÒµ½Ò»¸ö²»ÔÚ±éÀúºóÃæµÄÎÄ¼ş
-//ngx_http_static_handler ngx_http_index_handlerÃ¿´Î¶¼Òª»ñÈ¡»º´æĞÅÏ¢statĞÅÏ¢£¬Òò´ËÃ¿´Î»ñÈ¡ºÜ¿ÉÄÜÊÇÉÏÒ»´ÎstatÖ´ĞĞµÄÊ±ºò»ñÈ¡µÄĞÅÏ¢£¬³ı·Ç»º´æ¹ıÆÚ
+{//æ³¨æ„:ngx_http_static_handlerå¦‚æœuriä¸æ˜¯ä»¥/ç»“å°¾è¿”å›ï¼Œngx_http_index_handlerä¸ä»¥/ç»“å°¾è¿”å›
+//å¾ªç¯éå†index index.html index_large.html  gmime-gmime-cipher-context.html;é…ç½®çš„æ–‡ä»¶ï¼Œå­˜åœ¨åˆ™è¿”å›ï¼Œæ‰¾åˆ°ä¸€ä¸ªä¸åœ¨éå†åé¢çš„æ–‡ä»¶
+//ngx_http_static_handler ngx_http_index_handleræ¯æ¬¡éƒ½è¦è·å–ç¼“å­˜ä¿¡æ¯statä¿¡æ¯ï¼Œå› æ­¤æ¯æ¬¡è·å–å¾ˆå¯èƒ½æ˜¯ä¸Šä¸€æ¬¡statæ‰§è¡Œçš„æ—¶å€™è·å–çš„ä¿¡æ¯ï¼Œé™¤éç¼“å­˜è¿‡æœŸ
 
     u_char                       *p, *name;
     size_t                        len, root, reserve, allocated;
@@ -177,13 +177,13 @@ ngx_http_index_handler(ngx_http_request_t *r)
     ngx_http_script_len_code_pt   lcode;
 
     /*
-      Ò»°ãÆ¥Åäµ½location / {
+      ä¸€èˆ¬åŒ¹é…åˆ°location / {
     
-      }µÄÊ±ºò£¬²Å»áÖ´ĞĞÏÂÃæµÄindex£¬È»ºó½øĞĞÄÚ²¿Ìø×ª
+      }çš„æ—¶å€™ï¼Œæ‰ä¼šæ‰§è¡Œä¸‹é¢çš„indexï¼Œç„¶åè¿›è¡Œå†…éƒ¨è·³è½¬
      */
 
     /*
-    Èç¹ûä¯ÀÀÆ÷ÊäÈë:http://10.135.10.167/ABC/,ÔòÒ²»áÂú×ãÒªÇó£¬uri»á±äÎª/ABC/index.html,´òÓ¡ÈçÏÂ
+    å¦‚æœæµè§ˆå™¨è¾“å…¥:http://10.135.10.167/ABC/,åˆ™ä¹Ÿä¼šæ»¡è¶³è¦æ±‚ï¼Œuriä¼šå˜ä¸º/ABC/index.html,æ‰“å°å¦‚ä¸‹
      2015/10/16 12:08:03[                ngx_event_del_timer,    39]  [debug] 12610#12610: *2 < ngx_http_process_request,  2013>  event timer del: 3: 1859492499
      2015/10/16 12:08:03[        ngx_http_core_rewrite_phase,  1810]  [debug] 12610#12610: *2 rewrite phase: 0 (NGX_HTTP_SERVER_REWRITE_PHASE)
      2015/10/16 12:08:03[    ngx_http_core_find_config_phase,  1868]  [debug] 12610#12610: *2 find config phase: 1 (NGX_HTTP_FIND_CONFIG_PHASE), uri:/ABC/
@@ -207,8 +207,8 @@ ngx_http_index_handler(ngx_http_request_t *r)
      2015/10/16 12:08:03[             ngx_http_index_handler,   283]  [debug] 12610#12610: *2 stat() "/var/yyz/www/ABC/index.html" failed (2: No such file or directory)
      2015/10/16 12:08:03[            ngx_http_index_test_dir,   364]  [debug] 12610#12610: *2 http index check dir: "/var/yyz/www/ABC"
 
-     */ //Ä¬ÈÏhttp://10.2.13.167µÄÊ±ºò£¬ä¯ÀÀÆ÷¶¼»á×ª»»Îªhttp://10.2.13.167/·¢ËÍµ½nginx·şÎñÆ÷
-    if (r->uri.data[r->uri.len - 1] != '/') { //Ä©Î²²»ÊÇ/£¬Ö±½ÓÌø×ªµ½ÏÂÒ»½×¶Î
+     */ //é»˜è®¤http://10.2.13.167çš„æ—¶å€™ï¼Œæµè§ˆå™¨éƒ½ä¼šè½¬æ¢ä¸ºhttp://10.2.13.167/å‘é€åˆ°nginxæœåŠ¡å™¨
+    if (r->uri.data[r->uri.len - 1] != '/') { //æœ«å°¾ä¸æ˜¯/ï¼Œç›´æ¥è·³è½¬åˆ°ä¸‹ä¸€é˜¶æ®µ
         return NGX_DECLINED;
     }
 
@@ -227,8 +227,8 @@ ngx_http_index_handler(ngx_http_request_t *r)
     path.data = NULL;
 
     index = ilcf->indices->elts;
-    //indicesÉÏÄ¬ÈÏÓĞÒ»¸öNGX_HTTP_DEFAULT_INDEX
-    for (i = 0; i < ilcf->indices->nelts; i++) {//Ñ­»·±éÀúindexÅäÖÃµÄÎÄ¼ş£¬Èç¹ûÓĞ¸ÃÎÄ¼ş£¬Ôò½øĞĞÄÚ²¿ÖØ¶¨Ïò£¬´ÓĞÂ×ßNGX_HTTP_SERVER_REWRITE_PHASE
+    //indicesä¸Šé»˜è®¤æœ‰ä¸€ä¸ªNGX_HTTP_DEFAULT_INDEX
+    for (i = 0; i < ilcf->indices->nelts; i++) {//å¾ªç¯éå†indexé…ç½®çš„æ–‡ä»¶ï¼Œå¦‚æœæœ‰è¯¥æ–‡ä»¶ï¼Œåˆ™è¿›è¡Œå†…éƒ¨é‡å®šå‘ï¼Œä»æ–°èµ°NGX_HTTP_SERVER_REWRITE_PHASE
 
         if (index[i].lengths == NULL) {
 
@@ -350,7 +350,7 @@ ngx_http_index_handler(ngx_http_request_t *r)
             }
 
             if (of.err == NGX_ENOENT) {
-                continue; //stat»ñÈ¡µÄ²ÎÊıfile_nameÖ¸¶¨µÄÎÄ¼ş²»´æÔÚ
+                continue; //statè·å–çš„å‚æ•°file_nameæŒ‡å®šçš„æ–‡ä»¶ä¸å­˜åœ¨
             }
 
             ngx_log_error(NGX_LOG_CRIT, r->connection->log, of.err,
@@ -374,7 +374,7 @@ ngx_http_index_handler(ngx_http_request_t *r)
             ngx_memcpy(p, name, len - 1);
         }
 
-        return ngx_http_internal_redirect(r, &uri, &r->args); //ÄÚ²¿ÖØ¶¨Ïò
+        return ngx_http_internal_redirect(r, &uri, &r->args); //å†…éƒ¨é‡å®šå‘
     }
 
     return NGX_DECLINED;
@@ -559,7 +559,7 @@ ngx_http_index_init(ngx_conf_t *cf)
 
 /* TODO: warn about duplicate indices */
 //index /index.html /html/index.php /index.php;
-static char * //°ÑindexÅäÖÃµÄ×Ö·û´®Ìí¼Óµ½ilcf->indicesÊı×éÖĞ
+static char * //æŠŠindexé…ç½®çš„å­—ç¬¦ä¸²æ·»åŠ åˆ°ilcf->indicesæ•°ç»„ä¸­
 ngx_http_index_set_index(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
 {
     ngx_http_index_loc_conf_t *ilcf = conf;

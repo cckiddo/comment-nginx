@@ -89,19 +89,19 @@ location /{
 root   /var/www/html;
 autoindex on;
 } 
-Õâ¶Î´úÂëµÄÒâË¼¾ÍÊÇ°Ñ /var/www/htmlÄ¿Â¼×÷Îª¸ùÄ¿Â¼À´Ö±½ÓÁÐ³öÀ´¡£
+è¿™æ®µä»£ç çš„æ„æ€å°±æ˜¯æŠŠ /var/www/htmlç›®å½•ä½œä¸ºæ ¹ç›®å½•æ¥ç›´æŽ¥åˆ—å‡ºæ¥ã€‚
 */
 
 /*
-ngx_http_autoindex_module Ä£¿é¿ÉÒÔÁÐ³öÄ¿Â¼ÖÐµÄÎÄ¼þ¡£ Ò»°ãµ±ngx_http_index_moduleÄ£¿éÕÒ²»µ½Ä¬ÈÏÖ÷Ò³µÄÊ±ºò£¬»á°ÑÇëÇó
-×ª¸ø ngx_http_autoindex_moduleÄ£¿éÈ¥´¦Àí¡£ 
+ngx_http_autoindex_module æ¨¡å—å¯ä»¥åˆ—å‡ºç›®å½•ä¸­çš„æ–‡ä»¶ã€‚ ä¸€èˆ¬å½“ngx_http_index_moduleæ¨¡å—æ‰¾ä¸åˆ°é»˜è®¤ä¸»é¡µçš„æ—¶å€™ï¼Œä¼šæŠŠè¯·æ±‚
+è½¬ç»™ ngx_http_autoindex_moduleæ¨¡å—åŽ»å¤„ç†ã€‚ 
 */
 static ngx_command_t  ngx_http_autoindex_commands[] = {
     /*     
-    Óï·¨:  autoindex on | off;
-    Ä¬ÈÏÖµ:  autoindex off;
-    ÉÏÏÂÎÄ:  http, server, location
-    ¿ªÆô»òÕß¹Ø±ÕÁÐ³öÄ¿Â¼ÖÐÎÄ¼þµÄ¹¦ÄÜ¡£ 
+    è¯­æ³•:  autoindex on | off;
+    é»˜è®¤å€¼:  autoindex off;
+    ä¸Šä¸‹æ–‡:  http, server, location
+    å¼€å¯æˆ–è€…å…³é—­åˆ—å‡ºç›®å½•ä¸­æ–‡ä»¶çš„åŠŸèƒ½ã€‚ 
     */
     { ngx_string("autoindex"),
       NGX_HTTP_MAIN_CONF|NGX_HTTP_SRV_CONF|NGX_HTTP_LOC_CONF|NGX_CONF_FLAG,
@@ -117,7 +117,7 @@ static ngx_command_t  ngx_http_autoindex_commands[] = {
       offsetof(ngx_http_autoindex_loc_conf_t, format),
       &ngx_http_autoindex_format },
 
-    //ÉèÖÃÄ¿Â¼ÖÐÁÐ³öÎÄ¼þµÄÊ±¼äÊÇ±¾µØÊ±¼ä»¹ÊÇUTCÊ±¼ä¡£ 
+    //è®¾ç½®ç›®å½•ä¸­åˆ—å‡ºæ–‡ä»¶çš„æ—¶é—´æ˜¯æœ¬åœ°æ—¶é—´è¿˜æ˜¯UTCæ—¶é—´ã€‚ 
     { ngx_string("autoindex_localtime"),
       NGX_HTTP_MAIN_CONF|NGX_HTTP_SRV_CONF|NGX_HTTP_LOC_CONF|NGX_CONF_FLAG,
       ngx_conf_set_flag_slot,
@@ -125,7 +125,7 @@ static ngx_command_t  ngx_http_autoindex_commands[] = {
       offsetof(ngx_http_autoindex_loc_conf_t, localtime),
       NULL },
 
-    //ÉèÖÃÄ¿Â¼ÖÐÁÐ³öµÄÎÄ¼þÊÇÏÔÊ¾¾«È·´óÐ¡£¬»¹ÊÇ¶ÔKB£¬MB£¬GB½øÐÐËÄÉáÎåÈë¡£
+    //è®¾ç½®ç›®å½•ä¸­åˆ—å‡ºçš„æ–‡ä»¶æ˜¯æ˜¾ç¤ºç²¾ç¡®å¤§å°ï¼Œè¿˜æ˜¯å¯¹KBï¼ŒMBï¼ŒGBè¿›è¡Œå››èˆäº”å…¥ã€‚
     { ngx_string("autoindex_exact_size"),
       NGX_HTTP_MAIN_CONF|NGX_HTTP_SRV_CONF|NGX_HTTP_LOC_CONF|NGX_CONF_FLAG,
       ngx_conf_set_flag_slot,
@@ -138,14 +138,14 @@ static ngx_command_t  ngx_http_autoindex_commands[] = {
 
 /*
 location / {			
-    index index11.html	#±ØÐë±£Ö¤ÐÂuriËùÔÚÄ¿Â¼´æÔÚ²¢ÇÒ¸ÃÄ¿Â¼ÏÂÃæÃ»ÓÐindex11.html£¬autoindex¶ÔÓ¦µÄngx_http_autoindex_handler²Å»áÉúÐ§		
+    index index11.html	#å¿…é¡»ä¿è¯æ–°uriæ‰€åœ¨ç›®å½•å­˜åœ¨å¹¶ä¸”è¯¥ç›®å½•ä¸‹é¢æ²¡æœ‰index11.htmlï¼Œautoindexå¯¹åº”çš„ngx_http_autoindex_handleræ‰ä¼šç”Ÿæ•ˆ		
     autoindex on;		
 }
-Ö»ÓÐÔÚindex11.htmlÎÄ¼þ²»´æÔÚµÄÊ±ºò²Å»áÖ´ÐÐautoindex£¬Èç¹ûÃ»ÓÐÉèÖÃindexÔòÄ¬ÈÏ´ò¿ªindex.html£¬±ØÐë±£Ö¤index.htmlµÄuriÄ¿Â¼´æÔÚ£¬Èç¹û²»´æÔÚ£¬ÊÇÒ»¸ö²»´æÔÚµÄÄ¿Â¼Ò²²»»áÖ´ÐÐautoindex
+åªæœ‰åœ¨index11.htmlæ–‡ä»¶ä¸å­˜åœ¨çš„æ—¶å€™æ‰ä¼šæ‰§è¡Œautoindexï¼Œå¦‚æžœæ²¡æœ‰è®¾ç½®indexåˆ™é»˜è®¤æ‰“å¼€index.htmlï¼Œå¿…é¡»ä¿è¯index.htmlçš„uriç›®å½•å­˜åœ¨ï¼Œå¦‚æžœä¸å­˜åœ¨ï¼Œæ˜¯ä¸€ä¸ªä¸å­˜åœ¨çš„ç›®å½•ä¹Ÿä¸ä¼šæ‰§è¡Œautoindex
 
-Nginx Ò»°ã»áÔÚ content ½×¶Î°²ÅÅÈý¸öÕâÑùµÄ¾²Ì¬×ÊÔ´·þÎñÄ£¿é:ngx_index Ä£¿é£¬ ngx_autoindex Ä£¿é¡¢ngx_static Ä£¿é
-ngx_index ºÍ ngx_autoindex Ä£¿é¶¼Ö»»á×÷ÓÃÓÚÄÇÐ© URI ÒÔ / ½áÎ²µÄÇëÇó£¬ÀýÈçÇëÇó GET /cats/£¬¶ø¶ÔÓÚ²»ÒÔ / ½áÎ²µÄÇëÇóÔò»áÖ±½ÓºöÂÔ£¬
-Í¬Ê±°Ñ´¦ÀíÈ¨ÒÆ½»¸ø content ½×¶ÎµÄÏÂÒ»¸öÄ£¿é¡£¶ø ngx_static Ä£¿éÔò¸ÕºÃÏà·´£¬Ö±½ÓºöÂÔÄÇÐ© URI ÒÔ / ½áÎ²µÄÇëÇó¡£ 
+Nginx ä¸€èˆ¬ä¼šåœ¨ content é˜¶æ®µå®‰æŽ’ä¸‰ä¸ªè¿™æ ·çš„é™æ€èµ„æºæœåŠ¡æ¨¡å—:ngx_index æ¨¡å—ï¼Œ ngx_autoindex æ¨¡å—ã€ngx_static æ¨¡å—
+ngx_index å’Œ ngx_autoindex æ¨¡å—éƒ½åªä¼šä½œç”¨äºŽé‚£äº› URI ä»¥ / ç»“å°¾çš„è¯·æ±‚ï¼Œä¾‹å¦‚è¯·æ±‚ GET /cats/ï¼Œè€Œå¯¹äºŽä¸ä»¥ / ç»“å°¾çš„è¯·æ±‚åˆ™ä¼šç›´æŽ¥å¿½ç•¥ï¼Œ
+åŒæ—¶æŠŠå¤„ç†æƒç§»äº¤ç»™ content é˜¶æ®µçš„ä¸‹ä¸€ä¸ªæ¨¡å—ã€‚è€Œ ngx_static æ¨¡å—åˆ™åˆšå¥½ç›¸åï¼Œç›´æŽ¥å¿½ç•¥é‚£äº› URI ä»¥ / ç»“å°¾çš„è¯·æ±‚ã€‚ 
 */
 static ngx_http_module_t  ngx_http_autoindex_module_ctx = {
     NULL,                                  /* preconfiguration */
@@ -163,14 +163,14 @@ static ngx_http_module_t  ngx_http_autoindex_module_ctx = {
 
 /*
 location / {			
-    index index11.html	#±ØÐë±£Ö¤ÐÂuriËùÔÚÄ¿Â¼´æÔÚ²¢ÇÒ¸ÃÄ¿Â¼ÏÂÃæÃ»ÓÐindex11.html£¬autoindex¶ÔÓ¦µÄngx_http_autoindex_handler²Å»áÉúÐ§		
+    index index11.html	#å¿…é¡»ä¿è¯æ–°uriæ‰€åœ¨ç›®å½•å­˜åœ¨å¹¶ä¸”è¯¥ç›®å½•ä¸‹é¢æ²¡æœ‰index11.htmlï¼Œautoindexå¯¹åº”çš„ngx_http_autoindex_handleræ‰ä¼šç”Ÿæ•ˆ		
     autoindex on;		
 }
-Ö»ÓÐÔÚindex11.htmlÎÄ¼þ²»´æÔÚµÄÊ±ºò²Å»áÖ´ÐÐautoindex£¬Èç¹ûÃ»ÓÐÉèÖÃindexÔòÄ¬ÈÏ´ò¿ªindex.html£¬±ØÐë±£Ö¤index.htmlµÄuriÄ¿Â¼´æÔÚ£¬Èç¹û²»´æÔÚ£¬ÊÇÒ»¸ö²»´æÔÚµÄÄ¿Â¼Ò²²»»áÖ´ÐÐautoindex
+åªæœ‰åœ¨index11.htmlæ–‡ä»¶ä¸å­˜åœ¨çš„æ—¶å€™æ‰ä¼šæ‰§è¡Œautoindexï¼Œå¦‚æžœæ²¡æœ‰è®¾ç½®indexåˆ™é»˜è®¤æ‰“å¼€index.htmlï¼Œå¿…é¡»ä¿è¯index.htmlçš„uriç›®å½•å­˜åœ¨ï¼Œå¦‚æžœä¸å­˜åœ¨ï¼Œæ˜¯ä¸€ä¸ªä¸å­˜åœ¨çš„ç›®å½•ä¹Ÿä¸ä¼šæ‰§è¡Œautoindex
 
-Nginx Ò»°ã»áÔÚ content ½×¶Î°²ÅÅÈý¸öÕâÑùµÄ¾²Ì¬×ÊÔ´·þÎñÄ£¿é:ngx_index Ä£¿é£¬ ngx_autoindex Ä£¿é¡¢ngx_static Ä£¿é
-ngx_index ºÍ ngx_autoindex Ä£¿é¶¼Ö»»á×÷ÓÃÓÚÄÇÐ© URI ÒÔ / ½áÎ²µÄÇëÇó£¬ÀýÈçÇëÇó GET /cats/£¬¶ø¶ÔÓÚ²»ÒÔ / ½áÎ²µÄÇëÇóÔò»áÖ±½ÓºöÂÔ£¬
-Í¬Ê±°Ñ´¦ÀíÈ¨ÒÆ½»¸ø content ½×¶ÎµÄÏÂÒ»¸öÄ£¿é¡£¶ø ngx_static Ä£¿éÔò¸ÕºÃÏà·´£¬Ö±½ÓºöÂÔÄÇÐ© URI ÒÔ / ½áÎ²µÄÇëÇó¡£ 
+Nginx ä¸€èˆ¬ä¼šåœ¨ content é˜¶æ®µå®‰æŽ’ä¸‰ä¸ªè¿™æ ·çš„é™æ€èµ„æºæœåŠ¡æ¨¡å—:ngx_index æ¨¡å—ï¼Œ ngx_autoindex æ¨¡å—ã€ngx_static æ¨¡å—
+ngx_index å’Œ ngx_autoindex æ¨¡å—éƒ½åªä¼šä½œç”¨äºŽé‚£äº› URI ä»¥ / ç»“å°¾çš„è¯·æ±‚ï¼Œä¾‹å¦‚è¯·æ±‚ GET /cats/ï¼Œè€Œå¯¹äºŽä¸ä»¥ / ç»“å°¾çš„è¯·æ±‚åˆ™ä¼šç›´æŽ¥å¿½ç•¥ï¼Œ
+åŒæ—¶æŠŠå¤„ç†æƒç§»äº¤ç»™ content é˜¶æ®µçš„ä¸‹ä¸€ä¸ªæ¨¡å—ã€‚è€Œ ngx_static æ¨¡å—åˆ™åˆšå¥½ç›¸åï¼Œç›´æŽ¥å¿½ç•¥é‚£äº› URI ä»¥ / ç»“å°¾çš„è¯·æ±‚ã€‚ 
 */
 
 /*
@@ -188,7 +188,7 @@ test4.php                                          06-Jan-2016 20:36            
 xiazai.php                                         07-Jan-2016 01:41                 673
 */
 
-ngx_module_t  ngx_http_autoindex_module = { //¿ÉÒÔÓÃ×ÅÄ¿Â¼·þÎñÆ÷ÏÂÔØÎÄ¼þ
+ngx_module_t  ngx_http_autoindex_module = { //å¯ä»¥ç”¨ç€ç›®å½•æœåŠ¡å™¨ä¸‹è½½æ–‡ä»¶
     NGX_MODULE_V1,
     &ngx_http_autoindex_module_ctx,        /* module context */
     ngx_http_autoindex_commands,           /* module directives */
@@ -235,7 +235,7 @@ root@root:~# curl http://10.2.13.167/
 root@root:~# 
 
 
-½çÃæÊäÈëhttp://ip½á¹û:
+ç•Œé¢è¾“å…¥http://ipç»“æžœ:
 Index of /
 
 ../
@@ -249,23 +249,23 @@ test3.php                                          23-Apr-2025 10:24            
 test4.php                                          06-Jan-2016 20:36                 428
 xiazai.php                                         07-Jan-2016 01:41                 673
 
-Òò´Ë¿ÉÒÔÓÃ×ÅÄ¿Â¼·þÎñÆ÷ÏÂÔØÎÄ¼þ
+å› æ­¤å¯ä»¥ç”¨ç€ç›®å½•æœåŠ¡å™¨ä¸‹è½½æ–‡ä»¶
 */
 
 /*
 location / {			
-    index index11.html	#±ØÐë±£Ö¤ÐÂuriËùÔÚÄ¿Â¼´æÔÚ²¢ÇÒ¸ÃÄ¿Â¼ÏÂÃæÃ»ÓÐindex11.html£¬autoindex¶ÔÓ¦µÄngx_http_autoindex_handler²Å»áÉúÐ§		
+    index index11.html	#å¿…é¡»ä¿è¯æ–°uriæ‰€åœ¨ç›®å½•å­˜åœ¨å¹¶ä¸”è¯¥ç›®å½•ä¸‹é¢æ²¡æœ‰index11.htmlï¼Œautoindexå¯¹åº”çš„ngx_http_autoindex_handleræ‰ä¼šç”Ÿæ•ˆ		
     autoindex on;		
 }
-Ö»ÓÐÔÚindex11.htmlÎÄ¼þ²»´æÔÚµÄÊ±ºò²Å»áÖ´ÐÐautoindex£¬Èç¹ûÃ»ÓÐÉèÖÃindexÔòÄ¬ÈÏ´ò¿ªindex.html£¬±ØÐë±£Ö¤index.htmlµÄuriÄ¿Â¼´æÔÚ£¬Èç¹û²»´æÔÚ£¬ÊÇÒ»¸ö²»´æÔÚµÄÄ¿Â¼Ò²²»»áÖ´ÐÐautoindex
+åªæœ‰åœ¨index11.htmlæ–‡ä»¶ä¸å­˜åœ¨çš„æ—¶å€™æ‰ä¼šæ‰§è¡Œautoindexï¼Œå¦‚æžœæ²¡æœ‰è®¾ç½®indexåˆ™é»˜è®¤æ‰“å¼€index.htmlï¼Œå¿…é¡»ä¿è¯index.htmlçš„uriç›®å½•å­˜åœ¨ï¼Œå¦‚æžœä¸å­˜åœ¨ï¼Œæ˜¯ä¸€ä¸ªä¸å­˜åœ¨çš„ç›®å½•ä¹Ÿä¸ä¼šæ‰§è¡Œautoindex
 
-Nginx Ò»°ã»áÔÚ content ½×¶Î°²ÅÅÈý¸öÕâÑùµÄ¾²Ì¬×ÊÔ´·þÎñÄ£¿é:ngx_index Ä£¿é£¬ ngx_autoindex Ä£¿é¡¢ngx_static Ä£¿é
-ngx_index ºÍ ngx_autoindex Ä£¿é¶¼Ö»»á×÷ÓÃÓÚÄÇÐ© URI ÒÔ / ½áÎ²µÄÇëÇó£¬ÀýÈçÇëÇó GET /cats/£¬¶ø¶ÔÓÚ²»ÒÔ / ½áÎ²µÄÇëÇóÔò»áÖ±½ÓºöÂÔ£¬
-Í¬Ê±°Ñ´¦ÀíÈ¨ÒÆ½»¸ø content ½×¶ÎµÄÏÂÒ»¸öÄ£¿é¡£¶ø ngx_static Ä£¿éÔò¸ÕºÃÏà·´£¬Ö±½ÓºöÂÔÄÇÐ© URI ÒÔ / ½áÎ²µÄÇëÇó¡£ 
+Nginx ä¸€èˆ¬ä¼šåœ¨ content é˜¶æ®µå®‰æŽ’ä¸‰ä¸ªè¿™æ ·çš„é™æ€èµ„æºæœåŠ¡æ¨¡å—:ngx_index æ¨¡å—ï¼Œ ngx_autoindex æ¨¡å—ã€ngx_static æ¨¡å—
+ngx_index å’Œ ngx_autoindex æ¨¡å—éƒ½åªä¼šä½œç”¨äºŽé‚£äº› URI ä»¥ / ç»“å°¾çš„è¯·æ±‚ï¼Œä¾‹å¦‚è¯·æ±‚ GET /cats/ï¼Œè€Œå¯¹äºŽä¸ä»¥ / ç»“å°¾çš„è¯·æ±‚åˆ™ä¼šç›´æŽ¥å¿½ç•¥ï¼Œ
+åŒæ—¶æŠŠå¤„ç†æƒç§»äº¤ç»™ content é˜¶æ®µçš„ä¸‹ä¸€ä¸ªæ¨¡å—ã€‚è€Œ ngx_static æ¨¡å—åˆ™åˆšå¥½ç›¸åï¼Œç›´æŽ¥å¿½ç•¥é‚£äº› URI ä»¥ / ç»“å°¾çš„è¯·æ±‚ã€‚ 
 */
 static ngx_int_t  
 ngx_http_autoindex_handler(ngx_http_request_t *r)  
-{ //»ñÈ¡uriÄ¿Â¼ÖÐµÄËùÓÐÎÄ¼þÐÅÏ¢×é°ü·¢ËÍ¸ø¿Í»§¶Ëä¯ÀÀÆ÷
+{ //èŽ·å–uriç›®å½•ä¸­çš„æ‰€æœ‰æ–‡ä»¶ä¿¡æ¯ç»„åŒ…å‘é€ç»™å®¢æˆ·ç«¯æµè§ˆå™¨
     u_char                         *last, *filename;
     size_t                          len, allocated, root;
     ngx_err_t                       err;
@@ -280,13 +280,13 @@ ngx_http_autoindex_handler(ngx_http_request_t *r)
     ngx_http_autoindex_entry_t     *entry;
     ngx_http_autoindex_loc_conf_t  *alcf;
 
-    if (r->uri.data[r->uri.len - 1] != '/') { //autoindexµÄuri±ØÐëÊÇÄ¿Â¼ÐÎÊ½£¬×îÄ©Î²×Ö·û/
+    if (r->uri.data[r->uri.len - 1] != '/') { //autoindexçš„uriå¿…é¡»æ˜¯ç›®å½•å½¢å¼ï¼Œæœ€æœ«å°¾å­—ç¬¦/
         return NGX_DECLINED;
     }
 
     alcf = ngx_http_get_module_loc_conf(r, ngx_http_autoindex_module);
 
-    //Èç¹ûÃ»ÓÐÅäÖÃindex»òÕßtry_files£¬ÔòÆ¥Åälocation / {}µ½ºó»áÄ¬ÈÏÊ¹ÓÃhtml/index.html 
+    //å¦‚æžœæ²¡æœ‰é…ç½®indexæˆ–è€…try_filesï¼Œåˆ™åŒ¹é…location / {}åˆ°åŽä¼šé»˜è®¤ä½¿ç”¨html/index.html 
     if (!(r->method & (NGX_HTTP_GET|NGX_HTTP_HEAD))) {
         return NGX_DECLINED;
     }

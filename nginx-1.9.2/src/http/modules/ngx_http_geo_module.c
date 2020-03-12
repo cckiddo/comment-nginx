@@ -150,15 +150,15 @@ default_type    application/octet-stream;
 sendfile        on;
 keepalive_timeout 65;
 geo $cmccip {
-    default 1;¡¡¡¡¡¡#¡¡Î´¶¨ÒåipµÄÖµÎª1  Ã»ÓĞÆ¥Åäµ½IP£¬Ôò±äÁ¿$cmccipÖÃÎª1
-    include cmcc.conf; ¼ÓÔØgeo.confÎÄ¼ş£¬Õâ¸öÎÄ¼ş¶¨ÒåÒÆ¶¯Íø¹Øip  Ò²¾ÍÊÇÂú×ãcmcc.confÎÄ¼şÖĞIPµØÖ·¶ÎµÄ¿Í»§¶ËIPÄ¬ÈÏÖµÎªcmcc.confÖĞµÄÈ¡Öµ0
+    default 1;ã€€ã€€ã€€#ã€€æœªå®šä¹‰ipçš„å€¼ä¸º1  æ²¡æœ‰åŒ¹é…åˆ°IPï¼Œåˆ™å˜é‡$cmccipç½®ä¸º1
+    include cmcc.conf; åŠ è½½geo.confæ–‡ä»¶ï¼Œè¿™ä¸ªæ–‡ä»¶å®šä¹‰ç§»åŠ¨ç½‘å…³ip  ä¹Ÿå°±æ˜¯æ»¡è¶³cmcc.confæ–‡ä»¶ä¸­IPåœ°å€æ®µçš„å®¢æˆ·ç«¯IPé»˜è®¤å€¼ä¸ºcmcc.confä¸­çš„å–å€¼0
 }
 server {
 listen 801;
 server_name XXXXX;
 location / {
 if ($cmccip) { //
-    ://www.oschina.net;   Î´¶¨Òåip¼´·ÇÒÆ¶¯ipÖØ¶¨Ïòµ½www.oschina.net;
+    ://www.oschina.net;   æœªå®šä¹‰ipå³éç§»åŠ¨ipé‡å®šå‘åˆ°www.oschina.net;
 }
 root /data/www;
 index index.wml index.html;
@@ -167,17 +167,17 @@ index index.wml index.html;
 }
 }
 
-2. [´úÂë]cmcc.conf      
+2. [ä»£ç ]cmcc.conf      
 211.136.222.90/32 0;
 */
 
 /*
-NginxµÄgeoÄ£¿é¿ÉÒÔ×öÈ«¾Ö¸ºÔØ¾ùºâ£¬¿ÉÒÔÒª¸ù¾İ¿Í»§¶Ëip·ÃÎÊµ½²»Í¬µÄserver¡£±ÈÈç£¬¿ÉÒÔ½«µçĞÅµÄÓÃ»§·ÃÎÊ¶¨Ïòµ½µçĞÅ·şÎñÆ÷£¬ÍøÍ¨µÄÓÃ»§ÖØ¶¨Ïòµ½ÍøÍ¨·şÎñÆ÷
+Nginxçš„geoæ¨¡å—å¯ä»¥åšå…¨å±€è´Ÿè½½å‡è¡¡ï¼Œå¯ä»¥è¦æ ¹æ®å®¢æˆ·ç«¯ipè®¿é—®åˆ°ä¸åŒçš„serverã€‚æ¯”å¦‚ï¼Œå¯ä»¥å°†ç”µä¿¡çš„ç”¨æˆ·è®¿é—®å®šå‘åˆ°ç”µä¿¡æœåŠ¡å™¨ï¼Œç½‘é€šçš„ç”¨æˆ·é‡å®šå‘åˆ°ç½‘é€šæœåŠ¡å™¨
 */
 
 /*
-ngx_http_geo_module:geo [$address] $variable { ... }  ¶ÔµØÖ·$addressÓë{}ÖĞµÄkey-value¶Ô½øĞĞÆ¥Åä£¬Æ¥Åä½á¹¹´æ´¢µ½$variableÖĞ
-ngx_http_map_module: map String $variable { ... } ¶Ô×Ö·û´®StringÓë{}ÖĞµÄkey-value¶Ô½øĞĞÆ¥Åä£¬Æ¥Åä½á¹¹´æ´¢µ½$variableÖĞ
+ngx_http_geo_module:geo [$address] $variable { ... }  å¯¹åœ°å€$addressä¸{}ä¸­çš„key-valueå¯¹è¿›è¡ŒåŒ¹é…ï¼ŒåŒ¹é…ç»“æ„å­˜å‚¨åˆ°$variableä¸­
+ngx_http_map_module: map String $variable { ... } å¯¹å­—ç¬¦ä¸²Stringä¸{}ä¸­çš„key-valueå¯¹è¿›è¡ŒåŒ¹é…ï¼ŒåŒ¹é…ç»“æ„å­˜å‚¨åˆ°$variableä¸­
 */
 ngx_module_t  ngx_http_geo_module = {
     NGX_MODULE_V1,

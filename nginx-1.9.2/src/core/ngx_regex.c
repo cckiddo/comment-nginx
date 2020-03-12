@@ -90,7 +90,7 @@ ngx_regex_malloc_done(void)
     ngx_pcre_pool = NULL;
 }
 
-//PCREÊ¹ÓÃ²Î¿¼http://blog.chinaunix.net/uid-26575352-id-3517146.html    http://blog.csdn.net/kofiory/article/details/5829697
+//PCREä½¿ç”¨å‚è€ƒhttp://blog.chinaunix.net/uid-26575352-id-3517146.html    http://blog.csdn.net/kofiory/article/details/5829697
 ngx_int_t
 ngx_regex_compile(ngx_regex_compile_t *rc)
 {
@@ -102,7 +102,7 @@ ngx_regex_compile(ngx_regex_compile_t *rc)
     
     ngx_regex_malloc_init(rc->pool);
 
-    //ÕýÔò±í´ïÊ½ÔÚÊ¹ÓÃÖ®Ç°Òª¾­¹ý±àÒë¡£±àÒëµÄÄ¿µÄÊÇ½«ÕýÔò±í´ïÊ½µÄpattern×ª»»³ÉPCREÒýÇæÄÜ¹»Ê¶±ðµÄ½á¹¹£¨struct real_pcre£©¡£
+    //æ­£åˆ™è¡¨è¾¾å¼åœ¨ä½¿ç”¨ä¹‹å‰è¦ç»è¿‡ç¼–è¯‘ã€‚ç¼–è¯‘çš„ç›®çš„æ˜¯å°†æ­£åˆ™è¡¨è¾¾å¼çš„patternè½¬æ¢æˆPCREå¼•æ“Žèƒ½å¤Ÿè¯†åˆ«çš„ç»“æž„ï¼ˆstruct real_pcreï¼‰ã€‚
     re = pcre_compile((const char *) rc->pattern.data, (int) rc->options,
                       &errstr, &erroff, NULL);
 
@@ -145,7 +145,7 @@ ngx_regex_compile(ngx_regex_compile_t *rc)
         elt->name = rc->pattern.data;
     }
 
-    //PCRE_INFO_CAPTURECOUNT: µÃµ½µÄÊÇËùÓÐ×ÓÄ£Ê½µÄ¸öÊý,°üº¬ÃüÃû×ÓÄ£Ê½ºÍ·ÇÃüÃû×ÓÄ£Ê½
+    //PCRE_INFO_CAPTURECOUNT: å¾—åˆ°çš„æ˜¯æ‰€æœ‰å­æ¨¡å¼çš„ä¸ªæ•°,åŒ…å«å‘½åå­æ¨¡å¼å’Œéžå‘½åå­æ¨¡å¼
     n = pcre_fullinfo(re, NULL, PCRE_INFO_CAPTURECOUNT, &rc->captures);
     if (n < 0) {
         p = "pcre_fullinfo(\"%V\", PCRE_INFO_CAPTURECOUNT) failed: %d";
@@ -350,11 +350,11 @@ ngx_regex_module_init(ngx_cycle_t *cycle)
         }
 
         /* 
-          ¶Ô±àÒëºóµÄÕýÔò±í´ïÊ½½á¹¹(struct real_pcre)½øÐÐ·ÖÎöºÍÑ§Ï°,Ñ§Ï°µÄ½á¹ûÊÇÒ»¸öÊý¾Ý½á¹¹(struct pcre_extra),Õâ¸öÊý¾Ý½á¹¹Á¬Í¬±àÒë
-          ºóµÄ¹æÔò(struct real_pcre)¿ÉÒÔÒ»ÆðËÍ¸øpcre_execµ¥Ôª½øÐÐÆ¥Åä.
+          å¯¹ç¼–è¯‘åŽçš„æ­£åˆ™è¡¨è¾¾å¼ç»“æž„(struct real_pcre)è¿›è¡Œåˆ†æžå’Œå­¦ä¹ ,å­¦ä¹ çš„ç»“æžœæ˜¯ä¸€ä¸ªæ•°æ®ç»“æž„(struct pcre_extra),è¿™ä¸ªæ•°æ®ç»“æž„è¿žåŒç¼–è¯‘
+          åŽçš„è§„åˆ™(struct real_pcre)å¯ä»¥ä¸€èµ·é€ç»™pcre_execå•å…ƒè¿›è¡ŒåŒ¹é….
 
-          pcre_study£¨£©µÄÒýÈëÖ÷ÒªÊÇÎªÁË¼ÓËÙÕýÔò±í´ïÊ½Æ¥ÅäµÄËÙ¶È.(ÎªÊ²Ã´Ñ§Ï°ºó¾ÍÄÜ¼ÓËÙÄØ?)Õâ¸ö»¹ÊÇ±È½ÏÓÐÓÃµÄ,¿ÉÒÔ½«ÕýÔò±í´ïÊ½±àÒë,
-          Ñ§Ï°ºó±£´æµ½Ò»¸öÎÄ¼þ»òÄÚ´æÖÐ,ÕâÑù½øÐÐÆ¥ÅäµÄÊ±ºòÐ§ÂÊ±È½Ï¸ã.snortÖÐ¾ÍÊÇÕâÑù×öµÄ.
+          pcre_studyï¼ˆï¼‰çš„å¼•å…¥ä¸»è¦æ˜¯ä¸ºäº†åŠ é€Ÿæ­£åˆ™è¡¨è¾¾å¼åŒ¹é…çš„é€Ÿåº¦.(ä¸ºä»€ä¹ˆå­¦ä¹ åŽå°±èƒ½åŠ é€Ÿå‘¢?)è¿™ä¸ªè¿˜æ˜¯æ¯”è¾ƒæœ‰ç”¨çš„,å¯ä»¥å°†æ­£åˆ™è¡¨è¾¾å¼ç¼–è¯‘,
+          å­¦ä¹ åŽä¿å­˜åˆ°ä¸€ä¸ªæ–‡ä»¶æˆ–å†…å­˜ä¸­,è¿™æ ·è¿›è¡ŒåŒ¹é…çš„æ—¶å€™æ•ˆçŽ‡æ¯”è¾ƒæž.snortä¸­å°±æ˜¯è¿™æ ·åšçš„.
           */
         elts[i].regex->extra = pcre_study(elts[i].regex->code, opt, &errstr);
 

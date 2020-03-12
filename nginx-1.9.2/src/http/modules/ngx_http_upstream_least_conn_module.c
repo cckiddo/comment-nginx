@@ -21,15 +21,15 @@ static char *ngx_http_upstream_least_conn(ngx_conf_t *cf, ngx_command_t *cmd,
 static ngx_command_t  ngx_http_upstream_least_conn_commands[] = {
 /*
 
-Óï·¨:  least_conn;
+è¯­æ³•:  least_conn;
  
-Ä¬ÈÏÖµ:  ¡ª  
-ÉÏÏÂÎÄ:  upstream
+é»˜è®¤å€¼:  â€•  
+ä¸Šä¸‹æ–‡:  upstream
  
 
-Õâ¸öÖ¸Áî³öÏÖÔÚ°æ±¾ 1.3.1 ºÍ 1.2.2. 
+è¿™ä¸ªæŒ‡ä»¤å‡ºç°åœ¨ç‰ˆæœ¬ 1.3.1 å’Œ 1.2.2. 
 
-Ö¸¶¨·şÎñÆ÷×éµÄ¸ºÔØ¾ùºâ·½·¨£¬¸ù¾İÆäÈ¨ÖØÖµ£¬½«ÇëÇó·¢ËÍµ½»îÔ¾Á¬½ÓÊı×îÉÙµÄÄÇÌ¨·şÎñÆ÷¡£ Èç¹ûÕâÑùµÄ·şÎñÆ÷ÓĞ¶àÌ¨£¬ÄÇ¾Í²ÉÈ¡ÓĞÈ¨ÖØµÄÂÖ×ª·¨½øĞĞ³¢ÊÔ¡£ 
+æŒ‡å®šæœåŠ¡å™¨ç»„çš„è´Ÿè½½å‡è¡¡æ–¹æ³•ï¼Œæ ¹æ®å…¶æƒé‡å€¼ï¼Œå°†è¯·æ±‚å‘é€åˆ°æ´»è·ƒè¿æ¥æ•°æœ€å°‘çš„é‚£å°æœåŠ¡å™¨ã€‚ å¦‚æœè¿™æ ·çš„æœåŠ¡å™¨æœ‰å¤šå°ï¼Œé‚£å°±é‡‡å–æœ‰æƒé‡çš„è½®è½¬æ³•è¿›è¡Œå°è¯•ã€‚ 
 */
     { ngx_string("least_conn"),
       NGX_HTTP_UPS_CONF|NGX_CONF_NOARGS,
@@ -57,20 +57,20 @@ static ngx_http_module_t  ngx_http_upstream_least_conn_module_ctx = {
 };
 
 /*
-¸ºÔØ¾ùºâÏà¹ØÅäÖÃ:
+è´Ÿè½½å‡è¡¡ç›¸å…³é…ç½®:
 upstream
 server
-ip_hash:¸ù¾İ¿Í»§¶ËµÄIPÀ´×öhash,²»¹ıÈç¹ûsquid -- nginx -- server(s)Ôò£¬ipÓÀÔ¶ÊÇsquid·şÎñÆ÷ip,Òò´Ë²»¹ÜÓÃ,ĞèÒªngx_http_realip_module»òÕßµÚÈı·½Ä£¿é
-keepalive:ÅäÖÃµ½ºó¶ËµÄ×î´óÁ¬½ÓÊı£¬±£³Ö³¤Á¬½Ó£¬²»±ØÎªÃ¿Ò»¸ö¿Í»§¶Ë¶¼ÖØĞÂ½¨Á¢nginxµ½ºó¶ËPHPµÈ·şÎñÆ÷µÄÁ¬½Ó£¬ĞèÒª±£³ÖºÍºó¶Ë
-    ³¤Á¬½Ó£¬ÀıÈçfastcgi:fastcgi_keep_conn on;       proxy:  proxy_http_version 1.1;  proxy_set_header Connection "";
-least_conn:¸ù¾İÆäÈ¨ÖØÖµ£¬½«ÇëÇó·¢ËÍµ½»îÔ¾Á¬½ÓÊı×îÉÙµÄÄÇÌ¨·şÎñÆ÷
-hash:¿ÉÒÔ°´ÕÕuri  ip µÈ²ÎÊı½øĞĞ×öhash
+ip_hash:æ ¹æ®å®¢æˆ·ç«¯çš„IPæ¥åšhash,ä¸è¿‡å¦‚æœsquid -- nginx -- server(s)åˆ™ï¼Œipæ°¸è¿œæ˜¯squidæœåŠ¡å™¨ip,å› æ­¤ä¸ç®¡ç”¨,éœ€è¦ngx_http_realip_moduleæˆ–è€…ç¬¬ä¸‰æ–¹æ¨¡å—
+keepalive:é…ç½®åˆ°åç«¯çš„æœ€å¤§è¿æ¥æ•°ï¼Œä¿æŒé•¿è¿æ¥ï¼Œä¸å¿…ä¸ºæ¯ä¸€ä¸ªå®¢æˆ·ç«¯éƒ½é‡æ–°å»ºç«‹nginxåˆ°åç«¯PHPç­‰æœåŠ¡å™¨çš„è¿æ¥ï¼Œéœ€è¦ä¿æŒå’Œåç«¯
+    é•¿è¿æ¥ï¼Œä¾‹å¦‚fastcgi:fastcgi_keep_conn on;       proxy:  proxy_http_version 1.1;  proxy_set_header Connection "";
+least_conn:æ ¹æ®å…¶æƒé‡å€¼ï¼Œå°†è¯·æ±‚å‘é€åˆ°æ´»è·ƒè¿æ¥æ•°æœ€å°‘çš„é‚£å°æœåŠ¡å™¨
+hash:å¯ä»¥æŒ‰ç…§uri  ip ç­‰å‚æ•°è¿›è¡Œåšhash
 
-²Î¿¼http://tengine.taobao.org/nginx_docs/cn/docs/http/ngx_http_upstream_module.html#ip_hash
+å‚è€ƒhttp://tengine.taobao.org/nginx_docs/cn/docs/http/ngx_http_upstream_module.html#ip_hash
 */
 
 
-//Ö¸¶¨·şÎñÆ÷×éµÄ¸ºÔØ¾ùºâ·½·¨£¬¸ù¾İÆäÈ¨ÖØÖµ£¬½«ÇëÇó·¢ËÍµ½»îÔ¾Á¬½ÓÊı×îÉÙµÄÄÇÌ¨·şÎñÆ÷¡£ Èç¹ûÕâÑùµÄ·şÎñÆ÷ÓĞ¶àÌ¨£¬ÄÇ¾Í²ÉÈ¡ÓĞÈ¨ÖØµÄÂÖ×ª·¨½øĞĞ³¢ÊÔ¡£ 
+//æŒ‡å®šæœåŠ¡å™¨ç»„çš„è´Ÿè½½å‡è¡¡æ–¹æ³•ï¼Œæ ¹æ®å…¶æƒé‡å€¼ï¼Œå°†è¯·æ±‚å‘é€åˆ°æ´»è·ƒè¿æ¥æ•°æœ€å°‘çš„é‚£å°æœåŠ¡å™¨ã€‚ å¦‚æœè¿™æ ·çš„æœåŠ¡å™¨æœ‰å¤šå°ï¼Œé‚£å°±é‡‡å–æœ‰æƒé‡çš„è½®è½¬æ³•è¿›è¡Œå°è¯•ã€‚ 
 ngx_module_t  ngx_http_upstream_least_conn_module = {
     NGX_MODULE_V1,
     &ngx_http_upstream_least_conn_module_ctx, /* module context */
@@ -121,7 +121,7 @@ ngx_http_upstream_init_least_conn_peer(ngx_http_request_t *r,
 }
 
 /*ngx_http_upstream_get_round_robin_peer ngx_http_upstream_get_least_conn_peer ngx_http_upstream_get_hash_peer  
-ngx_http_upstream_get_ip_hash_peer ngx_http_upstream_get_keepalive_peerµÈ */
+ngx_http_upstream_get_ip_hash_peer ngx_http_upstream_get_keepalive_peerç­‰ */
 static ngx_int_t
 ngx_http_upstream_get_least_conn_peer(ngx_peer_connection_t *pc, void *data)
 {

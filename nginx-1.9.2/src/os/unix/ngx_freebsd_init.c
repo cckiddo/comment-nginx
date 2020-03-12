@@ -87,7 +87,7 @@ void ngx_debug_init(void)
 
     mo = getenv("MALLOC_OPTIONS"); 
 
-    if (mo && ngx_strchr(mo, 'J')) {//getenvÊÇº¯ÊıÃû£¬´Ó»·¾³ÖĞÈ¡×Ö·û´®,»ñÈ¡ »·¾³±äÁ¿µÄÖµ
+    if (mo && ngx_strchr(mo, 'J')) {//getenvæ˜¯å‡½æ•°åï¼Œä»ç¯å¢ƒä¸­å–å­—ç¬¦ä¸²,è·å– ç¯å¢ƒå˜é‡çš„å€¼
         ngx_debug_malloc = 1;
     }
 #endif

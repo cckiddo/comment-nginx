@@ -46,10 +46,10 @@ static ngx_http_module_t  ngx_http_stub_status_module_ctx = {
 };
 
 /* 
-¸ÃÄ£¿éÔÚ auto/optionsÎÄ¼şÖĞ£¬Í¨¹ıÏÂÃæµÄconfigÑ¡Ïî°ÑÄ£¿é±àÒëµ½nginx
+è¯¥æ¨¡å—åœ¨ auto/optionsæ–‡ä»¶ä¸­ï¼Œé€šè¿‡ä¸‹é¢çš„configé€‰é¡¹æŠŠæ¨¡å—ç¼–è¯‘åˆ°nginx
     HTTP_STUB_STATUS=NO
     --with-http_stub_status_module)  HTTP_STUB_STATUS=YES       ;; 
-*/ //Ìá¹©¼òµ¥µÄÁ¬½Ó¡¢¶Á¡¢Ğ´µÈÍ³¼Æ²éÑ¯¹¦ÄÜ
+*/ //æä¾›ç®€å•çš„è¿æ¥ã€è¯»ã€å†™ç­‰ç»Ÿè®¡æŸ¥è¯¢åŠŸèƒ½
 ngx_module_t  ngx_http_stub_status_module = {
     NGX_MODULE_V1,
     &ngx_http_stub_status_module_ctx,      /* module context */

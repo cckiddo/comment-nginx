@@ -16,7 +16,7 @@ static void ngx_encode_base64_internal(ngx_str_t *dst, ngx_str_t *src,
 static ngx_int_t ngx_decode_base64_internal(ngx_str_t *dst, ngx_str_t *src,
     const u_char *basis);
 
-//´óĞ´×ÖÄ¸×ª»»ÎªĞ¡Ğ´×ÖÄ¸
+//å¤§å†™å­—æ¯è½¬æ¢ä¸ºå°å†™å­—æ¯
 void
 ngx_strlow(u_char *dst, u_char *src, size_t n)
 {
@@ -143,88 +143,88 @@ ngx_slprintf(u_char *buf, u_char *last, const char *fmt, ...)
 }
 
 /*
-±í4-8´òÓ¡ÈÕÖ¾»òÕßÊ¹ÓÃngx_sprintfÏµÁĞ·½·¨×ª»»×Ö·û´®Ê±Ö§³ÖµÄ27ÖÖ×ª»¯¸ñÊ½
-©³©¥©¥©¥©¥©¥©×©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©·
-©§×ª»»¸ñÊ½  ©§    ÓÃ·¨                                                                                ©§
-©Ç©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§          ©§  ±íÊ¾ÎŞ·ûºÅ£¬Æäºó»¹¿ÉÒÔ¸úÆäËû×ª»»·ûºÅ£¬Èç%ui±íÊ¾Òª×ª»»µÄÀàĞÍÊÇngx_uint_t¡£Èç¹ûÆäºóÃ»   ©§
-©§%U        ©§                                                                                        ©§
-©§          ©§ÓĞ¸ú×ª»»·ûºÅ£¬Ôò±íÊ¾Òª×ª»»µÄÀàĞÍÊÇÎŞ·ûºÅÊ®½øÖÆÕıÊı                                      ©§
-©Ç©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§%m        ©§  ±íÊ¾ÒÔ×î´ó³¤¶ÈÀ´×ª»»Êı×ÖÀàĞÍ(Èçint)                                                   ©§
-©Ç©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§          ©§  ÒÔÊ®Áù½øÖÆÀ´¸ñÊ½»¯×ª»»ºóµÄÊı¾İ¡£×¢Òâ£¬NginxÖĞµÄ%XÓëprintfµÈ×ª»»¸ñÊ½ÍêÈ«²»Í¬£¬ËüÖ»     ©§
-©§          ©§ÊÇÏŞÖÆ×ª»»ºóµÄÊı×ÖÒÔÊ®Áù½øÖÆ¸ñÊ½À´ÏÔÊ¾£¬¶ø²»ÊÇÏŞÖÆÏàÓ¦²ÎÊıµÄÀàĞÍ¡£ÀıÈç£¬%Xdºó¸ú×Åint    ©§
-©§%X        ©§                                                                                        ©§
-©§          ©§ÀàĞÍ£¬±íÊ¾ÒÔÊ®Áù½øÖÆ¸ñÊ½À´ÏÔÊ¾intÕûÊı£¬¶ø%Xp±íÊ¾ÒÔÊ®Áù½øÖÆ¸ñÊ½À´ÏÔÊ¾Ö¸ÕëµØÖ·¡£Èç¹û½ö    ©§
-©§          ©§ÓĞ%X£¬ÄÇÃ´ÊÇÃ»ÓĞÈÎºÎÊä³öµÄ                                                              ©§
-©Ç©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§          ©§  %XÓë%XµÄÓÃ·¨ÍêÈ«ÏàÍ¬£¬Ö»ÊÇ%XÒÔA¡¢B¡¢C¡¢D¡¢E¡¢F±íÊ¾Ê®½øÖÆÖĞµÄ10¡¢11¡¢12¡¢13¡¢          ©§
-©§%x        ©§                                                                                        ©§
-©§          ©§14¡¢15£¬¶ø%x×ãÒÔĞ¡Ğ´µÄa¡¢b¡¢c¡¢d¡¢e¡¢fÀ´±íÊ¾                                            ©§
-©Ç©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§          ©§  Æäºó±ØĞë½ô¸úÊı×Ö¡£µ±Ç°ÊµÏÖ°æ±¾ÏÂ±ØĞëÓë%fÅäºÏÊ¹ÓÃ£¬±íÊ¾×ª»»¸¡µãÊıÊ±Ğ¡Êı²¿·ÖµÄÎ»Êı¡£Àı  ©§
-©§%£®       ©§                                                                                        ©§
-©§          ©§Èç£¬%£®lOf±íÊ¾×ª»»doubleÀàĞÍÊ±£¬Ğ¡Êıµãºó×ª»»ÇÒ±ØĞë×ª»»Îª10Î»£¬²»×ãIOÎ»ÒÔOÌî²¹           ©§
-©Ç©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§          ©§  ×ª»»doubleÀàĞÍÊı¾İ¡£×¢Òâ£¬ËüÓëprintfµÈ±ê×¼CÓïÑÔÖĞµÄ%fÍêÈ«²»Í¬£¬Èç¹ûÏë×ª»»Ğ¡Êı²¿·Ö£¬   ©§
-©§%f        ©§                                                                                        ©§
-©§          ©§Ôò±ØĞë¼ÓÉÏ%£®(number)f¡£²Î¼û±¾±íÖĞ%£®µÄÃèÊö                                             ©§
-©Ç©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§%+        ©§  ±íÊ¾Òª×ª»»µÄ×Ö·û³¤¶È¡£Ä¿Ç°½öÓë%sÅäºÏÊ¹ÓÃ                                              ©§
-©Ç©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§          ©§  ×ª»»1¸öchar~»òÕßu- char~µÄ×Ö·û´®¡£Óë%+ÅäºÏÊ¹ÓÃÊ±£¬%ts±íÊ¾Êä³öÖ¸¶¨³¤¶ÈµÄ×Ö·û´®£¬Æä     ©§
-©§%S        ©§ºó±ØĞëÓĞÁ½¸ö²ÎÊı£º±íÊ¾Êä³ö×Ö·û´®³¤¶ÈµÄsize_tºÍ×Ö·û´®µØÖ·char~ÀàĞÍ¡£Èç¹û²»Óë%+ÅäºÏÊ¹ÓÃ£¬ ©§
-©§          ©§¶øÓëprintfµÈ±ê×¼¸ñÊ½ÏàÍ¬£¬ÄÇÃ´×Ö·û´®±ØĞëÒÔ¡®£Ü0¡¯½áÎ²                                   ©§
-©Ç©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§%V        ©§                                                                                        ©§
-©§          ©§  ×ª»»ngx_str_tÀàĞÍ£¬%V¶ÔÓ¦µÄ²ÎÊı±ØĞëÊÇngx_str_t±äÁ¿µÄµØÖ·¡£Ëü½«»á°´ÕÕngx_str_tÀàĞÍµÄ   ©§
-©§          ©§len³¤¶ÈÀ´Êä³ödata×Ö·û´®                                                                 ©§
-©Ç©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§          ©§  ×ª»»ngx_variable_value_tÀàĞÍ£¬%V¶ÔÓ¦µÄ²ÎÊı±ØĞëÊÇngx_variable_valuej±äÁ¿µÄµØÖ·¡£Ëü½«»á ©§
-©§%V        ©§                                                                                        ©§
-©§          ©§°´ÕÕngx_variable_value-t·àĞÍµÄlen³¤¶ÈÀ´Êä³ödata×Ö·û´®                                   ©§
-©Ç©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§%O        ©§  ×ª»»1¸öofftÀàĞÍ                                                                       ©§
-©Ç©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§%P        ©§  ×ª»»1¸öngx_pid_tÀàĞÍ                                                                  ©§
-©Ç©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§%T        ©§  ×ª»»1¸ötime¡ªtÀàĞÍ                                                                    ©§
-©Ç©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§%M        ©§  ×ª»»1¸öngx_msec_tÀàĞÍ                                                                 ©§
-©Ç©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§%Z        ©§  ×ª»»ssize_tÀàĞÍÊı¾İ£¬Èç¹ûÓÃ%UZ£¬Ôò×ª»»µÄÊı¾İÀàĞÍÊÇsize-t                              ©§
-©Ç©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§%i        ©§  ×ª»»ngx_int_tĞÍÊı¾İ£¬Èç¹ûÓÃ%ui£¬Ôò×ª»»µÄÊı¾İÀàĞÍÊÇngx_uint_t                          ©§
-©Ç©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§%d        ©§  ×ª»»intĞÍÊı¾İ£¬Èç¹ûÓÃ%ud£¬Ôò×ª»»µÄÊı¾İÀàĞÍÊÇu_int                                     ©§
-©Ç©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§%1        ©§  ×ª»»longĞÍÊı¾İ£¬Èç¹ûÓÃ%ul£¬Ôò×ª»»µÄÊı¾İÀàĞÍÊÇu_long                                   ©§
-©Ç©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§%D        ©§  ×ª»»int32-tĞÍÊı¾İ£¬Èç¹ûÓÃ%uD£¬Ôò×ª»»µÄÊı¾İÀàĞÍÊÇuint32-t                              ©§
-©Ç©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§%L        ©§  ×ª»»int64jĞÍÊı¾İ£¬Èç¹ûÓÃ%uL£¬Ôò×ª»»µÄÊı¾İÀàĞÍÊÇuint64 t                               ©§
-©Ç©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§%A        ©§  ×ª»»ngx_atomic_int_tĞÍÊı¾İ£¬Èç¹ûÓÃ%uA£¬Ôò×ª»»µÄÊı¾İÀàĞÍÊÇngx_atomic_uint_t            ©§
-©»©¥©¥©¥©¥©¥©ß©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¿
-©³©¥©¥©¥©¥©¥©×©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©·
-©§×ª»»¸ñÊ½  ©§    ÓÃ·¨                                                                                ©§
-©Ç©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§%r        ©§                                                                                        ©§
-©§          ©§  ×ª»»1¸örlimjÀàĞÍ¡£ÏµÍ³µ÷ÓÃgetrlimit»òÕßsetrlimitÊ±¶¼»áÊ¹ÓÃrlimjÀàĞÍ²ÎÊı£¬ËüÊµ¼ÊÉÏÊÇ   ©§
-©§          ©§Ò»¸öËãÊõÊı¾İÀàĞÍ£¬µÈÍ¬¸ÉÀàĞÍint¡¢size t»òÕßofft                                         ©§
-©Ç©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§%p        ©§  ×ª»»1¸öÖ¸Õë£¨µØÖ·£©                                                                   ©§
-©Ç©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§%C        ©§  ×ª»»1¸ö×Ö·ûÀàĞÍ                                                                       ©§
-©Ç©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§%Z        ©§  ±íÊ¾¡¯£ÜO¡¯                                                                           ©§
-©Ç©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§%N        ©§  ±íÊ¾¡¯£Ün¡¯»»ĞĞ·û£¬¼´¡±\xOa¡±£¬ÔÚwindows²Ù×÷ÏµÍ³ÉÏÔò±íÊ¾¡¯\r\n¡¯£¬Ò²¾ÍÊÇ¡±\xOd\xOa¡±  ©§
-©Ç©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§%%        ©§  ´òÓ¡1¸ö°Ù·ÖºÅ(%)                                                                      ©§
-©»©¥©¥©¥©¥©¥©ß©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¿
-ÀıÈç£¬ÔÚ4.2.4½Ú×Ô¶¨ÒåµÄngx_c onf_set_myc onfig·½·¨ÖĞ£¬¿ÉÒÔÕâÑùÊä³öÈÕÖ¾¡£
+è¡¨4-8æ‰“å°æ—¥å¿—æˆ–è€…ä½¿ç”¨ngx_sprintfç³»åˆ—æ–¹æ³•è½¬æ¢å­—ç¬¦ä¸²æ—¶æ”¯æŒçš„27ç§è½¬åŒ–æ ¼å¼
+â”â”â”â”â”â”â”³â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”“
+â”ƒè½¬æ¢æ ¼å¼  â”ƒ    ç”¨æ³•                                                                                â”ƒ
+â”£â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ          â”ƒ  è¡¨ç¤ºæ— ç¬¦å·ï¼Œå…¶åè¿˜å¯ä»¥è·Ÿå…¶ä»–è½¬æ¢ç¬¦å·ï¼Œå¦‚%uiè¡¨ç¤ºè¦è½¬æ¢çš„ç±»å‹æ˜¯ngx_uint_tã€‚å¦‚æœå…¶åæ²¡   â”ƒ
+â”ƒ%U        â”ƒ                                                                                        â”ƒ
+â”ƒ          â”ƒæœ‰è·Ÿè½¬æ¢ç¬¦å·ï¼Œåˆ™è¡¨ç¤ºè¦è½¬æ¢çš„ç±»å‹æ˜¯æ— ç¬¦å·åè¿›åˆ¶æ­£æ•°                                      â”ƒ
+â”£â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ%m        â”ƒ  è¡¨ç¤ºä»¥æœ€å¤§é•¿åº¦æ¥è½¬æ¢æ•°å­—ç±»å‹(å¦‚int)                                                   â”ƒ
+â”£â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ          â”ƒ  ä»¥åå…­è¿›åˆ¶æ¥æ ¼å¼åŒ–è½¬æ¢åçš„æ•°æ®ã€‚æ³¨æ„ï¼ŒNginxä¸­çš„%Xä¸printfç­‰è½¬æ¢æ ¼å¼å®Œå…¨ä¸åŒï¼Œå®ƒåª     â”ƒ
+â”ƒ          â”ƒæ˜¯é™åˆ¶è½¬æ¢åçš„æ•°å­—ä»¥åå…­è¿›åˆ¶æ ¼å¼æ¥æ˜¾ç¤ºï¼Œè€Œä¸æ˜¯é™åˆ¶ç›¸åº”å‚æ•°çš„ç±»å‹ã€‚ä¾‹å¦‚ï¼Œ%Xdåè·Ÿç€int    â”ƒ
+â”ƒ%X        â”ƒ                                                                                        â”ƒ
+â”ƒ          â”ƒç±»å‹ï¼Œè¡¨ç¤ºä»¥åå…­è¿›åˆ¶æ ¼å¼æ¥æ˜¾ç¤ºintæ•´æ•°ï¼Œè€Œ%Xpè¡¨ç¤ºä»¥åå…­è¿›åˆ¶æ ¼å¼æ¥æ˜¾ç¤ºæŒ‡é’ˆåœ°å€ã€‚å¦‚æœä»…    â”ƒ
+â”ƒ          â”ƒæœ‰%Xï¼Œé‚£ä¹ˆæ˜¯æ²¡æœ‰ä»»ä½•è¾“å‡ºçš„                                                              â”ƒ
+â”£â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ          â”ƒ  %Xä¸%Xçš„ç”¨æ³•å®Œå…¨ç›¸åŒï¼Œåªæ˜¯%Xä»¥Aã€Bã€Cã€Dã€Eã€Fè¡¨ç¤ºåè¿›åˆ¶ä¸­çš„10ã€11ã€12ã€13ã€          â”ƒ
+â”ƒ%x        â”ƒ                                                                                        â”ƒ
+â”ƒ          â”ƒ14ã€15ï¼Œè€Œ%xè¶³ä»¥å°å†™çš„aã€bã€cã€dã€eã€fæ¥è¡¨ç¤º                                            â”ƒ
+â”£â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ          â”ƒ  å…¶åå¿…é¡»ç´§è·Ÿæ•°å­—ã€‚å½“å‰å®ç°ç‰ˆæœ¬ä¸‹å¿…é¡»ä¸%fé…åˆä½¿ç”¨ï¼Œè¡¨ç¤ºè½¬æ¢æµ®ç‚¹æ•°æ—¶å°æ•°éƒ¨åˆ†çš„ä½æ•°ã€‚ä¾‹  â”ƒ
+â”ƒ%ï¼       â”ƒ                                                                                        â”ƒ
+â”ƒ          â”ƒå¦‚ï¼Œ%ï¼lOfè¡¨ç¤ºè½¬æ¢doubleç±»å‹æ—¶ï¼Œå°æ•°ç‚¹åè½¬æ¢ä¸”å¿…é¡»è½¬æ¢ä¸º10ä½ï¼Œä¸è¶³IOä½ä»¥Oå¡«è¡¥           â”ƒ
+â”£â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ          â”ƒ  è½¬æ¢doubleç±»å‹æ•°æ®ã€‚æ³¨æ„ï¼Œå®ƒä¸printfç­‰æ ‡å‡†Cè¯­è¨€ä¸­çš„%få®Œå…¨ä¸åŒï¼Œå¦‚æœæƒ³è½¬æ¢å°æ•°éƒ¨åˆ†ï¼Œ   â”ƒ
+â”ƒ%f        â”ƒ                                                                                        â”ƒ
+â”ƒ          â”ƒåˆ™å¿…é¡»åŠ ä¸Š%ï¼(number)fã€‚å‚è§æœ¬è¡¨ä¸­%ï¼çš„æè¿°                                             â”ƒ
+â”£â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ%+        â”ƒ  è¡¨ç¤ºè¦è½¬æ¢çš„å­—ç¬¦é•¿åº¦ã€‚ç›®å‰ä»…ä¸%sé…åˆä½¿ç”¨                                              â”ƒ
+â”£â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ          â”ƒ  è½¬æ¢1ä¸ªchar~æˆ–è€…u- char~çš„å­—ç¬¦ä¸²ã€‚ä¸%+é…åˆä½¿ç”¨æ—¶ï¼Œ%tsè¡¨ç¤ºè¾“å‡ºæŒ‡å®šé•¿åº¦çš„å­—ç¬¦ä¸²ï¼Œå…¶     â”ƒ
+â”ƒ%S        â”ƒåå¿…é¡»æœ‰ä¸¤ä¸ªå‚æ•°ï¼šè¡¨ç¤ºè¾“å‡ºå­—ç¬¦ä¸²é•¿åº¦çš„size_tå’Œå­—ç¬¦ä¸²åœ°å€char~ç±»å‹ã€‚å¦‚æœä¸ä¸%+é…åˆä½¿ç”¨ï¼Œ â”ƒ
+â”ƒ          â”ƒè€Œä¸printfç­‰æ ‡å‡†æ ¼å¼ç›¸åŒï¼Œé‚£ä¹ˆå­—ç¬¦ä¸²å¿…é¡»ä»¥â€˜ï¼¼0â€™ç»“å°¾                                   â”ƒ
+â”£â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ%V        â”ƒ                                                                                        â”ƒ
+â”ƒ          â”ƒ  è½¬æ¢ngx_str_tç±»å‹ï¼Œ%Vå¯¹åº”çš„å‚æ•°å¿…é¡»æ˜¯ngx_str_tå˜é‡çš„åœ°å€ã€‚å®ƒå°†ä¼šæŒ‰ç…§ngx_str_tç±»å‹çš„   â”ƒ
+â”ƒ          â”ƒlené•¿åº¦æ¥è¾“å‡ºdataå­—ç¬¦ä¸²                                                                 â”ƒ
+â”£â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ          â”ƒ  è½¬æ¢ngx_variable_value_tç±»å‹ï¼Œ%Vå¯¹åº”çš„å‚æ•°å¿…é¡»æ˜¯ngx_variable_valuejå˜é‡çš„åœ°å€ã€‚å®ƒå°†ä¼š â”ƒ
+â”ƒ%V        â”ƒ                                                                                        â”ƒ
+â”ƒ          â”ƒæŒ‰ç…§ngx_variable_value-tç²ªå‹çš„lené•¿åº¦æ¥è¾“å‡ºdataå­—ç¬¦ä¸²                                   â”ƒ
+â”£â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ%O        â”ƒ  è½¬æ¢1ä¸ªofftç±»å‹                                                                       â”ƒ
+â”£â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ%P        â”ƒ  è½¬æ¢1ä¸ªngx_pid_tç±»å‹                                                                  â”ƒ
+â”£â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ%T        â”ƒ  è½¬æ¢1ä¸ªtimeâ€•tç±»å‹                                                                    â”ƒ
+â”£â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ%M        â”ƒ  è½¬æ¢1ä¸ªngx_msec_tç±»å‹                                                                 â”ƒ
+â”£â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ%Z        â”ƒ  è½¬æ¢ssize_tç±»å‹æ•°æ®ï¼Œå¦‚æœç”¨%UZï¼Œåˆ™è½¬æ¢çš„æ•°æ®ç±»å‹æ˜¯size-t                              â”ƒ
+â”£â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ%i        â”ƒ  è½¬æ¢ngx_int_tå‹æ•°æ®ï¼Œå¦‚æœç”¨%uiï¼Œåˆ™è½¬æ¢çš„æ•°æ®ç±»å‹æ˜¯ngx_uint_t                          â”ƒ
+â”£â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ%d        â”ƒ  è½¬æ¢intå‹æ•°æ®ï¼Œå¦‚æœç”¨%udï¼Œåˆ™è½¬æ¢çš„æ•°æ®ç±»å‹æ˜¯u_int                                     â”ƒ
+â”£â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ%1        â”ƒ  è½¬æ¢longå‹æ•°æ®ï¼Œå¦‚æœç”¨%ulï¼Œåˆ™è½¬æ¢çš„æ•°æ®ç±»å‹æ˜¯u_long                                   â”ƒ
+â”£â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ%D        â”ƒ  è½¬æ¢int32-tå‹æ•°æ®ï¼Œå¦‚æœç”¨%uDï¼Œåˆ™è½¬æ¢çš„æ•°æ®ç±»å‹æ˜¯uint32-t                              â”ƒ
+â”£â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ%L        â”ƒ  è½¬æ¢int64jå‹æ•°æ®ï¼Œå¦‚æœç”¨%uLï¼Œåˆ™è½¬æ¢çš„æ•°æ®ç±»å‹æ˜¯uint64 t                               â”ƒ
+â”£â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ%A        â”ƒ  è½¬æ¢ngx_atomic_int_tå‹æ•°æ®ï¼Œå¦‚æœç”¨%uAï¼Œåˆ™è½¬æ¢çš„æ•°æ®ç±»å‹æ˜¯ngx_atomic_uint_t            â”ƒ
+â”—â”â”â”â”â”â”»â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”›
+â”â”â”â”â”â”â”³â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”“
+â”ƒè½¬æ¢æ ¼å¼  â”ƒ    ç”¨æ³•                                                                                â”ƒ
+â”£â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ%r        â”ƒ                                                                                        â”ƒ
+â”ƒ          â”ƒ  è½¬æ¢1ä¸ªrlimjç±»å‹ã€‚ç³»ç»Ÿè°ƒç”¨getrlimitæˆ–è€…setrlimitæ—¶éƒ½ä¼šä½¿ç”¨rlimjç±»å‹å‚æ•°ï¼Œå®ƒå®é™…ä¸Šæ˜¯   â”ƒ
+â”ƒ          â”ƒä¸€ä¸ªç®—æœ¯æ•°æ®ç±»å‹ï¼Œç­‰åŒå¹²ç±»å‹intã€size tæˆ–è€…offt                                         â”ƒ
+â”£â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ%p        â”ƒ  è½¬æ¢1ä¸ªæŒ‡é’ˆï¼ˆåœ°å€ï¼‰                                                                   â”ƒ
+â”£â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ%C        â”ƒ  è½¬æ¢1ä¸ªå­—ç¬¦ç±»å‹                                                                       â”ƒ
+â”£â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ%Z        â”ƒ  è¡¨ç¤ºâ€™ï¼¼Oâ€™                                                                           â”ƒ
+â”£â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ%N        â”ƒ  è¡¨ç¤ºâ€™ï¼¼nâ€™æ¢è¡Œç¬¦ï¼Œå³â€\xOaâ€ï¼Œåœ¨windowsæ“ä½œç³»ç»Ÿä¸Šåˆ™è¡¨ç¤ºâ€™\r\nâ€™ï¼Œä¹Ÿå°±æ˜¯â€\xOd\xOaâ€  â”ƒ
+â”£â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ%%        â”ƒ  æ‰“å°1ä¸ªç™¾åˆ†å·(%)                                                                      â”ƒ
+â”—â”â”â”â”â”â”»â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”›
+ä¾‹å¦‚ï¼Œåœ¨4.2.4èŠ‚è‡ªå®šä¹‰çš„ngx_c onf_set_myc onfigæ–¹æ³•ä¸­ï¼Œå¯ä»¥è¿™æ ·è¾“å‡ºæ—¥å¿—ã€‚
 long tl = 4900000000;
 u_long tul = 5000000000;
 int32_t ti32 = 110;
@@ -234,7 +234,7 @@ int x = 15;
 ngx_log_error (NGX_LOG_ALERT , cf->log ,  0 ,
               " l= %l , ul=%ul , D=%D, p=%p, f=%.lOf , str=%V, x=%xd, X=%Xd "
                 tl, tul, ti32 , &ti3 2 , tdoub , &tstr, x, x)  ;
-ÍÁÊöÕâ¶Î´úÂë½«»áÊä³ö£º
+åœŸè¿°è¿™æ®µä»£ç å°†ä¼šè¾“å‡ºï¼š
       nginx :   [alert]   1=4900000000 , ul=5000000000 , D=110, p=00007FFFF26836DC, f=3 . 1415926536
 , str=teststr, x=f , X=F
 */
@@ -326,7 +326,7 @@ ngx_vslprintf(u_char *buf, u_char *last, const char *fmt, va_list args)
 
             switch (*fmt) {
 
-            case 'V': //Êä³öngx_str_tÀàĞÍÊı¾İ
+            case 'V': //è¾“å‡ºngx_str_tç±»å‹æ•°æ®
                 v = va_arg(args, ngx_str_t *);
                 if(v == NULL)
                     continue;
@@ -378,7 +378,7 @@ ngx_vslprintf(u_char *buf, u_char *last, const char *fmt, va_list args)
                 sign = 1;
                 break;
 
-            case 'M': //´òÓ¡Ê±¼ä£¬±äÁ¿²ÎÊıÀàĞÍÎªngx_msec_t
+            case 'M': //æ‰“å°æ—¶é—´ï¼Œå˜é‡å‚æ•°ç±»å‹ä¸ºngx_msec_t
                 ms = (ngx_msec_t) va_arg(args, ngx_msec_t);
                 if ((ngx_msec_int_t) ms == -1) {
                     sign = 1;
@@ -1200,7 +1200,7 @@ ngx_hextoi(u_char *line, size_t n)
     return value;
 }
 
-//×Ö·û´®×ª»»Îª16½øÖÆµØÖ·£¬ÀıÈç4¸ö×Ö½Ú×Ö·û´®"5566"£¬Ôò×ª»»Îª16½øÖÆµØÖ·0X5566Á½¸ö×Ö½Ú
+//å­—ç¬¦ä¸²è½¬æ¢ä¸º16è¿›åˆ¶åœ°å€ï¼Œä¾‹å¦‚4ä¸ªå­—èŠ‚å­—ç¬¦ä¸²"5566"ï¼Œåˆ™è½¬æ¢ä¸º16è¿›åˆ¶åœ°å€0X5566ä¸¤ä¸ªå­—èŠ‚
 u_char *
 ngx_hex_dump(u_char *dst, u_char *src, size_t len)
 {
@@ -1215,9 +1215,9 @@ ngx_hex_dump(u_char *dst, u_char *src, size_t len)
 }
 
 /*
-ÕâÁ½¸öº¯ÊıÓÃÓÚ¶Ôstr½øĞĞbase64±àÂëÓë½âÂë£¬µ÷ÓÃÇ°£¬ĞèÒª±£Ö¤dstÖĞÓĞ×ã¹»µÄ¿Õ¼äÀ´´æ·Å½á¹û£¬Èç¹û²»ÖªµÀ¾ßÌå´óĞ¡£¬¿ÉÏÈµ÷ÓÃ
-ngx_base64_encoded_lengthÓëngx_base64_decoded_lengthÀ´Ô¤¹À×î´óÕ¼ÓÃ¿Õ¼ä¡£
-*/ //ngx_encode_base64  ngx_decode_base64¶ÔÓ¦½âÃÜ½âÃÜ
+è¿™ä¸¤ä¸ªå‡½æ•°ç”¨äºå¯¹strè¿›è¡Œbase64ç¼–ç ä¸è§£ç ï¼Œè°ƒç”¨å‰ï¼Œéœ€è¦ä¿è¯dstä¸­æœ‰è¶³å¤Ÿçš„ç©ºé—´æ¥å­˜æ”¾ç»“æœï¼Œå¦‚æœä¸çŸ¥é“å…·ä½“å¤§å°ï¼Œå¯å…ˆè°ƒç”¨
+ngx_base64_encoded_lengthä¸ngx_base64_decoded_lengthæ¥é¢„ä¼°æœ€å¤§å ç”¨ç©ºé—´ã€‚
+*/ //ngx_encode_base64  ngx_decode_base64å¯¹åº”è§£å¯†è§£å¯†
 void
 ngx_encode_base64(ngx_str_t *dst, ngx_str_t *src)
 {
@@ -1227,8 +1227,8 @@ ngx_encode_base64(ngx_str_t *dst, ngx_str_t *src)
     ngx_encode_base64_internal(dst, src, basis64, 1);
 }
 
-//ngx_decode_base64url  ngx_encode_base64url¶ÔÓ¦¼ÓÃÜ½âÃÜ
-//ngx_encode_base64url  ngx_decode_base64¶ÔÓ¦½âÃÜ½âÃÜ
+//ngx_decode_base64url  ngx_encode_base64urlå¯¹åº”åŠ å¯†è§£å¯†
+//ngx_encode_base64url  ngx_decode_base64å¯¹åº”è§£å¯†è§£å¯†
 void
 ngx_encode_base64url(ngx_str_t *dst, ngx_str_t *src)
 {
@@ -1282,8 +1282,8 @@ ngx_encode_base64_internal(ngx_str_t *dst, ngx_str_t *src, const u_char *basis,
     dst->len = d - dst->data;
 }
 
-//¶ÔsrcÊı¾İ×îhashÈ»ºó´æµ½dstÖĞ£¬ÕâÀïÎªÊ²Ã´¿ÉÒÔ±£Ö¤dst²»±»Ô½½ç£¬Ò»°ã¶¼ÊÇÔÚ´úÂëÖĞ×Ö½Ú±£Ö¤srcµÄ³¤¶ÈÀ´ÊµÏÖµÄ£¬¿ÉÒÔ²Î¿¼ngx_http_secure_link_variable
-//ngx_encode_base64  ngx_decode_base64¶ÔÓ¦½âÃÜ½âÃÜ
+//å¯¹srcæ•°æ®æœ€hashç„¶åå­˜åˆ°dstä¸­ï¼Œè¿™é‡Œä¸ºä»€ä¹ˆå¯ä»¥ä¿è¯dstä¸è¢«è¶Šç•Œï¼Œä¸€èˆ¬éƒ½æ˜¯åœ¨ä»£ç ä¸­å­—èŠ‚ä¿è¯srcçš„é•¿åº¦æ¥å®ç°çš„ï¼Œå¯ä»¥å‚è€ƒngx_http_secure_link_variable
+//ngx_encode_base64  ngx_decode_base64å¯¹åº”è§£å¯†è§£å¯†
 ngx_int_t
 ngx_decode_base64(ngx_str_t *dst, ngx_str_t *src)
 {
@@ -1310,8 +1310,8 @@ ngx_decode_base64(ngx_str_t *dst, ngx_str_t *src)
     return ngx_decode_base64_internal(dst, src, basis64);
 }
 
-//¶ÔsrcÊı¾İ×îhashÈ»ºó´æµ½dstÖĞ£¬ÕâÀïÎªÊ²Ã´¿ÉÒÔ±£Ö¤dst²»±»Ô½½ç£¬Ò»°ã¶¼ÊÇÔÚ´úÂëÖĞ×Ö½Ú±£Ö¤srcµÄ³¤¶ÈÀ´ÊµÏÖµÄ£¬¿ÉÒÔ²Î¿¼ngx_http_secure_link_variable
-//ngx_decode_base64url  ngx_encode_base64url¶ÔÓ¦¼ÓÃÜ½âÃÜ
+//å¯¹srcæ•°æ®æœ€hashç„¶åå­˜åˆ°dstä¸­ï¼Œè¿™é‡Œä¸ºä»€ä¹ˆå¯ä»¥ä¿è¯dstä¸è¢«è¶Šç•Œï¼Œä¸€èˆ¬éƒ½æ˜¯åœ¨ä»£ç ä¸­å­—èŠ‚ä¿è¯srcçš„é•¿åº¦æ¥å®ç°çš„ï¼Œå¯ä»¥å‚è€ƒngx_http_secure_link_variable
+//ngx_decode_base64url  ngx_encode_base64urlå¯¹åº”åŠ å¯†è§£å¯†
 ngx_int_t
 ngx_decode_base64url(ngx_str_t *dst, ngx_str_t *src)
 {
@@ -1338,7 +1338,7 @@ ngx_decode_base64url(ngx_str_t *dst, ngx_str_t *src)
     return ngx_decode_base64_internal(dst, src, basis64);
 }
 
-//¶ÔsrcÊı¾İ×îhashÈ»ºó´æµ½dstÖĞ£¬ÕâÀïÎªÊ²Ã´¿ÉÒÔ±£Ö¤dst²»±»Ô½½ç£¬Ò»°ã¶¼ÊÇÔÚ´úÂëÖĞ×Ö½Ú±£Ö¤srcµÄ³¤¶ÈÀ´ÊµÏÖµÄ£¬¿ÉÒÔ²Î¿¼ngx_http_secure_link_variable
+//å¯¹srcæ•°æ®æœ€hashç„¶åå­˜åˆ°dstä¸­ï¼Œè¿™é‡Œä¸ºä»€ä¹ˆå¯ä»¥ä¿è¯dstä¸è¢«è¶Šç•Œï¼Œä¸€èˆ¬éƒ½æ˜¯åœ¨ä»£ç ä¸­å­—èŠ‚ä¿è¯srcçš„é•¿åº¦æ¥å®ç°çš„ï¼Œå¯ä»¥å‚è€ƒngx_http_secure_link_variable
 static ngx_int_t
 ngx_decode_base64_internal(ngx_str_t *dst, ngx_str_t *src, const u_char *basis)
 {
@@ -1371,11 +1371,11 @@ ngx_decode_base64_internal(ngx_str_t *dst, ngx_str_t *src, const u_char *basis)
         len -= 4;
     }
 
-    if (len > 1) { //s[0]ºÍs[1]ÔÚÉÏÃæÒ²ÓĞÓÃ£¬Òò´ËÕâÀïd±ÈÊµ¼ÊµÄs/2Òª¶à1×Ö½Ú£¬ÔÚ¼ÓÉÏºóÃæ¶à1×Ö½Ú£¬×Ü¹²¶à2×Ö½Ú
+    if (len > 1) { //s[0]å’Œs[1]åœ¨ä¸Šé¢ä¹Ÿæœ‰ç”¨ï¼Œå› æ­¤è¿™é‡Œdæ¯”å®é™…çš„s/2è¦å¤š1å­—èŠ‚ï¼Œåœ¨åŠ ä¸Šåé¢å¤š1å­—èŠ‚ï¼Œæ€»å…±å¤š2å­—èŠ‚
         *d++ = (u_char) (basis[s[0]] << 2 | basis[s[1]] >> 4);
     }
 
-    if (len > 2) {//s[0]ºÍs[1]ÔÚÉÏÃæÒ²ÓĞÓÃ£¬Òò´ËÕâÀïd±ÈÊµ¼ÊµÄs/2Òª¶à1×Ö½Ú£¬ÔÚ¼ÓÉÏºóÃæ¶à1×Ö½Ú£¬×Ü¹²¶à2×Ö½Ú
+    if (len > 2) {//s[0]å’Œs[1]åœ¨ä¸Šé¢ä¹Ÿæœ‰ç”¨ï¼Œå› æ­¤è¿™é‡Œdæ¯”å®é™…çš„s/2è¦å¤š1å­—èŠ‚ï¼Œåœ¨åŠ ä¸Šåé¢å¤š1å­—èŠ‚ï¼Œæ€»å…±å¤š2å­—èŠ‚
         *d++ = (u_char) (basis[s[1]] << 4 | basis[s[2]] >> 2);
     }
 
@@ -1526,7 +1526,7 @@ ngx_utf8_cpystrn(u_char *dst, u_char *src, size_t n, size_t len)
 
 uintptr_t
 ngx_escape_uri(u_char *dst, u_char *src, size_t size, ngx_uint_t type)
-{//Èç¹ûdstÎª¿Õ£¬Ôò·µ»ØĞèÒª×ªÒåµÄ×Ö·ûÓĞ¶àÉÙ¸ö¡£·ñÔò½«×Ö·û´®×ªÒåÁË£¬´æ·ÅÔÚdstÀïÃæ¡£
+{//å¦‚æœdstä¸ºç©ºï¼Œåˆ™è¿”å›éœ€è¦è½¬ä¹‰çš„å­—ç¬¦æœ‰å¤šå°‘ä¸ªã€‚å¦åˆ™å°†å­—ç¬¦ä¸²è½¬ä¹‰äº†ï¼Œå­˜æ”¾åœ¨dsté‡Œé¢ã€‚
     ngx_uint_t      n;
     uint32_t       *escape;
     static u_char   hex[] = "0123456789ABCDEF";
@@ -1693,15 +1693,15 @@ ngx_escape_uri(u_char *dst, u_char *src, size_t size, ngx_uint_t type)
 }
 
 /*
-µØÖ·À¸ÖĞµÄÎÊºÅÓĞÊ²Ã´×÷ÓÃ
-±ÈÈçÕâÑùµÄÁ´½Ó£º
+åœ°å€æ ä¸­çš„é—®å·æœ‰ä»€ä¹ˆä½œç”¨
+æ¯”å¦‚è¿™æ ·çš„é“¾æ¥ï¼š
 http://www.xxx.com/Show.asp?id=77&nameid=2905210001&page=1
-ÔÚÕâÑùµÄÁ´½ÓÖĞ£¬ÎÊºÅµÄº¬Òå²»ÊÇÉÏÃæÎÄÕÂÖĞËùÌáµ½µÄ°æ±¾ºÅÎÊÌâ£¬¶øÊÇ´«µİ²ÎÊıµÄ×÷ÓÃ¡£Õâ¸öÎÊºÅ½«show.aspÎÄ¼şºÍºóÃæµÄid¡¢nameid¡¢pageµÈÁ¬½ÓÆğÀ´¡£
+åœ¨è¿™æ ·çš„é“¾æ¥ä¸­ï¼Œé—®å·çš„å«ä¹‰ä¸æ˜¯ä¸Šé¢æ–‡ç« ä¸­æ‰€æåˆ°çš„ç‰ˆæœ¬å·é—®é¢˜ï¼Œè€Œæ˜¯ä¼ é€’å‚æ•°çš„ä½œç”¨ã€‚è¿™ä¸ªé—®å·å°†show.aspæ–‡ä»¶å’Œåé¢çš„idã€nameidã€pageç­‰è¿æ¥èµ·æ¥ã€‚
 
 
-¶Ôsrc½øĞĞ·´±àÂë£¬type¿ÉÒÔÊÇ0¡¢NGX_UNESCAPE_URI¡¢NGX_UNESCAPE_REDIRECTÕâÈı¸öÖµ¡£Èç¹ûÊÇ0£¬Ôò±íÊ¾srcÖĞµÄËùÓĞ×Ö·û¶¼Òª½øĞĞ×ªÂë¡£Èç¹û
-ÊÇNGX_UNESCAPE_URIÓëNGX_UNESCAPE_REDIRECT£¬ÔòÓöµ½¡¯?¡¯ºó¾Í½áÊøÁË£¬ºóÃæµÄ×Ö·û¾Í²»¹ÜÁË¡£¶øNGX_UNESCAPE_URIÓëNGX_UNESCAPE_REDIRECTÖ®¼ä
-µÄÇø±ğÊÇNGX_UNESCAPE_URI¶ÔÓÚÓöµ½µÄĞèÒª×ªÂëµÄ×Ö·û£¬¶¼»á×ªÂë£¬¶øNGX_UNESCAPE_REDIRECTÔòÖ»»á¶Ô·Ç¿É¼û×Ö·û½øĞĞ×ªÂë¡£
+å¯¹srcè¿›è¡Œåç¼–ç ï¼Œtypeå¯ä»¥æ˜¯0ã€NGX_UNESCAPE_URIã€NGX_UNESCAPE_REDIRECTè¿™ä¸‰ä¸ªå€¼ã€‚å¦‚æœæ˜¯0ï¼Œåˆ™è¡¨ç¤ºsrcä¸­çš„æ‰€æœ‰å­—ç¬¦éƒ½è¦è¿›è¡Œè½¬ç ã€‚å¦‚æœ
+æ˜¯NGX_UNESCAPE_URIä¸NGX_UNESCAPE_REDIRECTï¼Œåˆ™é‡åˆ°â€™?â€™åå°±ç»“æŸäº†ï¼Œåé¢çš„å­—ç¬¦å°±ä¸ç®¡äº†ã€‚è€ŒNGX_UNESCAPE_URIä¸NGX_UNESCAPE_REDIRECTä¹‹é—´
+çš„åŒºåˆ«æ˜¯NGX_UNESCAPE_URIå¯¹äºé‡åˆ°çš„éœ€è¦è½¬ç çš„å­—ç¬¦ï¼Œéƒ½ä¼šè½¬ç ï¼Œè€ŒNGX_UNESCAPE_REDIRECTåˆ™åªä¼šå¯¹éå¯è§å­—ç¬¦è¿›è¡Œè½¬ç ã€‚
 */
 void
 ngx_unescape_uri(u_char **dst, u_char **src, size_t size, ngx_uint_t type)
@@ -1957,100 +1957,100 @@ ngx_escape_json(u_char *dst, u_char *src, size_t size)
 }
 
 /*
-±í7-4 NginxÎªºìºÚÊ÷ÒÑ¾­ÊµÏÖºÃµÄ3ÖÖÊı¾İÌí¼Ó·½·¨ (ngx_rbtree_insert_ptÖ¸ÏòÒÔÏÂÈıÖÖ·½·¨)
-©³©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©×©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©×©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©·
-©§    ·½·¨Ãû                          ©§    ²ÎÊıº¬Òå                          ©§    Ö´ĞĞÒâÒå                  ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§void ngx_rbtree_insert_value        ©§  rootÊÇºìºÚÊ÷ÈİÆ÷µÄÖ¸Õë£»nodeÊÇ      ©§  ÏòºìºÚÊ÷Ìí¼ÓÊı¾İ½Úµã£¬Ã¿¸ö  ©§
-©§(ngx_rbtree_node_t *root,           ©§´ıÌí¼ÓÔªËØµÄngx_rbtree_node_t³ÉÔ±     ©§Êı¾İ½ÚµãµÄ¹Ø¼ü×Ö¶¼ÊÇÎ¨Ò»µÄ£¬  ©§
-©§ngx_rbtree_node_t *node,            ©§µÄÖ¸Õë£»sentinelÊÇÕâ¿ÃºìºÚÊ÷³õÊ¼»¯    ©§²»´æÔÚÍ¬Ò»¸ö¹Ø¼ü×ÖÓĞ¶à¸ö½Úµã  ©§
-©§ngx_rbtree_node_t *sentinel)        ©§Ê±ÉÚ±ø½ÚµãµÄÖ¸Õë                      ©§µÄÎÊÌâ                        ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§void ngx_rbtree_insert_timer_value  ©§  rootÊÇºìºÚÊ÷ÈİÆ÷µÄÖ¸Õë£»nodeÊÇ      ©§                              ©§
-©§(ngx_rbtree_node_t *root,           ©§´ıÌí¼ÓÔªËØµÄngx_rbtree_node_t³ÉÔ±     ©§  ÏòºìºÚÊ÷Ìí¼ÓÊı¾İ½Úµã£¬Ã¿¸ö  ©§
-©§ngx_rbtree_node_t *node,            ©§µÄÖ¸Õë£¬Ëü¶ÔÓ¦µÄ¹Ø¼ü×ÖÊÇÊ±¼ä»òÕß      ©§Êı¾İ½ÚµãµÄ¹Ø¼ü×Ö±íÊ¾Ê±¼äÈÖÕß  ©§
-©§                                    ©§Ê±¼ä²î£¬¿ÉÄÜÊÇ¸ºÊı£»sentinelÊÇÕâ¿Ã    ©§Ê±¼ä²î                        ©§
-©§ngx_rbtree_node_t *sentinel)        ©§                                      ©§                              ©§
-©§                                    ©§ºìºÚÊ÷³õÊ¼»¯Ê±µÄÉÚ±ø½Úµã              ©§                              ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§void ngx_str_rbtree_insert_value    ©§  rootÊÇºìºÚÊ÷ÈİÆ÷µÄÖ¸Õë£»nodeÊÇ      ©§  ÏòºìºÚÊ÷Ìí¼ÓÊı¾İ½Úµã£¬Ã¿¸ö  ©§
-©§(ngx_rbtree_node_t *temp,           ©§´ıÌí¼ÓÔªËØµÄngx_str_node_t³ÉÔ±µÄ      ©§Êı¾İ½ÚµãµÄ¹Ø¼ü×Ö¿ÉÒÔ²»ÊÇÎ¨Ò»  ©§
-©§ngx_rbtree_node_t *node,            ©§Ö¸Õë£¨ngx- rbtree_node_tÀàĞÍ»áÇ¿ÖÆ×ª  ©§µÄ£¬µ«ËüÃÇÊÇÒÔ×Ö·û´®×÷ÎªÎ¨Ò»  ©§
-©§                                    ©§»¯Îªngx_str_node_tÀàĞÍ£©£»sentinelÊÇ  ©§µÄ±êÊ¶£¬´æ·ÅÔÚngx_str_node_t  ©§
-©§ngx_rbtree_node t *sentinel)        ©§                                      ©§                              ©§
-©§                                    ©§Õâ¿ÃºìºÚÊ÷³õÊ¼»¯Ê±ÉÚ±ø½ÚµãµÄÖ¸Õë      ©§½á¹¹ÌåµÄstr³ÉÔ±ÖĞ             ©§
-©»©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ß©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ß©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¿
-    Í¬Ê±£¬¶ÔÓÚngx_str_node_t½Úµã£¬Nginx»¹Ìá¹©ÁËngx_str_rbtree_lookup·½·¨ÓÃÓÚ¼ìË÷
-ºìºÚÊ÷½Úµã£¬ÏÂÃæÀ´¿´Ò»ÏÂËüµÄ¶¨Òå£¬´úÂëÈçÏÂ¡£
-    ngx_str_node_t  *ngx_str_rbtree_lookup(ngx_rbtree t  *rbtree,  ngx_str_t *name, uint32_t hash)£¬
-    ÆäÖĞ£¬hash²ÎÊıÊÇÒª²éÑ¯½ÚµãµÄkey¹Ø¼ü×Ö£¬¶ønameÊÇÒª²éÑ¯µÄ×Ö·û´®£¨½â¾ö²»Í¬Óî
-·û´®¶ÔÓ¦ÏàÍ¬key¹Ø¼ü×ÖµÄÎÊÌâ£©£¬·µ»ØµÄÊÇ²éÑ¯µ½µÄºìºÚÊ÷½Úµã½á¹¹Ìå¡£
-    ¹ØÓÚºìºÚÊ÷²Ù×÷µÄ·½·¨¼û±í7-5¡£
-±í7-5  ºìºÚÊ÷ÈİÆ÷Ìá¹©µÄ·½·¨
-©³©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©×©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©×©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©·
-©§    ·½·¨Ãû                          ©§    ²ÎÊıº¬Òå                    ©§    Ö´ĞĞÒâÒå                        ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§                                    ©§  treeÊÇºìºÚÊ÷ÈİÆ÷µÄÖ¸Õë£»sÊÇ   ©§  ³õÊ¼»¯ºìºÚÊ÷£¬°üÀ¨³õÊ¼»¯¸ù½Ú      ©§
-©§                                    ©§ÉÚ±ø½ÚµãµÄÖ¸Õë£»iÊÇngx_rbtree_  ©§                                    ©§
-©§ngx_rbtree_init(tree, s, i)         ©§                                ©§µã¡¢ÉÚ±ø½Úµã¡¢ngx_rbtree_insert_pt  ©§
-©§                                    ©§insert_ptÀàĞÍµÄ½ÚµãÌí¼Ó·½·¨£¬¾ß ©§½ÚµãÌí¼Ó·½·¨                        ©§
-©§                                    ©§Ìå¼û±í7-4                       ©§                                    ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§void ngx_rbtree_insert(ngx_rbtree_t ©§  treeÊÇºìºÚÊ÷ÈİÆ÷µÄÖ¸Õë£»node  ©§  ÏòºìºÚÊ÷ÖĞÌí¼Ó½Úµã£¬¸Ã·½·¨»á      ©§
-©§*tree, ngx_rbtree node_t *node)     ©§ÊÇĞèÒªÌí¼Óµ½ºìºÚÊ÷µÄ½ÚµãÖ¸Õë    ©§Í¨¹ıĞı×ªºìºÚÊ÷±£³ÖÊ÷µÄÆ½ºâ          ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§void ngx_rbtree_delete(ngx_rbtree_t ©§  treeÊÇºìºÚÊ÷ÈİÆ÷µÄÖ¸Õë£»node  ©§  ´ÓºìºÚÊ÷ÖĞÉ¾³ı½Úµã£¬¸Ã·½·¨»á      ©§
-©§*tree, ngx_rbtree node_t *node)     ©§ÊÇºìºÚÊ÷ÖĞĞèÒªÉ¾³ıµÄ½ÚµãÖ¸Õë    ©§Í¨¹ıĞı×ªºìºÚÊ÷±£³ÖÊ÷µÄÆ½ºâ          ©§
-©»©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ß©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ß©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¿
-    ÔÚ³õÊ¼»¯ºìºÚÊ÷Ê±£¬ĞèÒªÏÈ·ÖÅäºÃ±£´æºìºÚÊ÷µÄngx_rbtree_t½á¹¹Ìå£¬ÒÔ¼°ngx_rbtree_
-node_t·àĞÍµÄÉÚ±ø½Úµã£¬²¢Ñ¡Ôñ»òÕß×Ô¶¨Òångx_rbtree_insert_ptÀàĞÍµÄ½ÚµãÌí¼Óº¯Êı¡£
-    ¶ÔÓÚºìºÚÊ÷µÄÃ¿¸ö½ÚµãÀ´Ëµ£¬ËüÃÇ¶¼¾ß±¸±í7-6ËùÁĞµÄ7¸ö·½·¨£¬Èç¹ûÖ»ÊÇÏëÁË½âÈçºÎ
-Ê¹ÓÃºìºÚÊ÷£¬ÄÇÃ´Ö»ĞèÒªÁË½ângx_rbtree_min·½·¨¡£
+è¡¨7-4 Nginxä¸ºçº¢é»‘æ ‘å·²ç»å®ç°å¥½çš„3ç§æ•°æ®æ·»åŠ æ–¹æ³• (ngx_rbtree_insert_ptæŒ‡å‘ä»¥ä¸‹ä¸‰ç§æ–¹æ³•)
+â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”³â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”³â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”“
+â”ƒ    æ–¹æ³•å                          â”ƒ    å‚æ•°å«ä¹‰                          â”ƒ    æ‰§è¡Œæ„ä¹‰                  â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒvoid ngx_rbtree_insert_value        â”ƒ  rootæ˜¯çº¢é»‘æ ‘å®¹å™¨çš„æŒ‡é’ˆï¼›nodeæ˜¯      â”ƒ  å‘çº¢é»‘æ ‘æ·»åŠ æ•°æ®èŠ‚ç‚¹ï¼Œæ¯ä¸ª  â”ƒ
+â”ƒ(ngx_rbtree_node_t *root,           â”ƒå¾…æ·»åŠ å…ƒç´ çš„ngx_rbtree_node_tæˆå‘˜     â”ƒæ•°æ®èŠ‚ç‚¹çš„å…³é”®å­—éƒ½æ˜¯å”¯ä¸€çš„ï¼Œ  â”ƒ
+â”ƒngx_rbtree_node_t *node,            â”ƒçš„æŒ‡é’ˆï¼›sentinelæ˜¯è¿™æ£µçº¢é»‘æ ‘åˆå§‹åŒ–    â”ƒä¸å­˜åœ¨åŒä¸€ä¸ªå…³é”®å­—æœ‰å¤šä¸ªèŠ‚ç‚¹  â”ƒ
+â”ƒngx_rbtree_node_t *sentinel)        â”ƒæ—¶å“¨å…µèŠ‚ç‚¹çš„æŒ‡é’ˆ                      â”ƒçš„é—®é¢˜                        â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒvoid ngx_rbtree_insert_timer_value  â”ƒ  rootæ˜¯çº¢é»‘æ ‘å®¹å™¨çš„æŒ‡é’ˆï¼›nodeæ˜¯      â”ƒ                              â”ƒ
+â”ƒ(ngx_rbtree_node_t *root,           â”ƒå¾…æ·»åŠ å…ƒç´ çš„ngx_rbtree_node_tæˆå‘˜     â”ƒ  å‘çº¢é»‘æ ‘æ·»åŠ æ•°æ®èŠ‚ç‚¹ï¼Œæ¯ä¸ª  â”ƒ
+â”ƒngx_rbtree_node_t *node,            â”ƒçš„æŒ‡é’ˆï¼Œå®ƒå¯¹åº”çš„å…³é”®å­—æ˜¯æ—¶é—´æˆ–è€…      â”ƒæ•°æ®èŠ‚ç‚¹çš„å…³é”®å­—è¡¨ç¤ºæ—¶é—´æˆè€…  â”ƒ
+â”ƒ                                    â”ƒæ—¶é—´å·®ï¼Œå¯èƒ½æ˜¯è´Ÿæ•°ï¼›sentinelæ˜¯è¿™æ£µ    â”ƒæ—¶é—´å·®                        â”ƒ
+â”ƒngx_rbtree_node_t *sentinel)        â”ƒ                                      â”ƒ                              â”ƒ
+â”ƒ                                    â”ƒçº¢é»‘æ ‘åˆå§‹åŒ–æ—¶çš„å“¨å…µèŠ‚ç‚¹              â”ƒ                              â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒvoid ngx_str_rbtree_insert_value    â”ƒ  rootæ˜¯çº¢é»‘æ ‘å®¹å™¨çš„æŒ‡é’ˆï¼›nodeæ˜¯      â”ƒ  å‘çº¢é»‘æ ‘æ·»åŠ æ•°æ®èŠ‚ç‚¹ï¼Œæ¯ä¸ª  â”ƒ
+â”ƒ(ngx_rbtree_node_t *temp,           â”ƒå¾…æ·»åŠ å…ƒç´ çš„ngx_str_node_tæˆå‘˜çš„      â”ƒæ•°æ®èŠ‚ç‚¹çš„å…³é”®å­—å¯ä»¥ä¸æ˜¯å”¯ä¸€  â”ƒ
+â”ƒngx_rbtree_node_t *node,            â”ƒæŒ‡é’ˆï¼ˆngx- rbtree_node_tç±»å‹ä¼šå¼ºåˆ¶è½¬  â”ƒçš„ï¼Œä½†å®ƒä»¬æ˜¯ä»¥å­—ç¬¦ä¸²ä½œä¸ºå”¯ä¸€  â”ƒ
+â”ƒ                                    â”ƒåŒ–ä¸ºngx_str_node_tç±»å‹ï¼‰ï¼›sentinelæ˜¯  â”ƒçš„æ ‡è¯†ï¼Œå­˜æ”¾åœ¨ngx_str_node_t  â”ƒ
+â”ƒngx_rbtree_node t *sentinel)        â”ƒ                                      â”ƒ                              â”ƒ
+â”ƒ                                    â”ƒè¿™æ£µçº¢é»‘æ ‘åˆå§‹åŒ–æ—¶å“¨å…µèŠ‚ç‚¹çš„æŒ‡é’ˆ      â”ƒç»“æ„ä½“çš„stræˆå‘˜ä¸­             â”ƒ
+â”—â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”»â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”»â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”›
+    åŒæ—¶ï¼Œå¯¹äºngx_str_node_tèŠ‚ç‚¹ï¼ŒNginxè¿˜æä¾›äº†ngx_str_rbtree_lookupæ–¹æ³•ç”¨äºæ£€ç´¢
+çº¢é»‘æ ‘èŠ‚ç‚¹ï¼Œä¸‹é¢æ¥çœ‹ä¸€ä¸‹å®ƒçš„å®šä¹‰ï¼Œä»£ç å¦‚ä¸‹ã€‚
+    ngx_str_node_t  *ngx_str_rbtree_lookup(ngx_rbtree t  *rbtree,  ngx_str_t *name, uint32_t hash)ï¼Œ
+    å…¶ä¸­ï¼Œhashå‚æ•°æ˜¯è¦æŸ¥è¯¢èŠ‚ç‚¹çš„keyå…³é”®å­—ï¼Œè€Œnameæ˜¯è¦æŸ¥è¯¢çš„å­—ç¬¦ä¸²ï¼ˆè§£å†³ä¸åŒå®‡
+ç¬¦ä¸²å¯¹åº”ç›¸åŒkeyå…³é”®å­—çš„é—®é¢˜ï¼‰ï¼Œè¿”å›çš„æ˜¯æŸ¥è¯¢åˆ°çš„çº¢é»‘æ ‘èŠ‚ç‚¹ç»“æ„ä½“ã€‚
+    å…³äºçº¢é»‘æ ‘æ“ä½œçš„æ–¹æ³•è§è¡¨7-5ã€‚
+è¡¨7-5  çº¢é»‘æ ‘å®¹å™¨æä¾›çš„æ–¹æ³•
+â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”³â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”³â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”“
+â”ƒ    æ–¹æ³•å                          â”ƒ    å‚æ•°å«ä¹‰                    â”ƒ    æ‰§è¡Œæ„ä¹‰                        â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ                                    â”ƒ  treeæ˜¯çº¢é»‘æ ‘å®¹å™¨çš„æŒ‡é’ˆï¼›sæ˜¯   â”ƒ  åˆå§‹åŒ–çº¢é»‘æ ‘ï¼ŒåŒ…æ‹¬åˆå§‹åŒ–æ ¹èŠ‚      â”ƒ
+â”ƒ                                    â”ƒå“¨å…µèŠ‚ç‚¹çš„æŒ‡é’ˆï¼›iæ˜¯ngx_rbtree_  â”ƒ                                    â”ƒ
+â”ƒngx_rbtree_init(tree, s, i)         â”ƒ                                â”ƒç‚¹ã€å“¨å…µèŠ‚ç‚¹ã€ngx_rbtree_insert_pt  â”ƒ
+â”ƒ                                    â”ƒinsert_ptç±»å‹çš„èŠ‚ç‚¹æ·»åŠ æ–¹æ³•ï¼Œå…· â”ƒèŠ‚ç‚¹æ·»åŠ æ–¹æ³•                        â”ƒ
+â”ƒ                                    â”ƒä½“è§è¡¨7-4                       â”ƒ                                    â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒvoid ngx_rbtree_insert(ngx_rbtree_t â”ƒ  treeæ˜¯çº¢é»‘æ ‘å®¹å™¨çš„æŒ‡é’ˆï¼›node  â”ƒ  å‘çº¢é»‘æ ‘ä¸­æ·»åŠ èŠ‚ç‚¹ï¼Œè¯¥æ–¹æ³•ä¼š      â”ƒ
+â”ƒ*tree, ngx_rbtree node_t *node)     â”ƒæ˜¯éœ€è¦æ·»åŠ åˆ°çº¢é»‘æ ‘çš„èŠ‚ç‚¹æŒ‡é’ˆ    â”ƒé€šè¿‡æ—‹è½¬çº¢é»‘æ ‘ä¿æŒæ ‘çš„å¹³è¡¡          â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒvoid ngx_rbtree_delete(ngx_rbtree_t â”ƒ  treeæ˜¯çº¢é»‘æ ‘å®¹å™¨çš„æŒ‡é’ˆï¼›node  â”ƒ  ä»çº¢é»‘æ ‘ä¸­åˆ é™¤èŠ‚ç‚¹ï¼Œè¯¥æ–¹æ³•ä¼š      â”ƒ
+â”ƒ*tree, ngx_rbtree node_t *node)     â”ƒæ˜¯çº¢é»‘æ ‘ä¸­éœ€è¦åˆ é™¤çš„èŠ‚ç‚¹æŒ‡é’ˆ    â”ƒé€šè¿‡æ—‹è½¬çº¢é»‘æ ‘ä¿æŒæ ‘çš„å¹³è¡¡          â”ƒ
+â”—â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”»â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”»â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”›
+    åœ¨åˆå§‹åŒ–çº¢é»‘æ ‘æ—¶ï¼Œéœ€è¦å…ˆåˆ†é…å¥½ä¿å­˜çº¢é»‘æ ‘çš„ngx_rbtree_tç»“æ„ä½“ï¼Œä»¥åŠngx_rbtree_
+node_tç²ªå‹çš„å“¨å…µèŠ‚ç‚¹ï¼Œå¹¶é€‰æ‹©æˆ–è€…è‡ªå®šä¹‰ngx_rbtree_insert_ptç±»å‹çš„èŠ‚ç‚¹æ·»åŠ å‡½æ•°ã€‚
+    å¯¹äºçº¢é»‘æ ‘çš„æ¯ä¸ªèŠ‚ç‚¹æ¥è¯´ï¼Œå®ƒä»¬éƒ½å…·å¤‡è¡¨7-6æ‰€åˆ—çš„7ä¸ªæ–¹æ³•ï¼Œå¦‚æœåªæ˜¯æƒ³äº†è§£å¦‚ä½•
+ä½¿ç”¨çº¢é»‘æ ‘ï¼Œé‚£ä¹ˆåªéœ€è¦äº†è§£ngx_rbtree_minæ–¹æ³•ã€‚
 
 
-µÚ7ÕÂNginxÌá¹©µÄ¸ß¼¶Êı¾İ½á¹¹×¨233
-±í7-6ºìºÚÊ÷½ÚµãÌá¹©µÄ·½·¨
-©³©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©×©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©×©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©·
-©§    ·½·¨Ãû                          ©§    ²ÎÊıº¬Òå                      ©§    Ö´ĞĞÒâÒå                          ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§                                    ©§  nodeÊÇºìºÚÊ÷ÖĞngx_rbtree_node_  ©§                                      ©§
-©§ngx_rbt_red(node)                   ©§                                  ©§  ÉèÖÃnode½ÚµãµÄÑÕÉ«ÎªºìÉ«            ©§
-©§                                    ©§ tÀàĞÍµÄ½ÚµãÖ¸Õë                  ©§                                      ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§                                    ©§  nodeÊÇºìºÚÊ÷ÖĞngx_rbtree_node_  ©§                                      ©§
-©§ngx_rbt_black(node)                 ©§                                  ©§  ÉèÖÃnode½ÚµãµÄÑÕÉ«ÎªºÚÉ«            ©§
-©§                                    ©§tÀàĞÍµÄ½ÚµãÖ¸Õë                   ©§                                      ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§                                    ©§  nodeÊÇºìºÚÊ÷ÖĞngx_rbtree_node_  ©§  Èônode½ÚµãµÄÑÕÉ«ÎªºìÉ«£¬Ôò·µ»Ø·ÇO   ©§
-©§ngx_rbt_is_red(node)                ©§                                  ©§                                      ©§
-©§                                    ©§tÀàĞÍµÄ½ÚµãÖ¸Õë                   ©§ÊıÖµ£¬·ñÔò·µ»ØO                       ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§ngx_rbt_is_black(node)              ©§  nodeÊÇºìºÚÊ÷ÖĞngx_rbtree_node_  ©§  Èônode½ÚµãµÄÑÕÉ«ÎªºÚÉ«£¬Ôò·µ»Ø·Ç0   ©§
-©§                        I           ©§tÀàĞÍµÄ½ÚµãÖ¸Õë                   ©§ÊıÖµ£¬·ñÔò·µ»ØO                       ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§               I                    ©§  nl¡¢n2¶¼ÊÇºìºÚÊ÷ÖĞngx_rbtree_   ©§                                      ©§
-©§ngx_rbt_copy_color(nl, n2)          ©§                                  ©§  ½«n2½ÚµãµÄÑÕÉ«¸´ÖÆµ½nl½Úµã          ©§
-©§                                 I  ©§nodejÀàĞÍµÄ½ÚµãÖ¸Õë               ©§                                      ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§ngx_rbtree_node_t *                 ©§  nodeÊÇºìºÚÊ÷ÖĞngx_rbtree_node_  ©§                                      ©§
-©§ngx_rbtree_min                      ©§tÀàĞÍµÄ½ÚµãÖ¸Õë£»sentinelÊÇÕâ¿Ãºì ©§  ÕÒµ½µ±Ç°½Úµã¼°Æä×ÓÊ÷ÖĞµÄ×îĞ¡½Úµã    ©§
-©§(ngx_rbtree_node_tÄ¾node,           ©§ºÚÊ÷µÄÉÚ±ø½Úµã                    ©§£¨°´ÕÕkey¹Ø¼ü×Ö£©                     ©§
-©§ngx_rbtree_node_t *sentinel)        ©§                                  ©§                                      ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§                                    ©§  nodeÊÇºìºÚÊ÷ÖĞngx_rbtree_node_  ©§  ³õÊ¼»¯ÉÚ±ø½Úµã£¬Êµ¼ÊÉÏ¾ÍÊÇ½«¸Ã½Úµã  ©§
-©§ngx_rbtree_sentinel_init(node)      ©§                                  ©§                                      ©§
-©§                                    ©§tÀàĞÍµÄ½ÚµãÖ¸Õë                   ©§ÑÕÉ«ÖÃÎªºÚÉ«                          ©§
-©»©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ß©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ß©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¿
+ç¬¬7ç« Nginxæä¾›çš„é«˜çº§æ•°æ®ç»“æ„ä¸“233
+è¡¨7-6çº¢é»‘æ ‘èŠ‚ç‚¹æä¾›çš„æ–¹æ³•
+â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”³â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”³â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”“
+â”ƒ    æ–¹æ³•å                          â”ƒ    å‚æ•°å«ä¹‰                      â”ƒ    æ‰§è¡Œæ„ä¹‰                          â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ                                    â”ƒ  nodeæ˜¯çº¢é»‘æ ‘ä¸­ngx_rbtree_node_  â”ƒ                                      â”ƒ
+â”ƒngx_rbt_red(node)                   â”ƒ                                  â”ƒ  è®¾ç½®nodeèŠ‚ç‚¹çš„é¢œè‰²ä¸ºçº¢è‰²            â”ƒ
+â”ƒ                                    â”ƒ tç±»å‹çš„èŠ‚ç‚¹æŒ‡é’ˆ                  â”ƒ                                      â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ                                    â”ƒ  nodeæ˜¯çº¢é»‘æ ‘ä¸­ngx_rbtree_node_  â”ƒ                                      â”ƒ
+â”ƒngx_rbt_black(node)                 â”ƒ                                  â”ƒ  è®¾ç½®nodeèŠ‚ç‚¹çš„é¢œè‰²ä¸ºé»‘è‰²            â”ƒ
+â”ƒ                                    â”ƒtç±»å‹çš„èŠ‚ç‚¹æŒ‡é’ˆ                   â”ƒ                                      â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ                                    â”ƒ  nodeæ˜¯çº¢é»‘æ ‘ä¸­ngx_rbtree_node_  â”ƒ  è‹¥nodeèŠ‚ç‚¹çš„é¢œè‰²ä¸ºçº¢è‰²ï¼Œåˆ™è¿”å›éO   â”ƒ
+â”ƒngx_rbt_is_red(node)                â”ƒ                                  â”ƒ                                      â”ƒ
+â”ƒ                                    â”ƒtç±»å‹çš„èŠ‚ç‚¹æŒ‡é’ˆ                   â”ƒæ•°å€¼ï¼Œå¦åˆ™è¿”å›O                       â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒngx_rbt_is_black(node)              â”ƒ  nodeæ˜¯çº¢é»‘æ ‘ä¸­ngx_rbtree_node_  â”ƒ  è‹¥nodeèŠ‚ç‚¹çš„é¢œè‰²ä¸ºé»‘è‰²ï¼Œåˆ™è¿”å›é0   â”ƒ
+â”ƒ                        I           â”ƒtç±»å‹çš„èŠ‚ç‚¹æŒ‡é’ˆ                   â”ƒæ•°å€¼ï¼Œå¦åˆ™è¿”å›O                       â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ               I                    â”ƒ  nlã€n2éƒ½æ˜¯çº¢é»‘æ ‘ä¸­ngx_rbtree_   â”ƒ                                      â”ƒ
+â”ƒngx_rbt_copy_color(nl, n2)          â”ƒ                                  â”ƒ  å°†n2èŠ‚ç‚¹çš„é¢œè‰²å¤åˆ¶åˆ°nlèŠ‚ç‚¹          â”ƒ
+â”ƒ                                 I  â”ƒnodejç±»å‹çš„èŠ‚ç‚¹æŒ‡é’ˆ               â”ƒ                                      â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒngx_rbtree_node_t *                 â”ƒ  nodeæ˜¯çº¢é»‘æ ‘ä¸­ngx_rbtree_node_  â”ƒ                                      â”ƒ
+â”ƒngx_rbtree_min                      â”ƒtç±»å‹çš„èŠ‚ç‚¹æŒ‡é’ˆï¼›sentinelæ˜¯è¿™æ£µçº¢ â”ƒ  æ‰¾åˆ°å½“å‰èŠ‚ç‚¹åŠå…¶å­æ ‘ä¸­çš„æœ€å°èŠ‚ç‚¹    â”ƒ
+â”ƒ(ngx_rbtree_node_tæœ¨node,           â”ƒé»‘æ ‘çš„å“¨å…µèŠ‚ç‚¹                    â”ƒï¼ˆæŒ‰ç…§keyå…³é”®å­—ï¼‰                     â”ƒ
+â”ƒngx_rbtree_node_t *sentinel)        â”ƒ                                  â”ƒ                                      â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ                                    â”ƒ  nodeæ˜¯çº¢é»‘æ ‘ä¸­ngx_rbtree_node_  â”ƒ  åˆå§‹åŒ–å“¨å…µèŠ‚ç‚¹ï¼Œå®é™…ä¸Šå°±æ˜¯å°†è¯¥èŠ‚ç‚¹  â”ƒ
+â”ƒngx_rbtree_sentinel_init(node)      â”ƒ                                  â”ƒ                                      â”ƒ
+â”ƒ                                    â”ƒtç±»å‹çš„èŠ‚ç‚¹æŒ‡é’ˆ                   â”ƒé¢œè‰²ç½®ä¸ºé»‘è‰²                          â”ƒ
+â”—â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”»â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”»â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”›
   
-Ê¹ÓÃºìºÚÊ÷µÄ¼òµ¥Àı×Ó
-    ±¾½ÚÒÔÒ»¸ö¼òµ¥µÄÀı×ÓÀ´ËµÃ÷ÈçºÎÊ¹ÓÃºìºÚÊ÷ÈİÆ÷¡£Ê×ÏÈÔÚÕ»ÖĞ·ÖÅärbtreeºìºÚÊ÷ÈİÆ÷
-½á¹¹ÌåÒÔ¼°ÉÚ±ø½Úµãsentinel£¨µ±È»£¬Ò²¿ÉÒÔÊ¹ÓÃÄÚ´æ³Ø»òÕß´Ó½ø³Ì¶ÑÖĞ·ÖÅä£©£¬±¾ÀıÖĞµÄ½Ú
-µãÍêÈ«ÒÔkey¹Ø¼ü×Ö×÷ÎªÃ¿¸ö½ÚµãµÄÎ¨Ò»±êÊ¶£¬ÕâÑù¾Í¿ÉÒÔ²ÉÓÃÔ¤ÉèµÄngx_rbtree insert
-value·½·¨ÁË¡£×îºó¿Éµ÷ÓÃngx_rbtree_init·½·¨³õÊ¼»¯ºìºÚÊ÷£¬´úÂëÈçÏÂËùÊ¾¡£
+ä½¿ç”¨çº¢é»‘æ ‘çš„ç®€å•ä¾‹å­
+    æœ¬èŠ‚ä»¥ä¸€ä¸ªç®€å•çš„ä¾‹å­æ¥è¯´æ˜å¦‚ä½•ä½¿ç”¨çº¢é»‘æ ‘å®¹å™¨ã€‚é¦–å…ˆåœ¨æ ˆä¸­åˆ†é…rbtreeçº¢é»‘æ ‘å®¹å™¨
+ç»“æ„ä½“ä»¥åŠå“¨å…µèŠ‚ç‚¹sentinelï¼ˆå½“ç„¶ï¼Œä¹Ÿå¯ä»¥ä½¿ç”¨å†…å­˜æ± æˆ–è€…ä»è¿›ç¨‹å †ä¸­åˆ†é…ï¼‰ï¼Œæœ¬ä¾‹ä¸­çš„èŠ‚
+ç‚¹å®Œå…¨ä»¥keyå…³é”®å­—ä½œä¸ºæ¯ä¸ªèŠ‚ç‚¹çš„å”¯ä¸€æ ‡è¯†ï¼Œè¿™æ ·å°±å¯ä»¥é‡‡ç”¨é¢„è®¾çš„ngx_rbtree insert
+valueæ–¹æ³•äº†ã€‚æœ€åå¯è°ƒç”¨ngx_rbtree_initæ–¹æ³•åˆå§‹åŒ–çº¢é»‘æ ‘ï¼Œä»£ç å¦‚ä¸‹æ‰€ç¤ºã€‚
     ngx_rbtree_node_t  sentinel ;
     ngx_rbtree_init ( &rbtree, &sentinel,ngx_str_rbtree_insert_value)
-    ·îÀıÖĞÊ÷½ÚµãµÄ½á¹¹Ìå½«Ê¹ÓÃ7.5.3½ÚÖĞ½éÉÜµÄTestRBTreeNode½á¹¹Ìå£¬Ã¿¸öÔªËØµÄkey¹Ø¼ü×Ö°´ÕÕ1¡¢6¡¢8¡¢11¡¢13¡¢15¡¢17¡¢22¡¢25¡¢27µÄË³
-ĞòÒ»Ò»ÏòºìºÚÊ÷ÖĞÌí¼Ó£¬´úÂëÈçÏÂËùÊ¾¡£
+    å¥‰ä¾‹ä¸­æ ‘èŠ‚ç‚¹çš„ç»“æ„ä½“å°†ä½¿ç”¨7.5.3èŠ‚ä¸­ä»‹ç»çš„TestRBTreeNodeç»“æ„ä½“ï¼Œæ¯ä¸ªå…ƒç´ çš„keyå…³é”®å­—æŒ‰ç…§1ã€6ã€8ã€11ã€13ã€15ã€17ã€22ã€25ã€27çš„é¡º
+åºä¸€ä¸€å‘çº¢é»‘æ ‘ä¸­æ·»åŠ ï¼Œä»£ç å¦‚ä¸‹æ‰€ç¤ºã€‚
     rbTreeNode [0] .num=17;
     rbTreeNode [1] .num=22;
     rbTreeNode [2] .num=25;
@@ -2066,44 +2066,44 @@ value·½·¨ÁË¡£×îºó¿Éµ÷ÓÃngx_rbtree_init·½·¨³õÊ¼»¯ºìºÚÊ÷£¬´úÂëÈçÏÂËùÊ¾¡£
     )
 
 ngx_rbtree_node_t *tmpnode   =   ngx_rbtree_min ( rbtree . root ,    &sentinel )  ;
-    µ±È»£¬²ÎÊıÖĞÈç¹û²»Ê¹ÓÃ¸ù½Úµã¶øÊÇÊ¹ÓÃÈÎÒ»¸ö½ÚµãÒ²ÊÇ¿ÉÒÔµÄ¡£ÏÂÃæÀ´¿´Ò»ÏÂÈçºÎ
-¼ìË÷1¸ö½Úµã£¬ËäÈ»Nginx¶Ô´Ë²¢Ã»ÓĞÌá¹©Ô¤ÉèµÄ·½·¨£¨½ö¶Ô×Ö·û´®ÀàĞÍÌá¹©ÁËngx_str_
-rbtree_lookup¼ìË÷·½·¨£©£¬µ«Êµ¼ÊÉÏ¼ìË÷ÊÇ·Ç³£¼òµ¥µÄ¡£ÏÂÃæÒÔÑ°ÕÒkey¹Ø¼ü×ÖÎª13µÄ½Úµã
-ÎªÀıÀ´¼ÓÒÔËµÃ÷¡£
+    å½“ç„¶ï¼Œå‚æ•°ä¸­å¦‚æœä¸ä½¿ç”¨æ ¹èŠ‚ç‚¹è€Œæ˜¯ä½¿ç”¨ä»»ä¸€ä¸ªèŠ‚ç‚¹ä¹Ÿæ˜¯å¯ä»¥çš„ã€‚ä¸‹é¢æ¥çœ‹ä¸€ä¸‹å¦‚ä½•
+æ£€ç´¢1ä¸ªèŠ‚ç‚¹ï¼Œè™½ç„¶Nginxå¯¹æ­¤å¹¶æ²¡æœ‰æä¾›é¢„è®¾çš„æ–¹æ³•ï¼ˆä»…å¯¹å­—ç¬¦ä¸²ç±»å‹æä¾›äº†ngx_str_
+rbtree_lookupæ£€ç´¢æ–¹æ³•ï¼‰ï¼Œä½†å®é™…ä¸Šæ£€ç´¢æ˜¯éå¸¸ç®€å•çš„ã€‚ä¸‹é¢ä»¥å¯»æ‰¾keyå…³é”®å­—ä¸º13çš„èŠ‚ç‚¹
+ä¸ºä¾‹æ¥åŠ ä»¥è¯´æ˜ã€‚
     ngx_uint_t lookupkey=13;
     tmpnode=rbtree.root;
     TestRBTreeNode *lookupNode;
     while (tmpnode  !=&sentinel)  {
         if (lookupkey!-tmpnode->key)  (
-        £¯£¯¸ù¾İkey¹Ø¼ü×ÖÓëµ±Ç°½ÚµãµÄ´óĞ¡±È½Ï£¬¾ö¶¨ÊÇ¼ìË÷×ó×ÓÊ÷»¹ÊÇÓÒ×ÓÊ÷
+        ï¼ï¼æ ¹æ®keyå…³é”®å­—ä¸å½“å‰èŠ‚ç‚¹çš„å¤§å°æ¯”è¾ƒï¼Œå†³å®šæ˜¯æ£€ç´¢å·¦å­æ ‘è¿˜æ˜¯å³å­æ ‘
         tmpnode=  (lookupkey<tmpnode->key)  ?tmpnode->left:tmpnode->right;
-        continue£º
+        continueï¼š
         )
-        £¯£¯ÕÒµ½ÁËÖµÎª13µÄÊ÷½Úµã
+        ï¼ï¼æ‰¾åˆ°äº†å€¼ä¸º13çš„æ ‘èŠ‚ç‚¹
         lookupNode=  (TestRBTreeNode*)  tmpnode;
         break;
     )
-    ´ÓºìºÚÊ÷ÖĞÉ¾³ı1¸ö½ÚµãÒ²ÊÇ·Ç³£¼òµ¥µÄ£¬Èç°Ñ¸Õ¸ÕÕÒµ½µÄÖµÎª13µÄ½Úµã´ÓrbtreeÖĞ
-É¾³ı£¬Ö»Ğèµ÷ÓÃngx_rbtree_delete·½·¨¡£
+    ä»çº¢é»‘æ ‘ä¸­åˆ é™¤1ä¸ªèŠ‚ç‚¹ä¹Ÿæ˜¯éå¸¸ç®€å•çš„ï¼Œå¦‚æŠŠåˆšåˆšæ‰¾åˆ°çš„å€¼ä¸º13çš„èŠ‚ç‚¹ä»rbtreeä¸­
+åˆ é™¤ï¼Œåªéœ€è°ƒç”¨ngx_rbtree_deleteæ–¹æ³•ã€‚
 ngx_rbtree_delete ( &rbtree , &lookupNode->node);
 
-    ÓÉÓÚ½ÚµãµÄkey¹Ø¼ü×Ö±ØĞëÊÇÕûĞÍ£¬Õâµ¼ÖÂºÜ¶àÇé¿öÏÂ²»Í¬µÄ½Úµã»á¾ßÓĞÏàÍ¬µÄkey¹Ø
-¼ü×Ö¡£Èç¹û²»Ï£Íû³öÏÖ¾ßÓĞÏàÍ¬key¹Ø¼ü×ÖµÄ²»Í¬½ÚµãÔÚÏòºìºÚÊ÷Ìí¼ÓÊ±³öÏÖ¸²¸ÇÔ­½ÚµãµÄ
-Çé¿ö£¬¾ÍĞèÒªÊµÏÖ×ÔÓĞµÄngx_rbtree_insert_ptÜµ·¨¡£
+    ç”±äºèŠ‚ç‚¹çš„keyå…³é”®å­—å¿…é¡»æ˜¯æ•´å‹ï¼Œè¿™å¯¼è‡´å¾ˆå¤šæƒ…å†µä¸‹ä¸åŒçš„èŠ‚ç‚¹ä¼šå…·æœ‰ç›¸åŒçš„keyå…³
+é”®å­—ã€‚å¦‚æœä¸å¸Œæœ›å‡ºç°å…·æœ‰ç›¸åŒkeyå…³é”®å­—çš„ä¸åŒèŠ‚ç‚¹åœ¨å‘çº¢é»‘æ ‘æ·»åŠ æ—¶å‡ºç°è¦†ç›–åŸèŠ‚ç‚¹çš„
+æƒ…å†µï¼Œå°±éœ€è¦å®ç°è‡ªæœ‰çš„ngx_rbtree_insert_ptè‰¿æ³•ã€‚
 */
 /*
-ngx_str_rbtree_insert_valueº¯ÊıµÄÓ¦ÓÃ³¡¾°Îª£º½ÚµãµÄ±êÊ¶·ûÊÇ×Ö·û´®£¬ºìºÚÊ÷µÄµÚÒ»ÅÅĞòÒÀ¾İÈÔÈ»ÊÇ½ÚµãµÄkey¹Ø¼ü×Ö£¬µÚ¶şÅÅĞòÒÀ¾İÔòÊÇ½ÚµãµÄ×Ö·û´®
+ngx_str_rbtree_insert_valueå‡½æ•°çš„åº”ç”¨åœºæ™¯ä¸ºï¼šèŠ‚ç‚¹çš„æ ‡è¯†ç¬¦æ˜¯å­—ç¬¦ä¸²ï¼Œçº¢é»‘æ ‘çš„ç¬¬ä¸€æ’åºä¾æ®ä»ç„¶æ˜¯èŠ‚ç‚¹çš„keyå…³é”®å­—ï¼Œç¬¬äºŒæ’åºä¾æ®åˆ™æ˜¯èŠ‚ç‚¹çš„å­—ç¬¦ä¸²
 */
 
 /*
-©³©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©×©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©×©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©·
-©§    ·½·¨Ãû                          ©§    ²ÎÊıº¬Òå                          ©§    Ö´ĞĞÒâÒå                  ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§void ngx_rbtree_insert_value        ©§  rootÊÇºìºÚÊ÷ÈİÆ÷µÄÖ¸Õë£»nodeÊÇ      ©§  ÏòºìºÚÊ÷Ìí¼ÓÊı¾İ½Úµã£¬Ã¿¸ö  ©§
-©§(ngx_rbtree_node_t *root,           ©§´ıÌí¼ÓÔªËØµÄngx_rbtree_node_t³ÉÔ±     ©§Êı¾İ½ÚµãµÄ¹Ø¼ü×Ö¶¼ÊÇÎ¨Ò»µÄ£¬  ©§
-©§ngx_rbtree_node_t *node,            ©§µÄÖ¸Õë£»sentinelÊÇÕâ¿ÃºìºÚÊ÷³õÊ¼»¯    ©§²»´æÔÚÍ¬Ò»¸ö¹Ø¼ü×ÖÓĞ¶à¸ö½Úµã  ©§
-©§ngx_rbtree_node_t *sentinel)        ©§Ê±ÉÚ±ø½ÚµãµÄÖ¸Õë                      ©§µÄÎÊÌâ                        ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
+â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”³â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”³â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”“
+â”ƒ    æ–¹æ³•å                          â”ƒ    å‚æ•°å«ä¹‰                          â”ƒ    æ‰§è¡Œæ„ä¹‰                  â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒvoid ngx_rbtree_insert_value        â”ƒ  rootæ˜¯çº¢é»‘æ ‘å®¹å™¨çš„æŒ‡é’ˆï¼›nodeæ˜¯      â”ƒ  å‘çº¢é»‘æ ‘æ·»åŠ æ•°æ®èŠ‚ç‚¹ï¼Œæ¯ä¸ª  â”ƒ
+â”ƒ(ngx_rbtree_node_t *root,           â”ƒå¾…æ·»åŠ å…ƒç´ çš„ngx_rbtree_node_tæˆå‘˜     â”ƒæ•°æ®èŠ‚ç‚¹çš„å…³é”®å­—éƒ½æ˜¯å”¯ä¸€çš„ï¼Œ  â”ƒ
+â”ƒngx_rbtree_node_t *node,            â”ƒçš„æŒ‡é’ˆï¼›sentinelæ˜¯è¿™æ£µçº¢é»‘æ ‘åˆå§‹åŒ–    â”ƒä¸å­˜åœ¨åŒä¸€ä¸ªå…³é”®å­—æœ‰å¤šä¸ªèŠ‚ç‚¹  â”ƒ
+â”ƒngx_rbtree_node_t *sentinel)        â”ƒæ—¶å“¨å…µèŠ‚ç‚¹çš„æŒ‡é’ˆ                      â”ƒçš„é—®é¢˜                        â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
 */
 void
 ngx_str_rbtree_insert_value(ngx_rbtree_node_t *temp,
@@ -2117,28 +2117,28 @@ ngx_str_rbtree_insert_value(ngx_rbtree_node_t *temp,
         n = (ngx_str_node_t *) node;
         t = (ngx_str_node_t *) temp;
 
-        //Ê×ÏÈ±È½Ïkey¹Ø¼ü×Ö£¬ºìºÚÊ÷ÖĞÒÔkey×÷ÎªµÚÒ»Ë÷Òı¹Ø¼ü×Ö
+        //é¦–å…ˆæ¯”è¾ƒkeyå…³é”®å­—ï¼Œçº¢é»‘æ ‘ä¸­ä»¥keyä½œä¸ºç¬¬ä¸€ç´¢å¼•å…³é”®å­—
         if (node->key != temp->key) {
-            //×ó×ÓÊ÷½ÚµãµÄ¹Ø¼ü½ÚĞ¡ÓÚÓÒ×ÓÊ÷
+            //å·¦å­æ ‘èŠ‚ç‚¹çš„å…³é”®èŠ‚å°äºå³å­æ ‘
             p = (node->key < temp->key) ? &temp->left : &temp->right;
 
-        } else if (n->str.len != t->str.len) {//µ±key¹Ø¼ü×ÖÏàÍ¬Ê±£¬ÒÔ×Ö·û´®³¤¶ÈÎªµÚ¶şË÷Òı¹Ø¼ü×Ö
-            //×ó×ÓÊ÷½Úµã×Ö·û´®µÄ³¤¶ÈĞ¡ÓÚÓÒ×ÓÊ÷
+        } else if (n->str.len != t->str.len) {//å½“keyå…³é”®å­—ç›¸åŒæ—¶ï¼Œä»¥å­—ç¬¦ä¸²é•¿åº¦ä¸ºç¬¬äºŒç´¢å¼•å…³é”®å­—
+            //å·¦å­æ ‘èŠ‚ç‚¹å­—ç¬¦ä¸²çš„é•¿åº¦å°äºå³å­æ ‘
             p = (n->str.len < t->str.len) ? &temp->left : &temp->right;
 
-        } else {//key¹Ø¼ü×ÖÏàÍ¬ÇÒ×Ö·û´®³¤¶ÈÏàÍ¬Ê±£¬ÔÙ¼ÌĞø±È½Ï×Ö·û´®ÄÚÈİ
+        } else {//keyå…³é”®å­—ç›¸åŒä¸”å­—ç¬¦ä¸²é•¿åº¦ç›¸åŒæ—¶ï¼Œå†ç»§ç»­æ¯”è¾ƒå­—ç¬¦ä¸²å†…å®¹
             p = (ngx_memcmp(n->str.data, t->str.data, n->str.len) < 0)
                  ? &temp->left : &temp->right;
         }
 
-        if (*p == sentinel) {//Èç¹ûµ±Ç°½ÚµãpÊÇÉÚ±ø½Úµã£¬ÄÇÃ´Ìø³öÑ­»·×¼±¸²åÈë½Úµã
+        if (*p == sentinel) {//å¦‚æœå½“å‰èŠ‚ç‚¹pæ˜¯å“¨å…µèŠ‚ç‚¹ï¼Œé‚£ä¹ˆè·³å‡ºå¾ªç¯å‡†å¤‡æ’å…¥èŠ‚ç‚¹
             break;
         }
 
         temp = *p;
     }
 
-    *p = node;///p½ÚµãÓëÒª²åÈëµÄ½Úµã¾ßÓĞÏàÍ¬µÄ±êÊ¶·ûÊ±£¬±ØĞë¸²¸ÇÄÚÈİ
+    *p = node;///pèŠ‚ç‚¹ä¸è¦æ’å…¥çš„èŠ‚ç‚¹å…·æœ‰ç›¸åŒçš„æ ‡è¯†ç¬¦æ—¶ï¼Œå¿…é¡»è¦†ç›–å†…å®¹
     node->parent = temp;
     node->left = sentinel;
     node->right = sentinel;
@@ -2190,7 +2190,7 @@ ngx_str_rbtree_lookup(ngx_rbtree_t *rbtree, ngx_str_t *val, uint32_t hash)
 
 /* ngx_sort() is implemented as insertion sort because we need stable sort */
 
-//×Ö·û´®Êı×éÅÅĞò
+//å­—ç¬¦ä¸²æ•°ç»„æ’åº
 void
 ngx_sort(void *base, size_t n, size_t size,
     ngx_int_t (*cmp)(const void *, const void *))

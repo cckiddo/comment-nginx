@@ -54,40 +54,40 @@ int ngx_tcp_push(ngx_socket_t s);
 #endif
 
 /*
-1.close()����
+1.close()函数
 
 [cpp] view plaincopyprint?
 01.<SPAN style="FONT-SIZE: 13px">#include<unistd.h>  
-02.int close(int sockfd);     //���سɹ�Ϊ0������Ϊ-1.</SPAN>  
+02.int close(int sockfd);     //返回成功为0，出错为-1.</SPAN>  
 #include<unistd.h>
-int close(int sockfd);     //���سɹ�Ϊ0������Ϊ-1.    close һ���׽��ֵ�Ĭ����Ϊ�ǰ��׽��ֱ��Ϊ�ѹرգ�Ȼ���������ص����ý��̣�
-���׽����������������ɵ��ý���ʹ�ã�Ҳ����˵����������Ϊread��write�ĵ�һ��������Ȼ��TCP�����Է������Ŷӵȴ����͵��Զ˵��κ����ݣ�
-������Ϻ�������������TCP������ֹ���С�
+int close(int sockfd);     //返回成功为0，出错为-1.    close 一个套接字的默认行为是把套接字标记为已关闭，然后立即返回到调用进程，
+该套接字描述符不能再由调用进程使用，也就是说它不能再作为read或write的第一个参数，然而TCP将尝试发送已排队等待发送到对端的任何数据，
+发送完毕后发生的是正常的TCP连接终止序列。
 
-    �ڶ���̲����������У����ӽ��̹������׽��֣��׽������������ü�����¼�Ź����ŵĽ��̸������������̻�ĳһ�ӽ���close���׽���ʱ��
-���������ü�������Ӧ�ļ�һ�������ü����Դ�����ʱ�����close���þͲ�������TCP����·���ֶ������̡�
+    在多进程并发服务器中，父子进程共享着套接字，套接字描述符引用计数记录着共享着的进程个数，当父进程或某一子进程close掉套接字时，
+描述符引用计数会相应的减一，当引用计数仍大于零时，这个close调用就不会引发TCP的四路握手断连过程。
 
-2.shutdown()����
+2.shutdown()函数
 
 [cpp] view plaincopyprint?
 01.<SPAN style="FONT-SIZE: 13px">#include<sys/socket.h>  
-02.int shutdown(int sockfd,int howto);  //���سɹ�Ϊ0������Ϊ-1.</SPAN>  
+02.int shutdown(int sockfd,int howto);  //返回成功为0，出错为-1.</SPAN>  
 #include<sys/socket.h>
-int shutdown(int sockfd,int howto);  //���سɹ�Ϊ0������Ϊ-1.    �ú�������Ϊ������howto��ֵ
+int shutdown(int sockfd,int howto);  //返回成功为0，出错为-1.    该函数的行为依赖于howto的值
 
-    1.SHUT_RD��ֵΪ0���ر����ӵĶ���һ�롣
+    1.SHUT_RD：值为0，关闭连接的读这一半。
 
-    2.SHUT_WR��ֵΪ1���ر����ӵ�д��һ�롣
+    2.SHUT_WR：值为1，关闭连接的写这一半。
 
-    3.SHUT_RDWR��ֵΪ2�����ӵĶ���д���رա�
+    3.SHUT_RDWR：值为2，连接的读和写都关闭。
 
-    ��ֹ�������ӵ�ͨ�÷����ǵ���close��������ʹ��shutdown�ܸ��õĿ��ƶ������̣�ʹ�õڶ�����������
+    终止网络连接的通用方法是调用close函数。但使用shutdown能更好的控制断连过程（使用第二个参数）。
 
-3.������������
-    close��shutdown��������Ҫ�����ڣ�
-    close������ر��׽���ID������������Ľ��̹���������׽��֣���ô����Ȼ�Ǵ򿪵ģ����������Ȼ������������д��������ʱ�����Ƿǳ���Ҫ�� ���ر��Ƕ��ڶ���̲�����������˵��
+3.两函数的区别
+    close与shutdown的区别主要表现在：
+    close函数会关闭套接字ID，如果有其他的进程共享着这个套接字，那么它仍然是打开的，这个连接仍然可以用来读和写，并且有时候这是非常重要的 ，特别是对于多进程并发服务器来说。
 
-    ��shutdown���жϽ��̹������׽��ֵ��������ӣ���������׽��ֵ����ü����Ƿ�Ϊ�㣬��Щ��ͼ���ý��̽�����յ�EOF��ʶ����Щ��ͼд�Ľ��̽����⵽SIGPIPE�źţ�ͬʱ������shutdown�ĵڶ�������ѡ������ķ�ʽ��
+    而shutdown会切断进程共享的套接字的所有连接，不管这个套接字的引用计数是否为零，那些试图读得进程将会接收到EOF标识，那些试图写的进程将会检测到SIGPIPE信号，同时可利用shutdown的第二个参数选择断连的方式。
 */
 #define ngx_shutdown_socket    shutdown
 #define ngx_shutdown_socket_n  "shutdown()"

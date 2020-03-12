@@ -8,7 +8,7 @@
 #include <ngx_config.h>
 #include <ngx_core.h>
 
-//°Ñ1×ª»»Îª1*1024*1024
+//æŠŠ1è½¬æ¢ä¸º1*1024*1024
 ssize_t
 ngx_parse_size(ngx_str_t *line)
 {
@@ -97,7 +97,7 @@ ngx_parse_offset(ngx_str_t *line)
     return offset;
 }
 
-//Ê±¼ä×Ö·û´®×ª»»Îªs£¬Èç1h=60*60*1s
+//æ—¶é—´å­—ç¬¦ä¸²è½¬æ¢ä¸ºsï¼Œå¦‚1h=60*60*1s
 ngx_int_t
 ngx_parse_time(ngx_str_t *line, ngx_uint_t is_sec)
 {

@@ -12,47 +12,47 @@
 
 
 typedef struct {
-    //Êı×éÖĞµÄÃ¿¸ö³ÉÔ±ÔÚngx_thread_pool_initÖĞ³õÊ¼»¯£¬
-    //Êı×é³ÉÔ±½á¹¹Ê½ngx_thread_pool_t
-    ngx_array_t               pools; //ËùÓĞµÄthread_pool nameÅäÖÃĞÅÏ¢ngx_thread_pool_t´æ·ÅÔÚ¸ÃÊı×éÖĞ£¬¼ûngx_thread_pool_add
-} ngx_thread_pool_conf_t;//´´½¨¿Õ¼äÔÚngx_thread_pool_create_conf
+    //æ•°ç»„ä¸­çš„æ¯ä¸ªæˆå‘˜åœ¨ngx_thread_pool_initä¸­åˆå§‹åŒ–ï¼Œ
+    //æ•°ç»„æˆå‘˜ç»“æ„å¼ngx_thread_pool_t
+    ngx_array_t               pools; //æ‰€æœ‰çš„thread_pool nameé…ç½®ä¿¡æ¯ngx_thread_pool_tå­˜æ”¾åœ¨è¯¥æ•°ç»„ä¸­ï¼Œè§ngx_thread_pool_add
+} ngx_thread_pool_conf_t;//åˆ›å»ºç©ºé—´åœ¨ngx_thread_pool_create_conf
 
 
-typedef struct { //¼ûngx_thread_pool_done
+typedef struct { //è§ngx_thread_pool_done
     ngx_thread_task_t        *first;
 
     /*
-     *ngx_thread_pool_t->queue.last = task;  ĞÂÌí¼ÓµÄÈÎÎñÍ¨¹ılastÁ¬½ÓÔÚÒ»Æğ
-     ngx_thread_pool_t->queue.last = &task->next;  ÏÂ´ÎÔÚÌí¼ÓĞÂÈÎÎñ¾ÍÈÃtask->nextÖ¸ÏòĞÂÈÎÎñÁË
+     *ngx_thread_pool_t->queue.last = task;  æ–°æ·»åŠ çš„ä»»åŠ¡é€šè¿‡lastè¿æ¥åœ¨ä¸€èµ·
+     ngx_thread_pool_t->queue.last = &task->next;  ä¸‹æ¬¡åœ¨æ·»åŠ æ–°ä»»åŠ¡å°±è®©task->nextæŒ‡å‘æ–°ä»»åŠ¡äº†
      */
     ngx_thread_task_t       **last;
-} ngx_thread_pool_queue_t; //Ïß³Ì³Ø¶ÓÁĞ  ³õÊ¼»¯ÔÚngx_thread_pool_queue_init
+} ngx_thread_pool_queue_t; //çº¿ç¨‹æ± é˜Ÿåˆ—  åˆå§‹åŒ–åœ¨ngx_thread_pool_queue_init
 
 #define ngx_thread_pool_queue_init(q)                                         \
     (q)->first = NULL;                                                        \
     (q)->last = &(q)->first
 
-//Ò»¸ö¸Ã½á¹¹¶ÔÓ¦Ò»¸öthreads_poolÅäÖÃ
-struct ngx_thread_pool_s {//¸Ã½á¹¹Ê½´æ·ÅÔÚngx_thread_pool_conf_t->poolÊı×éÖĞµÄ£¬¼ûngx_thread_pool_init_worker
-    ngx_thread_mutex_t        mtx; //Ïß³ÌËø  ngx_thread_pool_initÖĞ³õÊ¼»¯
-    //ngx_thread_task_postÖĞÌí¼ÓµÄÈÎÎñ±»Ìí¼Óµ½¸Ã¶ÓÁĞÖĞ
-    ngx_thread_pool_queue_t   queue;//ngx_thread_pool_init  ngx_thread_pool_queue_initÖĞ³õÊ¼»¯
-    //ÔÚ¸ÃÏß³Ì³ØpollÖĞÃ¿Ìí¼ÓÒ»¸öÏß³Ì£¬waiting×Ó¼õ£¬µ±Ïß³ÌÈ«²¿ÕıÔÚÖ´ĞĞÈÎÎñºó£¬waiting»á»Ö¸´µ½0
-    //Èç¹ûËùÓĞÏß³Ì¶¼ÒÑ¾­ÔÚÖ´ĞĞÈÎÎñ(Ò²¾ÍÊÇwaiting>-0)£¬ÓÖÀ´ÁËÈÎÎñ£¬ÄÇÃ´ÈÎÎñ¾ÍÖ»ÄÜµÈ´ı¡£ËùÒÔwaiting±íÊ¾µÈ´ı±»Ö´ĞĞµÄÈÎÎñÊı
-    ngx_int_t                 waiting;//µÈ´ıµÄÈÎÎñÊı   ngx_thread_task_post¼Ó1   ngx_thread_pool_cycle¼õ1
-    ngx_thread_cond_t         cond;//Ìõ¼ş±äÁ¿  ngx_thread_pool_initÖĞ³õÊ¼»¯
+//ä¸€ä¸ªè¯¥ç»“æ„å¯¹åº”ä¸€ä¸ªthreads_poolé…ç½®
+struct ngx_thread_pool_s {//è¯¥ç»“æ„å¼å­˜æ”¾åœ¨ngx_thread_pool_conf_t->poolæ•°ç»„ä¸­çš„ï¼Œè§ngx_thread_pool_init_worker
+    ngx_thread_mutex_t        mtx; //çº¿ç¨‹é”  ngx_thread_pool_initä¸­åˆå§‹åŒ–
+    //ngx_thread_task_postä¸­æ·»åŠ çš„ä»»åŠ¡è¢«æ·»åŠ åˆ°è¯¥é˜Ÿåˆ—ä¸­
+    ngx_thread_pool_queue_t   queue;//ngx_thread_pool_init  ngx_thread_pool_queue_initä¸­åˆå§‹åŒ–
+    //åœ¨è¯¥çº¿ç¨‹æ± pollä¸­æ¯æ·»åŠ ä¸€ä¸ªçº¿ç¨‹ï¼Œwaitingå­å‡ï¼Œå½“çº¿ç¨‹å…¨éƒ¨æ­£åœ¨æ‰§è¡Œä»»åŠ¡åï¼Œwaitingä¼šæ¢å¤åˆ°0
+    //å¦‚æœæ‰€æœ‰çº¿ç¨‹éƒ½å·²ç»åœ¨æ‰§è¡Œä»»åŠ¡(ä¹Ÿå°±æ˜¯waiting>-0)ï¼Œåˆæ¥äº†ä»»åŠ¡ï¼Œé‚£ä¹ˆä»»åŠ¡å°±åªèƒ½ç­‰å¾…ã€‚æ‰€ä»¥waitingè¡¨ç¤ºç­‰å¾…è¢«æ‰§è¡Œçš„ä»»åŠ¡æ•°
+    ngx_int_t                 waiting;//ç­‰å¾…çš„ä»»åŠ¡æ•°   ngx_thread_task_poståŠ 1   ngx_thread_pool_cycleå‡1
+    ngx_thread_cond_t         cond;//æ¡ä»¶å˜é‡  ngx_thread_pool_initä¸­åˆå§‹åŒ–
 
-    ngx_log_t                *log;//ngx_thread_pool_initÖĞ³õÊ¼»¯
+    ngx_log_t                *log;//ngx_thread_pool_initä¸­åˆå§‹åŒ–
 
-    ngx_str_t                 name;//thread_pool name threads=number [max_queue=number];ÖĞµÄname  ngx_thread_pool
-    //Èç¹ûÃ»ÓĞÅäÖÃ£¬ÔÚngx_thread_pool_init_confÄ¬ÈÏ¸³ÖµÎª32
-    ngx_uint_t                threads;//thread_pool name threads=number [max_queue=number];ÖĞµÄnumber  ngx_thread_pool
-    //Èç¹ûÃ»ÓĞÅäÖÃ£¬ÔÚngx_thread_pool_init_confÄ¬ÈÏ¸³ÖµÎª65535  
-    //Ö¸µÄÊÇÏß³ÌÒÑ¾­È«²¿ÓÃÍêµÄÇé¿öÏÂ£¬»¹¿ÉÒÔÌí¼Ó¶àÉÙ¸öÈÎÎñµ½µÈ´ı¶ÓÁĞ
-    ngx_int_t                 max_queue;//thread_pool name threads=number [max_queue=number];ÖĞµÄmax_queue  ngx_thread_pool
+    ngx_str_t                 name;//thread_pool name threads=number [max_queue=number];ä¸­çš„name  ngx_thread_pool
+    //å¦‚æœæ²¡æœ‰é…ç½®ï¼Œåœ¨ngx_thread_pool_init_confé»˜è®¤èµ‹å€¼ä¸º32
+    ngx_uint_t                threads;//thread_pool name threads=number [max_queue=number];ä¸­çš„number  ngx_thread_pool
+    //å¦‚æœæ²¡æœ‰é…ç½®ï¼Œåœ¨ngx_thread_pool_init_confé»˜è®¤èµ‹å€¼ä¸º65535  
+    //æŒ‡çš„æ˜¯çº¿ç¨‹å·²ç»å…¨éƒ¨ç”¨å®Œçš„æƒ…å†µä¸‹ï¼Œè¿˜å¯ä»¥æ·»åŠ å¤šå°‘ä¸ªä»»åŠ¡åˆ°ç­‰å¾…é˜Ÿåˆ—
+    ngx_int_t                 max_queue;//thread_pool name threads=number [max_queue=number];ä¸­çš„max_queue  ngx_thread_pool
 
-    u_char                   *file;//ÅäÖÃÎÄ¼şÃû
-    ngx_uint_t                line;//thread_poolÅäÖÃÔÚÅäÖÃÎÄ¼şÖĞµÄĞĞºÅ
+    u_char                   *file;//é…ç½®æ–‡ä»¶å
+    ngx_uint_t                line;//thread_poolé…ç½®åœ¨é…ç½®æ–‡ä»¶ä¸­çš„è¡Œå·
 };
 
 
@@ -76,7 +76,7 @@ static void ngx_thread_pool_exit_worker(ngx_cycle_t *cycle);
 static ngx_command_t  ngx_thread_pool_commands[] = {
     /*
     Syntax: thread_pool name threads=number [max_queue=number];
-    Default: thread_pool default threads=32 max_queue=65536; threads²ÎÊıÎª¸ÃpoolÖĞÏß³Ì¸öÊı£¬max_queue±íÊ¾µÈ´ı±»Ïß³Ìµ÷¶ÈµÄÈÎÎñÊı
+    Default: thread_pool default threads=32 max_queue=65536; threadså‚æ•°ä¸ºè¯¥poolä¸­çº¿ç¨‹ä¸ªæ•°ï¼Œmax_queueè¡¨ç¤ºç­‰å¾…è¢«çº¿ç¨‹è°ƒåº¦çš„ä»»åŠ¡æ•°
     
     Defines named thread pools used for multi-threaded reading and sending of files without blocking worker processes. 
     The threads parameter defines the number of threads in the pool. 
@@ -121,10 +121,10 @@ ngx_module_t  ngx_thread_pool_module = {
 static ngx_str_t  ngx_thread_pool_default = ngx_string("default");
 
 static ngx_uint_t               ngx_thread_pool_task_id;
-static ngx_atomic_t             ngx_thread_pool_done_lock;//Îª0£¬¿ÉÒÔ»ñÈ¡Ëø£¬²»Îª0£¬Ôò²»ÄÜ»ñÈ¡µ½¸ÃËø
-static ngx_thread_pool_queue_t  ngx_thread_pool_done; //ËùÓĞµÄ
+static ngx_atomic_t             ngx_thread_pool_done_lock;//ä¸º0ï¼Œå¯ä»¥è·å–é”ï¼Œä¸ä¸º0ï¼Œåˆ™ä¸èƒ½è·å–åˆ°è¯¥é”
+static ngx_thread_pool_queue_t  ngx_thread_pool_done; //æ‰€æœ‰çš„
 
-//¸ù¾İthread_pool name threads=number [max_queue=number];ÖĞµÄnumberÀ´´´½¨ÕâÃ´¶à¸öÏß³Ì
+//æ ¹æ®thread_pool name threads=number [max_queue=number];ä¸­çš„numberæ¥åˆ›å»ºè¿™ä¹ˆå¤šä¸ªçº¿ç¨‹
 static ngx_int_t
 ngx_thread_pool_init(ngx_thread_pool_t *tp, ngx_log_t *log, ngx_pool_t *pool)
 {
@@ -170,8 +170,8 @@ ngx_thread_pool_init(ngx_thread_pool_t *tp, ngx_log_t *log, ngx_pool_t *pool)
 
     for (n = 0; n < tp->threads; n++) {
         /*
-        Ïß³ÌÔ­Óï£ºpthread_create()£¬pthread_self()£¬pthread_exit(),pthread_join(),pthread_cancel(),pthread_detach( .
-        ºÃµÄÏß³ÌÀí½â´óÈ«²Î¿¼(ÓĞÍ¼½âÀı×Ó£¬ºÜºÃ):http://blog.csdn.net/tototuzuoquan/article/details/39553427
+        çº¿ç¨‹åŸè¯­ï¼špthread_create()ï¼Œpthread_self()ï¼Œpthread_exit(),pthread_join(),pthread_cancel(),pthread_detach( .
+        å¥½çš„çº¿ç¨‹ç†è§£å¤§å…¨å‚è€ƒ(æœ‰å›¾è§£ä¾‹å­ï¼Œå¾ˆå¥½):http://blog.csdn.net/tototuzuoquan/article/details/39553427
          */
         err = pthread_create(&tid, &attr, ngx_thread_pool_cycle, tp);
         if (err) {
@@ -196,27 +196,27 @@ ngx_thread_pool_destroy(ngx_thread_pool_t *tp)
 
     ngx_memzero(&task, sizeof(ngx_thread_task_t));
 
-    task.handler = ngx_thread_pool_exit_handler;//ÈÎÎñÍË³öÖ´ĞĞº¯Êı
-    task.ctx = (void *) &lock;//Ö¸Ïò´«ÈëµÄ²ÎÊı  
+    task.handler = ngx_thread_pool_exit_handler;//ä»»åŠ¡é€€å‡ºæ‰§è¡Œå‡½æ•°
+    task.ctx = (void *) &lock;//æŒ‡å‘ä¼ å…¥çš„å‚æ•°  
 
-    // Ã»ÓĞ¸³Öµtask->event.handler  task->event.data   (void) ngx_notify(ngx_thread_pool_handler); ÖĞ»á²»»á¶Î´íÎó??? /
-    for (n = 0; n < tp->threads; n++) {  //tpÖĞËùÓĞµÄÏß³Ì³ØÌí¼Ó¸ÃÈÎÎñ  
+    // æ²¡æœ‰èµ‹å€¼task->event.handler  task->event.data   (void) ngx_notify(ngx_thread_pool_handler); ä¸­ä¼šä¸ä¼šæ®µé”™è¯¯??? /
+    for (n = 0; n < tp->threads; n++) {  //tpä¸­æ‰€æœ‰çš„çº¿ç¨‹æ± æ·»åŠ è¯¥ä»»åŠ¡  
         lock = 1;
 
         if (ngx_thread_task_post(tp, &task) != NGX_OK) {
             return;
         }
 
-        while (lock) { //Ö÷½ø³ÌÅĞ¶ÏÈç¹ûlockÃ»ÓĞ¸Ä±ä£¬¾ÍÈÃCPU¸øÆäËûÏß³ÌÖ´ĞĞ£¬ÒÔ´ËµÈ´ı£¬Ïàµ±ÓÚpthread_join  
+        while (lock) { //ä¸»è¿›ç¨‹åˆ¤æ–­å¦‚æœlockæ²¡æœ‰æ”¹å˜ï¼Œå°±è®©CPUç»™å…¶ä»–çº¿ç¨‹æ‰§è¡Œï¼Œä»¥æ­¤ç­‰å¾…ï¼Œç›¸å½“äºpthread_join  
             ngx_sched_yield();
         }
 
-        //Ö»ÓĞÏß³Ì³ØÖĞµÄÒ»¸öÏß³ÌÖ´ĞĞÁËexit_handlerºó²ÅÄÜ»á¼ÌĞøforÑ­»·
+        //åªæœ‰çº¿ç¨‹æ± ä¸­çš„ä¸€ä¸ªçº¿ç¨‹æ‰§è¡Œäº†exit_handleråæ‰èƒ½ä¼šç»§ç»­forå¾ªç¯
 
         task.event.active = 0;
     }
 
-    //´ËÊ±µ½Õâ±ß£¬ËùÓĞµÄÏß³Ì¶¼ÒÑ¾­ÍË³ö   //Ìõ¼ş±äÁ¿Ïú»Ù   »¥³âËø
+    //æ­¤æ—¶åˆ°è¿™è¾¹ï¼Œæ‰€æœ‰çš„çº¿ç¨‹éƒ½å·²ç»é€€å‡º   //æ¡ä»¶å˜é‡é”€æ¯   äº’æ–¥é”
 
     (void) ngx_thread_cond_destroy(&tp->cond, tp->log);
 
@@ -251,12 +251,12 @@ ngx_thread_task_alloc(ngx_pool_t *pool, size_t size)
 }
 
 /*
-Ò»°ãÖ÷Ïß³ÌÍ¨¹ıngx_thread_task_postÌí¼ÓÈÎÎñ£¬Ïß³Ì¶ÓÁĞÖĞµÄÏß³ÌÖ´ĞĞÈÎÎñ£¬Ö÷Ïß³ÌºÅºÍ½ø³ÌºÅÒ»Ñù£¬Ïß³Ì¶ÓÁĞÖĞµÄÏß³ÌºÍ½ø³ÌºÅ²»Ò»Ñù£¬ÀıÈç
+ä¸€èˆ¬ä¸»çº¿ç¨‹é€šè¿‡ngx_thread_task_postæ·»åŠ ä»»åŠ¡ï¼Œçº¿ç¨‹é˜Ÿåˆ—ä¸­çš„çº¿ç¨‹æ‰§è¡Œä»»åŠ¡ï¼Œä¸»çº¿ç¨‹å·å’Œè¿›ç¨‹å·ä¸€æ ·ï¼Œçº¿ç¨‹é˜Ÿåˆ—ä¸­çš„çº¿ç¨‹å’Œè¿›ç¨‹å·ä¸ä¸€æ ·ï¼Œä¾‹å¦‚
 2016/01/07 12:38:01[               ngx_thread_task_post,   280][yangya  [debug] 20090#20090: ngx add task to thread, task id:183
-20090#20090Ç°ÃæÊÇ½ø³ÌºÅ£¬ºóÃæÊÇÖ÷Ïß³ÌºÅ£¬ËûÃÇÏàÍ¬
+20090#20090å‰é¢æ˜¯è¿›ç¨‹å·ï¼Œåé¢æ˜¯ä¸»çº¿ç¨‹å·ï¼Œä»–ä»¬ç›¸åŒ
 */
-//ÈÎÎñÌí¼Óµ½¶ÔÓ¦µÄÏß³Ì³ØÈÎÎñ¶ÓÁĞÖĞ
-ngx_int_t //ngx_thread_pool_cycleºÍngx_thread_task_postÅäºÏÔÄ¶Á
+//ä»»åŠ¡æ·»åŠ åˆ°å¯¹åº”çš„çº¿ç¨‹æ± ä»»åŠ¡é˜Ÿåˆ—ä¸­
+ngx_int_t //ngx_thread_pool_cycleå’Œngx_thread_task_posté…åˆé˜…è¯»
 ngx_thread_task_post(ngx_thread_pool_t *tp, ngx_thread_task_t *task)
 {
     if (task->event.active) {
@@ -289,7 +289,7 @@ ngx_thread_task_post(ngx_thread_pool_t *tp, ngx_thread_task_t *task)
         return NGX_ERROR;
     }
 
-    //Ìí¼Óµ½ÈÎÎñ¶ÓÁĞ
+    //æ·»åŠ åˆ°ä»»åŠ¡é˜Ÿåˆ—
     *tp->queue.last = task;
     tp->queue.last = &task->next;
 
@@ -304,11 +304,11 @@ ngx_thread_task_post(ngx_thread_pool_t *tp, ngx_thread_task_t *task)
     return NGX_OK;
 }
 
-//ngx_thread_pool_cycleºÍngx_thread_task_postÅäºÏÔÄ¶Á
+//ngx_thread_pool_cycleå’Œngx_thread_task_posté…åˆé˜…è¯»
 static void *
 ngx_thread_pool_cycle(void *data)
 {
-    ngx_thread_pool_t *tp = data; //Ò»¸ö¸Ã½á¹¹¶ÔÓ¦Ò»¸öthreads_poolÅäÖÃ
+    ngx_thread_pool_t *tp = data; //ä¸€ä¸ªè¯¥ç»“æ„å¯¹åº”ä¸€ä¸ªthreads_poolé…ç½®
 
     int                 err;
     sigset_t            set;
@@ -335,11 +335,11 @@ ngx_thread_pool_cycle(void *data)
     }
 
     /*
-    Ò»°ãÖ÷Ïß³ÌÍ¨¹ıngx_thread_task_postÌí¼ÓÈÎÎñ£¬Ïß³Ì¶ÓÁĞÖĞµÄÏß³ÌÖ´ĞĞÈÎÎñ£¬Ö÷Ïß³ÌºÅºÍ½ø³ÌºÅÒ»Ñù£¬Ïß³Ì¶ÓÁĞÖĞµÄÏß³ÌºÍ½ø³ÌºÅ²»Ò»Ñù£¬ÀıÈç
+    ä¸€èˆ¬ä¸»çº¿ç¨‹é€šè¿‡ngx_thread_task_postæ·»åŠ ä»»åŠ¡ï¼Œçº¿ç¨‹é˜Ÿåˆ—ä¸­çš„çº¿ç¨‹æ‰§è¡Œä»»åŠ¡ï¼Œä¸»çº¿ç¨‹å·å’Œè¿›ç¨‹å·ä¸€æ ·ï¼Œçº¿ç¨‹é˜Ÿåˆ—ä¸­çš„çº¿ç¨‹å’Œè¿›ç¨‹å·ä¸ä¸€æ ·ï¼Œä¾‹å¦‚
     2016/01/07 12:38:01[               ngx_thread_task_post,   280][yangya  [debug] 20090#20090: ngx add task to thread, task id:183
-    20090#20090Ç°ÃæÊÇ½ø³ÌºÅ£¬ºóÃæÊÇÖ÷Ïß³ÌºÅ£¬ËûÃÇÏàÍ¬
+    20090#20090å‰é¢æ˜¯è¿›ç¨‹å·ï¼Œåé¢æ˜¯ä¸»çº¿ç¨‹å·ï¼Œä»–ä»¬ç›¸åŒ
     */
-    for ( ;; ) {//Ò»´ÎÈÎÎñÖ´ĞĞÍêºóÓÖ»á×ßµ½ÕâÀï£¬Ñ­»·
+    for ( ;; ) {//ä¸€æ¬¡ä»»åŠ¡æ‰§è¡Œå®Œååˆä¼šèµ°åˆ°è¿™é‡Œï¼Œå¾ªç¯
         if (ngx_thread_mutex_lock(&tp->mtx, tp->log) != NGX_OK) {
             return NULL;
         }
@@ -347,10 +347,10 @@ ngx_thread_pool_cycle(void *data)
         /* the number may become negative */
         tp->waiting--;
 
-        //Èç¹û¶ÓÁĞÖĞÓĞÈÎÎñ£¬ÔòÖ±½ÓÖ´ĞĞÈÎÎñ£¬²»»áÔÚwhileÖĞµÈ´ıconf signal
-        while (tp->queue.first == NULL) { //´ËÊ±ÈÎÎñ¶ÓÁĞÎª¿Õ£¬ÔÚÌõ¼ş±äÁ¿ÉÏµÈ´ı  ÅäºÏngx_thread_task_postÔÄ¶Á
-            //ÔÚÌí¼ÓÈÎÎñµÄÊ±ºò»½ĞÑngx_thread_task_post -> ngx_thread_cond_signal
-            if (ngx_thread_cond_wait(&tp->cond, &tp->mtx, tp->log) //µÈ´ıngx_thread_cond_signalºó²Å»á·µ»Ø
+        //å¦‚æœé˜Ÿåˆ—ä¸­æœ‰ä»»åŠ¡ï¼Œåˆ™ç›´æ¥æ‰§è¡Œä»»åŠ¡ï¼Œä¸ä¼šåœ¨whileä¸­ç­‰å¾…conf signal
+        while (tp->queue.first == NULL) { //æ­¤æ—¶ä»»åŠ¡é˜Ÿåˆ—ä¸ºç©ºï¼Œåœ¨æ¡ä»¶å˜é‡ä¸Šç­‰å¾…  é…åˆngx_thread_task_posté˜…è¯»
+            //åœ¨æ·»åŠ ä»»åŠ¡çš„æ—¶å€™å”¤é†’ngx_thread_task_post -> ngx_thread_cond_signal
+            if (ngx_thread_cond_wait(&tp->cond, &tp->mtx, tp->log) //ç­‰å¾…ngx_thread_cond_signalåæ‰ä¼šè¿”å›
                 != NGX_OK)
             {
                 (void) ngx_thread_mutex_unlock(&tp->mtx, tp->log);
@@ -358,7 +358,7 @@ ngx_thread_pool_cycle(void *data)
             }
         }
 
-        //È¡³ö¶ÓÊ×ÈÎÎñ£¬È»ºóÖ´ĞĞ
+        //å–å‡ºé˜Ÿé¦–ä»»åŠ¡ï¼Œç„¶åæ‰§è¡Œ
         task = tp->queue.first;
         tp->queue.first = task->next;
 
@@ -366,7 +366,7 @@ ngx_thread_pool_cycle(void *data)
             tp->queue.last = &tp->queue.first;
         }
 
-        //ÕâÒ»¶Î¼ÓËøÊÇÒòÎªÏß³Ì³ØÊÇ¹²Ïí×ÊÔ´£¬¶à¸öÏß³Ì¶¼´Ó¶ÓÁĞÖĞÈ¡Ïß³Ì£¬²¢ÇÒÖ÷Ïß³Ì»áÌí¼ÓÈÎÎñµ½¶ÓÁĞÖĞ
+        //è¿™ä¸€æ®µåŠ é”æ˜¯å› ä¸ºçº¿ç¨‹æ± æ˜¯å…±äº«èµ„æºï¼Œå¤šä¸ªçº¿ç¨‹éƒ½ä»é˜Ÿåˆ—ä¸­å–çº¿ç¨‹ï¼Œå¹¶ä¸”ä¸»çº¿ç¨‹ä¼šæ·»åŠ ä»»åŠ¡åˆ°é˜Ÿåˆ—ä¸­
         if (ngx_thread_mutex_unlock(&tp->mtx, tp->log) != NGX_OK) {
             return NULL;
         }
@@ -379,7 +379,7 @@ ngx_thread_pool_cycle(void *data)
                        "run task #%ui in thread pool name:\"%V\"",
                        task->id, &tp->name);
 
-        task->handler(task->ctx, tp->log); //Ã¿¸öÈÎÎñÓĞ¸÷×ÔµÄctx,Òò´ËÕâÀï²»ĞèÒª¼ÓËø
+        task->handler(task->ctx, tp->log); //æ¯ä¸ªä»»åŠ¡æœ‰å„è‡ªçš„ctx,å› æ­¤è¿™é‡Œä¸éœ€è¦åŠ é”
 
         ngx_log_debug2(NGX_LOG_DEBUG_CORE, tp->log, 0,
                        "complete task #%ui in thread pool name: \"%V\"",
@@ -389,19 +389,19 @@ ngx_thread_pool_cycle(void *data)
 
         ngx_spinlock(&ngx_thread_pool_done_lock, 1, 2048);
 
-        //taskÌí¼Óµ½¶ÓÁĞÎ²²¿£¬Í¬Ê±¿ÉÒÔ±£Ö¤¶à´ÎÌí¼ÓµÄÊ±ºò£¬ÈÃĞÂtaskºÍÒÔÇ°µÄtaskĞÎ³ÉÒ»¸ö»¹£¬firstÖ´ĞĞµÚÒ»¸ötask£¬lastÖ¸Ïò×îºóÒ»¸ötask
+        //taskæ·»åŠ åˆ°é˜Ÿåˆ—å°¾éƒ¨ï¼ŒåŒæ—¶å¯ä»¥ä¿è¯å¤šæ¬¡æ·»åŠ çš„æ—¶å€™ï¼Œè®©æ–°taskå’Œä»¥å‰çš„taskå½¢æˆä¸€ä¸ªè¿˜ï¼Œfirstæ‰§è¡Œç¬¬ä¸€ä¸ªtaskï¼ŒlastæŒ‡å‘æœ€åä¸€ä¸ªtask
         *ngx_thread_pool_done.last = task;
         ngx_thread_pool_done.last = &task->next;
 
         ngx_unlock(&ngx_thread_pool_done_lock);
 
-//ngx_notifyÍ¨¸æÖ÷Ïß³Ì£¬¸ÃÈÎÎñ´¦ÀíÍê±Ï£¬ngx_thread_pool_handlerÓÉÖ÷Ïß³ÌÖ´ĞĞ£¬Ò²¾ÍÊÇ½ø³Ìcycle{}Í¨¹ıepoll_wait·µ»ØÖ´ĞĞ£¬¶ø²»ÊÇÓÉÏß³Ì³ØÖĞµÄÏß³ÌÖ´ĞĞ
+//ngx_notifyé€šå‘Šä¸»çº¿ç¨‹ï¼Œè¯¥ä»»åŠ¡å¤„ç†å®Œæ¯•ï¼Œngx_thread_pool_handlerç”±ä¸»çº¿ç¨‹æ‰§è¡Œï¼Œä¹Ÿå°±æ˜¯è¿›ç¨‹cycle{}é€šè¿‡epoll_waitè¿”å›æ‰§è¡Œï¼Œè€Œä¸æ˜¯ç”±çº¿ç¨‹æ± ä¸­çš„çº¿ç¨‹æ‰§è¡Œ
         (void) ngx_notify(ngx_thread_pool_handler); 
     }
 }
 
-//ÈÎÎñ´¦ÀíÍêºó£¬epollµÄÍ¨Öª¶ÁÊÂ¼ş»áµ÷ÓÃ¸Ãº¯Êı 
-////ngx_notifyÍ¨¸æÖ÷Ïß³Ì£¬¸ÃÈÎÎñ´¦ÀíÍê±Ï£¬ngx_thread_pool_handlerÓÉÖ÷Ïß³ÌÖ´ĞĞ£¬Ò²¾ÍÊÇ½ø³Ìcycle{}Í¨¹ıepoll_wait·µ»ØÖ´ĞĞ£¬¶ø²»ÊÇÓÉÏß³Ì³ØÖĞµÄÏß³ÌÖ´ĞĞ
+//ä»»åŠ¡å¤„ç†å®Œåï¼Œepollçš„é€šçŸ¥è¯»äº‹ä»¶ä¼šè°ƒç”¨è¯¥å‡½æ•° 
+////ngx_notifyé€šå‘Šä¸»çº¿ç¨‹ï¼Œè¯¥ä»»åŠ¡å¤„ç†å®Œæ¯•ï¼Œngx_thread_pool_handlerç”±ä¸»çº¿ç¨‹æ‰§è¡Œï¼Œä¹Ÿå°±æ˜¯è¿›ç¨‹cycle{}é€šè¿‡epoll_waitè¿”å›æ‰§è¡Œï¼Œè€Œä¸æ˜¯ç”±çº¿ç¨‹æ± ä¸­çš„çº¿ç¨‹æ‰§è¡Œ
 static void
 ngx_thread_pool_handler(ngx_event_t *ev)
 {
@@ -412,22 +412,22 @@ ngx_thread_pool_handler(ngx_event_t *ev)
 
     ngx_spinlock(&ngx_thread_pool_done_lock, 1, 2048);
 
-    /* ÕâÀïÊÇ²»ÊÇÓĞÎÊÌâ?
-        Èç¹ûÏß³Ì³ØÖĞµÄÏß³ÌÖ´ĞĞÈÎÎñ±È½Ï¿ì£¬¶øÖ÷½ø³ÌÔÚÖ´ĞĞepoll_wait¹ı³ÌÖĞÓĞµã×èÈû£¬ÄÇÃ´¾Í¼ì²â²»µ½ngx_notifyÖĞµÄepollÊÂ¼ş£¬ÓĞ¿ÉÄÜÏÂ´Î¼ì²âµ½¸ÃÊÂ¼şµÄÊ±ºò
-        ngx_thread_pool_doneÉÏÒÑ¾­»ıÀÛÁËºÜ¶àÖ´ĞĞÍêµÄÈÎÎñÊÂ¼ş£¬¼ûngx_thread_pool_cycle¡£
-        µ¥ÕâÀïºÃÏñÖ»È¡ÁË¶ÓÁĞÊ×²¿µÄÈÎÎñ°¡?????? ¶ÓÊ×ÍâµÄÈÎÎñ¶ªÆúÁË???????????²»¶Ô°É
+    /* è¿™é‡Œæ˜¯ä¸æ˜¯æœ‰é—®é¢˜?
+        å¦‚æœçº¿ç¨‹æ± ä¸­çš„çº¿ç¨‹æ‰§è¡Œä»»åŠ¡æ¯”è¾ƒå¿«ï¼Œè€Œä¸»è¿›ç¨‹åœ¨æ‰§è¡Œepoll_waitè¿‡ç¨‹ä¸­æœ‰ç‚¹é˜»å¡ï¼Œé‚£ä¹ˆå°±æ£€æµ‹ä¸åˆ°ngx_notifyä¸­çš„epolläº‹ä»¶ï¼Œæœ‰å¯èƒ½ä¸‹æ¬¡æ£€æµ‹åˆ°è¯¥äº‹ä»¶çš„æ—¶å€™
+        ngx_thread_pool_doneä¸Šå·²ç»ç§¯ç´¯äº†å¾ˆå¤šæ‰§è¡Œå®Œçš„ä»»åŠ¡äº‹ä»¶ï¼Œè§ngx_thread_pool_cycleã€‚
+        å•è¿™é‡Œå¥½åƒåªå–äº†é˜Ÿåˆ—é¦–éƒ¨çš„ä»»åŠ¡å•Š?????? é˜Ÿé¦–å¤–çš„ä»»åŠ¡ä¸¢å¼ƒäº†???????????ä¸å¯¹å§
 
-        ´ğ°¸ÊÇ£¬ÕâÀïÃæËùÓĞµÄÈÎÎñ¶¼ÔÚÏÂÃæµÄwhile{}ÖĞµÃµ½ÁËÖ´ĞĞ
+        ç­”æ¡ˆæ˜¯ï¼Œè¿™é‡Œé¢æ‰€æœ‰çš„ä»»åŠ¡éƒ½åœ¨ä¸‹é¢çš„while{}ä¸­å¾—åˆ°äº†æ‰§è¡Œ
      */
 
     task = ngx_thread_pool_done.first;
     ngx_thread_pool_done.first = NULL;
-    //Î²²¿Ö¸ÏòÍ·£¬µ«ÊÇÍ·ÒÑ¾­±äÎª¿Õ£¬¼´²»Ö´ĞĞÈÎÎñ  
+    //å°¾éƒ¨æŒ‡å‘å¤´ï¼Œä½†æ˜¯å¤´å·²ç»å˜ä¸ºç©ºï¼Œå³ä¸æ‰§è¡Œä»»åŠ¡  
     ngx_thread_pool_done.last = &ngx_thread_pool_done.first;
 
     ngx_unlock(&ngx_thread_pool_done_lock);
 
-    while (task) {//±éÀúÖ´ĞĞÇ°Ãæ¶ÓÁĞngx_thread_pool_doneÖĞµÄÃ¿Ò»¸öÈÎÎñ  
+    while (task) {//éå†æ‰§è¡Œå‰é¢é˜Ÿåˆ—ngx_thread_pool_doneä¸­çš„æ¯ä¸€ä¸ªä»»åŠ¡  
         ngx_log_debug1(NGX_LOG_DEBUG_CORE, ev->log, 0,
                        "run completion handler for task #%ui", task->id);
 
@@ -437,12 +437,12 @@ ngx_thread_pool_handler(ngx_event_t *ev)
         event->complete = 1;
         event->active = 0;
 
-      /*Èç¹ûÊÇĞ¡ÎÄ¼ş£¬ÔòÒ»´Î¿ÉÒÔ¶ÁÍê£¬º¯ÊıÖ¸Ïò¿ÉÒÔ²Î¿¼ngx_http_cache_thread_handler  ngx_http_copy_thread_handler  ngx_thread_read
+      /*å¦‚æœæ˜¯å°æ–‡ä»¶ï¼Œåˆ™ä¸€æ¬¡å¯ä»¥è¯»å®Œï¼Œå‡½æ•°æŒ‡å‘å¯ä»¥å‚è€ƒngx_http_cache_thread_handler  ngx_http_copy_thread_handler  ngx_thread_read
 
-        Èç¹ûÊÇ´óÎÄ¼şÏÂÔØ£¬ÔòµÚÒ»´Î×ßÕâÀïº¯ÊıÊ½ÉÏÃæµÄ¼¸¸öº¯Êı£¬µ«ÊÇÓÉÓÚÒ»´Î×î¶à»ñÈ¡32768×Ö½Ú£¬Òò´ËĞèÒª¶à´Î¶ÁÈ¡ÎÄ¼ş£¬¾ÍÊÇÓÉÒ»´ÎtreadÖ´ĞĞÍêÈÎÎñºó
-        ´¥·¢ngx_notifyÍ¨µÀepoll£¬È»ºó×ßµ½ÕâÀï¼ÌĞø¶Á 
+        å¦‚æœæ˜¯å¤§æ–‡ä»¶ä¸‹è½½ï¼Œåˆ™ç¬¬ä¸€æ¬¡èµ°è¿™é‡Œå‡½æ•°å¼ä¸Šé¢çš„å‡ ä¸ªå‡½æ•°ï¼Œä½†æ˜¯ç”±äºä¸€æ¬¡æœ€å¤šè·å–32768å­—èŠ‚ï¼Œå› æ­¤éœ€è¦å¤šæ¬¡è¯»å–æ–‡ä»¶ï¼Œå°±æ˜¯ç”±ä¸€æ¬¡treadæ‰§è¡Œå®Œä»»åŠ¡å
+        è§¦å‘ngx_notifyé€šé“epollï¼Œç„¶åèµ°åˆ°è¿™é‡Œç»§ç»­è¯» 
         */
-        event->handler(event);//ÕâÀïÊÇ·ñÓ¦¸Ã¼ì²éevent->handlerÊÇ·ñÎª¿Õ£¬ÀıÈç²Î¿¼ngx_thread_pool_destroy
+        event->handler(event);//è¿™é‡Œæ˜¯å¦åº”è¯¥æ£€æŸ¥event->handleræ˜¯å¦ä¸ºç©ºï¼Œä¾‹å¦‚å‚è€ƒngx_thread_pool_destroy
     }
 }
 
@@ -467,7 +467,7 @@ ngx_thread_pool_create_conf(ngx_cycle_t *cycle)
     return tcf;
 }
 
-//Èç¹ûÅäÖÃthread_poll default£¬ÔòÖ¸¶¨Ä¬ÈÏµÄthreadsºÍmax_queue
+//å¦‚æœé…ç½®thread_poll defaultï¼Œåˆ™æŒ‡å®šé»˜è®¤çš„threadså’Œmax_queue
 static char *
 ngx_thread_pool_init_conf(ngx_cycle_t *cycle, void *conf)
 {
@@ -506,7 +506,7 @@ ngx_thread_pool_init_conf(ngx_cycle_t *cycle, void *conf)
 
 /*
 Syntax: thread_pool name threads=number [max_queue=number];
-Default: thread_pool default threads=32 max_queue=65536; threads²ÎÊıÎª¸ÃpoolÖĞÏß³Ì¸öÊı£¬max_queue±íÊ¾µÈ´ı±»Ïß³Ìµ÷¶ÈµÄÈÎÎñÊı
+Default: thread_pool default threads=32 max_queue=65536; threadså‚æ•°ä¸ºè¯¥poolä¸­çº¿ç¨‹ä¸ªæ•°ï¼Œmax_queueè¡¨ç¤ºç­‰å¾…è¢«çº¿ç¨‹è°ƒåº¦çš„ä»»åŠ¡æ•°
 */
 static char *
 ngx_thread_pool(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
@@ -523,7 +523,7 @@ ngx_thread_pool(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
         return NGX_CONF_ERROR;
     }
 
-    if (tp->threads) { //ËµÃ÷ÅäÖÃÁËÍ¬ÑùµÄthread_pool name threads xx£¬ÖØ¸´£¬Èç¹ûthreadsÊı²»Í¬£¬»¹ÊÇ¿ÉÒÔÂú×ãÌõ¼şµÄ£¬ºóÅäÖÃµÄ»á¸²¸ÇÇ°ÃæÅäÖÃµÄ
+    if (tp->threads) { //è¯´æ˜é…ç½®äº†åŒæ ·çš„thread_pool name threads xxï¼Œé‡å¤ï¼Œå¦‚æœthreadsæ•°ä¸åŒï¼Œè¿˜æ˜¯å¯ä»¥æ»¡è¶³æ¡ä»¶çš„ï¼Œåé…ç½®çš„ä¼šè¦†ç›–å‰é¢é…ç½®çš„
         ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                            "duplicate thread pool \"%V\"", &tp->name);
         return NGX_CONF_ERROR;
@@ -570,7 +570,7 @@ ngx_thread_pool(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
     return NGX_CONF_OK;
 }
 
-//¼ì²éÊÇ·ñÒÑ¾­ÓĞ¸ÃnameµÄngx_thread_pool_t£¬ÓĞÔòÖ±½Ó·µ»Ø£¬Ã»ÓĞÔò´´½¨²¢Ìí¼Óµ½ngx_thread_pool_conf_tÖĞ
+//æ£€æŸ¥æ˜¯å¦å·²ç»æœ‰è¯¥nameçš„ngx_thread_pool_tï¼Œæœ‰åˆ™ç›´æ¥è¿”å›ï¼Œæ²¡æœ‰åˆ™åˆ›å»ºå¹¶æ·»åŠ åˆ°ngx_thread_pool_conf_tä¸­
 ngx_thread_pool_t *
 ngx_thread_pool_add(ngx_conf_t *cf, ngx_str_t *name)
 {
@@ -581,14 +581,14 @@ ngx_thread_pool_add(ngx_conf_t *cf, ngx_str_t *name)
         name = &ngx_thread_pool_default;
     }
     
-    //¼ì²é¸ÃÃû×ÖµÄÏß³Ì³ØÊÇ·ñÒÑ¾­´æÔÚ£¬´æÔÚÔòÖ±½Ó·µ»ØÒÔÇ°µÄÏß³Ì³Øngx_thread_pool_t£¬Ã»ÓĞ·µ»ØNULL
+    //æ£€æŸ¥è¯¥åå­—çš„çº¿ç¨‹æ± æ˜¯å¦å·²ç»å­˜åœ¨ï¼Œå­˜åœ¨åˆ™ç›´æ¥è¿”å›ä»¥å‰çš„çº¿ç¨‹æ± ngx_thread_pool_tï¼Œæ²¡æœ‰è¿”å›NULL
     tp = ngx_thread_pool_get(cf->cycle, name);
 
     if (tp) {
         return tp;
     }
 
-    //´´½¨ĞÂµÄngx_thread_pool_t
+    //åˆ›å»ºæ–°çš„ngx_thread_pool_t
     tp = ngx_pcalloc(cf->pool, sizeof(ngx_thread_pool_t));
     if (tp == NULL) {
         return NULL;
@@ -611,7 +611,7 @@ ngx_thread_pool_add(ngx_conf_t *cf, ngx_str_t *name)
     return tp;
 }
 
-//¼ì²é¸ÃÃû×ÖµÄÏß³Ì³ØÊÇ·ñÒÑ¾­´æÔÚ£¬´æÔÚÔòÖ±½Ó·µ»ØÒÔÇ°µÄÏß³Ì³Øngx_thread_pool_t£¬Ã»ÓĞ·µ»ØNULL
+//æ£€æŸ¥è¯¥åå­—çš„çº¿ç¨‹æ± æ˜¯å¦å·²ç»å­˜åœ¨ï¼Œå­˜åœ¨åˆ™ç›´æ¥è¿”å›ä»¥å‰çš„çº¿ç¨‹æ± ngx_thread_pool_tï¼Œæ²¡æœ‰è¿”å›NULL
 ngx_thread_pool_t *
 ngx_thread_pool_get(ngx_cycle_t *cycle, ngx_str_t *name)
 {
@@ -636,7 +636,7 @@ ngx_thread_pool_get(ngx_cycle_t *cycle, ngx_str_t *name)
     return NULL;
 }
 
-//ÔÚngx_thread_pool_init_workerºÍ ngx_thread_pool_exit_worker·Ö±ğ»á´´½¨Ã¿Ò»¸öÏß³Ì³ØºÍÏú»ÙÃ¿Ò»¸öÏß³Ì³Ø£»
+//åœ¨ngx_thread_pool_init_workerå’Œ ngx_thread_pool_exit_workeråˆ†åˆ«ä¼šåˆ›å»ºæ¯ä¸€ä¸ªçº¿ç¨‹æ± å’Œé”€æ¯æ¯ä¸€ä¸ªçº¿ç¨‹æ± ï¼›
 static ngx_int_t
 ngx_thread_pool_init_worker(ngx_cycle_t *cycle)
 {
@@ -661,7 +661,7 @@ ngx_thread_pool_init_worker(ngx_cycle_t *cycle)
 
     tpp = tcf->pools.elts;
 
-    for (i = 0; i < tcf->pools.nelts; i++) { //±éÀúËùÓĞµÄÏß³Ì³Ø
+    for (i = 0; i < tcf->pools.nelts; i++) { //éå†æ‰€æœ‰çš„çº¿ç¨‹æ± 
         if (ngx_thread_pool_init(tpp[i], cycle->log, cycle->pool) != NGX_OK) {
             return NGX_ERROR;
         }
@@ -670,7 +670,7 @@ ngx_thread_pool_init_worker(ngx_cycle_t *cycle)
     return NGX_OK;
 }
 
-//ÔÚngx_thread_pool_init_workerºÍ ngx_thread_pool_exit_worker·Ö±ğ»á´´½¨Ã¿Ò»¸öÏß³Ì³ØºÍÏú»ÙÃ¿Ò»¸öÏß³Ì³Ø£»
+//åœ¨ngx_thread_pool_init_workerå’Œ ngx_thread_pool_exit_workeråˆ†åˆ«ä¼šåˆ›å»ºæ¯ä¸€ä¸ªçº¿ç¨‹æ± å’Œé”€æ¯æ¯ä¸€ä¸ªçº¿ç¨‹æ± ï¼›
 static void
 ngx_thread_pool_exit_worker(ngx_cycle_t *cycle)
 {

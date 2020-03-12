@@ -31,12 +31,12 @@ typedef struct {
 #endif
 
 /*
-NginxµÄÈÕÖ¾Ä£¿é£¨ÕâÀïËùËµµÄÈÕÖ¾Ä£¿éÊÇngx_errlog_moduleÄ£¿é£¬¶øngx_http_log_moduleÄ£¿éÊÇÓÃÓÚ¼ÇÂ¼HTTPÇëÇóµÄ·ÃÎÊÈÕÖ¾µÄ£¬
-Á½Õß¹¦ÄÜ²»Í¬£¬ÔÚÊµÏÖÉÏÒ²Ã»ÓĞÈÎºÎ¹ØÏµ£©ÎªÆäËûÄ£¿éÌá¹©ÁË»ù±¾µÄ¼ÇÂ¼ÈÕÖ¾¹¦ÄÜ
+Nginxçš„æ—¥å¿—æ¨¡å—ï¼ˆè¿™é‡Œæ‰€è¯´çš„æ—¥å¿—æ¨¡å—æ˜¯ngx_errlog_moduleæ¨¡å—ï¼Œè€Œngx_http_log_moduleæ¨¡å—æ˜¯ç”¨äºè®°å½•HTTPè¯·æ±‚çš„è®¿é—®æ—¥å¿—çš„ï¼Œ
+ä¸¤è€…åŠŸèƒ½ä¸åŒï¼Œåœ¨å®ç°ä¸Šä¹Ÿæ²¡æœ‰ä»»ä½•å…³ç³»ï¼‰ä¸ºå…¶ä»–æ¨¡å—æä¾›äº†åŸºæœ¬çš„è®°å½•æ—¥å¿—åŠŸèƒ½
 */
-//error_log path level pathÂ·¾¶ level´òÓ¡¼¶±ğ£¬Ö»ÓĞ±Èlevel¼¶±ğ¸ßµÄ²Å´òÓ¡  ÖµÔ½Ğ¡ÓÅÏÈ¼¶Ô½¸ß
+//error_log path level pathè·¯å¾„ levelæ‰“å°çº§åˆ«ï¼Œåªæœ‰æ¯”levelçº§åˆ«é«˜çš„æ‰æ‰“å°  å€¼è¶Šå°ä¼˜å…ˆçº§è¶Šé«˜
 static ngx_command_t  ngx_errlog_commands[] = { //    error_log file [ debug | info | notice | warn | error | crit ] 
-    {ngx_string("error_log"), //ngx_errlog_moduleÖĞµÄerror_logÅäÖÃÖ»ÄÜÈ«¾ÖÅäÖÃ£¬ngx_http_core_moduleÔÚhttp{} server{} local{}ÖĞÅäÖÃ
+    {ngx_string("error_log"), //ngx_errlog_moduleä¸­çš„error_logé…ç½®åªèƒ½å…¨å±€é…ç½®ï¼Œngx_http_core_moduleåœ¨http{} server{} local{}ä¸­é…ç½®
      NGX_MAIN_CONF|NGX_CONF_1MORE,
      ngx_error_log,
      0,
@@ -54,8 +54,8 @@ static ngx_core_module_t  ngx_errlog_module_ctx = {
 };
 
 /*
-NginxµÄÈÕÖ¾Ä£¿é£¨ÕâÀïËùËµµÄÈÕÖ¾Ä£¿éÊÇngx_errlog_moduleÄ£¿é£¬¶øngx_http_log_moduleÄ£¿éÊÇÓÃÓÚ¼ÇÂ¼HTTPÇëÇóµÄ·ÃÎÊÈÕÖ¾µÄ£¬
-Á½Õß¹¦ÄÜ²»Í¬£¬ÔÚÊµÏÖÉÏÒ²Ã»ÓĞÈÎºÎ¹ØÏµ£©ÎªÆäËûÄ£¿éÌá¹©ÁË»ù±¾µÄ¼ÇÂ¼ÈÕÖ¾¹¦ÄÜ
+Nginxçš„æ—¥å¿—æ¨¡å—ï¼ˆè¿™é‡Œæ‰€è¯´çš„æ—¥å¿—æ¨¡å—æ˜¯ngx_errlog_moduleæ¨¡å—ï¼Œè€Œngx_http_log_moduleæ¨¡å—æ˜¯ç”¨äºè®°å½•HTTPè¯·æ±‚çš„è®¿é—®æ—¥å¿—çš„ï¼Œ
+ä¸¤è€…åŠŸèƒ½ä¸åŒï¼Œåœ¨å®ç°ä¸Šä¹Ÿæ²¡æœ‰ä»»ä½•å…³ç³»ï¼‰ä¸ºå…¶ä»–æ¨¡å—æä¾›äº†åŸºæœ¬çš„è®°å½•æ—¥å¿—åŠŸèƒ½
 */
 ngx_module_t  ngx_errlog_module = {
     NGX_MODULE_V1,
@@ -73,12 +73,12 @@ ngx_module_t  ngx_errlog_module = {
 };
 
 
-static ngx_log_t        ngx_log;//Ö¸ÏòµÄÊÇngx_log_file£¬¼ûngx_log_init
-static ngx_open_file_t  ngx_log_file;//NGX_ERROR_LOG_PATHÎÄ¼ş ngx_log_init
+static ngx_log_t        ngx_log;//æŒ‡å‘çš„æ˜¯ngx_log_fileï¼Œè§ngx_log_init
+static ngx_open_file_t  ngx_log_file;//NGX_ERROR_LOG_PATHæ–‡ä»¶ ngx_log_init
 ngx_uint_t              ngx_use_stderr = 1;
 
 
-static ngx_str_t err_levels[] = { //¶ÔÓ¦ÈÕÖ¾¼¶±ğNGX_LOG_STDERR--NGX_LOG_DEBUG£¬²Î¿¼ngx_log_set_levels
+static ngx_str_t err_levels[] = { //å¯¹åº”æ—¥å¿—çº§åˆ«NGX_LOG_STDERR--NGX_LOG_DEBUGï¼Œå‚è€ƒngx_log_set_levels
     ngx_null_string,
     ngx_string("emerg"),
     ngx_string("alert"),
@@ -90,8 +90,8 @@ static ngx_str_t err_levels[] = { //¶ÔÓ¦ÈÕÖ¾¼¶±ğNGX_LOG_STDERR--NGX_LOG_DEBUG£¬²
     ngx_string("debug")
 };
 
-//debug_levels´ú±íµÄÊÇÈÕÖ¾ÀàĞÍ     err_levels´ú±íµÄÊÇÈÕÖ¾¼¶±ğ  
-static const char *debug_levels[] = { //¶ÔÓ¦Î»Í¼NGX_LOG_DEBUG_CORE---NGX_LOG_DEBUG_LAST  ²Î¿¼ngx_log_set_levels
+//debug_levelsä»£è¡¨çš„æ˜¯æ—¥å¿—ç±»å‹     err_levelsä»£è¡¨çš„æ˜¯æ—¥å¿—çº§åˆ«  
+static const char *debug_levels[] = { //å¯¹åº”ä½å›¾NGX_LOG_DEBUG_CORE---NGX_LOG_DEBUG_LAST  å‚è€ƒngx_log_set_levels
     "debug_core", "debug_alloc", "debug_mutex", "debug_event",
     "debug_http", "debug_mail", "debug_mysql", "debug_stream"
 };
@@ -108,89 +108,89 @@ void ngx_str_t_2buf(char *buf, ngx_str_t *str)
 }
 
 /*
-ngx_log_errorºêºÍngx_log_debugºê¶¼°üÀ¨²ÎÊılevel¡¢log¡¢err¡¢fmt£¬ÏÂÃæ·Ö±ğ½âÊÍÕâ
-4¸ö²ÎÊıµÄÒâÒå¡£
-    (1) level²ÎÊı
-    ¶ÔÓÚngx_log_errorºêÀ´Ëµ£¬level±íÊ¾µ±Ç°ÕâÌõÈÕÖ¾µÄ¼¶±ğ¡£ËüµÄÈ¡Öµ·¶Î§¼û±í4-6¡£
+ngx_log_errorå®å’Œngx_log_debugå®éƒ½åŒ…æ‹¬å‚æ•°levelã€logã€errã€fmtï¼Œä¸‹é¢åˆ†åˆ«è§£é‡Šè¿™
+4ä¸ªå‚æ•°çš„æ„ä¹‰ã€‚
+    (1) levelå‚æ•°
+    å¯¹äºngx_log_errorå®æ¥è¯´ï¼Œlevelè¡¨ç¤ºå½“å‰è¿™æ¡æ—¥å¿—çš„çº§åˆ«ã€‚å®ƒçš„å–å€¼èŒƒå›´è§è¡¨4-6ã€‚
 	
 
-©³©¥©¥©¥©¥©¥©¥©¥©¥©×©¥©¥©¥©×©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©·
-©§    ¼¶±ğÃû³Æ    ©§  Öµ  ©§    ÒâÒå                                                            ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§                ©§      ©§    ×î¸ß¼¶±ğÈÕÖ¾£¬ÈÕÖ¾µÄÄÚÈİ²»»áÔÙĞ´Èëlog²ÎÊıÖ¸¶¨µÄÎÄ¼ş£¬¶øÊÇ»áÖ±½Ó ©§
-©§NGX_LOG_STDERR  ©§    O ©§                                                                    ©§
-©§                ©§      ©§½«ÈÕÖ¾Êä³öµ½±ê×¼´íÎóÉè±¸£¬Èç¿ØÖÆÌ¨ÆÁÄ»                              ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§                ©§      ©§  ´óÓÚNGX¡ªLOG ALERT¼¶±ğ£¬¶øĞ¡ÓÚ»òµÈÓÚNGX LOG EMERG¼¶±ğµÄ            ©§
-©§NGX_LOG:EMERG   ©§  1   ©§                                                                    ©§
-©§                ©§      ©§ÈÕÖ¾¶¼»áÊä³öµ½log²ÎÊıÖ¸¶¨µÄÎÄ¼şÖĞ                                   ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§NGX LOG ALERT   ©§    2 ©§    ´ó¸ÉNGX LOG CRIT¼¶±ğ                                            ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§  NGX LOG CRIT  ©§    3 ©§    ´ó¸ÉNGX LOG ERR¼¶±ğ                                             ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§  NGX LOG ERR   ©§    4 ©§    ´ó¸ÉNGX¡ªLOG WARN¼¶±ğ                                            ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§  NGX LOG WARN  ©§    5 ©§    ´óÓÚNGX LOG NOTICE¼¶±ğ                                          ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§NGX LOG NOTICE  ©§  6   ©§  ´óÓÚNGX__ LOG INFO¼¶±ğ                                            ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§  NGX LOG INFO  ©§    7 ©§    ´óÓÚNGX¡ªLOG DEBUG¼¶±ğ                                           ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§NGX LOG DEBUG   ©§    8 ©§    µ÷ÊÔ¼¶±ğ£¬×îµÍ¼¶±ğÈÕÖ¾                                          ©§
-©»©¥©¥©¥©¥©¥©¥©¥©¥©ß©¥©¥©¥©ß©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¿
-    Ê¹ÓÃngx_log_errorºê¼ÇÂ¼ÈÕÖ¾Ê±£¬Èç¹û´«ÈËµÄlevel¼¶±ğĞ¡ÓÚ»òµÈÓÚlog²ÎÊıÖĞµÄÈÕÖ¾
-¼¶±ğ£¨Í¨³£ÊÇÓÉnginx.confÅäÖÃÎÄ¼şÖĞÖ¸¶¨£©£¬¾Í»áÊä³öÈÕÖ¾ÄÚÈİ£¬·ñÔòÕâÌõÈÕÖ¾»á±»ºöÂÔ¡£
-    ÔÚÊ¹ÓÃngx_log_debugºêÊ±£¬levelµÄáÌÒåÍêÈ«²»Í¬£¬Ëü±í´ïµÄÒâÒå²»ÔÙÊÇ¼¶±ğ£¨ÒÑ¾­
-ÊÇDEBUG¼¶±ğ£©£¬¶øÊÇÈÕÖ¾ÀàĞÍ£¬ÒòÎªngx_log_debugºê¼ÇÂ¼µÄÈÕÖ¾±ØĞëÊÇNGX-LOG¡ª
-DEBUGµ÷ÊÔ¼¶±ğµÄ£¬ÕâÀïµÄlevelÓÉ¸÷×ÓÄ£¿é¶¨Òå¡£levelµÄÈ¡Öµ·¶Î§²Î¼û±í4-7¡£
-±í4-7 ngx_log_debugÈÕÖ¾½Ó¿Úlevel²ÎÊıµÄÈ¡Öµ·¶Î§
-©³©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©×©¥©¥©¥©¥©×©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©·
-©§    ¼¶±ğÃû³Æ        ©§  Öµ    ©§    ÒâÒå                                        ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§NGX LOG DEBUG CORE  ©§ Ox010  ©§    NginxºËĞÄÄ£¿éµÄµ÷ÊÔÈÕÖ¾                     ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§NGX LOG DEBUG ALLOC ©§ Ox020  ©§    NginxÔÚ·ÖÅäÄÚ´æÊ±Ê¹ÓÃµÄµ÷ÊÔÈÕÖ¾             ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§NGX LOG DEBUG MUTEX ©§ Ox040  ©§    NginxÔÚÊ¹ÓÃ½ø³ÌËøÊ±Ê¹ÓÃµÄµ÷ÊÔÈÕÖ¾           ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§NGX LOG DEBUG EVENT ©§ Ox080  ©§    NginxÊÂ¼şÄ£¿éµÄµ÷ÊÔÈÕÖ¾                     ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§NGX LOG DEBUG HTTP  ©§ Oxl00  ©§    Nginx httpÄ£¿éµÄµ÷ÊÔÈÕÖ¾                    ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§NGX LOG DEBUG MAIL  ©§ Ox200  ©§    NginxÓÊ¼şÄ£¿éµÄµ÷ÊÔÈÕÖ¾                     ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§NGX LOG_DEBUG_MYSQL ©§ Ox400  ©§    ±íÊ¾ÓëMySQLÏà¹ØµÄNginxÄ£¿éËùÊ¹ÓÃµÄµ÷ÊÔÈÕÖ¾  ©§
-©»©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ß©¥©¥©¥©¥©ß©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¿
-    µ±HTTPÄ£¿éµ÷ÓÃngx_log_debugºê¼ÇÂ¼ÈÕÖ¾Ê±£¬´«ÈËµÄlevel²ÎÊıÊÇNGX_LOG_DEBUG HTTP£¬
-ÕâÊ±Èç¹û1og²ÎÊı²»ÊôÓÚHTTPÄ£¿é£¬ÈçÊ¹ÖÜÁËeventÊÂ¼şÄ£¿éµÄlog£¬Ôò
-²»»áÊä³öÈÎºÎÈÕÖ¾¡£ËüÕıÊÇngx_log_debugÓµÓĞlevel²ÎÊıµÄÒâÒåËùÔÚ¡£
-    (2) log²ÎÊı
-    Êµ¼ÊÉÏ£¬ÔÚ¿ª·¢HTTPÄ£¿éÊ±ÎÒÃÇ²¢²»ÓÃ¹ØĞÄlog²ÎÊıµÄ¹¹Ôì£¬ÒòÎªÔÚ´¦ÀíÇëÇóÊ±ngx_
-http_request_t½á¹¹ÖĞµÄconnection³ÉÔ±¾ÍÓĞÒ»¸öngx_log_tÀàĞÍµÄlog³ÉÔ±£¬¿ÉÒÔ´«¸øngx_
-log_errorºêºÍngx_log_debugºê¼ÇÂ¼ÈÕÖ¾¡£ÔÚ¶ÁÈ¡ÅäÖÃ½×¶Î£¬ngx_conf_t½á¹¹Ò²ÓĞlog³ÉÔ±
-¿ÉÒÔÓÃÀ´¼ÇÂ¼ÈÕÖ¾£¨¶ÁÈ¡ÅäÖÃ½×¶ÎÊ±µÄÈÕÖ¾ĞÅÏ¢¶¼½«Êä³öµ½¿ØÖÆÌ¨ÆÁÄ»£©¡£ÏÂÃæ¼òµ¥µØ¿´Ò»
-ÏÂngx_log_tµÄ¶¨Òå¡£
+â”â”â”â”â”â”â”â”â”â”³â”â”â”â”³â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”“
+â”ƒ    çº§åˆ«åç§°    â”ƒ  å€¼  â”ƒ    æ„ä¹‰                                                            â”ƒ
+â”£â”â”â”â”â”â”â”â”â•‹â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ                â”ƒ      â”ƒ    æœ€é«˜çº§åˆ«æ—¥å¿—ï¼Œæ—¥å¿—çš„å†…å®¹ä¸ä¼šå†å†™å…¥logå‚æ•°æŒ‡å®šçš„æ–‡ä»¶ï¼Œè€Œæ˜¯ä¼šç›´æ¥ â”ƒ
+â”ƒNGX_LOG_STDERR  â”ƒ    O â”ƒ                                                                    â”ƒ
+â”ƒ                â”ƒ      â”ƒå°†æ—¥å¿—è¾“å‡ºåˆ°æ ‡å‡†é”™è¯¯è®¾å¤‡ï¼Œå¦‚æ§åˆ¶å°å±å¹•                              â”ƒ
+â”£â”â”â”â”â”â”â”â”â•‹â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ                â”ƒ      â”ƒ  å¤§äºNGXâ€•LOG ALERTçº§åˆ«ï¼Œè€Œå°äºæˆ–ç­‰äºNGX LOG EMERGçº§åˆ«çš„            â”ƒ
+â”ƒNGX_LOG:EMERG   â”ƒ  1   â”ƒ                                                                    â”ƒ
+â”ƒ                â”ƒ      â”ƒæ—¥å¿—éƒ½ä¼šè¾“å‡ºåˆ°logå‚æ•°æŒ‡å®šçš„æ–‡ä»¶ä¸­                                   â”ƒ
+â”£â”â”â”â”â”â”â”â”â•‹â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒNGX LOG ALERT   â”ƒ    2 â”ƒ    å¤§å¹²NGX LOG CRITçº§åˆ«                                            â”ƒ
+â”£â”â”â”â”â”â”â”â”â•‹â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ  NGX LOG CRIT  â”ƒ    3 â”ƒ    å¤§å¹²NGX LOG ERRçº§åˆ«                                             â”ƒ
+â”£â”â”â”â”â”â”â”â”â•‹â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ  NGX LOG ERR   â”ƒ    4 â”ƒ    å¤§å¹²NGXâ€•LOG WARNçº§åˆ«                                            â”ƒ
+â”£â”â”â”â”â”â”â”â”â•‹â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ  NGX LOG WARN  â”ƒ    5 â”ƒ    å¤§äºNGX LOG NOTICEçº§åˆ«                                          â”ƒ
+â”£â”â”â”â”â”â”â”â”â•‹â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒNGX LOG NOTICE  â”ƒ  6   â”ƒ  å¤§äºNGX__ LOG INFOçº§åˆ«                                            â”ƒ
+â”£â”â”â”â”â”â”â”â”â•‹â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ  NGX LOG INFO  â”ƒ    7 â”ƒ    å¤§äºNGXâ€•LOG DEBUGçº§åˆ«                                           â”ƒ
+â”£â”â”â”â”â”â”â”â”â•‹â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒNGX LOG DEBUG   â”ƒ    8 â”ƒ    è°ƒè¯•çº§åˆ«ï¼Œæœ€ä½çº§åˆ«æ—¥å¿—                                          â”ƒ
+â”—â”â”â”â”â”â”â”â”â”»â”â”â”â”»â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”›
+    ä½¿ç”¨ngx_log_errorå®è®°å½•æ—¥å¿—æ—¶ï¼Œå¦‚æœä¼ äººçš„levelçº§åˆ«å°äºæˆ–ç­‰äºlogå‚æ•°ä¸­çš„æ—¥å¿—
+çº§åˆ«ï¼ˆé€šå¸¸æ˜¯ç”±nginx.confé…ç½®æ–‡ä»¶ä¸­æŒ‡å®šï¼‰ï¼Œå°±ä¼šè¾“å‡ºæ—¥å¿—å†…å®¹ï¼Œå¦åˆ™è¿™æ¡æ—¥å¿—ä¼šè¢«å¿½ç•¥ã€‚
+    åœ¨ä½¿ç”¨ngx_log_debugå®æ—¶ï¼Œlevelçš„å´½ä¹‰å®Œå…¨ä¸åŒï¼Œå®ƒè¡¨è¾¾çš„æ„ä¹‰ä¸å†æ˜¯çº§åˆ«ï¼ˆå·²ç»
+æ˜¯DEBUGçº§åˆ«ï¼‰ï¼Œè€Œæ˜¯æ—¥å¿—ç±»å‹ï¼Œå› ä¸ºngx_log_debugå®è®°å½•çš„æ—¥å¿—å¿…é¡»æ˜¯NGX-LOGâ€•
+DEBUGè°ƒè¯•çº§åˆ«çš„ï¼Œè¿™é‡Œçš„levelç”±å„å­æ¨¡å—å®šä¹‰ã€‚levelçš„å–å€¼èŒƒå›´å‚è§è¡¨4-7ã€‚
+è¡¨4-7 ngx_log_debugæ—¥å¿—æ¥å£levelå‚æ•°çš„å–å€¼èŒƒå›´
+â”â”â”â”â”â”â”â”â”â”â”â”³â”â”â”â”â”³â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”“
+â”ƒ    çº§åˆ«åç§°        â”ƒ  å€¼    â”ƒ    æ„ä¹‰                                        â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒNGX LOG DEBUG CORE  â”ƒ Ox010  â”ƒ    Nginxæ ¸å¿ƒæ¨¡å—çš„è°ƒè¯•æ—¥å¿—                     â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒNGX LOG DEBUG ALLOC â”ƒ Ox020  â”ƒ    Nginxåœ¨åˆ†é…å†…å­˜æ—¶ä½¿ç”¨çš„è°ƒè¯•æ—¥å¿—             â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒNGX LOG DEBUG MUTEX â”ƒ Ox040  â”ƒ    Nginxåœ¨ä½¿ç”¨è¿›ç¨‹é”æ—¶ä½¿ç”¨çš„è°ƒè¯•æ—¥å¿—           â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒNGX LOG DEBUG EVENT â”ƒ Ox080  â”ƒ    Nginxäº‹ä»¶æ¨¡å—çš„è°ƒè¯•æ—¥å¿—                     â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒNGX LOG DEBUG HTTP  â”ƒ Oxl00  â”ƒ    Nginx httpæ¨¡å—çš„è°ƒè¯•æ—¥å¿—                    â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒNGX LOG DEBUG MAIL  â”ƒ Ox200  â”ƒ    Nginxé‚®ä»¶æ¨¡å—çš„è°ƒè¯•æ—¥å¿—                     â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒNGX LOG_DEBUG_MYSQL â”ƒ Ox400  â”ƒ    è¡¨ç¤ºä¸MySQLç›¸å…³çš„Nginxæ¨¡å—æ‰€ä½¿ç”¨çš„è°ƒè¯•æ—¥å¿—  â”ƒ
+â”—â”â”â”â”â”â”â”â”â”â”â”»â”â”â”â”â”»â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”›
+    å½“HTTPæ¨¡å—è°ƒç”¨ngx_log_debugå®è®°å½•æ—¥å¿—æ—¶ï¼Œä¼ äººçš„levelå‚æ•°æ˜¯NGX_LOG_DEBUG HTTPï¼Œ
+è¿™æ—¶å¦‚æœ1ogå‚æ•°ä¸å±äºHTTPæ¨¡å—ï¼Œå¦‚ä½¿å‘¨äº†eventäº‹ä»¶æ¨¡å—çš„logï¼Œåˆ™
+ä¸ä¼šè¾“å‡ºä»»ä½•æ—¥å¿—ã€‚å®ƒæ­£æ˜¯ngx_log_debugæ‹¥æœ‰levelå‚æ•°çš„æ„ä¹‰æ‰€åœ¨ã€‚
+    (2) logå‚æ•°
+    å®é™…ä¸Šï¼Œåœ¨å¼€å‘HTTPæ¨¡å—æ—¶æˆ‘ä»¬å¹¶ä¸ç”¨å…³å¿ƒlogå‚æ•°çš„æ„é€ ï¼Œå› ä¸ºåœ¨å¤„ç†è¯·æ±‚æ—¶ngx_
+http_request_tç»“æ„ä¸­çš„connectionæˆå‘˜å°±æœ‰ä¸€ä¸ªngx_log_tç±»å‹çš„logæˆå‘˜ï¼Œå¯ä»¥ä¼ ç»™ngx_
+log_errorå®å’Œngx_log_debugå®è®°å½•æ—¥å¿—ã€‚åœ¨è¯»å–é…ç½®é˜¶æ®µï¼Œngx_conf_tç»“æ„ä¹Ÿæœ‰logæˆå‘˜
+å¯ä»¥ç”¨æ¥è®°å½•æ—¥å¿—ï¼ˆè¯»å–é…ç½®é˜¶æ®µæ—¶çš„æ—¥å¿—ä¿¡æ¯éƒ½å°†è¾“å‡ºåˆ°æ§åˆ¶å°å±å¹•ï¼‰ã€‚ä¸‹é¢ç®€å•åœ°çœ‹ä¸€
+ä¸‹ngx_log_tçš„å®šä¹‰ã€‚
 typedef struct ngx_log_s ngx_log_t;
 typedef u_char * (*ngx_log_handler_pt)   (ngx_log_t  *log,  u_char *buf,  size_t  len) ;
 
 struct ngx_log_s  {
-    £¯£¯ÈÕÖ¾¼¶±ğ»òÕßÈÕÖ¾ÀàĞÍ
+    ï¼ï¼æ—¥å¿—çº§åˆ«æˆ–è€…æ—¥å¿—ç±»å‹
     ngx_uint_t log_level;
-    f£¬ÈÕÖ¾ÎÄ¼ş
-    ngx_open_file_t¡ïfile;
-    £¯£¯Á¬½ÓÊı£¬²»ÎªOÊ±»áÊä³öµ½ÈÕÖ¾ÖĞ
+    fï¼Œæ—¥å¿—æ–‡ä»¶
+    ngx_open_file_tâ˜…file;
+    ï¼ï¼è¿æ¥æ•°ï¼Œä¸ä¸ºOæ—¶ä¼šè¾“å‡ºåˆ°æ—¥å¿—ä¸­
     ngx_atomic_uint_t connection;
-    £¯¡ï¼ÇÂ¼ÈÕÖ¾Ê±µÄ»Øµ÷·½·¨¡£µ±handlerÒÑ¾­ÊµÏÖ£¨²»ÎªNULL£©£¬²¢ÇÒ²»ÊÇDEBUGµ÷ÊÔ¼¶±ğÊ±£¬²Å»áµ÷
-ÓÃhandler¹³×Ó·½·¨¡ï£¯
+    ï¼â˜…è®°å½•æ—¥å¿—æ—¶çš„å›è°ƒæ–¹æ³•ã€‚å½“handlerå·²ç»å®ç°ï¼ˆä¸ä¸ºNULLï¼‰ï¼Œå¹¶ä¸”ä¸æ˜¯DEBUGè°ƒè¯•çº§åˆ«æ—¶ï¼Œæ‰ä¼šè°ƒ
+ç”¨handleré’©å­æ–¹æ³•â˜…ï¼
     ngx_log_handler_pt handler;
-    £¯¡ïÃ¿¸öÄ£¿é¶¼¿ÉÒÔ×Ô¶¨ÒådataµÄÊ¹ÓÃ·½·¨¡£Í¨³££¬data²ÎÊı¶¼ÊÇÔÚÊµÏÖÁËÉÏÃæµÄhandler»Øµ÷·½·¨ºó
-²ÅÊ¹ÓÃµÄ¡£ÀıÈç£¬HTTP¿ò¼Ü¾Í¶¨ÒåÁËhandler·½·¨£¬²¢ÔÚdataÖĞ·ÅÈëÁËÕâ¸öÇëÇóµÄÉÏÏÂÎÄĞÅÏ¢£¬ÕâÑùÃ¿´ÎÊä³öÈÕ
-Ö¾Ê±¶¼»á°ÑÕâ¸öÇëÇóURIÊä³öµ½ÈÕÖ¾µÄÎ²²¿+£¯
-    void¡ïdata;
-    £¯¡ï±íÊ¾µ±Ç°µÄ¶¯×÷¡£Êµ¼ÊÉÏ£¬actionÓëdata×ãÒ»ÑùµÄ£¬Ö»ÓĞÔÚÊµÏÖÁËhandler»Øµ÷·½·¨ºó²Å»áÊ¹
-ÓÃ¡£ÀıÈç£¬HTTP¿ò¼Ü¾ÍÔÚhandler·½·¨ÖĞ¼ì²éactionÊÇ·ñÎªNULL£¬Èç¹û²»ÎªNULL£¬¾Í»áÔÚÈÕÖ¾ºó¼ÓÈë¡°while
-¡±+action£¬ÒÔ´Ë±íÊ¾µ±Ç°ÈÕÖ¾ÊÇÔÚ½øĞĞÊ²Ã´²Ù×÷£¬°ïÖú¶¨Î»ÎÊÌâ+£¯
+    ï¼â˜…æ¯ä¸ªæ¨¡å—éƒ½å¯ä»¥è‡ªå®šä¹‰dataçš„ä½¿ç”¨æ–¹æ³•ã€‚é€šå¸¸ï¼Œdataå‚æ•°éƒ½æ˜¯åœ¨å®ç°äº†ä¸Šé¢çš„handlerå›è°ƒæ–¹æ³•å
+æ‰ä½¿ç”¨çš„ã€‚ä¾‹å¦‚ï¼ŒHTTPæ¡†æ¶å°±å®šä¹‰äº†handleræ–¹æ³•ï¼Œå¹¶åœ¨dataä¸­æ”¾å…¥äº†è¿™ä¸ªè¯·æ±‚çš„ä¸Šä¸‹æ–‡ä¿¡æ¯ï¼Œè¿™æ ·æ¯æ¬¡è¾“å‡ºæ—¥
+å¿—æ—¶éƒ½ä¼šæŠŠè¿™ä¸ªè¯·æ±‚URIè¾“å‡ºåˆ°æ—¥å¿—çš„å°¾éƒ¨+ï¼
+    voidâ˜…data;
+    ï¼â˜…è¡¨ç¤ºå½“å‰çš„åŠ¨ä½œã€‚å®é™…ä¸Šï¼Œactionä¸dataè¶³ä¸€æ ·çš„ï¼Œåªæœ‰åœ¨å®ç°äº†handlerå›è°ƒæ–¹æ³•åæ‰ä¼šä½¿
+ç”¨ã€‚ä¾‹å¦‚ï¼ŒHTTPæ¡†æ¶å°±åœ¨handleræ–¹æ³•ä¸­æ£€æŸ¥actionæ˜¯å¦ä¸ºNULLï¼Œå¦‚æœä¸ä¸ºNULLï¼Œå°±ä¼šåœ¨æ—¥å¿—ååŠ å…¥â€œwhile
+â€+actionï¼Œä»¥æ­¤è¡¨ç¤ºå½“å‰æ—¥å¿—æ˜¯åœ¨è¿›è¡Œä»€ä¹ˆæ“ä½œï¼Œå¸®åŠ©å®šä½é—®é¢˜+ï¼
     char *action;
 }
 
@@ -199,8 +199,8 @@ struct ngx_log_s  {
 void
 ngx_log_error_core(ngx_uint_t level, ngx_log_t *log, const char* filename, int lineno, ngx_err_t err,
     const char *fmt, ...) 
-//ÕâÀï´òÓ¡Ò»¶¨Òª×¢Òâ£¬ÀıÈçÎ»±ê¼ÇÓÃ%d %u´òÓ¡¾Í»á³öÏÖ¶Î´íÎó£¬ÀıÈçÓÃ%d´òÓ¡ngx_event_t->write;
-//ÀıÈç´òÓ¡ngx_log_debug2(NGX_LOG_DEBUG_HTTP, c->log, 0, "http upstream request(ev->write:%u %u)  %V", ngx_event_t->write, ngx_event_t->write); ¶Î´íÎó
+//è¿™é‡Œæ‰“å°ä¸€å®šè¦æ³¨æ„ï¼Œä¾‹å¦‚ä½æ ‡è®°ç”¨%d %uæ‰“å°å°±ä¼šå‡ºç°æ®µé”™è¯¯ï¼Œä¾‹å¦‚ç”¨%dæ‰“å°ngx_event_t->write;
+//ä¾‹å¦‚æ‰“å°ngx_log_debug2(NGX_LOG_DEBUG_HTTP, c->log, 0, "http upstream request(ev->write:%u %u)  %V", ngx_event_t->write, ngx_event_t->write); æ®µé”™è¯¯
 #else
 
 void
@@ -255,7 +255,7 @@ ngx_log_error_core(ngx_uint_t level, ngx_log_t *log, const char* filename, int l
     }
 
     if (level != NGX_LOG_DEBUG && log->handler) {
-        p = log->handler(log, p, last - p); //·ÇNGX_LOG_DEBUGµÄÇé¿öÖ´ĞĞhandler,ÀïÃæ»áÌí¼ÓĞÂµÄĞÅÏ¢µ½´òÓ¡µÄĞÅÏ¢bufÖĞÒ»Æğ´òÓ¡
+        p = log->handler(log, p, last - p); //éNGX_LOG_DEBUGçš„æƒ…å†µæ‰§è¡Œhandler,é‡Œé¢ä¼šæ·»åŠ æ–°çš„ä¿¡æ¯åˆ°æ‰“å°çš„ä¿¡æ¯bufä¸­ä¸€èµ·æ‰“å°
     }
 
     if (p > last - NGX_LINEFEED_SIZE) {
@@ -269,7 +269,7 @@ ngx_log_error_core(ngx_uint_t level, ngx_log_t *log, const char* filename, int l
 
     while (log) {
 
-        if (log->log_level < level && !debug_connection) { //Ö»ÓĞlog_level´óÓÚlevelÔò»áÊä³öµ½error_logÅäÖÃÖĞ
+        if (log->log_level < level && !debug_connection) { //åªæœ‰log_levelå¤§äºlevelåˆ™ä¼šè¾“å‡ºåˆ°error_logé…ç½®ä¸­
             break;
         }
 
@@ -289,7 +289,7 @@ ngx_log_error_core(ngx_uint_t level, ngx_log_t *log, const char* filename, int l
             goto next;
         }
 
-        n = ngx_write_fd(log->file->fd, errstr, p - errstr); //Ğ´µ½logÎÄ¼şÖĞ
+        n = ngx_write_fd(log->file->fd, errstr, p - errstr); //å†™åˆ°logæ–‡ä»¶ä¸­
 
         if (n == -1 && ngx_errno == NGX_ENOSPC) {
             log->disk_full_time = ngx_time();
@@ -306,7 +306,7 @@ ngx_log_error_core(ngx_uint_t level, ngx_log_t *log, const char* filename, int l
 
     if (!ngx_use_stderr
         || level > NGX_LOG_WARN
-        || wrote_stderr) /* Èç¹ûÂú×ãÕâĞ©Ìõ¼ş£¬Ôò²»»áÊä³ö´òÓ¡µ½Ç°Ì¨£¬Ö»»áĞ´µ½errlogÎÄ¼şÖĞ */
+        || wrote_stderr) /* å¦‚æœæ»¡è¶³è¿™äº›æ¡ä»¶ï¼Œåˆ™ä¸ä¼šè¾“å‡ºæ‰“å°åˆ°å‰å°ï¼Œåªä¼šå†™åˆ°errlogæ–‡ä»¶ä¸­ */
     {
         return;
     }
@@ -322,8 +322,8 @@ ngx_log_error_core(ngx_uint_t level, ngx_log_t *log, const char* filename, int l
 void
 ngx_log_error_coreall(ngx_uint_t level, ngx_log_t *log, const char* filename, int lineno, ngx_err_t err,
     const char *fmt, ...) 
-//ÕâÀï´òÓ¡Ò»¶¨Òª×¢Òâ£¬ÀıÈçÎ»±ê¼ÇÓÃ%d %u´òÓ¡¾Í»á³öÏÖ¶Î´íÎó£¬ÀıÈçÓÃ%d´òÓ¡ngx_event_t->write;
-//ÀıÈç´òÓ¡ngx_log_debug2(NGX_LOG_DEBUG_HTTP, c->log, 0, "http upstream request(ev->write:%u %u)  %V", ngx_event_t->write, ngx_event_t->write); ¶Î´íÎó
+//è¿™é‡Œæ‰“å°ä¸€å®šè¦æ³¨æ„ï¼Œä¾‹å¦‚ä½æ ‡è®°ç”¨%d %uæ‰“å°å°±ä¼šå‡ºç°æ®µé”™è¯¯ï¼Œä¾‹å¦‚ç”¨%dæ‰“å°ngx_event_t->write;
+//ä¾‹å¦‚æ‰“å°ngx_log_debug2(NGX_LOG_DEBUG_HTTP, c->log, 0, "http upstream request(ev->write:%u %u)  %V", ngx_event_t->write, ngx_event_t->write); æ®µé”™è¯¯
 #else
 
 void
@@ -354,7 +354,7 @@ ngx_log_error_coreall(ngx_uint_t level, ngx_log_t *log, const char* filename, in
     p = ngx_slprintf(p, last, " [%V] ", &err_levels[level]);
 
     /* pid#tid */
-    p = ngx_slprintf(p, last, "%P#" NGX_TID_T_FMT ": ", ngx_log_pid, ngx_log_tid); //½ø³ÌIDºÍÏß³ÌID(ÔÚ¿ªÆôÏß³Ì³ØµÄÊ±ºòÏß³ÌIDºÍ½ø³ÌID²»Í¬)
+    p = ngx_slprintf(p, last, "%P#" NGX_TID_T_FMT ": ", ngx_log_pid, ngx_log_tid); //è¿›ç¨‹IDå’Œçº¿ç¨‹ID(åœ¨å¼€å¯çº¿ç¨‹æ± çš„æ—¶å€™çº¿ç¨‹IDå’Œè¿›ç¨‹IDä¸åŒ)
     
     if (log->connection) {
         p = ngx_slprintf(p, last, "*%uA ", log->connection);
@@ -409,7 +409,7 @@ ngx_log_error_coreall(ngx_uint_t level, ngx_log_t *log, const char* filename, in
             goto next;
         }
 
-        n = ngx_write_fd(log->file->fd, errstr, p - errstr); //Ğ´µ½logÎÄ¼şÖĞ
+        n = ngx_write_fd(log->file->fd, errstr, p - errstr); //å†™åˆ°logæ–‡ä»¶ä¸­
 
         if (n == -1 && ngx_errno == NGX_ENOSPC) {
             log->disk_full_time = ngx_time();
@@ -426,7 +426,7 @@ ngx_log_error_coreall(ngx_uint_t level, ngx_log_t *log, const char* filename, in
 
     if (!ngx_use_stderr
         || level > NGX_LOG_WARN
-        || wrote_stderr) /* Èç¹ûÂú×ãÕâĞ©Ìõ¼ş£¬Ôò²»»áÊä³ö´òÓ¡µ½Ç°Ì¨£¬Ö»»áĞ´µ½errlogÎÄ¼şÖĞ */
+        || wrote_stderr) /* å¦‚æœæ»¡è¶³è¿™äº›æ¡ä»¶ï¼Œåˆ™ä¸ä¼šè¾“å‡ºæ‰“å°åˆ°å‰å°ï¼Œåªä¼šå†™åˆ°errlogæ–‡ä»¶ä¸­ */
     {
         return;
     }
@@ -553,7 +553,7 @@ ngx_log_errno(u_char *buf, u_char *last, ngx_err_t err)
     return buf;
 }
 
-//´ò¿ªNGX_ERROR_LOG_PATHÎÄ¼ş
+//æ‰“å¼€NGX_ERROR_LOG_PATHæ–‡ä»¶
 ngx_log_t *ngx_log_init(u_char *prefix)
 {
     u_char  *p, *name;
@@ -616,7 +616,7 @@ ngx_log_t *ngx_log_init(u_char *prefix)
 
     ngx_log_file.fd = ngx_open_file(name, NGX_FILE_APPEND,
                                     NGX_FILE_CREATE_OR_OPEN,
-                                    NGX_FILE_DEFAULT_ACCESS);//´ò¿ªlogs/error.logÎÄ¼ş
+                                    NGX_FILE_DEFAULT_ACCESS);//æ‰“å¼€logs/error.logæ–‡ä»¶
 
     if (ngx_log_file.fd == NGX_INVALID_FILE) {
         ngx_log_stderr(ngx_errno,
@@ -639,8 +639,8 @@ ngx_log_t *ngx_log_init(u_char *prefix)
 }
 
 /*
-Èç¹ûÅäÖÃÎÄ¼şÖĞÃ»ÓĞerror_logÅäÖÃÏî£¬ÔÚÅäÖÃÎÄ¼ş½âÎöÍêºóµ÷ÓÃerrlogÄ£¿éµÄngx_log_open_defaultº¯Êı½«ÈÕÖ¾µÈ¼¶Ä¬ÈÏÖÃÎªNGX_LOG_ERR£¬
-ÈÕÖ¾ÎÄ¼şÉèÖÃÎªNGX_ERROR_LOG_PATH£¨¸ÃºêÊÇÔÚconfigureÊ±Ö¸¶¨µÄ£©¡£
+å¦‚æœé…ç½®æ–‡ä»¶ä¸­æ²¡æœ‰error_logé…ç½®é¡¹ï¼Œåœ¨é…ç½®æ–‡ä»¶è§£æå®Œåè°ƒç”¨errlogæ¨¡å—çš„ngx_log_open_defaultå‡½æ•°å°†æ—¥å¿—ç­‰çº§é»˜è®¤ç½®ä¸ºNGX_LOG_ERRï¼Œ
+æ—¥å¿—æ–‡ä»¶è®¾ç½®ä¸ºNGX_ERROR_LOG_PATHï¼ˆè¯¥å®æ˜¯åœ¨configureæ—¶æŒ‡å®šçš„ï¼‰ã€‚
 */
 ngx_int_t
 ngx_log_open_default(ngx_cycle_t *cycle)
@@ -648,7 +648,7 @@ ngx_log_open_default(ngx_cycle_t *cycle)
     ngx_log_t         *log;
     static ngx_str_t   error_log = ngx_string(NGX_ERROR_LOG_PATH);
 
-    /* ÅäÖÃÎÄ¼şÖĞ²»´æÔÚÉúĞ§µÄerror_logÅäÖÃÏîÊ±new_log.file¾ÍÎª¿Õ */  
+    /* é…ç½®æ–‡ä»¶ä¸­ä¸å­˜åœ¨ç”Ÿæ•ˆçš„error_logé…ç½®é¡¹æ—¶new_log.fileå°±ä¸ºç©º */  
     if (ngx_log_get_file_log(&cycle->new_log) != NULL) {
         return NGX_OK;
     }
@@ -680,7 +680,7 @@ ngx_log_open_default(ngx_cycle_t *cycle)
     return NGX_OK;
 }
 
-//°Ñcycle->log fdÉèÖÃÎªSTDERR_FILENO
+//æŠŠcycle->log fdè®¾ç½®ä¸ºSTDERR_FILENO
 ngx_int_t ngx_log_redirect_stderr(ngx_cycle_t *cycle)
 {
     ngx_fd_t  fd;
@@ -720,29 +720,29 @@ ngx_log_get_file_log(ngx_log_t *head)
 
 /*
 
-Óï·¨:  error_log file | stderr [debug | info | notice | warn | error | crit | alert | emerg];
+è¯­æ³•:  error_log file | stderr [debug | info | notice | warn | error | crit | alert | emerg];
  
-Ä¬ÈÏÖµ:  error_log logs/error.log error;
+é»˜è®¤å€¼:  error_log logs/error.log error;
  
-ÉÏÏÂÎÄ:  main, http, server, location
+ä¸Šä¸‹æ–‡:  main, http, server, location
  
-ÅäÖÃÈÕÖ¾¡£ 
-µÚÒ»¸ö²ÎÊı¶¨ÒåÁË´æ·ÅÈÕÖ¾µÄÎÄ¼ş¡£ Èç¹ûÉèÖÃÎªÌØÊâÖµstderr£¬nginx»á½«ÈÕÖ¾Êä³öµ½±ê×¼´íÎóÊä³ö¡£ 
-µÚ¶ş¸ö²ÎÊı¶¨ÒåÈÕÖ¾¼¶±ğ¡£ ÈÕÖ¾¼¶±ğÔÚÉÏÃæÒÑ¾­°´ÑÏÖØĞÔÓÉÇáµ½ÖØµÄË³ĞòÁĞ³ö¡£ ÉèÖÃÎªÄ³¸öÈÕÖ¾¼¶±ğ½«»áÊ¹Ö¸¶¨¼¶±ğºÍ¸ü¸ß¼¶±ğµÄÈÕÖ¾¶¼±»¼ÇÂ¼ÏÂÀ´¡£ 
-±ÈÈç£¬Ä¬ÈÏ¼¶±ğerror»áÊ¹nginx¼ÇÂ¼ËùÓĞerror¡¢crit¡¢alertºÍemerg¼¶±ğµÄÏûÏ¢¡£ Èç¹ûÊ¡ÂÔÕâ¸ö²ÎÊı£¬nginx»áÊ¹ÓÃerror¡£ 
-ÎªÁËÊ¹debugÈÕÖ¾¹¤×÷£¬ĞèÒªÌí¼Ó--with-debug±àÒëÑ¡Ïî¡£ 
+é…ç½®æ—¥å¿—ã€‚ 
+ç¬¬ä¸€ä¸ªå‚æ•°å®šä¹‰äº†å­˜æ”¾æ—¥å¿—çš„æ–‡ä»¶ã€‚ å¦‚æœè®¾ç½®ä¸ºç‰¹æ®Šå€¼stderrï¼Œnginxä¼šå°†æ—¥å¿—è¾“å‡ºåˆ°æ ‡å‡†é”™è¯¯è¾“å‡ºã€‚ 
+ç¬¬äºŒä¸ªå‚æ•°å®šä¹‰æ—¥å¿—çº§åˆ«ã€‚ æ—¥å¿—çº§åˆ«åœ¨ä¸Šé¢å·²ç»æŒ‰ä¸¥é‡æ€§ç”±è½»åˆ°é‡çš„é¡ºåºåˆ—å‡ºã€‚ è®¾ç½®ä¸ºæŸä¸ªæ—¥å¿—çº§åˆ«å°†ä¼šä½¿æŒ‡å®šçº§åˆ«å’Œæ›´é«˜çº§åˆ«çš„æ—¥å¿—éƒ½è¢«è®°å½•ä¸‹æ¥ã€‚ 
+æ¯”å¦‚ï¼Œé»˜è®¤çº§åˆ«errorä¼šä½¿nginxè®°å½•æ‰€æœ‰errorã€critã€alertå’Œemergçº§åˆ«çš„æ¶ˆæ¯ã€‚ å¦‚æœçœç•¥è¿™ä¸ªå‚æ•°ï¼Œnginxä¼šä½¿ç”¨errorã€‚ 
+ä¸ºäº†ä½¿debugæ—¥å¿—å·¥ä½œï¼Œéœ€è¦æ·»åŠ --with-debugç¼–è¯‘é€‰é¡¹ã€‚ 
 
 
 
 error_log file [ debug | info | notice | warn | error | crit ]  | [{  debug_core | debug_alloc | debug_mutex | debug_event | debug_http | debug_mail | debug_mysql } ]
-ÈÕÖ¾¼¶±ğ = ´íÎóÈÕÖ¾¼¶±ğ | µ÷ÊÔÈÕÖ¾¼¶±ğ; »òÕß
-ÈÕÖ¾¼¶±ğ = ´íÎóÈÕÖ¾¼¶±ğ;
-´íÎóÈÕÖ¾µÄ¼¶±ğ: emerg, alert, crit, error, warn, notic, info, debug, 
-µ÷ÊÔÈÕÖ¾µÄ¼¶±ğ: debug_core, debug_alloc, debug_mutex, debug_event, debug_http, debug_mail, debug_mysql,
+æ—¥å¿—çº§åˆ« = é”™è¯¯æ—¥å¿—çº§åˆ« | è°ƒè¯•æ—¥å¿—çº§åˆ«; æˆ–è€…
+æ—¥å¿—çº§åˆ« = é”™è¯¯æ—¥å¿—çº§åˆ«;
+é”™è¯¯æ—¥å¿—çš„çº§åˆ«: emerg, alert, crit, error, warn, notic, info, debug, 
+è°ƒè¯•æ—¥å¿—çš„çº§åˆ«: debug_core, debug_alloc, debug_mutex, debug_event, debug_http, debug_mail, debug_mysql,
 
- error_log Ö¸ÁîµÄÈÕÖ¾¼¶±ğÅäÖÃ·ÖÎª ´íÎóÈÕÖ¾¼¶±ğºÍµ÷ÊÔÈÕÖ¾¼¶±ğ
- ÇÒ ´íÎóÈÕÖ¾Ö»ÄÜÉèÖÃÒ»¸ö¼¶±ğ ÇÒ ´íÎóÈÕÖ¾±ØĞëÊéĞ´ÔÚµ÷ÊÔÈÕÖ¾¼¶±ğµÄÇ°Ãæ ÇÒ µ÷ÊÔÈÕÖ¾¿ÉÒÔÉèÖÃ¶à¸ö¼¶±ğ
- ÆäËûÅäÖÃ·½·¨¿ÉÄÜ´ï²»µ½ÄãµÄÔ¤ÆÚ. 
+ error_log æŒ‡ä»¤çš„æ—¥å¿—çº§åˆ«é…ç½®åˆ†ä¸º é”™è¯¯æ—¥å¿—çº§åˆ«å’Œè°ƒè¯•æ—¥å¿—çº§åˆ«
+ ä¸” é”™è¯¯æ—¥å¿—åªèƒ½è®¾ç½®ä¸€ä¸ªçº§åˆ« ä¸” é”™è¯¯æ—¥å¿—å¿…é¡»ä¹¦å†™åœ¨è°ƒè¯•æ—¥å¿—çº§åˆ«çš„å‰é¢ ä¸” è°ƒè¯•æ—¥å¿—å¯ä»¥è®¾ç½®å¤šä¸ªçº§åˆ«
+ å…¶ä»–é…ç½®æ–¹æ³•å¯èƒ½è¾¾ä¸åˆ°ä½ çš„é¢„æœŸ. 
 */
 static char *
 ngx_log_set_levels(ngx_conf_t *cf, ngx_log_t *log)
@@ -785,7 +785,7 @@ ngx_log_set_levels(ngx_conf_t *cf, ngx_log_t *log)
                     return NGX_CONF_ERROR;
                 }
 
-                log->log_level |= d; //ÉèÖÃµ÷ÊÔ¿ª¹Ø
+                log->log_level |= d; //è®¾ç½®è°ƒè¯•å¼€å…³
                 found = 1;
                 break;
             }
@@ -807,8 +807,8 @@ ngx_log_set_levels(ngx_conf_t *cf, ngx_log_t *log)
     return NGX_CONF_OK;
 }
 
-/* È«¾ÖÖĞÅäÖÃµÄerror_log xxx´æ´¢ÔÚngx_cycle_s->new_log£¬http{}¡¢server{}¡¢local{}ÅäÖÃµÄerror_log±£´æÔÚngx_http_core_loc_conf_t->error_log,
-   ¼ûngx_log_set_log,Èç¹ûÖ»ÅäÖÃÈ«¾Öerror_log£¬²»ÅäÖÃhttp{}¡¢server{}¡¢local{}ÔòÔÚngx_http_core_merge_loc_conf conf->error_log = &cf->cycle->new_log;  */ 
+/* å…¨å±€ä¸­é…ç½®çš„error_log xxxå­˜å‚¨åœ¨ngx_cycle_s->new_logï¼Œhttp{}ã€server{}ã€local{}é…ç½®çš„error_logä¿å­˜åœ¨ngx_http_core_loc_conf_t->error_log,
+   è§ngx_log_set_log,å¦‚æœåªé…ç½®å…¨å±€error_logï¼Œä¸é…ç½®http{}ã€server{}ã€local{}åˆ™åœ¨ngx_http_core_merge_loc_conf conf->error_log = &cf->cycle->new_log;  */ 
 static char *
 ngx_error_log(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
 {
@@ -823,31 +823,31 @@ ngx_error_log(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
 
 /*
 
-Óï·¨:  error_log file | stderr [debug | info | notice | warn | error | crit | alert | emerg];
+è¯­æ³•:  error_log file | stderr [debug | info | notice | warn | error | crit | alert | emerg];
  
-Ä¬ÈÏÖµ:  error_log logs/error.log error;
+é»˜è®¤å€¼:  error_log logs/error.log error;
  
-ÉÏÏÂÎÄ:  main, http, server, location
+ä¸Šä¸‹æ–‡:  main, http, server, location
  
-ÅäÖÃÈÕÖ¾¡£ 
-µÚÒ»¸ö²ÎÊı¶¨ÒåÁË´æ·ÅÈÕÖ¾µÄÎÄ¼ş¡£ Èç¹ûÉèÖÃÎªÌØÊâÖµstderr£¬nginx»á½«ÈÕÖ¾Êä³öµ½±ê×¼´íÎóÊä³ö¡£ 
-µÚ¶ş¸ö²ÎÊı¶¨ÒåÈÕÖ¾¼¶±ğ¡£ ÈÕÖ¾¼¶±ğÔÚÉÏÃæÒÑ¾­°´ÑÏÖØĞÔÓÉÇáµ½ÖØµÄË³ĞòÁĞ³ö¡£ ÉèÖÃÎªÄ³¸öÈÕÖ¾¼¶±ğ½«»áÊ¹Ö¸¶¨¼¶±ğºÍ¸ü¸ß¼¶±ğµÄÈÕÖ¾¶¼±»¼ÇÂ¼ÏÂÀ´¡£ 
-±ÈÈç£¬Ä¬ÈÏ¼¶±ğerror»áÊ¹nginx¼ÇÂ¼ËùÓĞerror¡¢crit¡¢alertºÍemerg¼¶±ğµÄÏûÏ¢¡£ Èç¹ûÊ¡ÂÔÕâ¸ö²ÎÊı£¬nginx»áÊ¹ÓÃerror¡£ 
-ÎªÁËÊ¹debugÈÕÖ¾¹¤×÷£¬ĞèÒªÌí¼Ó--with-debug±àÒëÑ¡Ïî¡£ 
+é…ç½®æ—¥å¿—ã€‚ 
+ç¬¬ä¸€ä¸ªå‚æ•°å®šä¹‰äº†å­˜æ”¾æ—¥å¿—çš„æ–‡ä»¶ã€‚ å¦‚æœè®¾ç½®ä¸ºç‰¹æ®Šå€¼stderrï¼Œnginxä¼šå°†æ—¥å¿—è¾“å‡ºåˆ°æ ‡å‡†é”™è¯¯è¾“å‡ºã€‚ 
+ç¬¬äºŒä¸ªå‚æ•°å®šä¹‰æ—¥å¿—çº§åˆ«ã€‚ æ—¥å¿—çº§åˆ«åœ¨ä¸Šé¢å·²ç»æŒ‰ä¸¥é‡æ€§ç”±è½»åˆ°é‡çš„é¡ºåºåˆ—å‡ºã€‚ è®¾ç½®ä¸ºæŸä¸ªæ—¥å¿—çº§åˆ«å°†ä¼šä½¿æŒ‡å®šçº§åˆ«å’Œæ›´é«˜çº§åˆ«çš„æ—¥å¿—éƒ½è¢«è®°å½•ä¸‹æ¥ã€‚ 
+æ¯”å¦‚ï¼Œé»˜è®¤çº§åˆ«errorä¼šä½¿nginxè®°å½•æ‰€æœ‰errorã€critã€alertå’Œemergçº§åˆ«çš„æ¶ˆæ¯ã€‚ å¦‚æœçœç•¥è¿™ä¸ªå‚æ•°ï¼Œnginxä¼šä½¿ç”¨errorã€‚ 
+ä¸ºäº†ä½¿debugæ—¥å¿—å·¥ä½œï¼Œéœ€è¦æ·»åŠ --with-debugç¼–è¯‘é€‰é¡¹ã€‚ 
 
 
 
 error_log file [ debug | info | notice | warn | error | crit ]  | [{  debug_core | debug_alloc | debug_mutex | debug_event | debug_http | debug_mail | debug_mysql } ]
-ÈÕÖ¾¼¶±ğ = ´íÎóÈÕÖ¾¼¶±ğ | µ÷ÊÔÈÕÖ¾¼¶±ğ; »òÕß
-ÈÕÖ¾¼¶±ğ = ´íÎóÈÕÖ¾¼¶±ğ;
-´íÎóÈÕÖ¾µÄ¼¶±ğ: emerg, alert, crit, error, warn, notic, info, debug, 
-µ÷ÊÔÈÕÖ¾µÄ¼¶±ğ: debug_core, debug_alloc, debug_mutex, debug_event, debug_http, debug_mail, debug_mysql,
+æ—¥å¿—çº§åˆ« = é”™è¯¯æ—¥å¿—çº§åˆ« | è°ƒè¯•æ—¥å¿—çº§åˆ«; æˆ–è€…
+æ—¥å¿—çº§åˆ« = é”™è¯¯æ—¥å¿—çº§åˆ«;
+é”™è¯¯æ—¥å¿—çš„çº§åˆ«: emerg, alert, crit, error, warn, notic, info, debug, 
+è°ƒè¯•æ—¥å¿—çš„çº§åˆ«: debug_core, debug_alloc, debug_mutex, debug_event, debug_http, debug_mail, debug_mysql,
 
- error_log Ö¸ÁîµÄÈÕÖ¾¼¶±ğÅäÖÃ·ÖÎª ´íÎóÈÕÖ¾¼¶±ğºÍµ÷ÊÔÈÕÖ¾¼¶±ğ
- ÇÒ ´íÎóÈÕÖ¾Ö»ÄÜÉèÖÃÒ»¸ö¼¶±ğ ÇÒ ´íÎóÈÕÖ¾±ØĞëÊéĞ´ÔÚµ÷ÊÔÈÕÖ¾¼¶±ğµÄÇ°Ãæ ÇÒ µ÷ÊÔÈÕÖ¾¿ÉÒÔÉèÖÃ¶à¸ö¼¶±ğ
- ÆäËûÅäÖÃ·½·¨¿ÉÄÜ´ï²»µ½ÄãµÄÔ¤ÆÚ. 
-*/  /* È«¾ÖÖĞÅäÖÃµÄerror_log xxx´æ´¢ÔÚngx_cycle_s->new_log£¬http{}¡¢server{}¡¢local{}ÅäÖÃµÄerror_log±£´æÔÚngx_http_core_loc_conf_t->error_log,
-    ¼ûngx_log_set_log,Èç¹ûÖ»ÅäÖÃÈ«¾Öerror_log£¬²»ÅäÖÃhttp{}¡¢server{}¡¢local{}ÔòÔÚngx_http_core_merge_loc_conf conf->error_log = &cf->cycle->new_log;  */
+ error_log æŒ‡ä»¤çš„æ—¥å¿—çº§åˆ«é…ç½®åˆ†ä¸º é”™è¯¯æ—¥å¿—çº§åˆ«å’Œè°ƒè¯•æ—¥å¿—çº§åˆ«
+ ä¸” é”™è¯¯æ—¥å¿—åªèƒ½è®¾ç½®ä¸€ä¸ªçº§åˆ« ä¸” é”™è¯¯æ—¥å¿—å¿…é¡»ä¹¦å†™åœ¨è°ƒè¯•æ—¥å¿—çº§åˆ«çš„å‰é¢ ä¸” è°ƒè¯•æ—¥å¿—å¯ä»¥è®¾ç½®å¤šä¸ªçº§åˆ«
+ å…¶ä»–é…ç½®æ–¹æ³•å¯èƒ½è¾¾ä¸åˆ°ä½ çš„é¢„æœŸ. 
+*/  /* å…¨å±€ä¸­é…ç½®çš„error_log xxxå­˜å‚¨åœ¨ngx_cycle_s->new_logï¼Œhttp{}ã€server{}ã€local{}é…ç½®çš„error_logä¿å­˜åœ¨ngx_http_core_loc_conf_t->error_log,
+    è§ngx_log_set_log,å¦‚æœåªé…ç½®å…¨å±€error_logï¼Œä¸é…ç½®http{}ã€server{}ã€local{}åˆ™åœ¨ngx_http_core_merge_loc_conf conf->error_log = &cf->cycle->new_log;  */
     
 char *
 ngx_log_set_log(ngx_conf_t *cf, ngx_log_t **head)
@@ -972,7 +972,7 @@ ngx_log_set_log(ngx_conf_t *cf, ngx_log_t **head)
     return NGX_CONF_OK;
 }
 
-//ÈÕÖ¾¶ÔÏó¶ÓÁĞ°´ÈÕÖ¾µÈ¼¶´ÓµÍµ½¸ßÅÅĞò
+//æ—¥å¿—å¯¹è±¡é˜Ÿåˆ—æŒ‰æ—¥å¿—ç­‰çº§ä»ä½åˆ°é«˜æ’åº
 static void
 ngx_log_insert(ngx_log_t *log, ngx_log_t *new_log)
 {

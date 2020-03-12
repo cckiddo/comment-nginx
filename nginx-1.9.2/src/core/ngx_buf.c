@@ -14,12 +14,12 @@ ngx_create_temp_buf(ngx_pool_t *pool, size_t size)
 {
     ngx_buf_t *b;
 
-    b = ngx_calloc_buf(pool); //ÕâÀïÃæÊÇÎªngx_buf_tÍ·²¿·ÖÅäµÄ¿Õ¼ä
+    b = ngx_calloc_buf(pool); //è¿™é‡Œé¢æ˜¯ä¸ºngx_buf_tå¤´éƒ¨åˆ†é…çš„ç©ºé—´
     if (b == NULL) {
         return NULL;
     }
 
-    b->start = ngx_palloc(pool, size); //ÕâÀïÃæ²ÅÊÇÕæÕý´æ´¢Êý¾ÝµÄ¿Õ¼ä
+    b->start = ngx_palloc(pool, size); //è¿™é‡Œé¢æ‰æ˜¯çœŸæ­£å­˜å‚¨æ•°æ®çš„ç©ºé—´
     if (b->start == NULL) {
         return NULL;
     }
@@ -52,7 +52,7 @@ ngx_alloc_chain_link(ngx_pool_t *pool)
     cl = pool->chain;
 
     if (cl) {
-        pool->chain = cl->next; //±»ÊÍ·ÅµÄngx_chain_tÊÇÍ¨¹ýngx_free_chainÌí¼Óµ½poll->chainÉÏµÄ
+        pool->chain = cl->next; //è¢«é‡Šæ”¾çš„ngx_chain_tæ˜¯é€šè¿‡ngx_free_chainæ·»åŠ åˆ°poll->chainä¸Šçš„
         return cl;
     }
 
@@ -122,7 +122,7 @@ ngx_create_chain_of_bufs(ngx_pool_t *pool, ngx_bufs_t *bufs)
     return chain;
 }
 
-//°ÑinÌí¼Óµ½chainµÄºóÃæ£¬Æ´½ÓÆðÀ´
+//æŠŠinæ·»åŠ åˆ°chainçš„åŽé¢ï¼Œæ‹¼æŽ¥èµ·æ¥
 ngx_int_t
 ngx_chain_add_copy(ngx_pool_t *pool, ngx_chain_t **chain, ngx_chain_t *in)
 {
@@ -130,7 +130,7 @@ ngx_chain_add_copy(ngx_pool_t *pool, ngx_chain_t **chain, ngx_chain_t *in)
 
     ll = chain;
 
-    for (cl = *chain; cl; cl = cl->next) { // Ñ­»·½áÊøºó£¬ll Ö¸Ïò×îºóÒ»¸ö chain µÄ next£¬next ÓÖÊÇÖ¸Õë£¬ËùÒÔ ll ÊÇ¶þ¼¶Ö¸Õë
+    for (cl = *chain; cl; cl = cl->next) { // å¾ªçŽ¯ç»“æŸåŽï¼Œll æŒ‡å‘æœ€åŽä¸€ä¸ª chain çš„ nextï¼Œnext åˆæ˜¯æŒ‡é’ˆï¼Œæ‰€ä»¥ ll æ˜¯äºŒçº§æŒ‡é’ˆ
         ll = &cl->next;
     }
 
@@ -157,7 +157,7 @@ ngx_chain_get_free_buf(ngx_pool_t *p, ngx_chain_t **free)
 {
     ngx_chain_t  *cl;
 
-    if (*free) { //Èç¹ûfree Á´±íÖÐÓÐÓÐ¿ÕÓàµÄngx_chain_t½Úµã£¬ÔòÖ±½ÓÊ¹ÓÃ¸ÃÁ´±íÖÐµÄngx_chain_t½Úµã¿Õ¼ä£¬·ñÔòºóÃæ¿ª±Ù¿Õ¼ä
+    if (*free) { //å¦‚æžœfree é“¾è¡¨ä¸­æœ‰æœ‰ç©ºä½™çš„ngx_chain_tèŠ‚ç‚¹ï¼Œåˆ™ç›´æŽ¥ä½¿ç”¨è¯¥é“¾è¡¨ä¸­çš„ngx_chain_tèŠ‚ç‚¹ç©ºé—´ï¼Œå¦åˆ™åŽé¢å¼€è¾Ÿç©ºé—´
         cl = *free;
         *free = cl->next;
         cl->next = NULL;
@@ -180,11 +180,11 @@ ngx_chain_get_free_buf(ngx_pool_t *p, ngx_chain_t **free)
 }
 
 /*
-ÒòÎªnginx¿ÉÒÔÌáÇ°flushÊä³ö£¬ËùÒÔÕâÐ©buf±»Êä³öºó¾Í¿ÉÒÔÖØ¸´Ê¹ÓÃ£¬¿ÉÒÔ±ÜÃâÖØ·ÖÅä£¬Ìá¸ßÏµÍ³ÐÔÄÜ£¬±»³ÆÎªfree_buf£¬¶øÃ»ÓÐ±»Êä³öµÄ
-buf¾ÍÊÇbusy_buf¡£nginxÃ»ÓÐÌØ±ðµÄ¼¯³ÉÕâ¸öÌØÐÔµ½×ÔÉí£¬µ«ÊÇÌá¹©ÁËÒ»¸öº¯Êýngx_chain_update_chainsÀ´°ïÖú¿ª·¢ÕßÎ¬»¤ÕâÁ½¸ö»º³åÇø¶ÓÁÐ
+å› ä¸ºnginxå¯ä»¥æå‰flushè¾“å‡ºï¼Œæ‰€ä»¥è¿™äº›bufè¢«è¾“å‡ºåŽå°±å¯ä»¥é‡å¤ä½¿ç”¨ï¼Œå¯ä»¥é¿å…é‡åˆ†é…ï¼Œæé«˜ç³»ç»Ÿæ€§èƒ½ï¼Œè¢«ç§°ä¸ºfree_bufï¼Œè€Œæ²¡æœ‰è¢«è¾“å‡ºçš„
+bufå°±æ˜¯busy_bufã€‚nginxæ²¡æœ‰ç‰¹åˆ«çš„é›†æˆè¿™ä¸ªç‰¹æ€§åˆ°è‡ªèº«ï¼Œä½†æ˜¯æä¾›äº†ä¸€ä¸ªå‡½æ•°ngx_chain_update_chainsæ¥å¸®åŠ©å¼€å‘è€…ç»´æŠ¤è¿™ä¸¤ä¸ªç¼“å†²åŒºé˜Ÿåˆ—
 */
-//¸Ãº¯Êý¹¦ÄÜ¾ÍÊÇ°ÑÐÂ¶Áµ½µÄoutÊý¾ÝÌí¼Óµ½busy±íÎ²²¿£¬È»ºó°Ñbusy±íÖÐÒÑ¾­´¦ÀíÍê±ÏµÄbuf½Úµã´Óbusy±íÖÐÕª³ý£¬È»ºó·Åµ½free±íÍ·²¿
-//Î´·¢ËÍ³öÈ¥µÄbuf½Úµã¼È»áÔÚoutÁ´±íÖÐ£¬Ò²»áÔÚbusyÁ´±íÖÐ
+//è¯¥å‡½æ•°åŠŸèƒ½å°±æ˜¯æŠŠæ–°è¯»åˆ°çš„outæ•°æ®æ·»åŠ åˆ°busyè¡¨å°¾éƒ¨ï¼Œç„¶åŽæŠŠbusyè¡¨ä¸­å·²ç»å¤„ç†å®Œæ¯•çš„bufèŠ‚ç‚¹ä»Žbusyè¡¨ä¸­æ‘˜é™¤ï¼Œç„¶åŽæ”¾åˆ°freeè¡¨å¤´éƒ¨
+//æœªå‘é€å‡ºåŽ»çš„bufèŠ‚ç‚¹æ—¢ä¼šåœ¨outé“¾è¡¨ä¸­ï¼Œä¹Ÿä¼šåœ¨busyé“¾è¡¨ä¸­
 void
 ngx_chain_update_chains(ngx_pool_t *p, ngx_chain_t **free, ngx_chain_t **busy,
     ngx_chain_t **out, ngx_buf_tag_t tag)
@@ -192,14 +192,14 @@ ngx_chain_update_chains(ngx_pool_t *p, ngx_chain_t **free, ngx_chain_t **busy,
     ngx_chain_t  *cl;
 
     if (*busy == NULL) {
-        // busy Ö¸Ïò out Ö¸ÏòµÄµØ·½
+        // busy æŒ‡å‘ out æŒ‡å‘çš„åœ°æ–¹
         *busy = *out;
 
     } else {
-        for (cl = *busy; cl->next; cl = cl->next) { /* void */ } // cl Ö¸Ïò busy chain Á´ÌõµÄ×îºóÒ»¸ö
+        for (cl = *busy; cl->next; cl = cl->next) { /* void */ } // cl æŒ‡å‘ busy chain é“¾æ¡çš„æœ€åŽä¸€ä¸ª
         
 
-        cl->next = *out; //out½ÚµãÌí¼Óµ½busy±íÖÐµÄ×îºóÒ»¸ö½Úµã
+        cl->next = *out; //outèŠ‚ç‚¹æ·»åŠ åˆ°busyè¡¨ä¸­çš„æœ€åŽä¸€ä¸ªèŠ‚ç‚¹
     }
 
     *out = NULL;
@@ -207,24 +207,24 @@ ngx_chain_update_chains(ngx_pool_t *p, ngx_chain_t **free, ngx_chain_t **busy,
     while (*busy) {
         cl = *busy;
 
-        // buf ´óÐ¡²»ÊÇ 0£¬ËµÃ÷»¹Ã»ÓÐÊä³ö£»request body ÖÐµÄ bufs ÊÇÊä³öÓÃµÄ£¬ÈçÉÏËùÊö£¬bufs ÖÐÖ¸ÏòµÄ buf ºÍ busy Ö¸ÏòµÄ buf ¶ÔÏóÊÇÒ»Ä£Ò»ÑùµÄ
-        if (ngx_buf_size(cl->buf) != 0) { //posºÍlast²»ÏàµÈ£¬ËµÃ÷¸ÃbufÖÐµÄÄÚÈÝÃ»ÓÐ´¦ÀíÍê
+        // buf å¤§å°ä¸æ˜¯ 0ï¼Œè¯´æ˜Žè¿˜æ²¡æœ‰è¾“å‡ºï¼›request body ä¸­çš„ bufs æ˜¯è¾“å‡ºç”¨çš„ï¼Œå¦‚ä¸Šæ‰€è¿°ï¼Œbufs ä¸­æŒ‡å‘çš„ buf å’Œ busy æŒ‡å‘çš„ buf å¯¹è±¡æ˜¯ä¸€æ¨¡ä¸€æ ·çš„
+        if (ngx_buf_size(cl->buf) != 0) { //poså’Œlastä¸ç›¸ç­‰ï¼Œè¯´æ˜Žè¯¥bufä¸­çš„å†…å®¹æ²¡æœ‰å¤„ç†å®Œ
             break;
         }
 
-        if (cl->buf->tag != tag) {// tag ÖÐ´æ´¢µÄÊÇ º¯ÊýÖ¸Õë
+        if (cl->buf->tag != tag) {// tag ä¸­å­˜å‚¨çš„æ˜¯ å‡½æ•°æŒ‡é’ˆ
             *busy = cl->next;
             ngx_free_chain(p, cl);
             continue;
         }
 
-        //°Ñ¸Ã¿Õ¼äµÄpos last¶¼Ö¸Ïòstart¿ªÊ¼´¦£¬±íÊ¾¸Ãngx_buf_tÃ»ÓÐÊý¾ÝÔÚÀïÃæ£¬Òò´Ë¿ÉÒÔ°ÑËû¼Óµ½free±íÖÐ£¬¿ÉÒÔ¼ÌÐø¶ÁÈ¡Êý¾Ýµ½freeÖÐµÄngx_buf_t½ÚµãÁË
+        //æŠŠè¯¥ç©ºé—´çš„pos lastéƒ½æŒ‡å‘startå¼€å§‹å¤„ï¼Œè¡¨ç¤ºè¯¥ngx_buf_tæ²¡æœ‰æ•°æ®åœ¨é‡Œé¢ï¼Œå› æ­¤å¯ä»¥æŠŠä»–åŠ åˆ°freeè¡¨ä¸­ï¼Œå¯ä»¥ç»§ç»­è¯»å–æ•°æ®åˆ°freeä¸­çš„ngx_buf_tèŠ‚ç‚¹äº†
         cl->buf->pos = cl->buf->start;
         cl->buf->last = cl->buf->start;
 
-        *busy = cl->next; //°Ñcl´ÓbusyÖÐ²ð³ý£¬È»ºóÌí¼Óµ½freeÍ·²¿
+        *busy = cl->next; //æŠŠclä»Žbusyä¸­æ‹†é™¤ï¼Œç„¶åŽæ·»åŠ åˆ°freeå¤´éƒ¨
         cl->next = *free;
-        *free = cl; // Õâ¸ö chain ·Åµ½ free ÁÐ±íµÄ×îÇ°Ãæ£¬Ìí¼Óµ½freeÍ·²¿
+        *free = cl; // è¿™ä¸ª chain æ”¾åˆ° free åˆ—è¡¨çš„æœ€å‰é¢ï¼Œæ·»åŠ åˆ°freeå¤´éƒ¨
     }
 }
 
@@ -270,14 +270,14 @@ ngx_chain_coalesce_file(ngx_chain_t **in, off_t limit)
     return total;
 }
 
-//¼ÆËã±¾´ÎµôÓÃngx_writev·¢ËÍ³öÈ¥µÄsend×Ö½ÚÔÚinÁ´±íÖÐËùÓÐÊý¾ÝµÄÄÇ¸öÎ»ÖÃ
+//è®¡ç®—æœ¬æ¬¡æŽ‰ç”¨ngx_writevå‘é€å‡ºåŽ»çš„sendå­—èŠ‚åœ¨iné“¾è¡¨ä¸­æ‰€æœ‰æ•°æ®çš„é‚£ä¸ªä½ç½®
 ngx_chain_t *
 ngx_chain_update_sent(ngx_chain_t *in, off_t sent)
 {
     off_t  size;
 
     for ( /* void */ ; in; in = in->next) {
-        //ÓÖ±éÀúÒ»´ÎÕâ¸öÁ´½Ó£¬ÎªÁËÕÒµ½ÄÇ¿éÖ»³É¹¦·¢ËÍÁËÒ»²¿·ÖÊý¾ÝµÄÄÚ´æ¿é£¬´ÓËü¼ÌÐø¿ªÊ¼·¢ËÍ¡£
+        //åˆéåŽ†ä¸€æ¬¡è¿™ä¸ªé“¾æŽ¥ï¼Œä¸ºäº†æ‰¾åˆ°é‚£å—åªæˆåŠŸå‘é€äº†ä¸€éƒ¨åˆ†æ•°æ®çš„å†…å­˜å—ï¼Œä»Žå®ƒç»§ç»­å¼€å§‹å‘é€ã€‚
         if (ngx_buf_special(in->buf)) {
             continue;
         }
@@ -288,11 +288,11 @@ ngx_chain_update_sent(ngx_chain_t *in, off_t sent)
 
         size = ngx_buf_size(in->buf);
 
-        if (sent >= size) { //ËµÃ÷¸Ãin->bufÊý¾ÝÒÑ¾­È«²¿·¢ËÍ³öÈ¥
-            sent -= size;//±ê¼ÇºóÃæ»¹ÓÐ¶àÉÙÊý¾ÝÊÇÎÒ·¢ËÍ¹ýµÄ
+        if (sent >= size) { //è¯´æ˜Žè¯¥in->bufæ•°æ®å·²ç»å…¨éƒ¨å‘é€å‡ºåŽ»
+            sent -= size;//æ ‡è®°åŽé¢è¿˜æœ‰å¤šå°‘æ•°æ®æ˜¯æˆ‘å‘é€è¿‡çš„
 
-            if (ngx_buf_in_memory(in->buf)) {//ËµÃ÷¸Ãin->bufÊý¾ÝÒÑ¾­È«²¿·¢ËÍ³öÈ¥
-                in->buf->pos = in->buf->last;//Çå¿ÕÕâ¶ÎÄÚ´æ¡£¼ÌÐøÕÒÏÂÒ»¸ö
+            if (ngx_buf_in_memory(in->buf)) {//è¯´æ˜Žè¯¥in->bufæ•°æ®å·²ç»å…¨éƒ¨å‘é€å‡ºåŽ»
+                in->buf->pos = in->buf->last;//æ¸…ç©ºè¿™æ®µå†…å­˜ã€‚ç»§ç»­æ‰¾ä¸‹ä¸€ä¸ª
             }
 
             if (in->buf->in_file) {
@@ -302,8 +302,8 @@ ngx_chain_update_sent(ngx_chain_t *in, off_t sent)
             continue;
         }
 
-        if (ngx_buf_in_memory(in->buf)) { //ËµÃ÷·¢ËÍ³öÈ¥µÄ×îºóÒ»×Ö½ÚÊý¾ÝµÄÏÂÒ»×Ö½ÚÊý¾ÝÔÚin->buf->pos+sendÎ»ÖÃ£¬ÏÂ´Î´ÓÕâ¸öÎ»ÖÃ¿ªÊ¼·¢ËÍ
-            in->buf->pos += (size_t) sent;//Õâ¿éÄÚ´æÃ»ÓÐÍêÈ«·¢ËÍÍê±Ï£¬±¯¾ç£¬ÏÂ»ØµÃ´ÓÕâÀï¿ªÊ¼¡£
+        if (ngx_buf_in_memory(in->buf)) { //è¯´æ˜Žå‘é€å‡ºåŽ»çš„æœ€åŽä¸€å­—èŠ‚æ•°æ®çš„ä¸‹ä¸€å­—èŠ‚æ•°æ®åœ¨in->buf->pos+sendä½ç½®ï¼Œä¸‹æ¬¡ä»Žè¿™ä¸ªä½ç½®å¼€å§‹å‘é€
+            in->buf->pos += (size_t) sent;//è¿™å—å†…å­˜æ²¡æœ‰å®Œå…¨å‘é€å®Œæ¯•ï¼Œæ‚²å‰§ï¼Œä¸‹å›žå¾—ä»Žè¿™é‡Œå¼€å§‹ã€‚
         }
 
         if (in->buf->in_file) {
@@ -313,5 +313,5 @@ ngx_chain_update_sent(ngx_chain_t *in, off_t sent)
         break;
     }
 
-    return in; //ÏÂ´Î´ÓÕâ¸öin¿ªÊ¼·¢ËÍin->buf->pos
+    return in; //ä¸‹æ¬¡ä»Žè¿™ä¸ªinå¼€å§‹å‘é€in->buf->pos
 }

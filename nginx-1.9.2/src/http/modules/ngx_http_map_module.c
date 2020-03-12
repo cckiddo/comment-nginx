@@ -48,40 +48,40 @@ static char *ngx_http_map(ngx_conf_t *cf, ngx_command_t *dummy, void *conf);
 
 static ngx_command_t  ngx_http_map_commands[] = {
 /*
-�﷨:  map string $variable { ... }  //����string�ַ�����ƥ��{}�ж�Ӧ��map�е�key�ַ�����ƥ����ȡ����key��Ӧ��value�����string��
-Ĭ��ֵ:  ��  
-������:  http
+语法:  map string $variable { ... }  //根据string字符串来匹配{}中对应的map中的key字符串，匹配则取出该key对应的value存放在string中
+默认值:  ―  
+上下文:  http
 
-�����õĲ����У���һ����Ҫ�����µı���������ֵȡ���ں���һ������Դ������ 
+在配置的参数中，第一个是要创建新的变量，它的值取决于后面一个或多个源变量。 
 
-�� map ����Ĳ���ָ����Դ����ֵ�ͽ��ֵ�Ķ�Ӧ��ϵ�� 
-Դ����ֵ����ʹ���ַ��������������ʽ (0.9.6)�� 
-һ���������ʽ����� ��~�� ��ͷ������������ʽ�Դ�Сд���У� ���� ��~*����ͷ (1.0.4)������������ʽ�Դ�Сд�����С� ����
-�����ʽ����԰������������λ�ò�����Щ�������Ը��������һ������ָ��ʹ�á� ���Դ������ֵ���ø��������ͬ���������棩��
-��Ҫ�� ��\�� �ַ���Ϊǰ׺�� 
+在 map 块里的参数指定了源变量值和结果值的对应关系。 
+源变量值可以使用字符串或者正则表达式 (0.9.6)。 
+一个正则表达式如果以 “~” 开头，这个正则表达式对大小写敏感； 若以 “~*”开头 (1.0.4)，这个正则表达式对大小写不敏感。 且正
+则表达式里可以包含命名捕获和位置捕获，这些变量可以跟结果变量一起被其它指令使用。 如果源变量的值正好跟特殊参数同名（看下面），
+它要以 “\” 字符作为前缀。 
 
-�������������һ���ַ���Ҳ����������һ������ (0.9.0)�� 
-���ָ��Ҳ֧��������������� 
-default value���Դ����ֵû��ƥ�䵽�κα�����������һ��Ĭ��ֵ��Ϊ����� ��û������ default��������һ���յ��ַ�����ΪĬ�ϵĽ���� 
-    hostnames������ǰ׺���ߺ�׺����ָ��������ΪԴ����ֵ���ٸ����ӣ� 
+结果变量可以是一个字符串也可以是另外一个变量 (0.9.0)。 
+这个指令也支持三个特殊参数。 
+default value如果源变量值没有匹配到任何变量，则设置一个默认值作为结果。 当没有设置 default，将会用一个空的字符串作为默认的结果。 
+    hostnames允许用前缀或者后缀掩码指定域名作为源变量值，举个例子， 
     *.example.com 1;
     example.*     1;
 
-    ��������¼ 
+    这两条记录 
     example.com   1;
     *.example.com 1;
 
-    ���Ա��ϲ�Ϊ�� 
+    可以被合并为： 
     .example.com  1;
-�����������д��ֵӳ���б�����ǰ�档 include file����һ�����߶������ӳ��ֵ���ļ��� 
-���Դֵƥ���˶���һ����ָ���������������������ͬʱƥ�䣬��ô���ᰴ�������˳���������ѡ�� 
-1. û��������ַ��� 
-2. ��Ĵ�ǰ׺���ַ���������: ��*.example.com�� 
-3. ��Ĵ���׺���ַ��������磺��mail.*�� 
-4. ��˳���һ����ƥ����������ʽ ���������ļ������ֵ�˳�� 
-5. Ĭ��ֵ 
+这个参数必须写在值映射列表的最前面。 include file包含一个或者多个存有映射值的文件。 
+如果源值匹配了多余一个的指定变量，例如掩码和正则同时匹配，那么将会按照下面的顺序进行优先选择： 
+1. 没有掩码的字符串 
+2. 最长的带前缀的字符串，例如: “*.example.com” 
+3. 最长的带后缀的字符串，例如：“mail.*” 
+4. 按顺序第一个先匹配的正则表达式 （在配置文件中体现的顺序） 
+5. 默认值 
 
-*/ //map string $variable { ... }  ����string�ַ�����ƥ��{}�ж�Ӧ��map�е�key�ַ�����ƥ����ȡ����key��Ӧ��value�����$variable������
+*/ //map string $variable { ... }  根据string字符串来匹配{}中对应的map中的key字符串，匹配则取出该key对应的value存放在$variable变量中
     { ngx_string("map"),
       NGX_HTTP_MAIN_CONF|NGX_CONF_BLOCK|NGX_CONF_TAKE2,
       ngx_http_map_block,
@@ -122,7 +122,7 @@ static ngx_http_module_t  ngx_http_map_module_ctx = {
 };
 
 /*
-map $uri $new { //���������uriƥ�������/aa��/bb�������ƥ�䣬��ʹ��defaultֵhttp:www.domain.com/home/;  ��ȡ��Ӧ��valueֵ�浽$new
+map $uri $new { //根据请求的uri匹配下面的/aa和/bb，如果不匹配，则使用default值http:www.domain.com/home/;  获取对应的value值存到$new
   default  http:www.domain.com/home/;
   /aa  http://aa.domain.com/ ;
   /bb  http://bb_domain.com/
@@ -135,10 +135,10 @@ server {
 */
 
 /*
-ngx_http_geo_module:geo [$address] $variable { ... }  �Ե�ַ$address��{}�е�key-value�Խ���ƥ�䣬ƥ��ṹ�洢��$variable��
-ngx_http_map_module: map String $variable { ... } ���ַ���String��{}�е�key-value�Խ���ƥ�䣬ƥ��ṹ�洢��$variable��
+ngx_http_geo_module:geo [$address] $variable { ... }  对地址$address与{}中的key-value对进行匹配，匹配结构存储到$variable中
+ngx_http_map_module: map String $variable { ... } 对字符串String与{}中的key-value对进行匹配，匹配结构存储到$variable中
 */
-ngx_module_t  ngx_http_map_module = {//�ο�:http://blog.sina.com.cn/s/blog_7303a1dc0100ycd1.html
+ngx_module_t  ngx_http_map_module = {//参考:http://blog.sina.com.cn/s/blog_7303a1dc0100ycd1.html
     NGX_MODULE_V1,
     &ngx_http_map_module_ctx,              /* module context */
     ngx_http_map_commands,                 /* module directives */
@@ -447,7 +447,7 @@ ngx_http_map(ngx_conf_t *cf, ngx_command_t *dummy, void *conf)
         return NGX_CONF_ERROR;
     }
 
-    if (ngx_strcmp(value[0].data, "include") == 0) {//Ƕ�����������ļ�
+    if (ngx_strcmp(value[0].data, "include") == 0) {//嵌入其他配置文件
         return ngx_conf_include(cf, dummy, conf);
     }
 

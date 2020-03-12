@@ -25,7 +25,7 @@
  */
 
 
-static ngx_str_t  *ngx_sys_errlist; ////»ñÈ¡error 0-NGX_SYS_NERR¶ÔÓ¦µÄÃèÊö×Ö·û´®¶¼´æÔÚ¸ÃÁ´±íÉÏ
+static ngx_str_t  *ngx_sys_errlist; ////èŽ·å–error 0-NGX_SYS_NERRå¯¹åº”çš„æè¿°å­—ç¬¦ä¸²éƒ½å­˜åœ¨è¯¥é“¾è¡¨ä¸Š
 static ngx_str_t   ngx_unknown_error = ngx_string("Unknown error");
 
 
@@ -41,7 +41,7 @@ ngx_strerror(ngx_err_t err, u_char *errstr, size_t size)
     return ngx_cpymem(errstr, msg->data, size);
 }
 
-//»ñÈ¡error 0-NGX_SYS_NERR¶ÔÓ¦µÄÃèÊö×Ö·û´®
+//èŽ·å–error 0-NGX_SYS_NERRå¯¹åº”çš„æè¿°å­—ç¬¦ä¸²
 ngx_int_t
 ngx_strerror_init(void)
 {
@@ -56,7 +56,7 @@ ngx_strerror_init(void)
      */
 
     len = NGX_SYS_NERR * sizeof(ngx_str_t);
-    //¼ÆËã³¤¶È,×¢ÒâNGX_SYS_NERR²»ÊÇÔÚsrcÀïÃæµÄ£¬¶øÊÇ±àÒëµÄÊ±ºò¸ù¾Ý²Ù×÷ÏµÍ³µÄ²»Í¬¶øÉú³ÉµÄ²»ÄÚÈÝ£¬ÕâÀïÊÇÔÚobjs/ngx_auto_config.hÀïÃæ£¬¶¨ÒåÎª:135¡£
+    //è®¡ç®—é•¿åº¦,æ³¨æ„NGX_SYS_NERRä¸æ˜¯åœ¨srcé‡Œé¢çš„ï¼Œè€Œæ˜¯ç¼–è¯‘çš„æ—¶å€™æ ¹æ®æ“ä½œç³»ç»Ÿçš„ä¸åŒè€Œç”Ÿæˆçš„ä¸å†…å®¹ï¼Œè¿™é‡Œæ˜¯åœ¨objs/ngx_auto_config.hé‡Œé¢ï¼Œå®šä¹‰ä¸º:135ã€‚
 
     ngx_sys_errlist = malloc(len);
     if (ngx_sys_errlist == NULL) {

@@ -151,127 +151,127 @@ static ngx_int_t ngx_http_variable_time_local(ngx_http_request_t *r,
  */
 
  /*
-һ����־����
-        Nginx��־��Ҫ��Ϊ���֣�������־�ʹ�����־����־������Nginx�����ļ���/etc/nginx/nginx.conf�������ã�������־������ѡ���Թرգ�Ĭ�϶��Ǵ򿪵ġ�
-1��������־
-        ������־��Ҫ��¼�ͻ��˷���Nginx��ÿһ�����󣬸�ʽ�����Զ��塣ͨ��������־������Եõ��û�������Դ����ת��Դ��ʹ���նˡ�ĳ��URL�������������Ϣ��Nginx�з�����־���ָ����Ҫ��������
-        ��1��log_format
-        log_format����������־��ʽ��Ҳ������־�ļ���ÿ����־�ĸ�ʽ���������£�
-        log_format name(��ʽ����) type(��ʽ��ʽ)
-        ����˵�����£�
+一、日志分类
+        Nginx日志主要分为两种：访问日志和错误日志。日志开关在Nginx配置文件（/etc/nginx/nginx.conf）中设置，两种日志都可以选择性关闭，默认都是打开的。
+1、访问日志
+        访问日志主要记录客户端访问Nginx的每一个请求，格式可以自定义。通过访问日志，你可以得到用户地域来源、跳转来源、使用终端、某个URL访问量等相关信息。Nginx中访问日志相关指令主要有两条：
+        （1）log_format
+        log_format用来设置日志格式，也就是日志文件中每条日志的格式，具体如下：
+        log_format name(格式名称) type(格式样式)
+        举例说明如下：
         log_format  main  '$server_name $remote_addr - $remote_user [$time_local] "$request" '
                         '$status $uptream_status $body_bytes_sent "$http_referer" '
                         '"$http_user_agent" "$http_x_forwarded_for" '
                         '$ssl_protocol $ssl_cipher $upstream_addr $request_time $upstream_response_time';
-        �����ɫ����ΪNginxĬ��ָ���ĸ�ʽ��ʽ��ÿ����ʽ�ĺ������£�
-        $server_name�������������ơ�
-        $remote_addr��Զ�̿ͻ��˵�IP��ַ��
-        -���հף���һ����-��ռλ���������ʷԭ���»����ڡ�
-        $remote_user��Զ�̿ͻ����û����ƣ����ڼ�¼����߽���������֤ʱ�ṩ�����֣����¼�ٶȵ��û���scq2099yt�����û�е�¼���ǿհס�
-        [$time_local]�����ʵ�ʱ����ʱ��������18/Jul/2012:17:00:01 +0800��ʱ����Ϣ����"+0800"��ʾ����������ʱ��λ��UTC֮���8Сʱ��
-        $request�������URI��HTTPЭ�飬��������PV��־��¼�������õ���Ϣ����¼�������յ�һ��ʲô��������
-        $status����¼���󷵻ص�http״̬�룬����ɹ���200��
-        $uptream_status��upstream״̬������ɹ���200.
-        $body_bytes_sent�����͸��ͻ��˵��ļ��������ݵĴ�С������899�����Խ���־ÿ����¼�е����ֵ�ۼ������Դ��Թ��Ʒ�������������
-        $http_referer����¼���ĸ�ҳ�����ӷ��ʹ����ġ� 
-        $http_user_agent���ͻ����������Ϣ
-        $http_x_forwarded_for���ͻ��˵���ʵip��ͨ��web���������ڷ�������ĺ��棬�����Ͳ��ܻ�ȡ���ͻ���IP��ַ�ˣ�ͨ��$remote_add�õ���IP��ַ�Ƿ��������������iP��ַ�����������������ת�������httpͷ��Ϣ�У���������x_forwarded_for��Ϣ�����Լ�¼ԭ�пͻ��˵�IP��ַ��ԭ���ͻ��˵�����ķ�������ַ��
-        $ssl_protocol��SSLЭ��汾������TLSv1��
-        $ssl_cipher�����������е��㷨������RC4-SHA�� 
-        $upstream_addr��upstream�ĵ�ַ���������ṩ�����������ַ�� 
-        $request_time�������������ʱ�䡣 
-        $upstream_response_time����������У�upstream����Ӧʱ�䡣
-        ������־��һ�����͵ļ�¼���£�
+        上面红色部分为Nginx默认指定的格式样式，每个样式的含义如下：
+        $server_name：虚拟主机名称。
+        $remote_addr：远程客户端的IP地址。
+        -：空白，用一个“-”占位符替代，历史原因导致还存在。
+        $remote_user：远程客户端用户名称，用于记录浏览者进行身份验证时提供的名字，如登录百度的用户名scq2099yt，如果没有登录就是空白。
+        [$time_local]：访问的时间与时区，比如18/Jul/2012:17:00:01 +0800，时间信息最后的"+0800"表示服务器所处时区位于UTC之后的8小时。
+        $request：请求的URI和HTTP协议，这是整个PV日志记录中最有用的信息，记录服务器收到一个什么样的请求
+        $status：记录请求返回的http状态码，比如成功是200。
+        $uptream_status：upstream状态，比如成功是200.
+        $body_bytes_sent：发送给客户端的文件主体内容的大小，比如899，可以将日志每条记录中的这个值累加起来以粗略估计服务器吞吐量。
+        $http_referer：记录从哪个页面链接访问过来的。 
+        $http_user_agent：客户端浏览器信息
+        $http_x_forwarded_for：客户端的真实ip，通常web服务器放在反向代理的后面，这样就不能获取到客户的IP地址了，通过$remote_add拿到的IP地址是反向代理服务器的iP地址。反向代理服务器在转发请求的http头信息中，可以增加x_forwarded_for信息，用以记录原有客户端的IP地址和原来客户端的请求的服务器地址。
+        $ssl_protocol：SSL协议版本，比如TLSv1。
+        $ssl_cipher：交换数据中的算法，比如RC4-SHA。 
+        $upstream_addr：upstream的地址，即真正提供服务的主机地址。 
+        $request_time：整个请求的总时间。 
+        $upstream_response_time：请求过程中，upstream的响应时间。
+        访问日志中一个典型的记录如下：
         192.168.1.102 - scq2099yt [18/Mar/2013:23:30:42 +0800] "GET /stats/awstats.pl?config=scq2099yt HTTP/1.1" 200 899 "http://192.168.1.1/pv/" "Mozilla/4.0 (compatible; MSIE 6.0; Windows XXX; Maxthon)"
-        ��Ҫע����ǣ�log_format���ñ������http�ڣ������������¾�����Ϣ��
+        需要注意的是：log_format配置必须放在http内，否则会出现如下警告信息：
         nginx: [warn] the "log_format" directive may be used only on "http" level in /etc/nginx/nginx.conf:97
-        ��2��access_log
-        access_logָ������ָ����־�ļ��Ĵ��·����������־�ļ���������ʽ�ͻ����С���������£�
-        access_log path(���·��) [format(�Զ�����־��ʽ����) [buffer=size | off]]
-        ����˵�����£�
+        （2）access_log
+        access_log指令用来指定日志文件的存放路径（包含日志文件名）、格式和缓存大小，具体如下：
+        access_log path(存放路径) [format(自定义日志格式名称) [buffer=size | off]]
+        举例说明如下：
         access_log  logs/access.log  main;
-        �����ر���־���������£�
+        如果想关闭日志，可以如下：
         access_log off;
-        �ܹ�ʹ��access_logָ����ֶΰ�����http��server��location��
-        ��Ҫע����ǣ�Nginx�������õ��û�����������־·���д����ļ���Ȩ�ޣ����򣬻ᱨ����
-        С���ɣ������Ҫ��access_log�м�¼post����Ĳ��������Բο����
-        Nginx֧��Ϊÿ��locationָ��ǿ�����־��¼��ͬ�������ӿ�����ͬһʱ���������ֹһ������־�У�������Ϣ��鿴�������������
-2��������־
-        ������־��Ҫ��¼�ͻ��˷���Nginx����ʱ����־����ʽ��֧���Զ��塣ͨ��������־������Եõ�ϵͳĳ�������server������ƿ���ȡ���ˣ�����־�ú����ã�����Եõ��ܶ��м�ֵ����Ϣ��������־��ָ��error_log��ָ���������ʽ���£�
-        error_log path(���·��) level(��־�ȼ�)
-        path����ͬaccess_log��level��ʾ��־�ȼ����������£�
+        能够使用access_log指令的字段包括：http、server、location。
+        需要注意的是：Nginx进程设置的用户和组必须对日志路径有创建文件的权限，否则，会报错。
+        小技巧：如果需要在access_log中记录post请求的参数，可以参考这里。
+        Nginx支持为每个location指定强大的日志记录。同样的连接可以在同一时间输出到不止一个的日志中，更多信息请查看这里，这里，还有这里。
+2、错误日志
+        错误日志主要记录客户端访问Nginx出错时的日志，格式不支持自定义。通过错误日志，你可以得到系统某个服务或server的性能瓶颈等。因此，将日志好好利用，你可以得到很多有价值的信息。错误日志由指令error_log来指定，具体格式如下：
+        error_log path(存放路径) level(日志等级)
+        path含义同access_log，level表示日志等级，具体如下：
         [ debug | info | notice | warn | error | crit ]
-        �������ң���־��ϸ�̶��𼶵ݼ�����debug����ϸ��crit���١�
-        ����˵�����£�
+        从左至右，日志详细程度逐级递减，即debug最详细，crit最少。
+        举例说明如下：
         error_log  logs/error.log  info;
-        ��Ҫע����ǣ�error_log off�����ܹرմ�����־�����ǻὫ������־��¼��һ���ļ���Ϊoff���ļ��С�
-        ��ȷ�Ĺرմ�����־��¼���ܵķ������£�
+        需要注意的是：error_log off并不能关闭错误日志，而是会将错误日志记录到一个文件名为off的文件中。
+        正确的关闭错误日志记录功能的方法如下：
         error_log /dev/null;
-        �����ʾ���洢��־��·������Ϊ������Ͱ����
+        上面表示将存储日志的路径设置为“垃圾桶”。
 
-*/ //��־���԰�����зָ���Բο�nginx��־�����������- Awstats 
+*/ //日志可以按天进行分割，可以参考nginx日志分析解决方案- Awstats 
 /*
-��ô������Ҫ�˽�һ��nginx�б�������֯�ṹ��nginx�������Թ�Ϊ���ࣺ
+那么首先需要了解一下nginx中变量的组织结构，nginx变量可以归为两类：
 
 
-����1��nginx�ڲ�����
-    nginx���ı�����ngx_http_core_variables ������
-    nginx��ģ�����Լ��ı���������ngx_http_browser_module ģ��� ngx_http_browsers ������
-����2��nginx�������ļ��У����ǻ��õ��ܶ������
-    ���磺log_format  main  '$remote_addr';  �е�$remote_addr'
-    ���磺set $name hello;�е�$name 
-    ���磺limit_conn_zone $binary_remote_addr zone=ip_zone:10m; �е�$binary_remote_addr
-    ���磺set $memcached_key test; �е�$memcached_key
+类型1：nginx内部变量
+    nginx核心变量：ngx_http_core_variables 变量集
+    nginx各模块有自己的变量：比如ngx_http_browser_module 模块的 ngx_http_browsers 变量集
+类型2：nginx的配置文件中，我们会用到很多变量。
+    比如：log_format  main  '$remote_addr';  中的$remote_addr'
+    比如：set $name hello;中的$name 
+    比如：limit_conn_zone $binary_remote_addr zone=ip_zone:10m; 中的$binary_remote_addr
+    比如：set $memcached_key test; 中的$memcached_key
 
 
-�ڼ�¼access_log������־�ļ�ʱ������ʹ��ngx_http_core_moduleģ�鴦������ʱ�������ķḻ�ı�������Ȼ����Щ������������������HTTPģ�顣
-���磬��URI�е�ĳ�����������趨������ʱ����ЩHTTPģ������������ʹ������$arg_PARAMETER�����ı��������磬�����ÿ�������е�������
-Ϣ��¼��access��־�ļ��У������ʹ��$limit_rate������
+在记录access_log访问日志文件时，可以使用ngx_http_core_module模块处理请求时所产生的丰富的变量，当然，这些变量还可以用于其他HTTP模块。
+例如，当URI中的某个参数满足设定的条件时，有些HTTP模块的配置项可以使用类似$arg_PARAMETER这样的变量。又如，若想把每个请求中的限速信
+息记录到access日志文件中，则可以使用$limit_rate变量。
 
-��2-1�г���ngx_http_core_moduleģ���ṩ����Щ������
+表2-1列出了ngx_http_core_module模块提供的这些变量。
 
-��2-1��ngx_http_core_moduleģ���ṩ�ı���
-�� �� �� �⡡��
-$arg_PARAMETER HTTP������ĳ��������ֵ����/index.html?size=100��������$arg_sizeȡ��100���ֵ
-$args HTTP�����е��������������磬������/index.html?_w=120&_h=120�У�$args��ʾ�ַ���_w=120&_h=120
-$binary_remote_addr �����Ƹ�ʽ�Ŀͻ��˵�ַ�����磺\x0A\xE0B\x0E
-$body_bytes_sent ��ʾ����ͻ��˷��͵�http��Ӧ�У����岿�ֵ��ֽ���
-$content_length ��ʾ�ͻ�������ͷ���е�Content-Length�ֶ�
-$content_type ��ʾ�ͻ�������ͷ���е�Content-Type�ֶ�
-$cookie_COOKIE ��ʾ�ڿͻ�������ͷ���е�cookie�ֶ�
-$document_root ��ʾ��ǰ������ʹ�õ�root�������ֵ
-$uri ��ʾ��ǰ�����URI�������κβ���
-$document_uri ��$uri������ͬ
-$request_uri ��ʾ�ͻ��˷�����ԭʼ����URI���������Ĳ�����$uri��$document_uriδ�����û���ԭʼ�������ڲ��ض����������ض�����URI����$request_uri��Զ����ı䣬ʼ���ǿͻ��˵�ԭʼURI
-$host ��ʾ�ͻ�������ͷ���е�Host�ֶΡ����Host�ֶβ����ڣ�����ʵ�ʴ�����server���������������ƴ��档���Host�ֶ��д��ж˿ڣ���IP:PORT����ô$host��ȥ���˿ڵģ�����ֵΪIP��$host��ȫСд�ġ���Щ������http_HEADER�е�http_host��ͬ��http_hostֻ�ǡ���ʵ����ȡ��Hostͷ����Ӧ��ֵ
-$hostname ��ʾNginx���ڻ��������ƣ���gethostbyname���÷��ص�ֵ��ͬ
-$http_HEADER ��ʾ��ǰHTTP��������Ӧͷ����ֵ��HEADER����ȫСд�����磬��$http_host��ʾ������Hostͷ����Ӧ��ֵ
-$sent_http_HEADER ��ʾ���ؿͻ��˵�HTTP��Ӧ����Ӧͷ����ֵ��HEADER����ȫСд�����磬��$sent_http_content_type��ʾ��Ӧ��Content-Typeͷ����Ӧ��ֵ
-$is_args ��ʾ�����е�URI�Ƿ�������������������$is_argsֵΪ?������������������ǿ��ַ���
-$limit_rate ��ʾ��ǰ���ӵ������Ƕ��٣�0��ʾ������
-$nginx_version ��ʾ��ǰNginx�İ汾�ţ���1.0.14
-$query_string ����URI�еĲ�������$args��ͬ��Ȼ��$query_string��ֻ���Ĳ���ı�
-$remote_addr ��ʾ�ͻ��˵ĵ�ַ
-$remote_port ��ʾ�ͻ�������ʹ�õĶ˿�
-$remote_user ��ʾʹ��Auth Basic Moduleʱ������û���
-$request_filename ��ʾ�û������е�URI����root��aliasת������ļ�·��
-$request_body ��ʾHTTP�����еİ��壬�ò���ֻ��proxy_pass��fastcgi_pass��������
-$request_body_file ��ʾHTTP�����еİ���洢����ʱ�ļ���
-$request_completion �������Ѿ�ȫ�����ʱ����ֵΪ��ok������û����ɣ���Ҫ���ؿͻ��ˣ�����ֵΪ���ַ����������ڶϵ������������ʹ��HTTP range���ʵĲ������ļ������һ�飬��ô��ֵҲ�ǿ��ַ���
-$request_method ��ʾHTTP����ķ���������GET��PUT��POST��
-$scheme ��ʾHTTP scheme����������https://nginx.com/�б�ʾhttps
-$server_addr ��ʾ��������ַ
-$server_name ��ʾ����������
-$server_port ��ʾ�������˿�
-$server_protocol ��ʾ��������ͻ��˷�����Ӧ��Э�飬��HTTP/1.1��HTTP/1.0
-*/ //��ش���������Բο�:http://blog.csdn.net/fangru/article/details/9163553
-//Nginx�ںܶ�ģ���ж������õı��������õ����ñ�����HTT(www.111cn.net)P����ģ���У���Щ����������ʹ���������ʽ����ƥ�䡣
+表2-1　ngx_http_core_module模块提供的变量
+参 数 名 意　义
+$arg_PARAMETER HTTP请求中某个参数的值，如/index.html?size=100，可以用$arg_size取得100这个值
+$args HTTP请求中的完整参数。例如，在请求/index.html?_w=120&_h=120中，$args表示字符串_w=120&_h=120
+$binary_remote_addr 二进制格式的客户端地址。例如：\x0A\xE0B\x0E
+$body_bytes_sent 表示在向客户端发送的http响应中，包体部分的字节数
+$content_length 表示客户端请求头部中的Content-Length字段
+$content_type 表示客户端请求头部中的Content-Type字段
+$cookie_COOKIE 表示在客户端请求头部中的cookie字段
+$document_root 表示当前请求所使用的root配置项的值
+$uri 表示当前请求的URI，不带任何参数
+$document_uri 与$uri含义相同
+$request_uri 表示客户端发来的原始请求URI，带完整的参数。$uri和$document_uri未必是用户的原始请求，在内部重定向后可能是重定向后的URI，而$request_uri永远不会改变，始终是客户端的原始URI
+$host 表示客户端请求头部中的Host字段。如果Host字段不存在，则以实际处理的server（虚拟主机）名称代替。如果Host字段中带有端口，如IP:PORT，那么$host是去掉端口的，它的值为IP。$host是全小写的。这些特性与http_HEADER中的http_host不同，http_host只是“忠实”地取出Host头部对应的值
+$hostname 表示Nginx所在机器的名称，与gethostbyname调用返回的值相同
+$http_HEADER 表示当前HTTP请求中相应头部的值。HEADER名称全小写。例如，用$http_host表示请求中Host头部对应的值
+$sent_http_HEADER 表示返回客户端的HTTP响应中相应头部的值。HEADER名称全小写。例如，用$sent_http_content_type表示响应中Content-Type头部对应的值
+$is_args 表示请求中的URI是否带参数，如果带参数，$is_args值为?，如果不带参数，则是空字符串
+$limit_rate 表示当前连接的限速是多少，0表示无限速
+$nginx_version 表示当前Nginx的版本号，如1.0.14
+$query_string 请求URI中的参数，与$args相同，然而$query_string是只读的不会改变
+$remote_addr 表示客户端的地址
+$remote_port 表示客户端连接使用的端口
+$remote_user 表示使用Auth Basic Module时定义的用户名
+$request_filename 表示用户请求中的URI经过root或alias转换后的文件路径
+$request_body 表示HTTP请求中的包体，该参数只在proxy_pass或fastcgi_pass中有意义
+$request_body_file 表示HTTP请求中的包体存储的临时文件名
+$request_completion 当请求已经全部完成时，其值为“ok”。若没有完成，就要返回客户端，则其值为空字符串；或者在断点续传等情况下使用HTTP range访问的并不是文件的最后一块，那么其值也是空字符串
+$request_method 表示HTTP请求的方法名，如GET、PUT、POST等
+$scheme 表示HTTP scheme，如在请求https://nginx.com/中表示https
+$server_addr 表示服务器地址
+$server_name 表示服务器名称
+$server_port 表示服务器端口
+$server_protocol 表示服务器向客户端发送响应的协议，如HTTP/1.1或HTTP/1.0
+*/ //相关代码分析可以参考:http://blog.csdn.net/fangru/article/details/9163553
+//Nginx在很多模块中都有内置的变量，常用的内置变量在HTT(www.111cn.net)P核心模块中，这些变量都可以使用正则表达式进行匹配。
 /*
-����ģ��ngx_http_core_module�ṩ�ı���ʹ��ngx_http_core_variables ��������preconfiguration�ص����� ngx_http_variables_add_core_vars���ж��壺
+核心模块ngx_http_core_module提供的变量使用ngx_http_core_variables 描述，由preconfiguration回调函数 ngx_http_variables_add_core_vars进行定义：
 */ //http://ialloc.org/posts/2013/10/20/ngx-notes-http-variables/
-static ngx_http_variable_t  ngx_http_core_variables[] = { //�ο�<��������nginx-����>  ������Щ������ֵ����Դ��ngx_http_headers_in�е�handler����
+static ngx_http_variable_t  ngx_http_core_variables[] = { //参考<输入剖析nginx-变量>  下面这些变量的值的来源是ngx_http_headers_in中的handler函数
 
-    { ngx_string("http_host"), NULL, ngx_http_variable_header, //ngx_http_get_variable��ִ��ngx_http_variable_header���Ӷ���headers_in.host��ȡֵ
+    { ngx_string("http_host"), NULL, ngx_http_variable_header, //ngx_http_get_variable中执行ngx_http_variable_header，从而从headers_in.host获取值
       offsetof(ngx_http_request_t, headers_in.host), 0, 0 }, 
 
     { ngx_string("http_user_agent"), NULL, ngx_http_variable_header,
@@ -325,8 +325,8 @@ static ngx_http_variable_t  ngx_http_core_variables[] = { //�ο�<��������nginx-�
     { ngx_string("request_uri"), NULL, ngx_http_variable_request,
       offsetof(ngx_http_request_t, unparsed_uri), 0, 0 },
 
-    //$uri �����еĵ�ǰURI(�����������������λ��$args)�����Բ�ͬ����������ݵ�$request_uri��ֵ��
-    //������ͨ���ڲ��ض��򣬻���ʹ��indexָ������޸ġ�
+    //$uri 请求中的当前URI(不带请求参数，参数位于$args)，可以不同于浏览器传递的$request_uri的值，
+    //它可以通过内部重定向，或者使用index指令进行修改。
     { ngx_string("uri"), NULL, ngx_http_variable_request,
       offsetof(ngx_http_request_t, uri),
       NGX_HTTP_VAR_NOCACHEABLE, 0 },
@@ -477,32 +477,32 @@ ngx_http_variable_value_t  ngx_http_variable_true_value =
 
 
 /*
-����name�Ǳ���������
-flags�Ǳ����ı�־��
-NGX_HTTP_VAR_CHANGEABLE�������ظ����壻
-NGX_HTTP_VAR_NOCACHEABLE������ֵ�����Ա����棬ÿ��ʹ�ñ�����㣻
-NGX_HTTP_VAR_INDEXED��ָʾ����ֵ�洢�������У���ʹ��ngx_http_get_variable������ȡ����ʱ����ÿ�ζ�Ϊ��������ֵ�ռ䣻
-NGX_HTTP_VAR_NOHASH�����ý������Ժ󣬱���������hash��������������ʱ�������ñ��������ʱ�����
+其中name是变量的名称
+flags是变量的标志：
+NGX_HTTP_VAR_CHANGEABLE：允许重复定义；
+NGX_HTTP_VAR_NOCACHEABLE：变量值不可以被缓存，每次使用必须计算；
+NGX_HTTP_VAR_INDEXED：指示变量值存储在数组中，当使用ngx_http_get_variable函数获取变量时不会每次都为变量分配值空间；
+NGX_HTTP_VAR_NOHASH：配置解析完以后，变量名不进hash索引，处理请求时不可以用变量名访问变量。
 
-�����˱����Ժ���Ҫ���ñ�����get_handler��set_handler���Լ�data������map���������õģ�
+创建了变量以后，需要设置变量的get_handler和set_handler，以及data。比如map是这样设置的：
     var->get_handler = ngx_http_map_variable;
     var->data = (uintptr_t) map;
  
-������get_handler��set_handler����������ʹ�ò��ԣ�
-get_handler���ֵ���lazy_handle�Ĳ��ԣ�ֻ��ʹ�õ��������Ż�������ֵ��
-set_handler���ֵ���active_handle�Ĳ��ԣ�ÿִ��һ�����󣬶���������ֵ��
-ͬʱ����get_handler��set_handler�ص�������û������ģ�������ݱ�����ʹ���ص㣬ȷ��ʹ������ĳһ�ֻص�������һ����˵��get_handler��ͨ��һЩ��
-���������õ�data������Ϊ��������get_handler����set_handler�Ĳ�����
+变量的get_handler和set_handler体现了两种使用策略，
+get_handler体现的是lazy_handle的策略，只有使用到变量，才会计算变量值；
+set_handler体现的是active_handle的策略，每执行一个请求，都会计算变量值。
+同时设置get_handler和set_handler回调函数是没有意义的，必须根据变量的使用特点，确定使用其中某一种回调函数。一般来说，get_handler更通用一些。
+而这里设置的data将会作为将来调用get_handler或者set_handler的参数。
 */ 
 
 /*
-ģ�����Լ��ı�����preconfiguration��ʱ��һ������ngx_http_add_variable���뵽variables_keys�� �������ngx_http_fastcgi_vars ngx_http_browsers 
-�����ļ���set���õı���Ҳ��ͨ��ngx_http_add_variable����
-//ע��:ngx_http_core_moduleģ��һ��Ҫ�������漰������ģ��ǰ���壬��Ϊvariables_keys�ռ�����ngx_http_core_moduleģ���ngx_http_variables_add_core_vars�д���
+模块内自己的变量在preconfiguration的时候一般会调用ngx_http_add_variable加入到variables_keys， 例如变量ngx_http_fastcgi_vars ngx_http_browsers 
+配置文件中set配置的变量也会通过ngx_http_add_variable创建
+//注意:ngx_http_core_module模块一定要在其他涉及到变量模块前定义，因为variables_keys空间是在ngx_http_core_module模块的ngx_http_variables_add_core_vars中创建
 */
 
-//����variables_keys hash������������Ѿ�����name����ֱ�ӷ���hash�ж�Ӧ��ngx_http_variable_t��Ϣ�����򴴽�ngx_http_variable_t hash�ڵ�
-//ע��:ngx_http_core_moduleģ��һ��Ҫ�������漰������ģ��ǰ���壬��Ϊvariables_keys�ռ�����ngx_http_core_moduleģ���ngx_http_variables_add_core_vars�д���
+//遍历variables_keys hash表，如果表中已经存在name，则直接返回hash中对应的ngx_http_variable_t信息，否则创建ngx_http_variable_t hash节点
+//注意:ngx_http_core_module模块一定要在其他涉及到变量模块前定义，因为variables_keys空间是在ngx_http_core_module模块的ngx_http_variables_add_core_vars中创建
  ngx_http_variable_t * 
 ngx_http_add_variable(ngx_conf_t *cf, ngx_str_t *name, ngx_uint_t flags)
 {
@@ -523,12 +523,12 @@ ngx_http_add_variable(ngx_conf_t *cf, ngx_str_t *name, ngx_uint_t flags)
     key = cmcf->variables_keys->keys.elts;
     for (i = 0; i < cmcf->variables_keys->keys.nelts; i++) {
         if (name->len != key[i].key.len
-            || ngx_strncasecmp(name->data, key[i].key.data, name->len) != 0) //û��ƥ�䵽name�ַ���
+            || ngx_strncasecmp(name->data, key[i].key.data, name->len) != 0) //没有匹配到name字符串
         {
             continue;
         }
 
-        v = key[i].value; //ngx_http_core_variables�е�ÿһ��ngx_http_variable_t��Ա
+        v = key[i].value; //ngx_http_core_variables中的每一个ngx_http_variable_t成员
 
         if (!(v->flags & NGX_HTTP_VAR_CHANGEABLE)) {
             ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
@@ -536,7 +536,7 @@ ngx_http_add_variable(ngx_conf_t *cf, ngx_str_t *name, ngx_uint_t flags)
             return NULL;
         }
 
-        return v; //����Ѿ����ڸ�name�ַ���������ֱ�ӷ���ngx_http_core_variables�ж�Ӧ��ngx_http_variable_t��Ա
+        return v; //如果已经存在该name字符串变量，直接返回ngx_http_core_variables中对应的ngx_http_variable_t成员
     }
 
     v = ngx_palloc(cf->pool, sizeof(ngx_http_variable_t));
@@ -574,17 +574,17 @@ ngx_http_add_variable(ngx_conf_t *cf, ngx_str_t *name, ngx_uint_t flags)
 }
 
 /*
-�ǿ����ж��߿��ܻ��������ˡ����ĳ������������NGX_HTTP_VAR_NOHASH�ı�־������ʹ�ñ��������ʣ���Ӧ����ô�����أ�
+那可能有读者可能会有疑问了。如果某个变量设置了NGX_HTTP_VAR_NOHASH的标志，不能使用变量名访问，那应该怎么访问呢？
 
 
-ngx_http_get_variable_index��ѱ�������һ��array�����ر�����array�е��±꣬����ģ�鱣��������±꣬��ͨ��
-ngx_http_get_indexed_variableֱ�ӵõ�����ֵ
+ngx_http_get_variable_index会把变量加入一个array并返回变量在array中的下标，这样模块保存变量的下标，并通过
+ngx_http_get_indexed_variable直接得到变量值
 */ 
 
-/*�ڽ��������ļ��е�ʱ������set���ñ�����ʱ�򣬻�Ѷ�Ӧ�ı������ӵ�variables���飬�����ڽ��������ļ������л��߽��������ļ�ǰ����û�а�ģ��
-���Դ��ı�������variables���飬��variables_keys����洢��ģ�����Զ�����Լ�set���������ļ��н������ı���
+/*在解析配置文件中的时候，遇到set配置变量的时候，会把对应的变量添加到variables数组，但是在解析配置文件过程中或者解析配置文件前，并没有把模块
+中自带的变量加入variables数组，而variables_keys中则存储了模块中自定义的以及set等在配置文件中解析到的变量
 */
-ngx_int_t //��cmcf->variables�в����Ƿ��ж�Ӧ��name������ȡ��variables�����е��±�
+ngx_int_t //在cmcf->variables中查找是否有对应的name，并获取在variables数组中的下标
 ngx_http_get_variable_index(ngx_conf_t *cf, ngx_str_t *name)
 {
     ngx_uint_t                  i;
@@ -617,7 +617,7 @@ ngx_http_get_variable_index(ngx_conf_t *cf, ngx_str_t *name)
                 continue;
             }
 
-            return i; //���������е��±�
+            return i; //返回数组中的下标
         }
     }
 
@@ -638,14 +638,14 @@ ngx_http_get_variable_index(ngx_conf_t *cf, ngx_str_t *name)
     v->get_handler = NULL;
     v->data = 0;
     v->flags = 0;
-    v->index = cmcf->variables.nelts - 1; //�����cmcf->variables�����е�λ��
+    v->index = cmcf->variables.nelts - 1; //标记在cmcf->variables数组中的位置
 
-    return v->index; //���������е��±�  ngx_http_variable_t->index
+    return v->index; //返回数组中的下标  ngx_http_variable_t->index
 }
 
 /*
-ngx_http_get_variable_index��ѱ�������һ��array�����ر�����array�е��±꣬����ģ�鱣��������±꣬��ͨ��
-ngx_http_get_indexed_variableֱ�ӵõ�����ֵ
+ngx_http_get_variable_index会把变量加入一个array并返回变量在array中的下标，这样模块保存变量的下标，并通过
+ngx_http_get_indexed_variable直接得到变量值
 */
 ngx_http_variable_value_t *
 ngx_http_get_indexed_variable(ngx_http_request_t *r, ngx_uint_t index)
@@ -667,7 +667,7 @@ ngx_http_get_indexed_variable(ngx_http_request_t *r, ngx_uint_t index)
 
     v = cmcf->variables.elts;
 
-    //ngx_http_rewrite_set������Ϊngx_http_rewrite_var  args��get_handler��ngx_http_variable_request ngx_http_variables_init_vars������"http_"�ȵ�get_handler
+    //ngx_http_rewrite_set中设置为ngx_http_rewrite_var  args的get_handler是ngx_http_variable_request ngx_http_variables_init_vars中设置"http_"等的get_handler
     if (v[index].get_handler(r, &r->variables[index], v[index].data)
         == NGX_OK)
     {
@@ -705,7 +705,7 @@ ngx_http_get_flushed_variable(ngx_http_request_t *r, ngx_uint_t index)
 }
 
 /*
-NGX HTTP_VAR_INDEXED��NGXHTTP_VARNOHASH������cmcf->variables_hash�Լ�ȡֵ����ngx_http_get_variable�ȣ����Ƕ���ΪSSIģ��ʵ�ֶ���Ƶ�
+NGX HTTP_VAR_INDEXED、NGXHTTP_VARNOHASH、变量cmcf->variables_hash以及取值函数ngx_http_get_variable等，它们都是为SSI模块实现而设计的
 */
 ngx_http_variable_value_t *
 ngx_http_get_variable(ngx_http_request_t *r, ngx_str_t *name, ngx_uint_t key)
@@ -1148,8 +1148,8 @@ ngx_http_variable_cookie(ngx_http_request_t *r, ngx_http_variable_value_t *v,
     return NGX_OK;
 }
 
-/*��������GET /download/nginx-1.9.2.rar?st=xhWL03HbtjrojpEAfiD6Mw&e=1452139931 HTTP/1.1��st��e�γɱ���$arg_st #arg_e��value�ֱ�
-ΪxhWL03HbtjrojpEAfiD6Mw 1452139931��$arg_st=xhWL03HbtjrojpEAfiD6Mw��#arg_e=1452139931 */
+/*把请求中GET /download/nginx-1.9.2.rar?st=xhWL03HbtjrojpEAfiD6Mw&e=1452139931 HTTP/1.1的st和e形成变量$arg_st #arg_e，value分别
+为xhWL03HbtjrojpEAfiD6Mw 1452139931即$arg_st=xhWL03HbtjrojpEAfiD6Mw，#arg_e=1452139931 */
 static ngx_int_t
 ngx_http_variable_argument(ngx_http_request_t *r, ngx_http_variable_value_t *v,
     uintptr_t data)
@@ -2463,9 +2463,9 @@ ngx_http_variable_not_found(ngx_http_request_t *r, ngx_http_variable_value_t *v,
 }
 
 /*
-1. ����ngx_regex_compile�����������ʽ�����ҵõ���ص����ݣ�������ģʽ��Ŀ��������ģʽ��Ŀ���б��ȡ�
-2.	���������ʽ��Ϣ�洢��ngx_http_regex_t���棬��������������ģʽ��Ŀ
-3. 	��������ģʽ ���뵽cmcf->variables_keys��cmcf->variables�С��Ա�����ͨ�����ֲ��ұ���ֵ��*/
+1. 调用ngx_regex_compile编译正则表达式，并且得到相关的数据，比如子模式数目，命名子模式数目，列表等。
+2.	将正则表达式信息存储到ngx_http_regex_t里面，包括正则句柄，子模式数目
+3. 	将命名子模式 加入到cmcf->variables_keys和cmcf->variables中。以备后续通过名字查找变量值。*/
 ngx_http_regex_t *
 ngx_http_regex_compile(ngx_conf_t *cf, ngx_regex_compile_t *rc)
 {
@@ -2480,7 +2480,7 @@ ngx_http_regex_compile(ngx_conf_t *cf, ngx_regex_compile_t *rc)
 
     rc->pool = cf->pool;
 
-    if (ngx_regex_compile(rc) != NGX_OK) { //����pcre_compile�������������ؽ������rc->regex = re;
+    if (ngx_regex_compile(rc) != NGX_OK) { //调用pcre_compile编译正则表达。返回结果存在rc->regex = re;
         ngx_conf_log_error(NGX_LOG_EMERG, cf, 0, "%V", &rc->err);
         return NULL;
     }
@@ -2491,52 +2491,52 @@ ngx_http_regex_compile(ngx_conf_t *cf, ngx_regex_compile_t *rc)
     }
 
     re->regex = rc->regex;
-    re->ncaptures = rc->captures;//�õ�$2,$3�ж��ٸ���pcre_fullinfo(re, NULL, PCRE_INFO_CAPTURECOUNT, &rc->captures);
+    re->ncaptures = rc->captures;//得到$2,$3有多少个。pcre_fullinfo(re, NULL, PCRE_INFO_CAPTURECOUNT, &rc->captures);
     re->name = rc->pattern;
 
     cmcf = ngx_http_conf_get_module_main_conf(cf, ngx_http_core_module);
     cmcf->ncaptures = ngx_max(cmcf->ncaptures, re->ncaptures); 
 
-    n = (ngx_uint_t) rc->named_captures;//��������ģʽ: pcre_fullinfo(re, NULL, PCRE_INFO_NAMECOUNT, &rc->named_captures);
+    n = (ngx_uint_t) rc->named_captures;//命名的子模式: pcre_fullinfo(re, NULL, PCRE_INFO_NAMECOUNT, &rc->named_captures);
 
-    if (n == 0) { //���������ģʽ(?<name>exp)û��
+    if (n == 0) { //如果命名子模式(?<name>exp)没有
         return re;
     }
 
     rv = ngx_palloc(rc->pool, n * sizeof(ngx_http_regex_variable_t));
-    if (rv == NULL) {//Ϊÿһ��������������ռ䵥���洢��
+    if (rv == NULL) {//为每一个命名变量申请空间单独存储。
         return NULL;
     }
 
-    re->variables = rv;//��¼������������ģʽ
+    re->variables = rv;//记录这种命名的子模式
     re->nvariables = n;
 
     size = rc->name_size; 
-    p = rc->names; //�����������ģʽ�Ķ�ά���������¼����ģʽ�����ƣ��Լ�������ģʽ�е��±�.
-    //names����ô�õ���: pcre_fullinfo(re, NULL, PCRE_INFO_NAMETABLE, &rc->names);
-    //һ��������ģʽ�Ķ�ά���洢��p��λ�á�ÿһ����һ������ģʽ��ÿ�е��ֽ���Ϊname_size
-    //�ο�http://blog.csdn.net/kofiory/article/details/5829697
+    p = rc->names; //正则的命名子模式的二维表，里面记录了子模式的名称，以及在所有模式中的下标.
+    //names是这么得到的: pcre_fullinfo(re, NULL, PCRE_INFO_NAMETABLE, &rc->names);
+    //一个命名子模式的二维表存储在p的位置。每一行是一个命名模式，每行的字节数为name_size
+    //参考http://blog.csdn.net/kofiory/article/details/5829697
 
-    ///ngx_http_regex_compile�з���ռ�,�������   ngx_http_regex_exec��ȡ��Ӧ������ֵ
-    for (i = 0; i < n; i++) { //����ÿһ��named_captures��
-        rv[i].capture = 2 * ((p[0] << 8) + p[1]); //��һ���Լ�����8λ+�ڶ����ֽڵ������������ģʽ������ģʽ�е��±ꡣ
+    ///ngx_http_regex_compile中分配空间,保存变量   ngx_http_regex_exec获取对应变量的值
+    for (i = 0; i < n; i++) { //遍历每一个named_captures，
+        rv[i].capture = 2 * ((p[0] << 8) + p[1]); //第一个自己左移8位+第二个字节等于这个命名子模式在所有模式中的下标。
 
-        name.data = &p[2]; //�������ֽڿ�ʼ�������������֡�
-        name.len = ngx_strlen(name.data); //���ֳ���
+        name.data = &p[2]; //第三个字节开始就是命名的名字。
+        name.len = ngx_strlen(name.data); //名字长度
         
-        ///�����������ģʽ���뵽cmcf->variables_keys��
+        ///将这个命名子模式加入到cmcf->variables_keys中
         v = ngx_http_add_variable(cf, &name, NGX_HTTP_VAR_CHANGEABLE);
         if (v == NULL) {
             return NULL;
         }
 
-        //Ȼ���cmcf->variables�в������������Ӧ���±��Ƕ��٣����û�У���Ȼ�����ӵ�����ȥ��
+        //然后从cmcf->variables中查找这个变量对应的下标是多少，如果没有，当然就增加到里面去。
         rv[i].index = ngx_http_get_variable_index(cf, &name);
         if (rv[i].index == NGX_ERROR) {
             return NULL;
         }
 
-        //��ʼ��Ϊ�պ���
+        //初始化为空函数
         v->get_handler = ngx_http_variable_not_found;
 
         p += size;
@@ -2545,7 +2545,7 @@ ngx_http_regex_compile(ngx_conf_t *cf, ngx_regex_compile_t *rc)
     return re;
 }
 
-//���Ѿ������regex ��e->line,Ҳ����sȥƥ�䣬�����Ƿ�ƥ��ɹ������ƥ��ɹ������������r->variables���桢
+//用已经编译的regex 跟e->line,也就是s去匹配，看看是否匹配成功。如果匹配成功，整理存放在r->variables里面、
 ngx_int_t
 ngx_http_regex_exec(ngx_http_request_t *r, ngx_http_regex_t *re, ngx_str_t *s)
 {
@@ -2556,7 +2556,7 @@ ngx_http_regex_exec(ngx_http_request_t *r, ngx_http_regex_t *re, ngx_str_t *s)
 
     cmcf = ngx_http_get_module_main_conf(r, ngx_http_core_module);
 
-    if (re->ncaptures) { //����ncaptures��С�������ڴ����ڴ������ƥ��Ľ����
+    if (re->ncaptures) { //根据ncaptures大小，申请内存用于存放正则匹配的结果。
         len = cmcf->ncaptures;
 
         if (r->captures == NULL) {
@@ -2570,8 +2570,8 @@ ngx_http_regex_exec(ngx_http_request_t *r, ngx_http_regex_t *re, ngx_str_t *s)
         len = 0;
     }
 
-    //�����������ʽ��ָ�����ַ����н��в��Һ�ƥ��,�����ƥ��Ľ��.
-    rc = ngx_regex_exec(re->regex, s, r->captures, len); //len��ȡֵ��http://www.rosoo.net/a/201004/9082.html
+    //根据正则表达式到指定的字符串中进行查找和匹配,并输出匹配的结果.
+    rc = ngx_regex_exec(re->regex, s, r->captures, len); //len的取值见http://www.rosoo.net/a/201004/9082.html
 
     if (rc == NGX_REGEX_NO_MATCHED) {
         return NGX_DECLINED;
@@ -2584,18 +2584,18 @@ ngx_http_regex_exec(ngx_http_request_t *r, ngx_http_regex_t *re, ngx_str_t *s)
         return NGX_ERROR;
     }
 
-    ////ngx_http_regex_compile�з���ռ�,�������   ngx_http_regex_exec��ȡ��Ӧ������ֵ
-    for (i = 0; i < re->nvariables; i++) { //���������ʽ�е�������ģʽ�ı�����ȡ��
+    ////ngx_http_regex_compile中分配空间,保存变量   ngx_http_regex_exec获取对应变量的值
+    for (i = 0; i < re->nvariables; i++) { //把正则表达式中的命名子模式的变量获取到
         /*
-           ����:rewrite   ^(?<name1>/download/.*)/media/(?<name2>.*)\..*$    $name1/mp3/$name2.mp3  break;
-           ���uriΪ/download/aaa/media/bbb.com����name1����Ϊ/download/aaa  name2����Ϊbbb 
-           �����vv->len��vv->data�ֱ�ָ��"/download/aaa"�ַ������ȣ����ַ���"/download/aaa"
+           例如:rewrite   ^(?<name1>/download/.*)/media/(?<name2>.*)\..*$    $name1/mp3/$name2.mp3  break;
+           如果uri为/download/aaa/media/bbb.com，则name1变量为/download/aaa  name2变量为bbb 
+           下面的vv->len和vv->data分别指向"/download/aaa"字符串长度，和字符串"/download/aaa"
           */
         n = re->variables[i].capture;
         index = re->variables[i].index;
         vv = &r->variables[index];
 
-        //��s��re�Ķ�Ӧ��ϵ�У���s�л�ȡre�еı�����ֵ
+        //从s和re的对应关系中，从s中获取re中的变量的值
         vv->len = r->captures[n + 1] - r->captures[n];
         vv->valid = 1;
         vv->no_cacheable = 0;
@@ -2616,10 +2616,10 @@ ngx_http_regex_exec(ngx_http_request_t *r, ngx_http_regex_t *re, ngx_str_t *s)
     }
 
     /*  
-     �����������ʽ���re.name= ^(/download/.*)/media/(.*)/tt/(.*)$��  s=/download/aa/media/bdb/tt/ad,�����ǻ�ƥ�䣬ͬʱƥ���
-     ��������3�����򷵻�ֵΪ3+1=4,�����ƥ���򷵻�-1
+     例如正则表达式语句re.name= ^(/download/.*)/media/(.*)/tt/(.*)$，  s=/download/aa/media/bdb/tt/ad,则他们会匹配，同时匹配的
+     变量数有3个，则返回值为3+1=4,如果不匹配则返回-1
 
-     ����*2����Ϊ��ȡǰ�������е�3��������Ӧ��ֵ��Ҫ�ɶ�ʹ��r->captures���ο�ngx_http_script_copy_capture_code��
+     这里*2是因为获取前面例子中的3个变量对应的值需要成对使用r->captures，参考ngx_http_script_copy_capture_code等
      */
     r->ncaptures = rc * 2;  
     r->captures_data = s->data;
@@ -2629,7 +2629,7 @@ ngx_http_regex_exec(ngx_http_request_t *r, ngx_http_regex_t *re, ngx_str_t *s)
 
 #endif
 
-//ngx_http_variables_add_core_vars��ngx_http_core_variables�еĸ��ֱ�����Ϣ��ŵ�cmcf->variables_keys��
+//ngx_http_variables_add_core_vars把ngx_http_core_variables中的各种变量信息存放到cmcf->variables_keys中
 ngx_int_t
 ngx_http_variables_add_core_vars(ngx_conf_t *cf)
 {
@@ -2681,20 +2681,20 @@ ngx_http_variables_add_core_vars(ngx_conf_t *cf)
 }
 
 /*
-����Ϸ��Լ���߼��ܼ򵥣�ʵ���ں���ngx_http_variables_init_vars�ڣ������cmcf->variables���ռ���������ʹ�ñ��������ȥ�Ѷ������
-cmcf->variableskeys�����ֲ��ҡ�����ҵ����ʾ�û�ʹ���������û�ҵ�������Ҫע�⣬�⻹ֻ��˵����������һ���Ƿ�������
-    ��һ���ֱ�����Ȼû�а�����cmcf->variables_key�ڣ���������ȴ�Ϸ����ⲿ�ֱ������ԡ�http_������sent_http_������upstream http������cookie_����
-��arg����ͷ�������������Щ�����Ӵ��Ҳ���Ԥ֪����������ǰ���岢�ռ���cmcf->variables_keys�ڣ������ԡ�arg����ͷ�����Ĳ�����������
-�ݿͻ�������URIʱ�����Ĳ�����I˾����ͬ��һ�������ڡ�http:// 192.168. 164.2/?pageid=2��������������Զ����ɱ���$argpageid����˻����ж�
-�û��������ļ���ʹ�õı����Ƿ�������������������˵���Ǽ���û�ʹ�õı�����ǰ�漸���ַ��Ƿ�������һ�£���Ҳ���˵�����û��Զ������ʱ
-��ò�Ҫ����Щ�ַ���ͷ������Ȼ������û��������ļ���ʹ���˱���$argpageid�����ͻ�������ʱȴ��û�д���pageid��������ʱ����$arg_pageidֵΪ�գ�
-�����ܻ����ǺϷ��ģ��������ʾ�������������Ĵ��������������ļ��ڱ������Ƿ���д��ȷ��(unknown "XXX" variable)
-    ����ngx_http_variables_init_vars()�ڶ���ʹ�ñ������кϷ��Լ���ͬʱ�����ںϷ���ʹ�ñ����Ὣ���Ӧ��������Ҫ�ֶ����úã�
-��get_handler0�ص���data���ݡ�flags��ꡣ��ǰ������Ľṹ��ngx_http_variables����������name�洢���Ǳ������ַ�����index�洢��
-�Ǹñ�����cmcf->variables�ڵ��±꣨ͨ������ngx_http_get_variable_index��ã������������ǲ���ģ���set_handlerr()�ص�Ŀǰֻ��
-ʹ��set����ָ���ű�����ʱ�Ż��õ���������ֱ��ʹ��cmcf->variables_keys���Ӧ�����ĸ��ֶΣ�����һ�������ļ�������ϣ�
-set_handlerr()�ص�Ҳ���ò����ˣ�����ֻ��ʣ�µ������ֶβ���Ҫ����ֵ����������cmcf->variables_keys���Ӧ�����Ķ�Ӧ�ֶο���������
-����������������͸��ݲ�ͬ�����й̶��ĸ�ֵ��
+这个合法性检测逻辑很简单，实现在函数ngx_http_variables_init_vars内，其遍历cmcf->variables内收集的所有已使用变量，逐个去已定义变量
+cmcf->variableskeys集合罩查找。如果找到则表示用户使用无误，如果没找到，则需要注意，这还只能说明它可能是一个非法变量。
+    有一部分变量虽然没有包含在cmcf->variables_key内，但是它们却合法。这部分变量是以”http_”、”sent_http_”、”upstream http”、”cookie_”、
+”arg”开头的五类变量。这些变量庞大并且不可预知，不可能提前定义并收集到cmcf->variables_keys内，比如以”arg”开头代表的参数类变量会根
+据客户端请求URI时附带的参数不I司而不同，一个类似于“http:// 192.168. 164.2/?pageid=2”这样的请求会自动生成变量$argpageid。因此还需判断
+用户在配置文件里使用的变量是否在这五类变量里，具体来说就是检测用户使用的变量名前面几个字符是否与它们一致（这也间接说明，用户自定义变量时
+最好不要以这些字符开头）。当然，如果用户在配置文件里使用了变量$argpageid，而客户端请求时却并没有带上pageid参数，此时变量$arg_pageid值为空，
+但它总还算是合法的，但如果提示类似如下这样的错误，请需检查配置文件内变量名是否书写正确。(unknown "XXX" variable)
+    函数ngx_http_variables_init_vars()在对已使用变量进行合法性检测的同时，对于合法的使用变量会将其对应的三个主要字段设置好，
+即get_handler0回调、data数据、flags旗标。从前面给出的结构体ngx_http_variables定义来看，name存储的是变量名字符串，index存储的
+是该变量在cmcf->variables内的下标（通过函数ngx_http_get_variable_index获得），这两个都是不变的，而set_handlerr()回调目前只在
+使用set配置指令构造脚本引擎时才会用到，而那里直接使用cmcf->variables_keys里对应变量的该字段，并且一旦配置文件解析完毕，
+set_handlerr()回调也就用不上了，所以只有剩下的三个字段才需要做赋值操作，即从cmcf->variables_keys里对应变量的对应字段拷贝过来，
+或是另外五类变量就根据不同类别进行固定的赋值。
 */
 ngx_int_t
 ngx_http_variables_init_vars(ngx_conf_t *cf)
@@ -2721,7 +2721,7 @@ ngx_http_variables_init_vars(ngx_conf_t *cf)
             if (v[i].name.len == key[n].key.len
                 && ngx_strncmp(v[i].name.data, key[n].key.data, v[i].name.len)
                    == 0)
-            { //���ںϷ���ʹ�ñ����Ὣ���Ӧ��������Ҫ�ֶ����úã���get_handler0�ص���data���ݡ�flags���
+            { //对于合法的使用变量会将其对应的三个主要字段设置好，即get_handler0回调、data数据、flags旗标
                 v[i].get_handler = av->get_handler;
                 v[i].data = av->data;
 
@@ -2739,19 +2739,19 @@ ngx_http_variables_init_vars(ngx_conf_t *cf)
         }
 
         /*
-          ngx_http_variables_init_vars����variables�еı����Ƿ���variables_keys�У�������ڣ�˵�����ʹ�õ��ı����п�����û�ж�����ģ�
-          �����ǲ���ʹ�õġ�Ϊʲô���п��ܣ���forѭ��������Ǽ���if�����жϣ��������variables_keys�еı����������if�ж��о�˵�����
-          �����ǺϷ��ģ����򲻺Ϸ�
+          ngx_http_variables_init_vars会检测variables中的变量是否在variables_keys中，如果不在，说明这个使用到的变量有可能是没有定义过的，
+          这样是不能使用的。为什么是有可能？看for循环下面的那几个if条件判断，如果不在variables_keys中的变量在下面的if判断中就说明这个
+          变量是合法的，否则不合法
 
-            ��һ���ֱ�����Ȼû�а�����cmcf->variables_key�ڣ���������ȴ�Ϸ����ⲿ�ֱ������ԡ�http_������sent_http_������upstream http������cookie_����
-        ��arg����ͷ�������������Щ�����Ӵ��Ҳ���Ԥ֪����������ǰ���岢�ռ���cmcf->variables_keys�ڣ������ԡ�arg����ͷ�����Ĳ�����������
-        �ݿͻ�������URIʱ�����Ĳ�����ͬ����ͬ��һ�������ڡ�http:// 192.168. 164.2/?pageid=2��������������Զ����ɱ���$argpageid����˻����ж�
-        �û��������ļ���ʹ�õı����Ƿ�������������������˵���Ǽ���û�ʹ�õı�����ǰ�漸���ַ��Ƿ�������һ�£���Ҳ���˵�����û��Զ������ʱ
-        ��ò�Ҫ����Щ�ַ���ͷ������Ȼ������û��������ļ���ʹ���˱���$argpageid�����ͻ�������ʱȴ��û�д���pageid��������ʱ����$arg_pageidֵΪ�գ�
-        �����ܻ����ǺϷ��ģ��������ʾ�������������Ĵ��������������ļ��ڱ������Ƿ���д��ȷ��(unknown "XXX" variable)
-          */ //��variables�У����ǲ���variables_keys�еı������������������ַ�����ͷ�����ǷǷ���
+            有一部分变量虽然没有包含在cmcf->variables_key内，但是它们却合法。这部分变量是以”http_”、”sent_http_”、”upstream http”、”cookie_”、
+        ”arg”开头的五类变量。这些变量庞大并且不可预知，不可能提前定义并收集到cmcf->variables_keys内，比如以”arg”开头代表的参数类变量会根
+        据客户端请求URI时附带的参数不同而不同，一个类似于“http:// 192.168. 164.2/?pageid=2”这样的请求会自动生成变量$argpageid。因此还需判断
+        用户在配置文件里使用的变量是否在这五类变量里，具体来说就是检测用户使用的变量名前面几个字符是否与它们一致（这也间接说明，用户自定义变量时
+        最好不要以这些字符开头）。当然，如果用户在配置文件里使用了变量$argpageid，而客户端请求时却并没有带上pageid参数，此时变量$arg_pageid值为空，
+        但它总还算是合法的，但如果提示类似如下这样的错误，请需检查配置文件内变量名是否书写正确。(unknown "XXX" variable)
+          */ //在variables中，但是不在variables_keys中的变量如果不是以下面的字符串开头，则是非法的
 
-        //���set ���õı����������������ַ�����ͷ������ngx_http_rewrite_set��ʱ����ʵ�Ѿ����ú���get_hendler��data
+        //如果set 设置的变量名不是以以下字符串开头，则在ngx_http_rewrite_set的时候其实已经设置好了get_hendler和data
         
         if (ngx_strncmp(v[i].name.data, "http_", 5) == 0) {
             v[i].get_handler = ngx_http_variable_unknown_header_in;

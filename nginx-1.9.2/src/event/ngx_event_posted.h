@@ -14,30 +14,30 @@
 #include <ngx_event.h>
 
 /*
-postÊÂ¼þ¶ÓÁÐµÄ²Ù×÷·½·¨
-©³©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©×©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©×©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©·
-©§    ·½·¨Ãû                                        ©§    ²ÎÊýº¬Òå                  ©§    Ö´ÐÐÒâÒå                        ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§  ngx_locked_post_event(ev,                       ©§  evÊÇÒªÌí¼Óµ½postÊÂ¼þ¶ÓÁÐ    ©§  ÏòqueueÊÂ¼þ¶ÓÁÐÖÐÌí¼ÓÊÂ¼þev£¬×¢   ©§
-©§queue)                                            ©§µÄÊÂ¼þ£¬queueÊÇpostÊÂ¼þ¶ÓÁÐ   ©§Òâ£¬ev½«²åÈëµ½ÊÂ¼þ¶ÓÁÐµÄÊ×²¿        ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§                                                  ©§                              ©§  Ïß³Ì°²È«µØÏòqueueÊÂ¼þ¶ÓÁÐÖÐÌí¼Ó   ©§
-©§                                                  ©§    evÊÇÒªÌí¼Óµ½post¶ÓÁÐµÄÊÂ  ©§ÊÂ¼þev¡£ÔÚÄ¿Ç°²»Ê¹ÓÃ¶àÏß³ÌµÄÇé¿ö    ©§
-©§ngx_post_event(ev, queue)                         ©§                              ©§                                    ©§
-©§                                                  ©§¼þ£¬queueÊÇpostÊÂ¼þ¶ÓÁÐ       ©§ÏÂ£¬ËüÓëngx_locked_post_eventµÄ¹¦ÄÜ ©§
-©§                                                  ©§                              ©§ÊÇÏàÍ¬µÄ                            ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§                                                  ©§    evÊÇÒª´ÓÄ³¸öpostÊÂ¼þ¶ÓÁÐ  ©§  ½«ÊÂ¼þev´ÓÆäËùÊôµÄpostÊÂ¼þ¶ÓÁÐ    ©§
-©§ngx_delete_posted_event(ev)                       ©§                              ©§                                    ©§
-©§                                                  ©§ÒÆ³ýµÄÊÂ¼þ                    ©§ÖÐÉ¾³ý                              ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§                                                  ©§  cycleÊÇ½ø³ÌµÄºËÐÄ½á¹¹Ìå     ©§                                    ©§
-©§   void ngx_event_process_posted                  ©§ngx_cycle_tµÄÖ¸Õë£®postedÊÇÒª ©§  À¾ÓÃpostedÊÂ¼þ¶ÓÁÐÖÐËùÓÐÊÂ¼þ      ©§
-©§(ngx_cycle_t *cycle,ngx_thread_                   ©§²Ù×÷µÄpostÊÂ¼þ¶ÓÁÐ£¬ËüµÄÈ¡Öµ  ©§µÄhandler»Øµ÷·½·¨¡£Ã¿¸öÊÂ¼þµ÷ÓÃÍê   ©§
-©§volatile ngx_event_t **posted);                   ©§Ä¿Ç°½ö¿ÉÒÔÎªngx_posted_events ©§handler·½·¨ºó£¬¾Í»á´ÓpostedÊÂ¼þ¶ÓÁÐ ©§
-©§                                               I  ©§                              ©§ÖÐÉ¾³ý                              ©§
-©§                                                  ©§»òÕßngx_posted_accept_events  ©§                                    ©§
-©»©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ß©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ß©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¿
+postäº‹ä»¶é˜Ÿåˆ—çš„æ“ä½œæ–¹æ³•
+â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”³â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”³â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”“
+â”ƒ    æ–¹æ³•å                                        â”ƒ    å‚æ•°å«ä¹‰                  â”ƒ    æ‰§è¡Œæ„ä¹‰                        â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ  ngx_locked_post_event(ev,                       â”ƒ  evæ˜¯è¦æ·»åŠ åˆ°postäº‹ä»¶é˜Ÿåˆ—    â”ƒ  å‘queueäº‹ä»¶é˜Ÿåˆ—ä¸­æ·»åŠ äº‹ä»¶evï¼Œæ³¨   â”ƒ
+â”ƒqueue)                                            â”ƒçš„äº‹ä»¶ï¼Œqueueæ˜¯postäº‹ä»¶é˜Ÿåˆ—   â”ƒæ„ï¼Œevå°†æ’å…¥åˆ°äº‹ä»¶é˜Ÿåˆ—çš„é¦–éƒ¨        â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ                                                  â”ƒ                              â”ƒ  çº¿ç¨‹å®‰å…¨åœ°å‘queueäº‹ä»¶é˜Ÿåˆ—ä¸­æ·»åŠ    â”ƒ
+â”ƒ                                                  â”ƒ    evæ˜¯è¦æ·»åŠ åˆ°posté˜Ÿåˆ—çš„äº‹  â”ƒäº‹ä»¶evã€‚åœ¨ç›®å‰ä¸ä½¿ç”¨å¤šçº¿ç¨‹çš„æƒ…å†µ    â”ƒ
+â”ƒngx_post_event(ev, queue)                         â”ƒ                              â”ƒ                                    â”ƒ
+â”ƒ                                                  â”ƒä»¶ï¼Œqueueæ˜¯postäº‹ä»¶é˜Ÿåˆ—       â”ƒä¸‹ï¼Œå®ƒä¸Žngx_locked_post_eventçš„åŠŸèƒ½ â”ƒ
+â”ƒ                                                  â”ƒ                              â”ƒæ˜¯ç›¸åŒçš„                            â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ                                                  â”ƒ    evæ˜¯è¦ä»ŽæŸä¸ªpostäº‹ä»¶é˜Ÿåˆ—  â”ƒ  å°†äº‹ä»¶evä»Žå…¶æ‰€å±žçš„postäº‹ä»¶é˜Ÿåˆ—    â”ƒ
+â”ƒngx_delete_posted_event(ev)                       â”ƒ                              â”ƒ                                    â”ƒ
+â”ƒ                                                  â”ƒç§»é™¤çš„äº‹ä»¶                    â”ƒä¸­åˆ é™¤                              â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ                                                  â”ƒ  cycleæ˜¯è¿›ç¨‹çš„æ ¸å¿ƒç»“æž„ä½“     â”ƒ                                    â”ƒ
+â”ƒ   void ngx_event_process_posted                  â”ƒngx_cycle_tçš„æŒ‡é’ˆï¼Žpostedæ˜¯è¦ â”ƒ  è°°ç”¨postedäº‹ä»¶é˜Ÿåˆ—ä¸­æ‰€æœ‰äº‹ä»¶      â”ƒ
+â”ƒ(ngx_cycle_t *cycle,ngx_thread_                   â”ƒæ“ä½œçš„postäº‹ä»¶é˜Ÿåˆ—ï¼Œå®ƒçš„å–å€¼  â”ƒçš„handlerå›žè°ƒæ–¹æ³•ã€‚æ¯ä¸ªäº‹ä»¶è°ƒç”¨å®Œ   â”ƒ
+â”ƒvolatile ngx_event_t **posted);                   â”ƒç›®å‰ä»…å¯ä»¥ä¸ºngx_posted_events â”ƒhandleræ–¹æ³•åŽï¼Œå°±ä¼šä»Žpostedäº‹ä»¶é˜Ÿåˆ— â”ƒ
+â”ƒ                                               I  â”ƒ                              â”ƒä¸­åˆ é™¤                              â”ƒ
+â”ƒ                                                  â”ƒæˆ–è€…ngx_posted_accept_events  â”ƒ                                    â”ƒ
+â”—â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”»â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”»â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”›
 */
 #define ngx_post_event(ev, q)                                                 \
                                                                               \

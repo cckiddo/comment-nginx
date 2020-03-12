@@ -36,26 +36,26 @@
 #define ngx_ssl_session_t       SSL_SESSION
 #define ngx_ssl_conn_t          SSL
 
-//ngx_http_ssl_srv_conf_t->ssl³ÉÔ±ÊôÓÚ¸Ã½á¹¹
+//ngx_http_ssl_srv_conf_t->sslæˆå‘˜å±äºè¯¥ç»“æ„
 typedef struct {
     SSL_CTX                    *ctx;
     ngx_log_t                  *log;
-    size_t                      buffer_size; /* Ä¬ÈÏNGX_SSL_BUFSIZE, ¸³Öµ¼ûngx_ssl_create */
+    size_t                      buffer_size; /* é»˜è®¤NGX_SSL_BUFSIZE, èµ‹å€¼è§ngx_ssl_create */
 } ngx_ssl_t;
 
-/* ´´½¨¿Õ¼äºÍ¸³Öµ¼ûngx_ssl_create_connection£¬ngx_connection_t.ssl³ÉÔ±ÊôÓÚ¸Ã½á¹¹ */
+/* åˆ›å»ºç©ºé—´å’Œèµ‹å€¼è§ngx_ssl_create_connectionï¼Œngx_connection_t.sslæˆå‘˜å±äºè¯¥ç»“æ„ */
 typedef struct {
-    ngx_ssl_conn_t             *connection; //¸³Öµ¼ûngx_ssl_create_connection
+    ngx_ssl_conn_t             *connection; //èµ‹å€¼è§ngx_ssl_create_connection
 
     ngx_int_t                   last;
     ngx_buf_t                  *buf;
     size_t                      buffer_size;
 
-    /* ngx_ssl_handshakeÎÕÊÖÎªÍê³ÉµÄÊ±ºò£¬ÔÚngx_http_ssl_handshake¸³ÖµÎªngx_http_ssl_handshake_handler£¬
-       Èç¹ûÊÇºÍºó¶Ë½øĞĞsslÎÕÊÖ´¦Àí£¬ÔòÎªngx_http_upstream_ssl_handshake
-       Èç¹ûÊÇssl»ÓÊÖ£¬ÔòÎªngx_http_close_connection
+    /* ngx_ssl_handshakeæ¡æ‰‹ä¸ºå®Œæˆçš„æ—¶å€™ï¼Œåœ¨ngx_http_ssl_handshakeèµ‹å€¼ä¸ºngx_http_ssl_handshake_handlerï¼Œ
+       å¦‚æœæ˜¯å’Œåç«¯è¿›è¡Œsslæ¡æ‰‹å¤„ç†ï¼Œåˆ™ä¸ºngx_http_upstream_ssl_handshake
+       å¦‚æœæ˜¯sslæŒ¥æ‰‹ï¼Œåˆ™ä¸ºngx_http_close_connection
     */
-    ngx_connection_handler_pt   handler; //sslµ¥ÏòÈÏÖ¤ËÄ´ÎÎÕÊÖÍê³ÉºóÔÚngx_ssl_handshake_handlerÖĞÖ´ĞĞ¸Ãhandler
+    ngx_connection_handler_pt   handler; //sslå•å‘è®¤è¯å››æ¬¡æ¡æ‰‹å®Œæˆååœ¨ngx_ssl_handshake_handlerä¸­æ‰§è¡Œè¯¥handler
 
     ngx_event_handler_pt        saved_read_handler;
     ngx_event_handler_pt        saved_write_handler;

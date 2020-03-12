@@ -13,10 +13,10 @@
 #include <ngx_core.h>
 
 
-#define NGX_IO_SENDFILE    1 //./configureÅäÖÃÁËsendfile£¬±àÒëµÄÊ±ºò¼ÓÉÏsendfileÑ¡Ïî,£¬¾Í»áÔÚngx_linux_io°ÑflagÖÃÎª¸ÃÖµ
+#define NGX_IO_SENDFILE    1 //./configureé…ç½®äº†sendfileï¼Œç¼–è¯‘çš„æ—¶å€™åŠ ä¸Šsendfileé€‰é¡¹,ï¼Œå°±ä¼šåœ¨ngx_linux_ioæŠŠflagç½®ä¸ºè¯¥å€¼
 
 
-//Ò»ÏÂËÄ¸ö·½·¨ÔÚngx_connection_sÖĞ°üº¬
+//ä¸€ä¸‹å››ä¸ªæ–¹æ³•åœ¨ngx_connection_sä¸­åŒ…å«
 typedef ssize_t (*ngx_recv_pt)(ngx_connection_t *c, u_char *buf, size_t size);
 typedef ssize_t (*ngx_recv_chain_pt)(ngx_connection_t *c, ngx_chain_t *in,
     off_t limit);
@@ -30,7 +30,7 @@ typedef struct {
     ngx_recv_pt        udp_recv;
     ngx_send_pt        send;
     ngx_send_chain_pt  send_chain;
-    ngx_uint_t         flags;//ÀıÈçNGX_IO_SENDFILE
+    ngx_uint_t         flags;//ä¾‹å¦‚NGX_IO_SENDFILE
 } ngx_os_io_t;
 
 ngx_int_t ngx_os_init(ngx_log_t *log);
@@ -58,10 +58,10 @@ ngx_chain_t *ngx_writev_chain(ngx_connection_t *c, ngx_chain_t *in,
 
 typedef struct {
     struct iovec  *iovs;
-    ngx_uint_t     count; //µÈÓÚ0£¬Ôò±íÃ÷chainÁ´ÖĞµÄËùÓĞÊı¾İÔÚÎÄ¼şÖĞ
+    ngx_uint_t     count; //ç­‰äº0ï¼Œåˆ™è¡¨æ˜chainé“¾ä¸­çš„æ‰€æœ‰æ•°æ®åœ¨æ–‡ä»¶ä¸­
     size_t         size;
     ngx_uint_t     nalloc;
-} ngx_iovec_t;//¿ÉÒÔ²Î¿¼ngx_output_chain_to_iovec
+} ngx_iovec_t;//å¯ä»¥å‚è€ƒngx_output_chain_to_iovec
 
 ngx_chain_t *ngx_output_chain_to_iovec(ngx_iovec_t *vec, ngx_chain_t *in,
     size_t limit, ngx_log_t *log);

@@ -59,7 +59,7 @@ typedef uint64_t   ngx_tid_t;
 ngx_tid_t ngx_thread_tid(void);
 
 #define ngx_log_tid           ngx_thread_tid() 
-//ngx_log_pid, ngx_log_tid进程ID和线程ID(主线程号和进程号相同，但在开启线程池的时候线程ID和进程ID不同),日志文件中会记录
+//ngx_log_pid, ngx_log_tid杩涚▼ID鍜岀嚎绋婭D(涓荤嚎绋嬪彿鍜岃繘绋嬪彿鐩稿悓锛屼絾鍦ㄥ紑鍚嚎绋嬫睜鐨勬椂鍊欑嚎绋婭D鍜岃繘绋婭D涓嶅悓),鏃ュ織鏂囦欢涓細璁板綍
 
 #else
 

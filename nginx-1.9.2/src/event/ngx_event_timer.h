@@ -50,19 +50,19 @@ ngx_event_del_timer(ngx_event_t *ev, const char *func, unsigned int line)
 }
 
 /*
-1.ngx_event_s¿ÉÒÔÊÇÆÕÍ¨µÄepoll¶ÁĞ´ÊÂ¼ş(²Î¿¼ngx_event_connect_peer->ngx_add_conn»òÕßngx_add_event)£¬Í¨¹ı¶ÁĞ´ÊÂ¼ş´¥·¢
+1.ngx_event_så¯ä»¥æ˜¯æ™®é€šçš„epollè¯»å†™äº‹ä»¶(å‚è€ƒngx_event_connect_peer->ngx_add_connæˆ–è€…ngx_add_event)ï¼Œé€šè¿‡è¯»å†™äº‹ä»¶è§¦å‘
 
-2.Ò²¿ÉÒÔÊÇÆÕÍ¨¶¨Ê±Æ÷ÊÂ¼ş(²Î¿¼ngx_cache_manager_process_handler->ngx_add_timer(ngx_event_add_timer))£¬Í¨¹ıngx_process_events_and_timersÖĞµÄ
-epoll_wait·µ»Ø£¬¿ÉÒÔÊÇ¶ÁĞ´ÊÂ¼ş´¥·¢·µ»Ø£¬Ò²¿ÉÄÜÊÇÒòÎªÃ»»ñÈ¡µ½¹²ÏíËø£¬´Ó¶øµÈ´ı0.5s·µ»ØÖØĞÂ»ñÈ¡ËøÀ´¸úĞÂÊÂ¼ş²¢Ö´ĞĞ³¬Ê±ÊÂ¼şÀ´¸úĞÂÊÂ¼ş²¢ÇÒÅĞ¶Ï¶¨
-Ê±Æ÷Á´±íÖĞµÄ³¬Ê±ÊÂ¼ş£¬³¬Ê±ÔòÖ´ĞĞ´Ó¶øÖ¸ÏòeventµÄhandler£¬È»ºó½øÒ»²½Ö¸Ïò¶ÔÓ¦r»òÕßuµÄ->write_event_handler  read_event_handler
+2.ä¹Ÿå¯ä»¥æ˜¯æ™®é€šå®šæ—¶å™¨äº‹ä»¶(å‚è€ƒngx_cache_manager_process_handler->ngx_add_timer(ngx_event_add_timer))ï¼Œé€šè¿‡ngx_process_events_and_timersä¸­çš„
+epoll_waitè¿”å›ï¼Œå¯ä»¥æ˜¯è¯»å†™äº‹ä»¶è§¦å‘è¿”å›ï¼Œä¹Ÿå¯èƒ½æ˜¯å› ä¸ºæ²¡è·å–åˆ°å…±äº«é”ï¼Œä»è€Œç­‰å¾…0.5sè¿”å›é‡æ–°è·å–é”æ¥è·Ÿæ–°äº‹ä»¶å¹¶æ‰§è¡Œè¶…æ—¶äº‹ä»¶æ¥è·Ÿæ–°äº‹ä»¶å¹¶ä¸”åˆ¤æ–­å®š
+æ—¶å™¨é“¾è¡¨ä¸­çš„è¶…æ—¶äº‹ä»¶ï¼Œè¶…æ—¶åˆ™æ‰§è¡Œä»è€ŒæŒ‡å‘eventçš„handlerï¼Œç„¶åè¿›ä¸€æ­¥æŒ‡å‘å¯¹åº”ræˆ–è€…uçš„->write_event_handler  read_event_handler
 
-3.Ò²¿ÉÒÔÊÇÀûÓÃ¶¨Ê±Æ÷expirtÊµÏÖµÄ¶ÁĞ´ÊÂ¼ş(²Î¿¼ngx_http_set_write_handler->ngx_add_timer(ngx_event_add_timer)),´¥·¢¹ı³Ì¼û2£¬Ö»ÊÇÔÚhandlerÖĞ²»»áÖ´ĞĞwrite_event_handler  read_event_handler
+3.ä¹Ÿå¯ä»¥æ˜¯åˆ©ç”¨å®šæ—¶å™¨expirtå®ç°çš„è¯»å†™äº‹ä»¶(å‚è€ƒngx_http_set_write_handler->ngx_add_timer(ngx_event_add_timer)),è§¦å‘è¿‡ç¨‹è§2ï¼Œåªæ˜¯åœ¨handlerä¸­ä¸ä¼šæ‰§è¡Œwrite_event_handler  read_event_handler
 */
 
 
-//ngx_event_expire_timersÖĞÖ´ĞĞev->handler
-//ÔÚngx_process_events_and_timersÖĞ£¬µ±ÓĞÊÂ¼şÊ¹epoll_wait·µ»Ø£¬Ôò»áÖ´ĞĞ³¬Ê±µÄ¶¨Ê±Æ÷
-//×¢Òâ¶¨Ê±Æ÷µÄ³¬Ê±´¦Àí£¬²»Ò»¶¨¾ÍÊÇtimerÊ±¼ä³¬Ê±£¬³¬Ê±Îó²î¿ÉÄÜÎªtimer_resolution£¬Èç¹ûÃ»ÓĞÉèÖÃtimer_resolutionÔò¶¨Ê±Æ÷¿ÉÄÜÓÀÔ¶²»³¬Ê±£¬ÒòÎªepoll_wait²»·µ»Ø£¬ÎŞ·¨¸üĞÂÊ±¼ä
+//ngx_event_expire_timersä¸­æ‰§è¡Œev->handler
+//åœ¨ngx_process_events_and_timersä¸­ï¼Œå½“æœ‰äº‹ä»¶ä½¿epoll_waitè¿”å›ï¼Œåˆ™ä¼šæ‰§è¡Œè¶…æ—¶çš„å®šæ—¶å™¨
+//æ³¨æ„å®šæ—¶å™¨çš„è¶…æ—¶å¤„ç†ï¼Œä¸ä¸€å®šå°±æ˜¯timeræ—¶é—´è¶…æ—¶ï¼Œè¶…æ—¶è¯¯å·®å¯èƒ½ä¸ºtimer_resolutionï¼Œå¦‚æœæ²¡æœ‰è®¾ç½®timer_resolutionåˆ™å®šæ—¶å™¨å¯èƒ½æ°¸è¿œä¸è¶…æ—¶ï¼Œå› ä¸ºepoll_waitä¸è¿”å›ï¼Œæ— æ³•æ›´æ–°æ—¶é—´
 static ngx_inline void
 ngx_event_add_timer(ngx_event_t *ev, ngx_msec_t timer, const char *func, unsigned int line)
 {//ngx_add_timer
@@ -72,7 +72,7 @@ ngx_event_add_timer(ngx_event_t *ev, ngx_msec_t timer, const char *func, unsigne
 
     key = ngx_current_msec + timer;
     
-    if (ev->timer_set) { //Èç¹ûÖ®Ç°¸ÃevÒÑ¾­Ìí¼Ó¹ı£¬ÔòÏÈ°ÑÖ®Ç°µÄev¶¨Ê±Æ÷delµô£¬È»ºóÔÚÖØĞÂÌí¼Ó
+    if (ev->timer_set) { //å¦‚æœä¹‹å‰è¯¥evå·²ç»æ·»åŠ è¿‡ï¼Œåˆ™å…ˆæŠŠä¹‹å‰çš„evå®šæ—¶å™¨delæ‰ï¼Œç„¶ååœ¨é‡æ–°æ·»åŠ 
 
         /*
          * Use a previous timer value if difference between it and a new

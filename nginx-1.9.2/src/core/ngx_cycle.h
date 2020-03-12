@@ -26,278 +26,278 @@ typedef struct ngx_shm_zone_s  ngx_shm_zone_t;
 
 typedef ngx_int_t (*ngx_shm_zone_init_pt) (ngx_shm_zone_t *zone, void *data);
 
-//ÔÚngx_http_upstream_cache_getÖĞ»ñÈ¡zoneµÄÊ±ºò»ñÈ¡µÄÊÇfastcgi_cache proxy_cacheÉèÖÃµÄzone£¬Òò´Ë±ØĞëÅäÖÃfastcgi_cache (proxy_cache) abc;ÖĞµÄxxxºÍxxx_cache_path(proxy_cache_path fastcgi_cache_path) xxx keys_zone=abc:10m;Ò»ÖÂ
-//ËùÓĞµÄ¹²ÏíÄÚ´æ¶¼Í¨¹ıngx_http_file_cache_s->shpool½øĞĞ¹ÜÀí   Ã¿¸ö¹²ÏíÄÚ´æ¶ÔÓ¦Ò»¸öngx_slab_pool_tÀ´¹ÜÀí£¬¼ûngx_init_zone_pool
-struct ngx_shm_zone_s { //³õÊ¼»¯¼ûngx_shared_memory_add£¬ÕæÕıµÄ¹²ÏíÄÚ´æ´´½¨ÔÚngx_init_cycle->ngx_init_cycle
-    void                     *data;//Ö¸Ïòngx_http_file_cache_t£¬¸³Öµ¼ûngx_http_file_cache_set_slot
-    ngx_shm_t                 shm; //ngx_init_cycle->ngx_shm_alloc->ngx_shm_allocÖĞ´´½¨ÏàÓ¦µÄ¹²ÏíÄÚ´æ¿Õ¼ä
-    //ngx_init_cycleÖĞÖ´ĞĞ
-    ngx_shm_zone_init_pt      init; // "zone" proxy_cache_path fastcgi_cache_pathµÈÅäÖÃÖĞÉèÖÃÎªngx_http_file_cache_init   ngx_http_upstream_init_zone   
-    void                     *tag; //´´½¨µÄÕâ¸ö¹²ÏíÄÚ´æÊôÓÚÄÄ¸öÄ£¿é
+//åœ¨ngx_http_upstream_cache_getä¸­è·å–zoneçš„æ—¶å€™è·å–çš„æ˜¯fastcgi_cache proxy_cacheè®¾ç½®çš„zoneï¼Œå› æ­¤å¿…é¡»é…ç½®fastcgi_cache (proxy_cache) abc;ä¸­çš„xxxå’Œxxx_cache_path(proxy_cache_path fastcgi_cache_path) xxx keys_zone=abc:10m;ä¸€è‡´
+//æ‰€æœ‰çš„å…±äº«å†…å­˜éƒ½é€šè¿‡ngx_http_file_cache_s->shpoolè¿›è¡Œç®¡ç†   æ¯ä¸ªå…±äº«å†…å­˜å¯¹åº”ä¸€ä¸ªngx_slab_pool_tæ¥ç®¡ç†ï¼Œè§ngx_init_zone_pool
+struct ngx_shm_zone_s { //åˆå§‹åŒ–è§ngx_shared_memory_addï¼ŒçœŸæ­£çš„å…±äº«å†…å­˜åˆ›å»ºåœ¨ngx_init_cycle->ngx_init_cycle
+    void                     *data;//æŒ‡å‘ngx_http_file_cache_tï¼Œèµ‹å€¼è§ngx_http_file_cache_set_slot
+    ngx_shm_t                 shm; //ngx_init_cycle->ngx_shm_alloc->ngx_shm_allocä¸­åˆ›å»ºç›¸åº”çš„å…±äº«å†…å­˜ç©ºé—´
+    //ngx_init_cycleä¸­æ‰§è¡Œ
+    ngx_shm_zone_init_pt      init; // "zone" proxy_cache_path fastcgi_cache_pathç­‰é…ç½®ä¸­è®¾ç½®ä¸ºngx_http_file_cache_init   ngx_http_upstream_init_zone   
+    void                     *tag; //åˆ›å»ºçš„è¿™ä¸ªå…±äº«å†…å­˜å±äºå“ªä¸ªæ¨¡å—
     ngx_uint_t                noreuse;  /* unsigned  noreuse:1; */
 };
 
 /*
-ngx_cycle_t½á¹¹ÌåÖ§³ÖµÄÖ÷Òª·½·¨
-©³©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©×©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©×©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©·
-©§    ·½·¨Ãû                        ©§    ²ÎÊıº¬Òå                          ©§    Ö´ĞĞÒâÒå                          ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§                                  ©§                                      ©§  ·µ»Ø³õÊ¼»¯³É¹¦µÄÍêÕûµÄngx_cycle_    ©§
-©§  ngx_cycle_t *ngx_init_cycle     ©§  old_cycle±íÊ¾ÁÙÊ±µÄngx_cycle_t      ©§t½á¹¹Ìå£¬¸Ãº¯Êı½«»á¸ºÔğ³õÊ¼»¯ngx_     ©§
-©§                                  ©§Ö¸Õë£¬Ò»°ã½öÓÃÀ´´«µİngx_cycle_t½á     ©§cycle_tÖĞµÄÊı¾İ½á¹¹¡¢½âÎöÅäÖÃÎÄ¼ş¡¢   ©§
-©§(ngx_cycle_t *old_cycle)          ©§                                      ©§¼ÓÔØËùÓĞÄ£¿é¡¢´ò¿ª¼àÌı¶Ë¿Ú¡¢³õÊ¼»¯    ©§
-©§                                  ©§¹¹ÌåÖĞµÄÅäÖÃÎÄ¼şÂ·¾¶µÈ²ÎÊı            ©§                                      ©§
-©§                                  ©§                                      ©§½ø³Ì¼äÍ¨ĞÅ·½Ê½µÈ¹¤×÷¡£Èç¹ûÊ§°Ü£¬Ôò    ©§
-©§                                  ©§                                      ©§·µ»ØNULL¿ÕÖ¸Õë                        ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§  ngx_int_t ngx_process_          ©§  cycleÍ¨³£ÊÇ¸Õ¸Õ·ÖÅäµÄngx_cycle_t    ©§  ÓÃÔËĞĞNginxÊ±¿ÉÄÜĞ¯´øµÄÄ¿Â¼²ÎÊı     ©§
-©§                                  ©§½á¹¹ÌåÖ¸Õë£¬½öÓÃÓÚ´«µİÅäÖÃÎÄ¼şÂ·      ©§À´³õÊ¼»¯cycle£¬°üÀ¨³õÊ¼»¯ÔËĞĞÄ¿Â¼¡¢   ©§
-©§options (ngx_cycle_t *cycle)      ©§                                      ©§ÅäÖÃÄ¿Â¼£¬²¢Éú³ÉÍêÕûµÄnginx£®confÅä   ©§
-©§                                  ©§¾¶ĞÅÏ¢                                ©§                                      ©§
-©§                                  ©§                                      ©§ÖÃÎÄ¼şÂ·¾¶                            ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§                                  ©§                                      ©§  ÔÚÖ´ĞĞ²»ÖØÆô·şÎñÉı¼¶NginxµÄ²Ù       ©§
-©§                                  ©§                                      ©§×÷Ê±£¬ÀÏµÄNginx½ø³Ì»áÍ¨¹ı»·¾³±äÁ¿     ©§
-©§  ngx_int_t ngx_add_inherited     ©§  cycleÊÇµ±Ç°½ø³ÌµÄngx_cycle_t½á      ©§¡°NGINX¡±À´´«µİĞèÒª´ò¿ªµÄ¼àÌı¶Ë       ©§
-©§sockets()                         ©§¹¹ÌåÖ¸Õë                              ©§¿Ú£¬ĞÂµÄNginx½ø³Ì»áÍ¨¹ıngx_add_       ©§
-©§                                  ©§                                      ©§inherited- sockets·½·¨À´Ê¹ÓÃÒÑ¾­´ò¿ª  ©§
-©§                                  ©§                                      ©§µÄTCP¼àÌı¶Ë¿Ú                         ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§  ngx int_t ngx_open_listening_   ©§  cycleÊÇµ±Ç°½ø³ÌµÄngx_cycle_t½á      ©§  ¼àÌı¡¢°ó¶¨cycleÖĞlistening¶¯Ì¬Êı    ©§
-©§sockets (ngx_cycle_t *cycle)      ©§¹¹ÌåÖ¸Õë                              ©§×éÖ¸¶¨µÄÏàÓ¦¶Ë¿Ú                      ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§   void ngx_configure_listening_  ©§  cycleÊÇµ±Ç°½ø³ÌµÄngx_cycle_t½á      ©§  ¸ù¾İnginx.confÖĞµÄÅäÖÃÏîÉèÖÃÒÑ¾­    ©§
-©§sockets(ngx_cycle_tÆßcycle)       ©§¹¹ÌåÖ¸Õë                              ©§¼àÌıµÄ¾ä±ú                            ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§void ngx_close_listening_         ©§    cycleÊÇµ±Ç°½ø³ÌµÄngx_cycle_t½á    ©§  ¹Ø±ÕcycleÖĞlistening¶¯Ì¬Êı×éÒÑ¾­    ©§
-©§sockets(ngx_cycle_t *cycle)       ©§¹¹ÌåÖ¸Õë                              ©§´ò¿ªµÄ¾ä±ú                            ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§void ngx_master_process_          ©§    cycleÊÇµ±Ç°½ø³ÌµÄngx_cycle_tĞ÷    ©§  ½øÈëmaster½ø³ÌµÄ¹¤×÷Ñ­»·            ©§
-©§cycle(ngx_cycle_t *cycle)         ©§¹¹ÌåÖ¸Õë                              ©§                                      ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§   void ngx_single_process_       ©§  cycleÊÇµ±Ç°½ø³ÌµÄngx_cycle_t½á      ©§  ½øÈëµ¥½ø³ÌÄ£Ê½£¨·Çmaster¡¢worker    ©§
-©§cycle (ngx_cycle_t *cycle)        ©§¹¹ÌåÖ¸Õë                              ©§½ø³Ì¹¤×÷Ä£Ê½£©µÄ¹¤×÷Ñ­»·              ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§                                  ©§  cycleÊÇµ±Ç°½ø³ÌµÄngx_cycle_t½á      ©§                                      ©§
-©§                                  ©§¹¹ÌåÖ¸Õë£¬nÊÇÆô¶¯×Ó½ø³ÌµÄ¸öÊı£¬       ©§                                      ©§
-©§                                  ©§typeÊÇÆô¶¯·½Ê½£¬ËüµÄÈ¡Öµ·¶Î§ÓĞÒÔ      ©§                                      ©§
-©§                                  ©§ÏÂ5¸ö£º                               ©§                                      ©§
-©§   void ngx_start_worker_         ©§    1)  NGX_PROCESS_RESPAWN;          ©§  Æô¶¯n¸öworker×Ó½ø³Ì£¬²¢ÉèÖÃºÃ       ©§
-©§processes (ngx_cycle_t *cycle,    ©§    2) NGX__ PROCESS NORESPAWN;       ©§Ã¿¸ö×Ó½ø³ÌÓëmaster¸¸½ø³ÌÖ®¼äÊ¹ÓÃ      ©§
-©§                                  ©§    3) NGX¡ªPROCESS_JUST_SPAWN;       ©§socketpairÏµÍ³µ÷ÓÃ½¨Á¢³¬À´µÄsocket    ©§
-©§ngx_int_t n, ngx_int_t type)      ©§                                      ©§                                      ©§
-©§                                  ©§    4) NGX.PROCESS JUST_RESPAWN;      ©§¾ä±úÍ¨ĞÅ»úÖÆ                          ©§
-©§                                  ©§    5) NGX_PROCESS¡ªDETACHED.         ©§                                      ©§
-©§                                  ©§typeµÄÖµ½«Ó°Ïì       ngn_process_t    ©§                                      ©§
-©§                                  ©§½á¹¹ÌåµÄrespawn. detached. just_spawn ©§                                      ©§
-©§                                  ©§±êÖ¾Î»µÄÖµ                            ©§                                      ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§                                  ©§                                      ©§  ¸ù¾İÊÇ·ñÊ¹ÓÃÎÄ¼ş»º´æÄ£¿é£¬Ò²¾ÍÊÇ    ©§
-©§   void ngx_start_cache_          ©§  cycleÊÇµ±Ç°½ø³ÌµÄngx_cycle_t½á      ©§cycleÖĞ´æ´¢Â·¾¶µÄ¶¯Ì¬Êı×éÖĞÊÇ·ñÓĞ     ©§
-©§manager_processes(ngx_cycle_t     ©§¹¹ÌåÖ¸Õë£¬respawnÊÇÆô¶¯×Ó½ø³ÌµÄ·½     ©§Â·¾¶µÄmanage±êÖ¾´ò¿ª£¬À´¾ö¶¨ÊÇ·ñ      ©§
-©§                                  ©§Ê½£¬  ËüÓëngx_start_worker_processes  ©§Æô¶¯cache manage×Ó½ø³Ì£¬Í¬Ñù¸ù¾İ      ©§
-©§*cycle, ngx_uint_t respawn)       ©§                                      ©§                                      ©§
-©§                                  ©§·½·¨ÖĞµÄtype²ÎÊıÒâÒåÍêÈ«ÏàÍ¬          ©§loader±êÖ¾¾ö¶¨ÊÇ·ñÆô¶¯cache loader    ©§
-©§                                  ©§                                      ©§×Ó½ø³Ì                                ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§   void ngx_pass_open_channel     ©§  cycleÊÇµ±Ç°½ø³ÌµÄngx_cycle_t½á      ©§  ÏòËùÓĞÒÑ¾­´ò¿ªµÄchannel£¨Í¨¹ı       ©§
-©§(ngx_cycle_t *cycle, ngx_         ©§¹¹ÌåÖ¸Õë£¬chÊÇ½«ÒªÏò×Ó½ø³Ì·¢ËÍµÄ      ©§socketpairÉú³ÉµÄ¾ä±ú½øĞĞÍ¨ĞÅ£©·¢ËÍ    ©§
-©§channel_t *ch)                    ©§ĞÅÏ¢                                  ©§chĞÅÏ¢                                ©§
-©»©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ß©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ß©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¿
-©³©¥©¥©¥©¥©¥©¥©¥©¥©¥©×©¥©¥©¥©¥©¥©¥©¥©¥©×©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©×©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©·
-©§    ·½·¨          ©§Ãû              ©§    ²ÎÊıº¬Òå                      ©§    Ö´ĞĞÒâÒå                        ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©ß©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§   void ngx_signal_worker_          ©§                                  ©§                                    ©§
-©§processes (ngx_cycle_t *cycle,      ©§  cycleÊÇµ±Ç°½ø³ÌµÄngx_cycle_t½á  ©§  ´¦Àíworker½ø³Ì½ÓÊÕµ½µÄĞÅºÅ        ©§
-©§                                    ©§¹¹ÌåÖ¸Õë£¬signoÊÇĞÅºÅ             ©§                                    ©§
-©§int signo)                          ©§                                  ©§                                    ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§                                    ©§                                  ©§  ¼ì²émaster½ø³ÌµÄËùÓĞ×Ó½ø³Ì£¬¸ù    ©§
-©§  ngx_uint_t ngx_reap_children      ©§  cycleÊÇµ±Ç°½ø³ÌµÄngx_cycle_t½á  ©§¾İÃ¿¸ö×Ó½ø³ÌµÄ×´Ì¬£¨ngx_process_t½á ©§
-©§(ngx_cycle_t *cycle)                ©§¹¹ÌåÖ¸Õë                          ©§¹¹ÌåÖĞµÄ±êÖ¾Î»£©ÅĞ¶ÏÊÇ·ñÒªÆô¶¯×Ó½ø  ©§
-©§                                    ©§                                  ©§³Ì¡¢¸ü¸ÄpidÎÄ¼şµÈ                   ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§  voidngx_maste,r_process exit      ©§  cycleÊÇµ±Ç°½ø³ÌµÄngx_cycle_t½á  ©§                                    ©§
-©§(ngx_cycle_t *cyc, le)              ©§¹¹ÌåÖ¸Õë                          ©§  ÍË³ömaster½ø³Ì¹¤×÷µÄÑ­»·          ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©×©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§  void ngx_wo?    ©§Lker_process_   ©§  cycleÊÇµ±Ç°½ø³ÌµÄngx_cycle_t½á  ©§                                    ©§
-©§cycle (ngx_cycle  ©§-t *cycle, void ©§¹¹ÌåÖ¸Õë£¬ÕâÀï»¹Î´¿ªÊ¼Ê¹ÓÃdata²Î  ©§  ½øÈëworker½ø³Ì¹¤×÷µÄÑ­»·          ©§
-©§*data)            ©§                ©§Êı£¬ËùÒÔdata -°ãÎªNULL            ©§                                    ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©ß©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§   void ngx_worker_process_         ©§  cycleĞüµ±Ç°½ø³ÌµÄngx_cycle_t½á  ©§  ½øÈëworker½ø³Ì¹¤×÷Ñ­»·Ö®Ç°µÄ³õ    ©§
-©§init (ngx_cycle_t *cycle, ngx_      ©§¹¹ÌåÖ¸Õë£¬priorityÊÇworker½ø³ÌµÄ  ©§Ê¼»¯¹¤×÷                            ©§
-©§uint_t priority)                    ©§ÏµÍ³ÓÅÏÈ¼¶                        ©§                                    ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§  void ngx_woriker_process_         ©§  cycleÊÇµ±Ç°½ø³ÌµÄngx_cycle_t½á  ©§                                    ©§
-©§exit (ngx_cycle_t, *cycle)          ©§¹¹ÌåÖ¸Õë                          ©§  ÍË³öworker½ø³Ì¹¤×÷µÄÑ­»·          ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§  void ngx_cac:he_manager_          ©§  cycleÊÇµ±Ç°½ø³ÌµÄngx_cycle_t½á  ©§  Ö´ĞĞ»º´æ¹ÜÀí¹¤×÷µÄÑ­»··½·¨¡£ÕâÓë  ©§
-©§process_cycle(ngx_cycle_t           ©§¹¹ÌåÖ¸Õë£¬dataÊÇ´«ÈËµÄngx_cache_  ©§ÎÄ¼ş»º´æÄ£¿éÃÜÇĞÏà¹Ø£¬ÔÚ±¾ÕÂÖĞ²»×ö  ©§
-©§*cycle, void *data)                 ©§manager_ctx_t½á¹¹ÌåÖ¸Õë           ©§ÏêÏ¸Ì½ÌÖ                            ©§
-©Ç©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ï©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©Ï
-©§   void ngx_process_events_         ©§  cycleÊÇµ±Ç°½ø³ÌµÄngx_cycle_t½á  ©§  Ê¹ÓÃÊÂ¼şÄ£¿é´¦Àí½ØÖ¹µ½ÏÖÔÚÒÑ¾­ÊÕ  ©§
-©§                                    ©§                                  ©§¼¯µ½µÄÊÂ¼ş¡£¸Ãº¯ÊıÓÉÊÂ°éÄ£¿éÊµÏÖ£¬  ©§
-©§and_timers (ngx_cycle_t *cycle)     ©§¹¹ÌåÖ¸Õë                          ©§                                    ©§
-©§                                    ©§                                  ©§                                    ©§
-©»©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ß©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©ß©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¿
+ngx_cycle_tç»“æ„ä½“æ”¯æŒçš„ä¸»è¦æ–¹æ³•
+â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”³â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”³â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”“
+â”ƒ    æ–¹æ³•å                        â”ƒ    å‚æ•°å«ä¹‰                          â”ƒ    æ‰§è¡Œæ„ä¹‰                          â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ                                  â”ƒ                                      â”ƒ  è¿”å›åˆå§‹åŒ–æˆåŠŸçš„å®Œæ•´çš„ngx_cycle_    â”ƒ
+â”ƒ  ngx_cycle_t *ngx_init_cycle     â”ƒ  old_cycleè¡¨ç¤ºä¸´æ—¶çš„ngx_cycle_t      â”ƒtç»“æ„ä½“ï¼Œè¯¥å‡½æ•°å°†ä¼šè´Ÿè´£åˆå§‹åŒ–ngx_     â”ƒ
+â”ƒ                                  â”ƒæŒ‡é’ˆï¼Œä¸€èˆ¬ä»…ç”¨æ¥ä¼ é€’ngx_cycle_tç»“     â”ƒcycle_tä¸­çš„æ•°æ®ç»“æ„ã€è§£æé…ç½®æ–‡ä»¶ã€   â”ƒ
+â”ƒ(ngx_cycle_t *old_cycle)          â”ƒ                                      â”ƒåŠ è½½æ‰€æœ‰æ¨¡å—ã€æ‰“å¼€ç›‘å¬ç«¯å£ã€åˆå§‹åŒ–    â”ƒ
+â”ƒ                                  â”ƒæ„ä½“ä¸­çš„é…ç½®æ–‡ä»¶è·¯å¾„ç­‰å‚æ•°            â”ƒ                                      â”ƒ
+â”ƒ                                  â”ƒ                                      â”ƒè¿›ç¨‹é—´é€šä¿¡æ–¹å¼ç­‰å·¥ä½œã€‚å¦‚æœå¤±è´¥ï¼Œåˆ™    â”ƒ
+â”ƒ                                  â”ƒ                                      â”ƒè¿”å›NULLç©ºæŒ‡é’ˆ                        â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ  ngx_int_t ngx_process_          â”ƒ  cycleé€šå¸¸æ˜¯åˆšåˆšåˆ†é…çš„ngx_cycle_t    â”ƒ  ç”¨è¿è¡ŒNginxæ—¶å¯èƒ½æºå¸¦çš„ç›®å½•å‚æ•°     â”ƒ
+â”ƒ                                  â”ƒç»“æ„ä½“æŒ‡é’ˆï¼Œä»…ç”¨äºä¼ é€’é…ç½®æ–‡ä»¶è·¯      â”ƒæ¥åˆå§‹åŒ–cycleï¼ŒåŒ…æ‹¬åˆå§‹åŒ–è¿è¡Œç›®å½•ã€   â”ƒ
+â”ƒoptions (ngx_cycle_t *cycle)      â”ƒ                                      â”ƒé…ç½®ç›®å½•ï¼Œå¹¶ç”Ÿæˆå®Œæ•´çš„nginxï¼confé…   â”ƒ
+â”ƒ                                  â”ƒå¾„ä¿¡æ¯                                â”ƒ                                      â”ƒ
+â”ƒ                                  â”ƒ                                      â”ƒç½®æ–‡ä»¶è·¯å¾„                            â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ                                  â”ƒ                                      â”ƒ  åœ¨æ‰§è¡Œä¸é‡å¯æœåŠ¡å‡çº§Nginxçš„æ“       â”ƒ
+â”ƒ                                  â”ƒ                                      â”ƒä½œæ—¶ï¼Œè€çš„Nginxè¿›ç¨‹ä¼šé€šè¿‡ç¯å¢ƒå˜é‡     â”ƒ
+â”ƒ  ngx_int_t ngx_add_inherited     â”ƒ  cycleæ˜¯å½“å‰è¿›ç¨‹çš„ngx_cycle_tç»“      â”ƒâ€œNGINXâ€æ¥ä¼ é€’éœ€è¦æ‰“å¼€çš„ç›‘å¬ç«¯       â”ƒ
+â”ƒsockets()                         â”ƒæ„ä½“æŒ‡é’ˆ                              â”ƒå£ï¼Œæ–°çš„Nginxè¿›ç¨‹ä¼šé€šè¿‡ngx_add_       â”ƒ
+â”ƒ                                  â”ƒ                                      â”ƒinherited- socketsæ–¹æ³•æ¥ä½¿ç”¨å·²ç»æ‰“å¼€  â”ƒ
+â”ƒ                                  â”ƒ                                      â”ƒçš„TCPç›‘å¬ç«¯å£                         â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ  ngx int_t ngx_open_listening_   â”ƒ  cycleæ˜¯å½“å‰è¿›ç¨‹çš„ngx_cycle_tç»“      â”ƒ  ç›‘å¬ã€ç»‘å®šcycleä¸­listeningåŠ¨æ€æ•°    â”ƒ
+â”ƒsockets (ngx_cycle_t *cycle)      â”ƒæ„ä½“æŒ‡é’ˆ                              â”ƒç»„æŒ‡å®šçš„ç›¸åº”ç«¯å£                      â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ   void ngx_configure_listening_  â”ƒ  cycleæ˜¯å½“å‰è¿›ç¨‹çš„ngx_cycle_tç»“      â”ƒ  æ ¹æ®nginx.confä¸­çš„é…ç½®é¡¹è®¾ç½®å·²ç»    â”ƒ
+â”ƒsockets(ngx_cycle_tä¸ƒcycle)       â”ƒæ„ä½“æŒ‡é’ˆ                              â”ƒç›‘å¬çš„å¥æŸ„                            â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒvoid ngx_close_listening_         â”ƒ    cycleæ˜¯å½“å‰è¿›ç¨‹çš„ngx_cycle_tç»“    â”ƒ  å…³é—­cycleä¸­listeningåŠ¨æ€æ•°ç»„å·²ç»    â”ƒ
+â”ƒsockets(ngx_cycle_t *cycle)       â”ƒæ„ä½“æŒ‡é’ˆ                              â”ƒæ‰“å¼€çš„å¥æŸ„                            â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒvoid ngx_master_process_          â”ƒ    cycleæ˜¯å½“å‰è¿›ç¨‹çš„ngx_cycle_tç»ª    â”ƒ  è¿›å…¥masterè¿›ç¨‹çš„å·¥ä½œå¾ªç¯            â”ƒ
+â”ƒcycle(ngx_cycle_t *cycle)         â”ƒæ„ä½“æŒ‡é’ˆ                              â”ƒ                                      â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ   void ngx_single_process_       â”ƒ  cycleæ˜¯å½“å‰è¿›ç¨‹çš„ngx_cycle_tç»“      â”ƒ  è¿›å…¥å•è¿›ç¨‹æ¨¡å¼ï¼ˆémasterã€worker    â”ƒ
+â”ƒcycle (ngx_cycle_t *cycle)        â”ƒæ„ä½“æŒ‡é’ˆ                              â”ƒè¿›ç¨‹å·¥ä½œæ¨¡å¼ï¼‰çš„å·¥ä½œå¾ªç¯              â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ                                  â”ƒ  cycleæ˜¯å½“å‰è¿›ç¨‹çš„ngx_cycle_tç»“      â”ƒ                                      â”ƒ
+â”ƒ                                  â”ƒæ„ä½“æŒ‡é’ˆï¼Œnæ˜¯å¯åŠ¨å­è¿›ç¨‹çš„ä¸ªæ•°ï¼Œ       â”ƒ                                      â”ƒ
+â”ƒ                                  â”ƒtypeæ˜¯å¯åŠ¨æ–¹å¼ï¼Œå®ƒçš„å–å€¼èŒƒå›´æœ‰ä»¥      â”ƒ                                      â”ƒ
+â”ƒ                                  â”ƒä¸‹5ä¸ªï¼š                               â”ƒ                                      â”ƒ
+â”ƒ   void ngx_start_worker_         â”ƒ    1)  NGX_PROCESS_RESPAWN;          â”ƒ  å¯åŠ¨nä¸ªworkerå­è¿›ç¨‹ï¼Œå¹¶è®¾ç½®å¥½       â”ƒ
+â”ƒprocesses (ngx_cycle_t *cycle,    â”ƒ    2) NGX__ PROCESS NORESPAWN;       â”ƒæ¯ä¸ªå­è¿›ç¨‹ä¸masterçˆ¶è¿›ç¨‹ä¹‹é—´ä½¿ç”¨      â”ƒ
+â”ƒ                                  â”ƒ    3) NGXâ€•PROCESS_JUST_SPAWN;       â”ƒsocketpairç³»ç»Ÿè°ƒç”¨å»ºç«‹è¶…æ¥çš„socket    â”ƒ
+â”ƒngx_int_t n, ngx_int_t type)      â”ƒ                                      â”ƒ                                      â”ƒ
+â”ƒ                                  â”ƒ    4) NGX.PROCESS JUST_RESPAWN;      â”ƒå¥æŸ„é€šä¿¡æœºåˆ¶                          â”ƒ
+â”ƒ                                  â”ƒ    5) NGX_PROCESSâ€•DETACHED.         â”ƒ                                      â”ƒ
+â”ƒ                                  â”ƒtypeçš„å€¼å°†å½±å“       ngn_process_t    â”ƒ                                      â”ƒ
+â”ƒ                                  â”ƒç»“æ„ä½“çš„respawn. detached. just_spawn â”ƒ                                      â”ƒ
+â”ƒ                                  â”ƒæ ‡å¿—ä½çš„å€¼                            â”ƒ                                      â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ                                  â”ƒ                                      â”ƒ  æ ¹æ®æ˜¯å¦ä½¿ç”¨æ–‡ä»¶ç¼“å­˜æ¨¡å—ï¼Œä¹Ÿå°±æ˜¯    â”ƒ
+â”ƒ   void ngx_start_cache_          â”ƒ  cycleæ˜¯å½“å‰è¿›ç¨‹çš„ngx_cycle_tç»“      â”ƒcycleä¸­å­˜å‚¨è·¯å¾„çš„åŠ¨æ€æ•°ç»„ä¸­æ˜¯å¦æœ‰     â”ƒ
+â”ƒmanager_processes(ngx_cycle_t     â”ƒæ„ä½“æŒ‡é’ˆï¼Œrespawnæ˜¯å¯åŠ¨å­è¿›ç¨‹çš„æ–¹     â”ƒè·¯å¾„çš„manageæ ‡å¿—æ‰“å¼€ï¼Œæ¥å†³å®šæ˜¯å¦      â”ƒ
+â”ƒ                                  â”ƒå¼ï¼Œ  å®ƒä¸ngx_start_worker_processes  â”ƒå¯åŠ¨cache manageå­è¿›ç¨‹ï¼ŒåŒæ ·æ ¹æ®      â”ƒ
+â”ƒ*cycle, ngx_uint_t respawn)       â”ƒ                                      â”ƒ                                      â”ƒ
+â”ƒ                                  â”ƒæ–¹æ³•ä¸­çš„typeå‚æ•°æ„ä¹‰å®Œå…¨ç›¸åŒ          â”ƒloaderæ ‡å¿—å†³å®šæ˜¯å¦å¯åŠ¨cache loader    â”ƒ
+â”ƒ                                  â”ƒ                                      â”ƒå­è¿›ç¨‹                                â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ   void ngx_pass_open_channel     â”ƒ  cycleæ˜¯å½“å‰è¿›ç¨‹çš„ngx_cycle_tç»“      â”ƒ  å‘æ‰€æœ‰å·²ç»æ‰“å¼€çš„channelï¼ˆé€šè¿‡       â”ƒ
+â”ƒ(ngx_cycle_t *cycle, ngx_         â”ƒæ„ä½“æŒ‡é’ˆï¼Œchæ˜¯å°†è¦å‘å­è¿›ç¨‹å‘é€çš„      â”ƒsocketpairç”Ÿæˆçš„å¥æŸ„è¿›è¡Œé€šä¿¡ï¼‰å‘é€    â”ƒ
+â”ƒchannel_t *ch)                    â”ƒä¿¡æ¯                                  â”ƒchä¿¡æ¯                                â”ƒ
+â”—â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”»â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”»â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”›
+â”â”â”â”â”â”â”â”â”â”â”³â”â”â”â”â”â”â”â”â”³â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”³â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”“
+â”ƒ    æ–¹æ³•          â”ƒå              â”ƒ    å‚æ•°å«ä¹‰                      â”ƒ    æ‰§è¡Œæ„ä¹‰                        â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”»â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ   void ngx_signal_worker_          â”ƒ                                  â”ƒ                                    â”ƒ
+â”ƒprocesses (ngx_cycle_t *cycle,      â”ƒ  cycleæ˜¯å½“å‰è¿›ç¨‹çš„ngx_cycle_tç»“  â”ƒ  å¤„ç†workerè¿›ç¨‹æ¥æ”¶åˆ°çš„ä¿¡å·        â”ƒ
+â”ƒ                                    â”ƒæ„ä½“æŒ‡é’ˆï¼Œsignoæ˜¯ä¿¡å·             â”ƒ                                    â”ƒ
+â”ƒint signo)                          â”ƒ                                  â”ƒ                                    â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ                                    â”ƒ                                  â”ƒ  æ£€æŸ¥masterè¿›ç¨‹çš„æ‰€æœ‰å­è¿›ç¨‹ï¼Œæ ¹    â”ƒ
+â”ƒ  ngx_uint_t ngx_reap_children      â”ƒ  cycleæ˜¯å½“å‰è¿›ç¨‹çš„ngx_cycle_tç»“  â”ƒæ®æ¯ä¸ªå­è¿›ç¨‹çš„çŠ¶æ€ï¼ˆngx_process_tç»“ â”ƒ
+â”ƒ(ngx_cycle_t *cycle)                â”ƒæ„ä½“æŒ‡é’ˆ                          â”ƒæ„ä½“ä¸­çš„æ ‡å¿—ä½ï¼‰åˆ¤æ–­æ˜¯å¦è¦å¯åŠ¨å­è¿›  â”ƒ
+â”ƒ                                    â”ƒ                                  â”ƒç¨‹ã€æ›´æ”¹pidæ–‡ä»¶ç­‰                   â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ  voidngx_maste,r_process exit      â”ƒ  cycleæ˜¯å½“å‰è¿›ç¨‹çš„ngx_cycle_tç»“  â”ƒ                                    â”ƒ
+â”ƒ(ngx_cycle_t *cyc, le)              â”ƒæ„ä½“æŒ‡é’ˆ                          â”ƒ  é€€å‡ºmasterè¿›ç¨‹å·¥ä½œçš„å¾ªç¯          â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”³â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ  void ngx_wo?    â”ƒLker_process_   â”ƒ  cycleæ˜¯å½“å‰è¿›ç¨‹çš„ngx_cycle_tç»“  â”ƒ                                    â”ƒ
+â”ƒcycle (ngx_cycle  â”ƒ-t *cycle, void â”ƒæ„ä½“æŒ‡é’ˆï¼Œè¿™é‡Œè¿˜æœªå¼€å§‹ä½¿ç”¨dataå‚  â”ƒ  è¿›å…¥workerè¿›ç¨‹å·¥ä½œçš„å¾ªç¯          â”ƒ
+â”ƒ*data)            â”ƒ                â”ƒæ•°ï¼Œæ‰€ä»¥data -èˆ¬ä¸ºNULL            â”ƒ                                    â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”»â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ   void ngx_worker_process_         â”ƒ  cycleæ‚¬å½“å‰è¿›ç¨‹çš„ngx_cycle_tç»“  â”ƒ  è¿›å…¥workerè¿›ç¨‹å·¥ä½œå¾ªç¯ä¹‹å‰çš„åˆ    â”ƒ
+â”ƒinit (ngx_cycle_t *cycle, ngx_      â”ƒæ„ä½“æŒ‡é’ˆï¼Œpriorityæ˜¯workerè¿›ç¨‹çš„  â”ƒå§‹åŒ–å·¥ä½œ                            â”ƒ
+â”ƒuint_t priority)                    â”ƒç³»ç»Ÿä¼˜å…ˆçº§                        â”ƒ                                    â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ  void ngx_woriker_process_         â”ƒ  cycleæ˜¯å½“å‰è¿›ç¨‹çš„ngx_cycle_tç»“  â”ƒ                                    â”ƒ
+â”ƒexit (ngx_cycle_t, *cycle)          â”ƒæ„ä½“æŒ‡é’ˆ                          â”ƒ  é€€å‡ºworkerè¿›ç¨‹å·¥ä½œçš„å¾ªç¯          â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ  void ngx_cac:he_manager_          â”ƒ  cycleæ˜¯å½“å‰è¿›ç¨‹çš„ngx_cycle_tç»“  â”ƒ  æ‰§è¡Œç¼“å­˜ç®¡ç†å·¥ä½œçš„å¾ªç¯æ–¹æ³•ã€‚è¿™ä¸  â”ƒ
+â”ƒprocess_cycle(ngx_cycle_t           â”ƒæ„ä½“æŒ‡é’ˆï¼Œdataæ˜¯ä¼ äººçš„ngx_cache_  â”ƒæ–‡ä»¶ç¼“å­˜æ¨¡å—å¯†åˆ‡ç›¸å…³ï¼Œåœ¨æœ¬ç« ä¸­ä¸åš  â”ƒ
+â”ƒ*cycle, void *data)                 â”ƒmanager_ctx_tç»“æ„ä½“æŒ‡é’ˆ           â”ƒè¯¦ç»†æ¢è®¨                            â”ƒ
+â”£â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â•‹â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”«
+â”ƒ   void ngx_process_events_         â”ƒ  cycleæ˜¯å½“å‰è¿›ç¨‹çš„ngx_cycle_tç»“  â”ƒ  ä½¿ç”¨äº‹ä»¶æ¨¡å—å¤„ç†æˆªæ­¢åˆ°ç°åœ¨å·²ç»æ”¶  â”ƒ
+â”ƒ                                    â”ƒ                                  â”ƒé›†åˆ°çš„äº‹ä»¶ã€‚è¯¥å‡½æ•°ç”±äº‹ä¼´æ¨¡å—å®ç°ï¼Œ  â”ƒ
+â”ƒand_timers (ngx_cycle_t *cycle)     â”ƒæ„ä½“æŒ‡é’ˆ                          â”ƒ                                    â”ƒ
+â”ƒ                                    â”ƒ                                  â”ƒ                                    â”ƒ
+â”—â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”»â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”»â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”›
 */
-//http://tech.uc.cn/?p=300 ²ÎÊı½âÎöÏà¹ØÊı¾İ½á¹¹²Î¿¼
-//³õÊ¼»¯²Î¿¼ngx_init_cycle£¬×îÖÕÓĞÒ»¸öÈ«¾ÖÀàĞÍµÄngx_cycle_s£¬¼´ngx_cycle,  ngx_conf_sÖĞ°üº¬¸ÃÀàĞÍ³ÉÔ±cycle
+//http://tech.uc.cn/?p=300 å‚æ•°è§£æç›¸å…³æ•°æ®ç»“æ„å‚è€ƒ
+//åˆå§‹åŒ–å‚è€ƒngx_init_cycleï¼Œæœ€ç»ˆæœ‰ä¸€ä¸ªå…¨å±€ç±»å‹çš„ngx_cycle_sï¼Œå³ngx_cycle,  ngx_conf_sä¸­åŒ…å«è¯¥ç±»å‹æˆå‘˜cycle
 struct ngx_cycle_s {
-    /*     ±£´æ×ÅËùÓĞÄ£¿é´æ´¢ÅäÖÃÏîµÄ½á¹¹ÌåÖ¸Õë£¬     ËüÊ×ÏÈÊÇÒ»¸öÊı×é£¬Êı×é´óĞ¡Îªngx_max_module£¬ÕıºÃÓëNginxµÄmodule¸öÊıÒ»Ñù£»     
-    Ã¿¸öÊı×é³ÉÔ±ÓÖÊÇÒ»¸öÖ¸Õë£¬Ö¸ÏòÁíÒ»¸ö´æ´¢×ÅÖ¸ÕëµÄÊı×é£¬Òò´Ë»á¿´µ½void ****    Çë¼ûÌÕ»ÔËùÖø¡¶ÉîÈëÀí½âNginx-Ä£¿é¿ª·¢Óë¼Ü¹¹½âÎö¡·
-    Ò»Êé302Ò³²åÍ¼¡£    ÁíÍâ£¬Õâ¸öÍ¼Ò²²»´í£ºhttp://img.my.csdn.net/uploads/201202/9/0_1328799724GTUk.gif ¸ÃÊı×éµÄ³ÉÔ±ÊıÎªngx_max_module   
+    /*     ä¿å­˜ç€æ‰€æœ‰æ¨¡å—å­˜å‚¨é…ç½®é¡¹çš„ç»“æ„ä½“æŒ‡é’ˆï¼Œ     å®ƒé¦–å…ˆæ˜¯ä¸€ä¸ªæ•°ç»„ï¼Œæ•°ç»„å¤§å°ä¸ºngx_max_moduleï¼Œæ­£å¥½ä¸Nginxçš„moduleä¸ªæ•°ä¸€æ ·ï¼›     
+    æ¯ä¸ªæ•°ç»„æˆå‘˜åˆæ˜¯ä¸€ä¸ªæŒ‡é’ˆï¼ŒæŒ‡å‘å¦ä¸€ä¸ªå­˜å‚¨ç€æŒ‡é’ˆçš„æ•°ç»„ï¼Œå› æ­¤ä¼šçœ‹åˆ°void ****    è¯·è§é™¶è¾‰æ‰€è‘—ã€Šæ·±å…¥ç†è§£Nginx-æ¨¡å—å¼€å‘ä¸æ¶æ„è§£æã€‹
+    ä¸€ä¹¦302é¡µæ’å›¾ã€‚    å¦å¤–ï¼Œè¿™ä¸ªå›¾ä¹Ÿä¸é”™ï¼šhttp://img.my.csdn.net/uploads/201202/9/0_1328799724GTUk.gif è¯¥æ•°ç»„çš„æˆå‘˜æ•°ä¸ºngx_max_module   
     */ 
         
-    /* ÀıÈçhttpºËĞÄÄ£¿éµÄconf_ctx[ngx_http_module->index]=ngx_http_conf_ctx_t,¼ûngx_conf_handler,ngx_http_block
-    ¼ûngx_init_cycle  conf.ctx = cycle->conf_ctx; //ÕâÑùÏÂÃæµÄngx_conf_param½âÎöÅäÖÃµÄÊ±ºò£¬ÀïÃæ¶Ôconf.ctx¸³Öµ²Ù×÷£¬Êµ¼ÊÉÏ¾ÍÊÇ¶Ôcycle->conf_ctx[i]
-    ¿ÉÈçºÎÓÉngx_cycle_tºËĞÄ½á¹¹ÌåÖĞÕÒµ½main¼¶±ğµÄÅäÖÃ½á¹¹ÌåÄØ£¿NginxÌá¹©µÄngx_http_cycle_get_module_main_confºê¿ÉÒÔÊµÏÖÕâ¸ö¹¦ÄÜ
+    /* ä¾‹å¦‚httpæ ¸å¿ƒæ¨¡å—çš„conf_ctx[ngx_http_module->index]=ngx_http_conf_ctx_t,è§ngx_conf_handler,ngx_http_block
+    è§ngx_init_cycle  conf.ctx = cycle->conf_ctx; //è¿™æ ·ä¸‹é¢çš„ngx_conf_paramè§£æé…ç½®çš„æ—¶å€™ï¼Œé‡Œé¢å¯¹conf.ctxèµ‹å€¼æ“ä½œï¼Œå®é™…ä¸Šå°±æ˜¯å¯¹cycle->conf_ctx[i]
+    å¯å¦‚ä½•ç”±ngx_cycle_tæ ¸å¿ƒç»“æ„ä½“ä¸­æ‰¾åˆ°mainçº§åˆ«çš„é…ç½®ç»“æ„ä½“å‘¢ï¼ŸNginxæä¾›çš„ngx_http_cycle_get_module_main_confå®å¯ä»¥å®ç°è¿™ä¸ªåŠŸèƒ½
     */ 
     /*
-    Í¼ĞÎ»¯²Î¿¼:ÉîÈëÀí½âNGINXÖĞµÄÍ¼9-2(P302)  Í¼10-1(P353) Í¼10-1(P356) Í¼10-1(P359) Í¼4-2(P145)
-    ngx_http_conf_ctx_t¡¢ngx_http_core_main_conf_t¡¢ngx_http_core_srv_conf_t¡¢ngx_http_core_loc_conf_sºÍngx_cycle_s->conf_ctxµÄ¹ØÏµ¼û:
-    NginxµÄhttpÅäÖÃ½á¹¹ÌåµÄ×éÖ¯½á¹¹:http://tech.uc.cn/?p=300
+    å›¾å½¢åŒ–å‚è€ƒ:æ·±å…¥ç†è§£NGINXä¸­çš„å›¾9-2(P302)  å›¾10-1(P353) å›¾10-1(P356) å›¾10-1(P359) å›¾4-2(P145)
+    ngx_http_conf_ctx_tã€ngx_http_core_main_conf_tã€ngx_http_core_srv_conf_tã€ngx_http_core_loc_conf_så’Œngx_cycle_s->conf_ctxçš„å…³ç³»è§:
+    Nginxçš„httpé…ç½®ç»“æ„ä½“çš„ç»„ç»‡ç»“æ„:http://tech.uc.cn/?p=300
     */ 
-    void                  ****conf_ctx; //ÓĞ¶àÉÙ¸öÄ£¿é¾Í»áÓĞ¶àÉÙ¸öÖ¸ÏòÕâĞ©Ä£¿éµÄÖ¸Õë£¬¼ûngx_init_cycle   ngx_max_module
-    ngx_pool_t               *pool; // ÄÚ´æ³Ø
+    void                  ****conf_ctx; //æœ‰å¤šå°‘ä¸ªæ¨¡å—å°±ä¼šæœ‰å¤šå°‘ä¸ªæŒ‡å‘è¿™äº›æ¨¡å—çš„æŒ‡é’ˆï¼Œè§ngx_init_cycle   ngx_max_module
+    ngx_pool_t               *pool; // å†…å­˜æ± 
 
-    /*    ÈÕÖ¾Ä£¿éÖĞÌá¹©ÁËÉú³É»ù±¾ngx_log_tÈÕÖ¾¶ÔÏóµÄ¹¦ÄÜ£¬ÕâÀïµÄlogÊµ¼ÊÉÏÊÇÔÚ»¹Ã»ÓĞÖ´ĞĞngx_init_cycle·½·¨Ç°£¬    
-    Ò²¾ÍÊÇ»¹Ã»ÓĞ½âÎöÅäÖÃÇ°£¬Èç¹ûÓĞĞÅÏ¢ĞèÒªÊä³öµ½ÈÕÖ¾£¬¾Í»áÔİÊ±Ê¹ÓÃlog¶ÔÏó£¬Ëü»áÊä³öµ½ÆÁÄ»¡£    
-    ÔÚngx_init_cycle·½·¨Ö´ĞĞºó£¬½«»á¸ù¾İnginx.confÅäÖÃÎÄ¼şÖĞµÄÅäÖÃÏî£¬¹¹Ôì³öÕıÈ·µÄÈÕÖ¾ÎÄ¼ş£¬´ËÊ±»á¶ÔlogÖØĞÂ¸³Öµ¡£    */
-    //ngx_init_cycleÖĞ¸³Öµcycle->log = &cycle->new_log;
-    ngx_log_t                *log; //Ö¸Ïòngx_log_initÖĞµÄngx_log£¬Èç¹ûÅäÖÃerror_log£¬Ö¸ÏòÕâ¸öÅäÖÃºóÃæµÄÎÄ¼ş²ÎÊı£¬¼ûngx_error_log¡£·ñÔòÔÚngx_log_open_defaultÖĞÉèÖÃ
+    /*    æ—¥å¿—æ¨¡å—ä¸­æä¾›äº†ç”ŸæˆåŸºæœ¬ngx_log_tæ—¥å¿—å¯¹è±¡çš„åŠŸèƒ½ï¼Œè¿™é‡Œçš„logå®é™…ä¸Šæ˜¯åœ¨è¿˜æ²¡æœ‰æ‰§è¡Œngx_init_cycleæ–¹æ³•å‰ï¼Œ    
+    ä¹Ÿå°±æ˜¯è¿˜æ²¡æœ‰è§£æé…ç½®å‰ï¼Œå¦‚æœæœ‰ä¿¡æ¯éœ€è¦è¾“å‡ºåˆ°æ—¥å¿—ï¼Œå°±ä¼šæš‚æ—¶ä½¿ç”¨logå¯¹è±¡ï¼Œå®ƒä¼šè¾“å‡ºåˆ°å±å¹•ã€‚    
+    åœ¨ngx_init_cycleæ–¹æ³•æ‰§è¡Œåï¼Œå°†ä¼šæ ¹æ®nginx.confé…ç½®æ–‡ä»¶ä¸­çš„é…ç½®é¡¹ï¼Œæ„é€ å‡ºæ­£ç¡®çš„æ—¥å¿—æ–‡ä»¶ï¼Œæ­¤æ—¶ä¼šå¯¹logé‡æ–°èµ‹å€¼ã€‚    */
+    //ngx_init_cycleä¸­èµ‹å€¼cycle->log = &cycle->new_log;
+    ngx_log_t                *log; //æŒ‡å‘ngx_log_initä¸­çš„ngx_logï¼Œå¦‚æœé…ç½®error_logï¼ŒæŒ‡å‘è¿™ä¸ªé…ç½®åé¢çš„æ–‡ä»¶å‚æ•°ï¼Œè§ngx_error_logã€‚å¦åˆ™åœ¨ngx_log_open_defaultä¸­è®¾ç½®
     
-    /* ÓÉnginx.confÅäÖÃÎÄ¼ş¶ÁÈ¡µ½ÈÕÖ¾ÎÄ¼şÂ·¾¶ºó£¬½«¿ªÊ¼³õÊ¼»¯error_logÈÕÖ¾ÎÄ¼ş£¬ÓÉÓÚlog¶ÔÏó»¹ÔÚÓÃÓÚÊä³öÈÕÖ¾µ½ÆÁÄ»£¬    
-    ÕâÊ±»áÓÃnew_log¶ÔÏóÔİÊ±ĞÔµØÌæ´úlogÈÕÖ¾£¬´ı³õÊ¼»¯³É¹¦ºó£¬»áÓÃnew_logµÄµØÖ·¸²¸ÇÉÏÃæµÄlogÖ¸Õë    */
-    // Èç¹ûÃ»ÓĞÅäÖÃerror_logÔòÔÚngx_log_open_defaultÉèÖÃÎªNGX_ERROR_LOG_PATH£¬Èç¹ûÍ¨¹ıerror_logÓĞÅäÖÃ¹ıÔòÍ¨¹ıngx_log_set_logÌí¼Óµ½¸Ãnew_log->nextÁ´±íÁ¬½ÓÆğÀ´
-    /* È«¾ÖÖĞÅäÖÃµÄerror_log xxx´æ´¢ÔÚngx_cycle_s->new_log£¬http{}¡¢server{}¡¢local{}ÅäÖÃµÄerror_log±£´æÔÚngx_http_core_loc_conf_t->error_log,
-    ¼ûngx_log_set_log,Èç¹ûÖ»ÅäÖÃÈ«¾Öerror_log£¬²»ÅäÖÃhttp{}¡¢server{}¡¢local{}ÔòÔÚngx_http_core_merge_loc_conf conf->error_log = &cf->cycle->new_log;  */
-    //ngx_log_insert²åÈë£¬ÔÚngx_log_error_coreÕÒµ½¶ÔÓ¦¼¶±ğµÄÈÕÖ¾ÅäÖÃ½øĞĞÊä³ö£¬ÒòÎª¿ÉÒÔÅäÖÃerror_log²»Í¬¼¶±ğµÄÈÕÖ¾´æ´¢ÔÚ²»Í¬µÄÈÕÖ¾ÎÄ¼şÖĞ
-    ngx_log_t                 new_log;//Èç¹ûÅäÖÃerror_log£¬Ö¸ÏòÕâ¸öÅäÖÃºóÃæµÄÎÄ¼ş²ÎÊı£¬¼ûngx_error_log¡£·ñÔòÔÚngx_log_open_defaultÖĞÉèÖÃ
+    /* ç”±nginx.confé…ç½®æ–‡ä»¶è¯»å–åˆ°æ—¥å¿—æ–‡ä»¶è·¯å¾„åï¼Œå°†å¼€å§‹åˆå§‹åŒ–error_logæ—¥å¿—æ–‡ä»¶ï¼Œç”±äºlogå¯¹è±¡è¿˜åœ¨ç”¨äºè¾“å‡ºæ—¥å¿—åˆ°å±å¹•ï¼Œ    
+    è¿™æ—¶ä¼šç”¨new_logå¯¹è±¡æš‚æ—¶æ€§åœ°æ›¿ä»£logæ—¥å¿—ï¼Œå¾…åˆå§‹åŒ–æˆåŠŸåï¼Œä¼šç”¨new_logçš„åœ°å€è¦†ç›–ä¸Šé¢çš„logæŒ‡é’ˆ    */
+    // å¦‚æœæ²¡æœ‰é…ç½®error_logåˆ™åœ¨ngx_log_open_defaultè®¾ç½®ä¸ºNGX_ERROR_LOG_PATHï¼Œå¦‚æœé€šè¿‡error_logæœ‰é…ç½®è¿‡åˆ™é€šè¿‡ngx_log_set_logæ·»åŠ åˆ°è¯¥new_log->nexté“¾è¡¨è¿æ¥èµ·æ¥
+    /* å…¨å±€ä¸­é…ç½®çš„error_log xxxå­˜å‚¨åœ¨ngx_cycle_s->new_logï¼Œhttp{}ã€server{}ã€local{}é…ç½®çš„error_logä¿å­˜åœ¨ngx_http_core_loc_conf_t->error_log,
+    è§ngx_log_set_log,å¦‚æœåªé…ç½®å…¨å±€error_logï¼Œä¸é…ç½®http{}ã€server{}ã€local{}åˆ™åœ¨ngx_http_core_merge_loc_conf conf->error_log = &cf->cycle->new_log;  */
+    //ngx_log_insertæ’å…¥ï¼Œåœ¨ngx_log_error_coreæ‰¾åˆ°å¯¹åº”çº§åˆ«çš„æ—¥å¿—é…ç½®è¿›è¡Œè¾“å‡ºï¼Œå› ä¸ºå¯ä»¥é…ç½®error_logä¸åŒçº§åˆ«çš„æ—¥å¿—å­˜å‚¨åœ¨ä¸åŒçš„æ—¥å¿—æ–‡ä»¶ä¸­
+    ngx_log_t                 new_log;//å¦‚æœé…ç½®error_logï¼ŒæŒ‡å‘è¿™ä¸ªé…ç½®åé¢çš„æ–‡ä»¶å‚æ•°ï¼Œè§ngx_error_logã€‚å¦åˆ™åœ¨ngx_log_open_defaultä¸­è®¾ç½®
 
     ngx_uint_t                log_use_stderr;  /* unsigned  log_use_stderr:1; */
 
-    /*  ¶ÔÓÚpoll£¬rtsigÕâÑùµÄÊÂ¼şÄ£¿é£¬»áÒÔÓĞĞ§ÎÄ¼ş¾ä±úÊıÀ´Ô¤ÏÈ½¨Á¢ÕâĞ©ngx_connection t½á¹¹
-Ìå£¬ÒÔ¼ÓËÙÊÂ¼şµÄÊÕ¼¯¡¢·Ö·¢¡£ÕâÊ±files¾Í»á±£´æËùÓĞngx_connection_tµÄÖ¸Õë×é³ÉµÄÊı×é£¬files_n¾ÍÊÇÖ¸
-ÕëµÄ×ÜÊı£¬¶øÎÄ¼ş¾ä±úµÄÖµÓÃÀ´·ÃÎÊfilesÊı×é³ÉÔ± */
-    ngx_connection_t        **files; //sizeof(ngx_connection_t *) * cycle->files_n  ¼ûngx_event_process_init  ngx_get_connection
+    /*  å¯¹äºpollï¼Œrtsigè¿™æ ·çš„äº‹ä»¶æ¨¡å—ï¼Œä¼šä»¥æœ‰æ•ˆæ–‡ä»¶å¥æŸ„æ•°æ¥é¢„å…ˆå»ºç«‹è¿™äº›ngx_connection tç»“æ„
+ä½“ï¼Œä»¥åŠ é€Ÿäº‹ä»¶çš„æ”¶é›†ã€åˆ†å‘ã€‚è¿™æ—¶fileså°±ä¼šä¿å­˜æ‰€æœ‰ngx_connection_tçš„æŒ‡é’ˆç»„æˆçš„æ•°ç»„ï¼Œfiles_nå°±æ˜¯æŒ‡
+é’ˆçš„æ€»æ•°ï¼Œè€Œæ–‡ä»¶å¥æŸ„çš„å€¼ç”¨æ¥è®¿é—®filesæ•°ç»„æˆå‘˜ */
+    ngx_connection_t        **files; //sizeof(ngx_connection_t *) * cycle->files_n  è§ngx_event_process_init  ngx_get_connection
 
     /*
-        ´ÓÍ¼9-1ÖĞ¿ÉÒÔ¿´³ö£¬ÔÚngx_cycle_tÖĞµÄconnectionsºÍfree_connections´ïÁ½¸ö³ÉÔ±¹¹³ÉÁËÒ»¸öÁ¬½Ó³Ø£¬ÆäÖĞconnectionsÖ¸ÏòÕû¸öÁ¬
-    ½Ó³ØÊı×éµÄÊ×²¿£¬¶øfree_connectionsÔòÖ¸ÏòµÚÒ»¸öngx_connection_t¿ÕÏĞÁ¬½Ó¡£ËùÓĞµÄ¿ÕÏĞÁ¬½Óngx_connection_t¶¼ÒÔdata³ÉÔ±£¨¼û9.3.1½Ú£©×÷
-    ÎªnextÖ¸Õë´®Áª³ÉÒ»¸öµ¥Á´±í£¬Èç´Ë£¬Ò»µ©ÓĞÓÃ»§·¢ÆğÁ¬½ÓÊ±¾Í´Ófree_connectionsÖ¸ÏòµÄÁ´±íÍ·»ñÈ¡Ò»¸ö¿ÕÏĞµÄÁ¬½Ó£¬Í¬Ê±free_connectionsÔÙÖ¸
-    ÏòÏÂÒ»¸ö¿ÕÏĞÁ¬½Ó¡£¶ø¹é»¹Á¬½ÓÊ±Ö»Ğè°Ñ¸ÃÁ¬½Ó²åÈëµ½free_connectionsÁ´±í±íÍ·¼´¿É¡£
-     */ //¼ûngx_event_process_init, ngx_connection_t¿Õ¼äºÍËüµ±ÖĞµÄ¶ÁĞ´ngx_event_t´æ´¢¿Õ¼ä¶¼ÔÚ¸Ãº¯ÊıÒ»´ÎĞÔ·ÖÅäºÃ
-    ngx_connection_t         *free_connections;// ¿ÉÓÃÁ¬½Ó³Ø£¬Óëfree_connection_nÅäºÏÊ¹ÓÃ
-    ngx_uint_t                free_connection_n;// ¿ÉÓÃÁ¬½Ó³ØÖĞÁ¬½ÓµÄ×ÜÊı
+        ä»å›¾9-1ä¸­å¯ä»¥çœ‹å‡ºï¼Œåœ¨ngx_cycle_tä¸­çš„connectionså’Œfree_connectionsè¾¾ä¸¤ä¸ªæˆå‘˜æ„æˆäº†ä¸€ä¸ªè¿æ¥æ± ï¼Œå…¶ä¸­connectionsæŒ‡å‘æ•´ä¸ªè¿
+    æ¥æ± æ•°ç»„çš„é¦–éƒ¨ï¼Œè€Œfree_connectionsåˆ™æŒ‡å‘ç¬¬ä¸€ä¸ªngx_connection_tç©ºé—²è¿æ¥ã€‚æ‰€æœ‰çš„ç©ºé—²è¿æ¥ngx_connection_téƒ½ä»¥dataæˆå‘˜ï¼ˆè§9.3.1èŠ‚ï¼‰ä½œ
+    ä¸ºnextæŒ‡é’ˆä¸²è”æˆä¸€ä¸ªå•é“¾è¡¨ï¼Œå¦‚æ­¤ï¼Œä¸€æ—¦æœ‰ç”¨æˆ·å‘èµ·è¿æ¥æ—¶å°±ä»free_connectionsæŒ‡å‘çš„é“¾è¡¨å¤´è·å–ä¸€ä¸ªç©ºé—²çš„è¿æ¥ï¼ŒåŒæ—¶free_connectionså†æŒ‡
+    å‘ä¸‹ä¸€ä¸ªç©ºé—²è¿æ¥ã€‚è€Œå½’è¿˜è¿æ¥æ—¶åªéœ€æŠŠè¯¥è¿æ¥æ’å…¥åˆ°free_connectionsé“¾è¡¨è¡¨å¤´å³å¯ã€‚
+     */ //è§ngx_event_process_init, ngx_connection_tç©ºé—´å’Œå®ƒå½“ä¸­çš„è¯»å†™ngx_event_tå­˜å‚¨ç©ºé—´éƒ½åœ¨è¯¥å‡½æ•°ä¸€æ¬¡æ€§åˆ†é…å¥½
+    ngx_connection_t         *free_connections;// å¯ç”¨è¿æ¥æ± ï¼Œä¸free_connection_né…åˆä½¿ç”¨
+    ngx_uint_t                free_connection_n;// å¯ç”¨è¿æ¥æ± ä¸­è¿æ¥çš„æ€»æ•°
 
-    //ngx_connection_sÖĞµÄqueueÌí¼Óµ½¸ÃÁ´±íÉÏ
+    //ngx_connection_sä¸­çš„queueæ·»åŠ åˆ°è¯¥é“¾è¡¨ä¸Š
     /*
-    Í¨¹ı¶Á²Ù×÷¿ÉÒÔÅĞ¶ÏÁ¬½ÓÊÇ·ñÕı³££¬Èç¹û²»Õı³£µÄ»°£¬¾Í»á°Ñ¸Ãngx_close_connection->ngx_free_connectionÊÍ·Å³öÀ´£¬ÕâÑù
-    Èç¹ûÖ®Ç°free_connectionsÉÏÃ»ÓĞ¿ÕÓàngx_connection_t£¬c = ngx_cycle->free_connections;¾Í¿ÉÒÔ»ñÈ¡µ½¸Õ²ÅÊÍ·Å³öÀ´µÄngx_connection_t
-    ¼ûngx_drain_connections
+    é€šè¿‡è¯»æ“ä½œå¯ä»¥åˆ¤æ–­è¿æ¥æ˜¯å¦æ­£å¸¸ï¼Œå¦‚æœä¸æ­£å¸¸çš„è¯ï¼Œå°±ä¼šæŠŠè¯¥ngx_close_connection->ngx_free_connectioné‡Šæ”¾å‡ºæ¥ï¼Œè¿™æ ·
+    å¦‚æœä¹‹å‰free_connectionsä¸Šæ²¡æœ‰ç©ºä½™ngx_connection_tï¼Œc = ngx_cycle->free_connections;å°±å¯ä»¥è·å–åˆ°åˆšæ‰é‡Šæ”¾å‡ºæ¥çš„ngx_connection_t
+    è§ngx_drain_connections
     */ 
-    ngx_queue_t               reusable_connections_queue;/* Ë«ÏòÁ´±íÈİÆ÷£¬ÔªËØÀàĞÍÊÇngx_connection_t½á¹¹Ìå£¬±íÊ¾¿ÉÖØ¸´Ê¹ÓÃÁ¬½Ó¶ÓÁĞ ±íÊ¾¿ÉÒÔÖØÓÃµÄÁ¬½Ó */
+    ngx_queue_t               reusable_connections_queue;/* åŒå‘é“¾è¡¨å®¹å™¨ï¼Œå…ƒç´ ç±»å‹æ˜¯ngx_connection_tç»“æ„ä½“ï¼Œè¡¨ç¤ºå¯é‡å¤ä½¿ç”¨è¿æ¥é˜Ÿåˆ— è¡¨ç¤ºå¯ä»¥é‡ç”¨çš„è¿æ¥ */
 
-//ngx_http_optimize_servers->ngx_http_init_listening->ngx_http_add_listening->ngx_create_listening°Ñ½âÎöµ½µÄlistenÅäÖÃÏîĞÅÏ¢Ìí¼Óµ½cycle->listeningÖĞ
-    //Í¨¹ı"listen"ÅäÖÃ´´½¨ngx_listening_t¼ÓÈëµ½¸ÃÊı×éÖĞ
-    //×¢Òâ£¬ÓĞ¶àÉÙ¸öworker½ø³Ì¾Í»á¸´ÖÆ¶àÉÙ¸öngx_listening_t, ¼ûngx_clone_listening
-    ngx_array_t               listening;// ¶¯Ì¬Êı×é£¬Ã¿¸öÊı×éÔªËØ´¢´æ×Ångx_listening_t³ÉÔ±£¬±íÊ¾¼àÌı¶Ë¿Ú¼°Ïà¹ØµÄ²ÎÊı
+//ngx_http_optimize_servers->ngx_http_init_listening->ngx_http_add_listening->ngx_create_listeningæŠŠè§£æåˆ°çš„listené…ç½®é¡¹ä¿¡æ¯æ·»åŠ åˆ°cycle->listeningä¸­
+    //é€šè¿‡"listen"é…ç½®åˆ›å»ºngx_listening_tåŠ å…¥åˆ°è¯¥æ•°ç»„ä¸­
+    //æ³¨æ„ï¼Œæœ‰å¤šå°‘ä¸ªworkerè¿›ç¨‹å°±ä¼šå¤åˆ¶å¤šå°‘ä¸ªngx_listening_t, è§ngx_clone_listening
+    ngx_array_t               listening;// åŠ¨æ€æ•°ç»„ï¼Œæ¯ä¸ªæ•°ç»„å…ƒç´ å‚¨å­˜ç€ngx_listening_tæˆå‘˜ï¼Œè¡¨ç¤ºç›‘å¬ç«¯å£åŠç›¸å…³çš„å‚æ•°
 
-    /*    ¶¯Ì¬Êı×éÈİÆ÷£¬Ëü±£´æ×ÅnginxËùÓĞÒª²Ù×÷µÄÄ¿Â¼¡£Èç¹ûÓĞÄ¿Â¼²»´æÔÚ£¬¾Í»áÊÔÍ¼´´½¨£¬¶ø´´½¨Ä¿Â¼Ê§°Ü¾Í»áµ¼ÖÂnginxÆô¶¯Ê§°Ü¡£    */
-    //Í¨¹ı½âÎöÅäÖÃÎÄ¼ş»ñÈ¡µ½µÄÂ·¾¶Ìí¼Óµ½¸ÃÊı×é£¬ÀıÈçnginx.confÖĞµÄclient_body_temp_path proxy_temp_path£¬²Î¿¼ngx_conf_set_path_slot
-    //ÕâĞ©ÅäÖÃ¿ÉÄÜÉèÖÃÖØ¸´µÄÂ·¾¶£¬Òò´Ë²»ĞèÒªÖØ¸´´´½¨£¬Í¨¹ıngx_add_path¼ì²âÌí¼ÓµÄÂ·¾¶ÊÇ·ñÖØ¸´£¬²»ÖØ¸´ÔòÌí¼Óµ½pathsÖĞ
-    ngx_array_t               paths;//Êı×é³ÉÔ± nginx_path_t £¬¸ÃÊı×éÔÚngx_init_cycleÖĞÔ¤·ÖÅä¿Õ¼ä
-    ngx_array_t               config_dump; //¸ÃÊı×éÔÚngx_init_cycleÖĞÔ¤·ÖÅä¿Õ¼ä
+    /*    åŠ¨æ€æ•°ç»„å®¹å™¨ï¼Œå®ƒä¿å­˜ç€nginxæ‰€æœ‰è¦æ“ä½œçš„ç›®å½•ã€‚å¦‚æœæœ‰ç›®å½•ä¸å­˜åœ¨ï¼Œå°±ä¼šè¯•å›¾åˆ›å»ºï¼Œè€Œåˆ›å»ºç›®å½•å¤±è´¥å°±ä¼šå¯¼è‡´nginxå¯åŠ¨å¤±è´¥ã€‚    */
+    //é€šè¿‡è§£æé…ç½®æ–‡ä»¶è·å–åˆ°çš„è·¯å¾„æ·»åŠ åˆ°è¯¥æ•°ç»„ï¼Œä¾‹å¦‚nginx.confä¸­çš„client_body_temp_path proxy_temp_pathï¼Œå‚è€ƒngx_conf_set_path_slot
+    //è¿™äº›é…ç½®å¯èƒ½è®¾ç½®é‡å¤çš„è·¯å¾„ï¼Œå› æ­¤ä¸éœ€è¦é‡å¤åˆ›å»ºï¼Œé€šè¿‡ngx_add_pathæ£€æµ‹æ·»åŠ çš„è·¯å¾„æ˜¯å¦é‡å¤ï¼Œä¸é‡å¤åˆ™æ·»åŠ åˆ°pathsä¸­
+    ngx_array_t               paths;//æ•°ç»„æˆå‘˜ nginx_path_t ï¼Œè¯¥æ•°ç»„åœ¨ngx_init_cycleä¸­é¢„åˆ†é…ç©ºé—´
+    ngx_array_t               config_dump; //è¯¥æ•°ç»„åœ¨ngx_init_cycleä¸­é¢„åˆ†é…ç©ºé—´
 
-    /*    µ¥Á´±íÈİÆ÷£¬ÔªËØÀàĞÍÊÇngx_open_file_t ½á¹¹Ìå£¬Ëü±íÊ¾nginxÒÑ¾­´ò¿ªµÄËùÓĞÎÄ¼ş¡£ÊÂÊµÉÏ£¬nginx¿ò¼Ü²»»áÏòopen_filesÁ´±íÖĞÌí¼ÓÎÄ¼ş¡£    
-    ¶øÊÇÓÉ¶Ô´Ë¸ĞĞËÈ¤µÄÄ£¿éÏòÆäÖĞÌí¼ÓÎÄ¼şÂ·¾¶Ãû£¬nginx¿ò¼Ü»áÔÚngx_init_cycle ·½·¨ÖĞ´ò¿ªÕâĞ©ÎÄ¼ş £¬ÏÈÍ¨¹ıngx_conf_open_fileÉèÖÃºÃÊı×éÎÄ¼ş£¬È»ºó
-    ÔÚngx_init_cycleÕæÕı´´½¨ÎÄ¼ş*/ //access_log error_logÅäÖÃµÄÎÄ¼şĞÅÏ¢¶¼Í¨¹ıngx_conf_open_file¼ÓÈëµ½open_filesÁ´±íÖĞ
-    //¸ÃÁ´±íÖĞËù°üº¬µÄÎÄ¼şµÄ´ò¿ªÔÚngx_init_cycleÖĞ´ò¿ª
-    ngx_list_t                open_files; //Èçnginx.confÅäÖÃÎÄ¼şÖĞµÄaccess_log²ÎÊıµÄÎÄ¼ş¾Í±£´æÔÚ¸ÃÁ´±íÖĞ£¬²Î¿¼ngx_conf_open_file
-    //ÕæÕıµÄ¹²ÏíÄÚ´æ¿Õ¼ä´´½¨ngx_shm_zone_tÔÚngx_init_cycle£¬ĞèÒª´´½¨ÄÄĞ©¹²ÏíÄÚ´æ£¬ÓÉÅäÖÃÎÄ¼şÖ¸¶¨£¬È»ºóµ÷ÓÃ
-    //ngx_shared_memory_add°ÑÕâĞ©ĞÅÏ¢±£´æµ½shared_memoryÁ´±í£¬ngx_init_cycle½âÎöÍêÅäÖÃÎÄ¼şºó½øĞĞ¹²ÏíÄÚ´æÕæÕıµÄÍ³Ò»·ÖÅä
-    ngx_list_t                shared_memory;// µ¥Á´±íÈİÆ÷£¬ÔªËØÀàĞÍÊÇngx_shm_zone_t½á¹¹Ìå£¬Ã¿¸öÔªËØ±íÊ¾Ò»¿é¹²ÏíÄÚ´æ
+    /*    å•é“¾è¡¨å®¹å™¨ï¼Œå…ƒç´ ç±»å‹æ˜¯ngx_open_file_t ç»“æ„ä½“ï¼Œå®ƒè¡¨ç¤ºnginxå·²ç»æ‰“å¼€çš„æ‰€æœ‰æ–‡ä»¶ã€‚äº‹å®ä¸Šï¼Œnginxæ¡†æ¶ä¸ä¼šå‘open_filesé“¾è¡¨ä¸­æ·»åŠ æ–‡ä»¶ã€‚    
+    è€Œæ˜¯ç”±å¯¹æ­¤æ„Ÿå…´è¶£çš„æ¨¡å—å‘å…¶ä¸­æ·»åŠ æ–‡ä»¶è·¯å¾„åï¼Œnginxæ¡†æ¶ä¼šåœ¨ngx_init_cycle æ–¹æ³•ä¸­æ‰“å¼€è¿™äº›æ–‡ä»¶ ï¼Œå…ˆé€šè¿‡ngx_conf_open_fileè®¾ç½®å¥½æ•°ç»„æ–‡ä»¶ï¼Œç„¶å
+    åœ¨ngx_init_cycleçœŸæ­£åˆ›å»ºæ–‡ä»¶*/ //access_log error_logé…ç½®çš„æ–‡ä»¶ä¿¡æ¯éƒ½é€šè¿‡ngx_conf_open_fileåŠ å…¥åˆ°open_filesé“¾è¡¨ä¸­
+    //è¯¥é“¾è¡¨ä¸­æ‰€åŒ…å«çš„æ–‡ä»¶çš„æ‰“å¼€åœ¨ngx_init_cycleä¸­æ‰“å¼€
+    ngx_list_t                open_files; //å¦‚nginx.confé…ç½®æ–‡ä»¶ä¸­çš„access_logå‚æ•°çš„æ–‡ä»¶å°±ä¿å­˜åœ¨è¯¥é“¾è¡¨ä¸­ï¼Œå‚è€ƒngx_conf_open_file
+    //çœŸæ­£çš„å…±äº«å†…å­˜ç©ºé—´åˆ›å»ºngx_shm_zone_tåœ¨ngx_init_cycleï¼Œéœ€è¦åˆ›å»ºå“ªäº›å…±äº«å†…å­˜ï¼Œç”±é…ç½®æ–‡ä»¶æŒ‡å®šï¼Œç„¶åè°ƒç”¨
+    //ngx_shared_memory_addæŠŠè¿™äº›ä¿¡æ¯ä¿å­˜åˆ°shared_memoryé“¾è¡¨ï¼Œngx_init_cycleè§£æå®Œé…ç½®æ–‡ä»¶åè¿›è¡Œå…±äº«å†…å­˜çœŸæ­£çš„ç»Ÿä¸€åˆ†é…
+    ngx_list_t                shared_memory;// å•é“¾è¡¨å®¹å™¨ï¼Œå…ƒç´ ç±»å‹æ˜¯ngx_shm_zone_tç»“æ„ä½“ï¼Œæ¯ä¸ªå…ƒç´ è¡¨ç¤ºä¸€å—å…±äº«å†…å­˜
 
-    //×î¿ªÊ¼free_connection_n=connection_n£¬¼ûngx_event_process_init
-    ngx_uint_t                connection_n;// µ±Ç°½ø³ÌÖĞËùÓĞÁ´½Ó¶ÔÏóµÄ×ÜÊı£¬Óë³ÉÔ±ÅäºÏÊ¹ÓÃ
-    ngx_uint_t                files_n; //Ã¿¸ö½ø³ÌÄÜ¹»´ò¿ªµÄ×î¶àÎÄ¼şÊı  ¸³Öµ¼ûngx_event_process_init
-
-    /*
-    ´ÓÍ¼9-1ÖĞ¿ÉÒÔ¿´³ö£¬ÔÚngx_cycle_tÖĞµÄconnectionsºÍfree_connections´ïÁ½¸ö³ÉÔ±¹¹³ÉÁËÒ»¸öÁ¬½Ó³Ø£¬ÆäÖĞconnectionsÖ¸ÏòÕû¸öÁ¬½Ó³ØÊı×éµÄÊ×²¿£¬
-    ¶øfree_connectionsÔòÖ¸ÏòµÚÒ»¸öngx_connection_t¿ÕÏĞÁ¬½Ó¡£ËùÓĞµÄ¿ÕÏĞÁ¬½Óngx_connection_t¶¼ÒÔdata³ÉÔ±£¨¼û9.3.1½Ú£©×÷ÎªnextÖ¸Õë´®Áª³ÉÒ»¸ö
-    µ¥Á´±í£¬Èç´Ë£¬Ò»µ©ÓĞÓÃ»§·¢ÆğÁ¬½ÓÊ±¾Í´Ófree_connectionsÖ¸ÏòµÄÁ´±íÍ·»ñÈ¡Ò»¸ö¿ÕÏĞµÄÁ¬½Ó£¬Í¬Ê±free_connectionsÔÙÖ¸ÏòÏÂÒ»¸ö¿ÕÏĞÁ¬
-    ½Ó¡£¶ø¹é»¹Á¬½ÓÊ±Ö»Ğè°Ñ¸ÃÁ¬½Ó²åÈëµ½free_connectionsÁ´±í±íÍ·¼´¿É¡£
-
-    ÔÚconnectionsÖ¸ÏòµÄÁ¬½Ó³ØÖĞ£¬Ã¿¸öÁ¬½ÓËùĞèÒªµÄ¶Á/Ğ´ÊÂ¼ş¶¼ÒÔÏàÍ¬µÄÊı×éĞòºÅ¶ÔÓ¦×Åread_events¡¢write_events¶Á/Ğ´ÊÂ¼şÊı×é£¬
-    ÏàÍ¬ĞòºÅÏÂÕâ3¸öÊı×éÖĞµÄÔªËØÊÇÅäºÏÊ¹ÓÃµÄ
-     */ //×Ó½ø³ÌÔÚngx_event_process_initÖĞ´´½¨¿Õ¼äºÍ¸³Öµ£¬connectionsºÍread_events  write_eventsÊı×é¶ÔÓ¦
-    ngx_connection_t         *connections;// Ö¸Ïòµ±Ç°½ø³ÌÖĞµÄËùÓĞÁ¬½Ó¶ÔÏó£¬Óëconnection_nÅäºÏÊ¹ÓÃ
+    //æœ€å¼€å§‹free_connection_n=connection_nï¼Œè§ngx_event_process_init
+    ngx_uint_t                connection_n;// å½“å‰è¿›ç¨‹ä¸­æ‰€æœ‰é“¾æ¥å¯¹è±¡çš„æ€»æ•°ï¼Œä¸æˆå‘˜é…åˆä½¿ç”¨
+    ngx_uint_t                files_n; //æ¯ä¸ªè¿›ç¨‹èƒ½å¤Ÿæ‰“å¼€çš„æœ€å¤šæ–‡ä»¶æ•°  èµ‹å€¼è§ngx_event_process_init
 
     /*
-    ÊÂ¼şÊÇ²»ĞèÒª´´½¨µÄ£¬ÒòÎªNginxÔÚÆô¶¯Ê±ÒÑ¾­ÔÚngx_cycle_tµÄread_events³ÉÔ±ÖĞÔ¤·ÖÅäÁËËùÓĞµÄ¶ÁÊÂ¼ş£¬²¢ÔÚwrite_events³ÉÔ±ÖĞÔ¤·ÖÅäÁËËùÓĞµÄĞ´ÊÂ¼ş
+    ä»å›¾9-1ä¸­å¯ä»¥çœ‹å‡ºï¼Œåœ¨ngx_cycle_tä¸­çš„connectionså’Œfree_connectionsè¾¾ä¸¤ä¸ªæˆå‘˜æ„æˆäº†ä¸€ä¸ªè¿æ¥æ± ï¼Œå…¶ä¸­connectionsæŒ‡å‘æ•´ä¸ªè¿æ¥æ± æ•°ç»„çš„é¦–éƒ¨ï¼Œ
+    è€Œfree_connectionsåˆ™æŒ‡å‘ç¬¬ä¸€ä¸ªngx_connection_tç©ºé—²è¿æ¥ã€‚æ‰€æœ‰çš„ç©ºé—²è¿æ¥ngx_connection_téƒ½ä»¥dataæˆå‘˜ï¼ˆè§9.3.1èŠ‚ï¼‰ä½œä¸ºnextæŒ‡é’ˆä¸²è”æˆä¸€ä¸ª
+    å•é“¾è¡¨ï¼Œå¦‚æ­¤ï¼Œä¸€æ—¦æœ‰ç”¨æˆ·å‘èµ·è¿æ¥æ—¶å°±ä»free_connectionsæŒ‡å‘çš„é“¾è¡¨å¤´è·å–ä¸€ä¸ªç©ºé—²çš„è¿æ¥ï¼ŒåŒæ—¶free_connectionså†æŒ‡å‘ä¸‹ä¸€ä¸ªç©ºé—²è¿
+    æ¥ã€‚è€Œå½’è¿˜è¿æ¥æ—¶åªéœ€æŠŠè¯¥è¿æ¥æ’å…¥åˆ°free_connectionsé“¾è¡¨è¡¨å¤´å³å¯ã€‚
 
-    ÔÚconnectionsÖ¸ÏòµÄÁ¬½Ó³ØÖĞ£¬Ã¿¸öÁ¬½ÓËùĞèÒªµÄ¶Á/Ğ´ÊÂ¼ş¶¼ÒÔÏàÍ¬µÄÊı×éĞòºÅ¶ÔÓ¦×Åread_events¡¢write_events¶Á/Ğ´ÊÂ¼şÊı×é£¬ÏàÍ¬ĞòºÅÏÂÕâ
-    3¸öÊı×éÖĞµÄÔªËØÊÇÅäºÏÊ¹ÓÃµÄ¡£Í¼9-1ÖĞ»¹ÏÔÊ¾ÁËÊÂ¼ş³Ø£¬NginxÈÏÎªÃ¿Ò»¸öÁ¬½ÓÒ»¶¨ÖÁÉÙĞèÒªÒ»¸ö¶ÁÊÂ¼şºÍÒ»¸öĞ´ÊÂ¼ş£¬ÓĞ¶àÉÙÁ¬½Ó¾Í·ÖÅä¶àÉÙ¸ö¶Á¡¢
-    Ğ´ÊÂ¼ş¡£ÔõÑù°ÑÁ¬½Ó³ØÖĞµÄÈÎÒ»¸öÁ¬½ÓÓë¶ÁÊÂ¼ş¡¢Ğ´ÊÂ¼ş¶ÔÓ¦ÆğÀ´ÄØ£¿ºÜ¼òµ¥¡£ÓÉÓÚ¶ÁÊÂ¼ş¡¢Ğ´ÊÂ¼ş¡¢Á¬½Ó³ØÊÇÓÉ3¸ö´óĞ¡ÏàÍ¬µÄÊı×é×é³É£¬ËùÒÔ¸ù¾İÊı×é
-    ĞòºÅ¾Í¿É½«Ã¿Ò»¸öÁ¬½Ó¡¢¶ÁÊÂ¼ş¡¢Ğ´ÊÂ¼ş¶ÔÓ¦ÆğÀ´£¬Õâ¸ö¶ÔÓ¦¹ØÏµÔÚngx_event_core_moduleÄ£¿éµÄ³õÊ¼»¯¹ı³ÌÖĞ¾ÍÒÑ¾­¾ö¶¨ÁË£¨²Î¼û9.5½Ú£©¡£Õâ3¸öÊı×é
-    µÄ´óĞ¡¶¼ÊÇÓÉcycle->connection_n¾ö¶¨¡£
-     */ //Ô¤·ÖÅäµÄ¶ÁĞ´ÊÂ¼ş¿Õ¼ä£¬ÀàĞÍngx_event_t  //×Ó½ø³ÌÔÚngx_event_process_initÖĞ´´½¨¿Õ¼äºÍ¸³Öµ£¬connectionsºÍread_events  write_eventsÊı×é¶ÔÓ¦
-    ngx_event_t              *read_events;// Ö¸Ïòµ±Ç°½ø³ÌÖĞµÄËùÓĞ¶ÁÊÂ¼ş¶ÔÏó£¬connection_nÍ¬Ê±±íÊ¾ËùÓĞ¶ÁÊÂ¼şµÄ×ÜÊı£¬ÒòÎªÃ¿¸öÁ¬½Ó·Ö±ğÓĞÒ»¸ö¶ÁĞ´ÊÂ¼ş
-    ngx_event_t              *write_events;// Ö¸Ïòµ±Ç°½ø³ÌÖĞµÄËùÓĞĞ´ÊÂ¼ş¶ÔÏó£¬connection_nÍ¬Ê±±íÊ¾ËùÓĞĞ´ÊÂ¼şµÄ×ÜÊı£¬ÒòÎªÃ¿¸öÁ¬½Ó·Ö±ğÓĞÒ»¸ö¶ÁĞ´ÊÂ¼ş
+    åœ¨connectionsæŒ‡å‘çš„è¿æ¥æ± ä¸­ï¼Œæ¯ä¸ªè¿æ¥æ‰€éœ€è¦çš„è¯»/å†™äº‹ä»¶éƒ½ä»¥ç›¸åŒçš„æ•°ç»„åºå·å¯¹åº”ç€read_eventsã€write_eventsè¯»/å†™äº‹ä»¶æ•°ç»„ï¼Œ
+    ç›¸åŒåºå·ä¸‹è¿™3ä¸ªæ•°ç»„ä¸­çš„å…ƒç´ æ˜¯é…åˆä½¿ç”¨çš„
+     */ //å­è¿›ç¨‹åœ¨ngx_event_process_initä¸­åˆ›å»ºç©ºé—´å’Œèµ‹å€¼ï¼Œconnectionså’Œread_events  write_eventsæ•°ç»„å¯¹åº”
+    ngx_connection_t         *connections;// æŒ‡å‘å½“å‰è¿›ç¨‹ä¸­çš„æ‰€æœ‰è¿æ¥å¯¹è±¡ï¼Œä¸connection_né…åˆä½¿ç”¨
 
-    /*    ¾ÉµÄngx_cycle_t ¶ÔÏóÓÃÓÚÒıÓÃÉÏÒ»¸öngx_cycle_t ¶ÔÏóÖĞµÄ³ÉÔ±¡£ÀıÈçngx_init_cycle ·½·¨£¬ÔÚÆô¶¯³õÆÚ£¬    
-    ĞèÒª½¨Á¢Ò»¸öÁÙÊ±µÄngx_cycle_t¶ÔÏó±£´æÒ»Ğ©±äÁ¿£¬ 
-    ÔÙµ÷ÓÃngx_init_cycle ·½·¨Ê±¾Í¿ÉÒÔ°Ñ¾ÉµÄngx_cycle_t ¶ÔÏó´«½øÈ¥£¬    ¶øÕâÊ±old_cycle¶ÔÏó¾Í»á±£´æÕâ¸öÇ°ÆÚµÄngx_cycle_t¶ÔÏó¡£    */
+    /*
+    äº‹ä»¶æ˜¯ä¸éœ€è¦åˆ›å»ºçš„ï¼Œå› ä¸ºNginxåœ¨å¯åŠ¨æ—¶å·²ç»åœ¨ngx_cycle_tçš„read_eventsæˆå‘˜ä¸­é¢„åˆ†é…äº†æ‰€æœ‰çš„è¯»äº‹ä»¶ï¼Œå¹¶åœ¨write_eventsæˆå‘˜ä¸­é¢„åˆ†é…äº†æ‰€æœ‰çš„å†™äº‹ä»¶
+
+    åœ¨connectionsæŒ‡å‘çš„è¿æ¥æ± ä¸­ï¼Œæ¯ä¸ªè¿æ¥æ‰€éœ€è¦çš„è¯»/å†™äº‹ä»¶éƒ½ä»¥ç›¸åŒçš„æ•°ç»„åºå·å¯¹åº”ç€read_eventsã€write_eventsè¯»/å†™äº‹ä»¶æ•°ç»„ï¼Œç›¸åŒåºå·ä¸‹è¿™
+    3ä¸ªæ•°ç»„ä¸­çš„å…ƒç´ æ˜¯é…åˆä½¿ç”¨çš„ã€‚å›¾9-1ä¸­è¿˜æ˜¾ç¤ºäº†äº‹ä»¶æ± ï¼ŒNginxè®¤ä¸ºæ¯ä¸€ä¸ªè¿æ¥ä¸€å®šè‡³å°‘éœ€è¦ä¸€ä¸ªè¯»äº‹ä»¶å’Œä¸€ä¸ªå†™äº‹ä»¶ï¼Œæœ‰å¤šå°‘è¿æ¥å°±åˆ†é…å¤šå°‘ä¸ªè¯»ã€
+    å†™äº‹ä»¶ã€‚æ€æ ·æŠŠè¿æ¥æ± ä¸­çš„ä»»ä¸€ä¸ªè¿æ¥ä¸è¯»äº‹ä»¶ã€å†™äº‹ä»¶å¯¹åº”èµ·æ¥å‘¢ï¼Ÿå¾ˆç®€å•ã€‚ç”±äºè¯»äº‹ä»¶ã€å†™äº‹ä»¶ã€è¿æ¥æ± æ˜¯ç”±3ä¸ªå¤§å°ç›¸åŒçš„æ•°ç»„ç»„æˆï¼Œæ‰€ä»¥æ ¹æ®æ•°ç»„
+    åºå·å°±å¯å°†æ¯ä¸€ä¸ªè¿æ¥ã€è¯»äº‹ä»¶ã€å†™äº‹ä»¶å¯¹åº”èµ·æ¥ï¼Œè¿™ä¸ªå¯¹åº”å…³ç³»åœ¨ngx_event_core_moduleæ¨¡å—çš„åˆå§‹åŒ–è¿‡ç¨‹ä¸­å°±å·²ç»å†³å®šäº†ï¼ˆå‚è§9.5èŠ‚ï¼‰ã€‚è¿™3ä¸ªæ•°ç»„
+    çš„å¤§å°éƒ½æ˜¯ç”±cycle->connection_nå†³å®šã€‚
+     */ //é¢„åˆ†é…çš„è¯»å†™äº‹ä»¶ç©ºé—´ï¼Œç±»å‹ngx_event_t  //å­è¿›ç¨‹åœ¨ngx_event_process_initä¸­åˆ›å»ºç©ºé—´å’Œèµ‹å€¼ï¼Œconnectionså’Œread_events  write_eventsæ•°ç»„å¯¹åº”
+    ngx_event_t              *read_events;// æŒ‡å‘å½“å‰è¿›ç¨‹ä¸­çš„æ‰€æœ‰è¯»äº‹ä»¶å¯¹è±¡ï¼Œconnection_nåŒæ—¶è¡¨ç¤ºæ‰€æœ‰è¯»äº‹ä»¶çš„æ€»æ•°ï¼Œå› ä¸ºæ¯ä¸ªè¿æ¥åˆ†åˆ«æœ‰ä¸€ä¸ªè¯»å†™äº‹ä»¶
+    ngx_event_t              *write_events;// æŒ‡å‘å½“å‰è¿›ç¨‹ä¸­çš„æ‰€æœ‰å†™äº‹ä»¶å¯¹è±¡ï¼Œconnection_nåŒæ—¶è¡¨ç¤ºæ‰€æœ‰å†™äº‹ä»¶çš„æ€»æ•°ï¼Œå› ä¸ºæ¯ä¸ªè¿æ¥åˆ†åˆ«æœ‰ä¸€ä¸ªè¯»å†™äº‹ä»¶
+
+    /*    æ—§çš„ngx_cycle_t å¯¹è±¡ç”¨äºå¼•ç”¨ä¸Šä¸€ä¸ªngx_cycle_t å¯¹è±¡ä¸­çš„æˆå‘˜ã€‚ä¾‹å¦‚ngx_init_cycle æ–¹æ³•ï¼Œåœ¨å¯åŠ¨åˆæœŸï¼Œ    
+    éœ€è¦å»ºç«‹ä¸€ä¸ªä¸´æ—¶çš„ngx_cycle_tå¯¹è±¡ä¿å­˜ä¸€äº›å˜é‡ï¼Œ 
+    å†è°ƒç”¨ngx_init_cycle æ–¹æ³•æ—¶å°±å¯ä»¥æŠŠæ—§çš„ngx_cycle_t å¯¹è±¡ä¼ è¿›å»ï¼Œ    è€Œè¿™æ—¶old_cycleå¯¹è±¡å°±ä¼šä¿å­˜è¿™ä¸ªå‰æœŸçš„ngx_cycle_tå¯¹è±¡ã€‚    */
     ngx_cycle_t              *old_cycle;
 
-    /* Ä¬ÈÏ./configureµÄÊ±ºòÖ¸¶¨ */
-    ngx_str_t                 conf_file;// ÅäÖÃÎÄ¼şÏà¶ÔÓÚ°²×°Ä¿Â¼µÄÂ·¾¶Ãû³Æ Ä¬ÈÏÎª°²×°Â·¾¶ÏÂµÄNGX_CONF_PATH,¼ûngx_process_options
-    ngx_str_t                 conf_param;// nginx ´¦ÀíÅäÖÃÎÄ¼şÊ±ĞèÒªÌØÊâ´¦ÀíµÄÔÚÃüÁîĞĞĞ¯´øµÄ²ÎÊı£¬Ò»°ãÊÇ-g Ñ¡ÏîĞ¯´øµÄ²ÎÊı
-    ngx_str_t                 conf_prefix;    // nginxÅäÖÃÎÄ¼şËùÔÚÄ¿Â¼µÄÂ·¾¶  ngx_prefix ¼ûngx_process_options
-    ngx_str_t                 prefix; //nginx°²×°Ä¿Â¼µÄÂ·¾¶ ngx_prefix ¼ûngx_process_options
-    ngx_str_t                 lock_file;// ÓÃÓÚ½ø³Ì¼äÍ¬²½µÄÎÄ¼şËøÃû³Æ
-    ngx_str_t                 hostname; // Ê¹ÓÃgethostnameÏµÍ³µ÷ÓÃµÃµ½µÄÖ÷»úÃû  ÔÚngx_init_cycleÖĞ´óĞ´×ÖÄ¸±»×ª»»ÎªĞ¡Ğ´×ÖÄ¸
+    /* é»˜è®¤./configureçš„æ—¶å€™æŒ‡å®š */
+    ngx_str_t                 conf_file;// é…ç½®æ–‡ä»¶ç›¸å¯¹äºå®‰è£…ç›®å½•çš„è·¯å¾„åç§° é»˜è®¤ä¸ºå®‰è£…è·¯å¾„ä¸‹çš„NGX_CONF_PATH,è§ngx_process_options
+    ngx_str_t                 conf_param;// nginx å¤„ç†é…ç½®æ–‡ä»¶æ—¶éœ€è¦ç‰¹æ®Šå¤„ç†çš„åœ¨å‘½ä»¤è¡Œæºå¸¦çš„å‚æ•°ï¼Œä¸€èˆ¬æ˜¯-g é€‰é¡¹æºå¸¦çš„å‚æ•°
+    ngx_str_t                 conf_prefix;    // nginxé…ç½®æ–‡ä»¶æ‰€åœ¨ç›®å½•çš„è·¯å¾„  ngx_prefix è§ngx_process_options
+    ngx_str_t                 prefix; //nginxå®‰è£…ç›®å½•çš„è·¯å¾„ ngx_prefix è§ngx_process_options
+    ngx_str_t                 lock_file;// ç”¨äºè¿›ç¨‹é—´åŒæ­¥çš„æ–‡ä»¶é”åç§°
+    ngx_str_t                 hostname; // ä½¿ç”¨gethostnameç³»ç»Ÿè°ƒç”¨å¾—åˆ°çš„ä¸»æœºå  åœ¨ngx_init_cycleä¸­å¤§å†™å­—æ¯è¢«è½¬æ¢ä¸ºå°å†™å­—æ¯
 };
 
-typedef struct { //´Óngx_cycle_s->conf_ctx[ngx_core_module.index]Ö¸ÏòÕâÀï
+typedef struct { //ä»ngx_cycle_s->conf_ctx[ngx_core_module.index]æŒ‡å‘è¿™é‡Œ
      ngx_flag_t               daemon;
-     ngx_flag_t               master; //ÔÚngx_core_module_init_confÖĞ³õÊ¼»¯Îª1  Í¨¹ı²ÎÊı"master_process"ÉèÖÃ
+     ngx_flag_t               master; //åœ¨ngx_core_module_init_confä¸­åˆå§‹åŒ–ä¸º1  é€šè¿‡å‚æ•°"master_process"è®¾ç½®
 
-     ngx_msec_t               timer_resolution; //´Ótimer_resolutionÈ«¾ÖÅäÖÃÖĞ½âÎöµ½µÄ²ÎÊı,±íÊ¾¶àÉÙmsÖ´ĞĞ¶¨Ê±Æ÷ÖĞ¶Ï£¬È»ºóepoll_wail»á·µ»Ø¸úĞÂÄÚ´æÊ±¼ä
+     ngx_msec_t               timer_resolution; //ä»timer_resolutionå…¨å±€é…ç½®ä¸­è§£æåˆ°çš„å‚æ•°,è¡¨ç¤ºå¤šå°‘msæ‰§è¡Œå®šæ—¶å™¨ä¸­æ–­ï¼Œç„¶åepoll_wailä¼šè¿”å›è·Ÿæ–°å†…å­˜æ—¶é—´
 
-     ngx_int_t                worker_processes;  //´´½¨µÄworker½ø³ÌÊı£¬Í¨¹ınginxÅäÖÃ£¬Ä¬ÈÏÎª1  "worker_processes"ÉèÖÃ
+     ngx_int_t                worker_processes;  //åˆ›å»ºçš„workerè¿›ç¨‹æ•°ï¼Œé€šè¿‡nginxé…ç½®ï¼Œé»˜è®¤ä¸º1  "worker_processes"è®¾ç½®
      ngx_int_t                debug_points;
-     //ĞŞ¸Ä¹¤×÷½ø³ÌµÄ´ò¿ªÎÄ¼şÊıµÄ×î´óÖµÏŞÖÆ(RLIMIT_NOFILE)£¬ÓÃÓÚÔÚ²»ÖØÆôÖ÷½ø³ÌµÄÇé¿öÏÂÔö´ó¸ÃÏŞÖÆ¡£
+     //ä¿®æ”¹å·¥ä½œè¿›ç¨‹çš„æ‰“å¼€æ–‡ä»¶æ•°çš„æœ€å¤§å€¼é™åˆ¶(RLIMIT_NOFILE)ï¼Œç”¨äºåœ¨ä¸é‡å¯ä¸»è¿›ç¨‹çš„æƒ…å†µä¸‹å¢å¤§è¯¥é™åˆ¶ã€‚
      ngx_int_t                rlimit_nofile; 
-     //ĞŞ¸Ä¹¤×÷½ø³ÌµÄcoreÎÄ¼ş³ß´çµÄ×î´óÖµÏŞÖÆ(RLIMIT_CORE)£¬ÓÃÓÚÔÚ²»ÖØÆôÖ÷½ø³ÌµÄÇé¿öÏÂÔö´ó¸ÃÏŞÖÆ¡£
-     off_t                    rlimit_core;//worker_rlimit_core 1024k;  coredumpÎÄ¼ş´óĞ¡
+     //ä¿®æ”¹å·¥ä½œè¿›ç¨‹çš„coreæ–‡ä»¶å°ºå¯¸çš„æœ€å¤§å€¼é™åˆ¶(RLIMIT_CORE)ï¼Œç”¨äºåœ¨ä¸é‡å¯ä¸»è¿›ç¨‹çš„æƒ…å†µä¸‹å¢å¤§è¯¥é™åˆ¶ã€‚
+     off_t                    rlimit_core;//worker_rlimit_core 1024k;  coredumpæ–‡ä»¶å¤§å°
 
      int                      priority;
 
      /*
      worker_processes 4;
-     worker_cpu_affinity 0001 0010 0100 1000; ËÄ¸ö¹¤×÷½ø³Ì·Ö±ğÔÚËÄ¸öÖ¸¶¨µÄheÉÏÃæÔËĞĞ
+     worker_cpu_affinity 0001 0010 0100 1000; å››ä¸ªå·¥ä½œè¿›ç¨‹åˆ†åˆ«åœ¨å››ä¸ªæŒ‡å®šçš„heä¸Šé¢è¿è¡Œ
      
-     Èç¹ûÊÇ5he¿ÉÒÔÕâÑùÅäÖÃ
-     worker_cpu_affinity 00001 00010 00100 01000 10000; ÆäËû¶àºËÀàËÆ
-     */  //²Î¿¼ngx_set_cpu_affinity
-     ngx_uint_t               cpu_affinity_n; //worker_cpu_affinity²ÎÊı¸öÊı
-     uint64_t                *cpu_affinity;//worker_cpu_affinity 00001 00010 00100 01000 10000;×ª»»µÄÎ»Í¼½á¹û¾ÍÊÇ0X11111
+     å¦‚æœæ˜¯5heå¯ä»¥è¿™æ ·é…ç½®
+     worker_cpu_affinity 00001 00010 00100 01000 10000; å…¶ä»–å¤šæ ¸ç±»ä¼¼
+     */  //å‚è€ƒngx_set_cpu_affinity
+     ngx_uint_t               cpu_affinity_n; //worker_cpu_affinityå‚æ•°ä¸ªæ•°
+     uint64_t                *cpu_affinity;//worker_cpu_affinity 00001 00010 00100 01000 10000;è½¬æ¢çš„ä½å›¾ç»“æœå°±æ˜¯0X11111
 
      char                    *username;
      ngx_uid_t                user;
      ngx_gid_t                group;
 
-     ngx_str_t                working_directory;//working_directory /var/yyz/corefile/;  coredump´æ·ÅÂ·¾¶
+     ngx_str_t                working_directory;//working_directory /var/yyz/corefile/;  coredumpå­˜æ”¾è·¯å¾„
      ngx_str_t                lock_file;
 
-     ngx_str_t                pid; //Ä¬ÈÏNGX_PID_PATH£¬Ö÷½ø³ÌÃû
-     ngx_str_t                oldpid;//NGX_PID_PATH+NGX_OLDPID_EXT  ÈÈÉı¼¶nginx½ø³ÌµÄÊ±ºòÓÃ
+     ngx_str_t                pid; //é»˜è®¤NGX_PID_PATHï¼Œä¸»è¿›ç¨‹å
+     ngx_str_t                oldpid;//NGX_PID_PATH+NGX_OLDPID_EXT  çƒ­å‡çº§nginxè¿›ç¨‹çš„æ—¶å€™ç”¨
 
-    //Êı×éµÚÒ»¸ö³ÉÔ±ÊÇTZ×Ö·û´®
-     ngx_array_t              env;//³ÉÔ±ÀàĞÍngx_str_t£¬¼ûngx_core_module_create_conf
-     char                   **environment; //Ö±½ÓÖ¸Ïòenv£¬¼ûngx_set_environment
+    //æ•°ç»„ç¬¬ä¸€ä¸ªæˆå‘˜æ˜¯TZå­—ç¬¦ä¸²
+     ngx_array_t              env;//æˆå‘˜ç±»å‹ngx_str_tï¼Œè§ngx_core_module_create_conf
+     char                   **environment; //ç›´æ¥æŒ‡å‘envï¼Œè§ngx_set_environment
 } ngx_core_conf_t;
 
 

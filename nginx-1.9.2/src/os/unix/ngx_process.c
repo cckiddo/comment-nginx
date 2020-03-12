@@ -11,12 +11,12 @@
 #include <ngx_channel.h>
 
 
-//�źŷ��ͼ�ngx_os_signal_process
+//信号发送见ngx_os_signal_process
 typedef struct { //signals
-    int     signo;   //��Ҫ�������ź�
-    char   *signame; //�źŶ�Ӧ���ַ�������
-    char   *name;    //����źŶ�Ӧ�ŵ�Nginx����
-    void  (*handler)(int signo); //�յ�signo�źź�ͻ�ص�handler����
+    int     signo;   //需要处理的信号
+    char   *signame; //信号对应的字符串名称
+    char   *name;    //这个信号对应着的Nginx命令
+    void  (*handler)(int signo); //收到signo信号后就会回调handler方法
 } ngx_signal_t;
 
 static void ngx_execute_proc(ngx_cycle_t *cycle, void *data);
@@ -25,29 +25,29 @@ static void ngx_process_get_status(void);
 static void ngx_unlock_mutexes(ngx_pid_t pid);
 
 int              ngx_argc;
-char           **ngx_argv; //���ִ��nginxʱ�������Ĳ����� ��ngx_save_argv
-char           **ngx_os_argv; //ָ��nginx����ʱ�������Ĳ�������ngx_save_argv
+char           **ngx_argv; //存放执行nginx时候所带的参数， 见ngx_save_argv
+char           **ngx_os_argv; //指向nginx运行时候所带的参数，见ngx_save_argv
 
-//��ǰ�����Ľ�����ngx_processes�����е��±�
+//当前操作的进程在ngx_processes数组中的下标
 ngx_int_t        ngx_process_slot;
-ngx_socket_t     ngx_channel;  //�洢�����ӽ��̵�����  ngx_spawn_process�и�ֵ  ngx_channel = ngx_processes[s].channel[1]
+ngx_socket_t     ngx_channel;  //存储所有子进程的数组  ngx_spawn_process中赋值  ngx_channel = ngx_processes[s].channel[1]
 
-//ngx_processes�������������ngx_process_tԪ���������±�
+//ngx_processes数组中有意义的ngx_process_t元素中最大的下标
 ngx_int_t        ngx_last_process;
 
 /*
-�ڽ���master��������ǰ������Ҫ��master���̹����ӽ��̵����ݽṹ�и������˽⡣���涨����pgx_processesȫ�����飬��Ȼ�ӽ�����Ҳ��
-��ngx_processes���飬�������������Ǹ�master����ʹ�õ�
+在解释master工作流程前，还需要对master进程管理子进程的数据结构有个初步了解。下面定义了pgx_processes全局数组，虽然子进程中也会
+有ngx_processes数组，但这个数组仅仅是给master进程使用的
 */
-ngx_process_t    ngx_processes[NGX_MAX_PROCESSES]; //�洢�����ӽ��̵�����  ngx_spawn_process�и�ֵ
+ngx_process_t    ngx_processes[NGX_MAX_PROCESSES]; //存储所有子进程的数组  ngx_spawn_process中赋值
 
-//�źŷ��ͼ�ngx_os_signal_process �źŴ�����ngx_signal_handler
+//信号发送见ngx_os_signal_process 信号处理在ngx_signal_handler
 ngx_signal_t  signals[] = {
     { ngx_signal_value(NGX_RECONFIGURE_SIGNAL),
       "SIG" ngx_value(NGX_RECONFIGURE_SIGNAL),
       "reload",
-      /* reloadʵ������ִ��reload��nginx������ԭmaster+worker�е�master���̷���reload�źţ�Դmaster�յ��������µ�worker���̣�ͬʱ��Դworker
-         ���̷���quit�źţ������Ǵ��������е�������Ϣ���˳���������ֻ���µ�worker�������С�
+      /* reload实际上是执行reload的nginx进程向原master+worker中的master进程发送reload信号，源master收到后，启动新的worker进程，同时向源worker
+         进程发送quit信号，等他们处理完已有的数据信息后，退出，这样就只有新的worker进程运行。
       */
       ngx_signal_handler }, 
 
@@ -92,30 +92,30 @@ ngx_signal_t  signals[] = {
 };
 
 /*
-master������������һ���ӽ����أ���ʵ�ܼ򵥣�forkϵͳ���ü�������ɡ�ngx_spawn_process������װ��forkϵͳ���ã�
-���һ��ngx_processes������ѡ��һ����δʹ�õ�ngx_process_tԪ�ش洢����ӽ��̵������Ϣ���������1024����ŦԪ�����Ѿ�û�п�
-���Ԫ�أ�Ҳ����˵���ӽ��̸������������ֵ1024����ô���᷵��NGX_INVALID_PID����ˣ�ngx_processes������Ԫ�صĳ�ʼ������ngx_spawn_process�����н��С�
+master进程怎样启动一个子进程呢？其实很简单，fork系统调用即可以完成。ngx_spawn_process方法封装了fork系统调用，
+并且会从ngx_processes数组中选择一个还未使用的ngx_process_t元素存储这个子进程的相关信息。如果所有1024个数纽元素中已经没有空
+余的元素，也就是说，子进程个数超过了最大值1024，那么将会返回NGX_INVALID_PID。因此，ngx_processes数组中元素的初始化将在ngx_spawn_process方法中进行。
 */
-//��һ��������ȫ�ֵ����ã��ڶ����������ӽ�����Ҫִ�еĺ�����������������proc�Ĳ��������ĸ����͡�  name���ӽ��̵�����
+//第一个参数是全局的配置，第二个参数是子进程需要执行的函数，第三个参数是proc的参数。第四个类型。  name是子进程的名称
 ngx_pid_t ngx_spawn_process(ngx_cycle_t *cycle, ngx_spawn_proc_pt proc, void *data,
-    char *name, ngx_int_t respawn) //respawnȡֵΪNGX_PROCESS_RESPAWN�ȣ�����Ϊ������ngx_processes[]�е����
+    char *name, ngx_int_t respawn) //respawn取值为NGX_PROCESS_RESPAWN等，或者为进程在ngx_processes[]中的序号
 {
     u_long     on;
     ngx_pid_t  pid;
-    ngx_int_t  s; //��Ҫ�������ӽ����ڽ��̱��е�λ��   
+    ngx_int_t  s; //将要创建的子进程在进程表中的位置   
 
-    // ���respawn��С��0������Ϊ��ǰ�����Ѿ��˳�����Ҫ����  
-    if (respawn >= 0) {  //�滻����ngx_processes[respawn],�ɰ�ȫ���øý��̱���  
+    // 如果respawn不小于0，则视为当前进程已经退出，需要重启  
+    if (respawn >= 0) {  //替换进程ngx_processes[respawn],可安全重用该进程表项  
         s = respawn; 
 
     } else {
         for (s = 0; s < ngx_last_process; s++) { 
-            if (ngx_processes[s].pid == -1) { //���ҵ�һ�������յĽ��̱���   
+            if (ngx_processes[s].pid == -1) { //先找到一个被回收的进程表象   
                 break;
             }
         }
 
-        if (s == NGX_MAX_PROCESSES) { //���ֻ�ܴ���1024���ӽ���
+        if (s == NGX_MAX_PROCESSES) { //最多只能创建1024个子进程
             ngx_log_error(NGX_LOG_ALERT, cycle->log, 0,
                           "no more than %d processes can be spawned",
                           NGX_MAX_PROCESSES);
@@ -124,27 +124,27 @@ ngx_pid_t ngx_spawn_process(ngx_cycle_t *cycle, ngx_spawn_proc_pt proc, void *da
     }
 
 
-    if (respawn != NGX_PROCESS_DETACHED) { //���Ƿ�����ӽ���      /* �����ȴ����滻 */
+    if (respawn != NGX_PROCESS_DETACHED) { //不是分离的子进程      /* 不是热代码替换 */
 
         /* Solaris 9 still has no AF_LOCAL */
        
         /* 
-          �����൱��Master���̵���socketpair()Ϊ�µ�worker���̴���һ��ȫ˫����socket 
+          这里相当于Master进程调用socketpair()为新的worker进程创建一对全双工的socket 
             
-          ʵ����socketpair ������pipe ���������Ƶģ�Ҳֻ����ͬ�������Ͼ�����Ե��ϵ�Ľ��̼�ͨ�ţ���pipe �����������ܵ��ǰ�˫���ģ�
-          ��socketpair ������Ϊ�Ǵ���һ��ȫ˫���Ĺܵ���
+          实际上socketpair 函数跟pipe 函数是类似的，也只能在同个主机上具有亲缘关系的进程间通信，但pipe 创建的匿名管道是半双工的，
+          而socketpair 可以认为是创建一个全双工的管道。
 
           int socketpair(int domain, int type, int protocol, int sv[2]);
-          ����������Դ���һ�Թ������׽���sv[2]���������ν�������4������������d��ʾ����Linux��ͨ��ȡֵΪAF UNIX��typeȡֵΪSOCK��
-          STREAM����SOCK��DGRAM������ʾ���׽�����ʹ�õ���TCP����UDP; protocol���봫��0��sv[2]��һ����������Ԫ�ص��������飬ʵ���Ͼ�
-          �������׽��֡���socketpair����0ʱ��sv[2]�������׽��ִ����ɹ�������socketpair����һ1��ʾʧ�ܡ�
-             ��socketpairִ�гɹ�ʱ��sv[2]�������׽��־߱����й�ϵ����sv[0]�׽���д�����ݣ������Դ�sv[l]�׽����ж�ȡ����д������ݣ�
-          ͬ������sv[l]�׽���д�����ݣ�Ҳ���Դ�sv[0]�ж�ȡ��д������ݡ�ͨ�����ڸ����ӽ���ͨ��ǰ�����ȵ���socketpair������������һ��
-          �׽��֣��ڵ���fork�����������ӽ��̺󣬽����ڸ������йر�sv[l]�׽��֣���ʹ��sv[0]�׽����������ӽ��̷��������Լ������ӽ��̷�
-          ���������ݣ������ӽ�������ر�sv[0]�׽��֣���ʹ��sv[l]�׽��ּȿ��Խ��ո����̷��������ݣ�Ҳ�����򸸽��̷������ݡ�
-          ע��socketpair��Э����ΪAF_UNIX UNXI��
+          这个方法可以创建一对关联的套接字sv[2]。下面依次介绍它的4个参数：参数d表示域，在Linux下通常取值为AF UNIX；type取值为SOCK。
+          STREAM或者SOCK。DGRAM，它表示在套接字上使用的是TCP还是UDP; protocol必须传递0；sv[2]是一个含有两个元素的整型数组，实际上就
+          是两个套接字。当socketpair返回0时，sv[2]这两个套接字创建成功，否则socketpair返回一1表示失败。
+             当socketpair执行成功时，sv[2]这两个套接字具备下列关系：向sv[0]套接字写入数据，将可以从sv[l]套接字中读取到刚写入的数据；
+          同样，向sv[l]套接字写入数据，也可以从sv[0]中读取到写入的数据。通常，在父、子进程通信前，会先调用socketpair方法创建这样一组
+          套接字，在调用fork方法创建出子进程后，将会在父进程中关闭sv[l]套接字，仅使用sv[0]套接字用于向子进程发送数据以及接收子进程发
+          送来的数据：而在子进程中则关闭sv[0]套接字，仅使用sv[l]套接字既可以接收父进程发来的数据，也可以向父进程发送数据。
+          注意socketpair的协议族为AF_UNIX UNXI域
           */  
-        if (socketpair(AF_UNIX, SOCK_STREAM, 0, ngx_processes[s].channel) == -1) //��ngx_worker_process_init�����ӵ��¼���
+        if (socketpair(AF_UNIX, SOCK_STREAM, 0, ngx_processes[s].channel) == -1) //在ngx_worker_process_init中添加到事件集
         {
             ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_errno,
                           "socketpair() failed while spawning \"%s\"", name);
@@ -156,7 +156,7 @@ ngx_pid_t ngx_spawn_process(ngx_cycle_t *cycle, ngx_spawn_proc_pt proc, void *da
                        ngx_processes[s].channel[0],
                        ngx_processes[s].channel[1]);
 
-        /* ����master��channel[0](��д�˿�)��channel[1](�����˿�)��Ϊ��������ʽ */  
+        /* 设置master的channel[0](即写端口)，channel[1](即读端口)均为非阻塞方式 */  
         if (ngx_nonblocking(ngx_processes[s].channel[0]) == -1) {
             ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_errno,
                           ngx_nonblocking_n " failed while spawning \"%s\"",
@@ -174,14 +174,14 @@ ngx_pid_t ngx_spawn_process(ngx_cycle_t *cycle, ngx_spawn_proc_pt proc, void *da
         }
         
         /* 
-            �����첽ģʽ�� ������Կ��¡������̾�һ����ioctl������fcntl���� or ���ϲ�ѯ 
+            设置异步模式： 这里可以看下《网络编程卷一》的ioctl函数和fcntl函数 or 网上查询 
           */  
-        on = 1; // ���λ��ioctl���������0�������ã���0������  
+        on = 1; // 标记位，ioctl用于清除（0）或设置（非0）操作  
 
         /* 
-          ����channel[0]���ź������첽I/O��־ 
-          FIOASYNC����״̬��־�����Ƿ���ȡ���socket���첽I/O�źţ�SIGIO�� 
-          ����O_ASYNC�ļ�״̬��־��Ч����ͨ��fcntl��F_SETFL��������or��� 
+          设置channel[0]的信号驱动异步I/O标志 
+          FIOASYNC：该状态标志决定是否收取针对socket的异步I/O信号（SIGIO） 
+          其与O_ASYNC文件状态标志等效，可通过fcntl的F_SETFL命令设置or清除 
          */ 
         if (ioctl(ngx_processes[s].channel[0], FIOASYNC, &on) == -1) {
             ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_errno,
@@ -190,10 +190,10 @@ ngx_pid_t ngx_spawn_process(ngx_cycle_t *cycle, ngx_spawn_proc_pt proc, void *da
             return NGX_INVALID_PID;
         }
 
-        /* F_SETOWN������ָ������SIGIO��SIGURG�źŵ�socket����������ID�������ID�� 
-          * ������˼��ָ��Master���̽���SIGIO��SIGURG�ź� 
-          * SIGIO�źű�������socket����Ϊ�ź������첽I/O���ܲ���������һ������ 
-          * SIGURG�ź������µĴ������ݵ���socketʱ������ 
+        /* F_SETOWN：用于指定接收SIGIO和SIGURG信号的socket属主（进程ID或进程组ID） 
+          * 这里意思是指定Master进程接收SIGIO和SIGURG信号 
+          * SIGIO信号必须是在socket设置为信号驱动异步I/O才能产生，即上一步操作 
+          * SIGURG信号是在新的带外数据到达socket时产生的 
          */ 
         if (fcntl(ngx_processes[s].channel[0], F_SETOWN, ngx_pid) == -1) {
             ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_errno,
@@ -203,10 +203,10 @@ ngx_pid_t ngx_spawn_process(ngx_cycle_t *cycle, ngx_spawn_proc_pt proc, void *da
         }
             
         
-        /* FD_CLOEXEC�����������ļ���close-on-exec״̬��׼ 
-          *             ��exec()���ú�close-on-exec��־Ϊ0������£����ļ������رգ���������exec()�󱻹ر� 
-          *             Ĭ��close-on-exec״̬Ϊ0����Ҫͨ��FD_CLOEXEC���� 
-          *     ������˼�ǵ�Master������ִ����exec()���ú󣬹ر�socket        
+        /* FD_CLOEXEC：用来设置文件的close-on-exec状态标准 
+          *             在exec()调用后，close-on-exec标志为0的情况下，此文件不被关闭；非零则在exec()后被关闭 
+          *             默认close-on-exec状态为0，需要通过FD_CLOEXEC设置 
+          *     这里意思是当Master父进程执行了exec()调用后，关闭socket        
           */
         if (fcntl(ngx_processes[s].channel[0], F_SETFD, FD_CLOEXEC) == -1) {
             ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_errno,
@@ -217,7 +217,7 @@ ngx_pid_t ngx_spawn_process(ngx_cycle_t *cycle, ngx_spawn_proc_pt proc, void *da
         }
 
         
-        /* ͬ�ϣ�������˼�ǵ�Worker�ӽ���ִ����exec()���ú󣬹ر�socket */  
+        /* 同上，这里意思是当Worker子进程执行了exec()调用后，关闭socket */  
         if (fcntl(ngx_processes[s].channel[1], F_SETFD, FD_CLOEXEC) == -1) {
             ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_errno,
                           "fcntl(FD_CLOEXEC) failed while spawning \"%s\"",
@@ -227,8 +227,8 @@ ngx_pid_t ngx_spawn_process(ngx_cycle_t *cycle, ngx_spawn_proc_pt proc, void *da
         }
         
        /* 
-         ���ü��������ӽ��̵�channel ������ں�����õ����ں��洴�����ӽ��̵�cycleѭ��ִ�к����л��õ�������ngx_worker_process_init -> ngx_add_channel_event   
-         �Ӷ����ӽ��̵�channel[1]�������ӵ�epool�У����ڶ�ȡ�����̷��͵�ngx_channel_t��Ϣ
+         设置即将创建子进程的channel ，这个在后面会用到，在后面创建的子进程的cycle循环执行函数中会用到，例如ngx_worker_process_init -> ngx_add_channel_event   
+         从而把子进程的channel[1]读端添加到epool中，用于读取父进程发送的ngx_channel_t信息
         */  
         ngx_channel = ngx_processes[s].channel[1];
 
@@ -237,7 +237,7 @@ ngx_pid_t ngx_spawn_process(ngx_cycle_t *cycle, ngx_spawn_proc_pt proc, void *da
         ngx_processes[s].channel[1] = -1;
     }
 
-    ngx_process_slot = s; // ��һ������ngx_pass_open_channel()���õ������������±꣬����Ѱ�ұ��δ������ӽ���  
+    ngx_process_slot = s; // 这一步将在ngx_pass_open_channel()中用到，就是设置下标，用于寻找本次创建的子进程  
 
     pid = fork();
 
@@ -249,24 +249,24 @@ ngx_pid_t ngx_spawn_process(ngx_cycle_t *cycle, ngx_spawn_proc_pt proc, void *da
         ngx_close_channel(ngx_processes[s].channel, cycle->log);
         return NGX_INVALID_PID;
 
-    case 0: //�ӽ���
-        ngx_pid = ngx_getpid();  // �����ӽ���ID  
+    case 0: //子进程
+        ngx_pid = ngx_getpid();  // 设置子进程ID  
         //printf(" .....slave......pid:%u, %u\n", pid, ngx_pid); slave......pid:0, 14127
-        proc(cycle, data); // ����proc�ص���������ngx_worker_process_cycle��֮��worker�ӽ��̴����￪ʼִ��  
+        proc(cycle, data); // 调用proc回调函数，即ngx_worker_process_cycle。之后worker子进程从这里开始执行  
         break;
 
-    default: //�����̣�������ʱ���ӡ��pidΪ�ӽ���ID
+    default: //父进程，但是这时候打印的pid为子进程ID
         //printf(" ......master.....pid:%u, %u\n", pid, ngx_pid); master.....pid:14127, 14126
         break;
     }
 
     ngx_log_error(NGX_LOG_NOTICE, cycle->log, 0, "start %s %P", name, pid);
 
-    /* ��һ������������ngx_process_t�ĳ�Ա���� */  
+    /* 这一部分用来设置ngx_process_t的成员变量 */  
     ngx_processes[s].pid = pid;
     ngx_processes[s].exited = 0;
 
-    if (respawn >= 0) { /* �������0,��˵�����������ӽ��̣��������ĳ�ʼ���������ظ��� */  
+    if (respawn >= 0) { /* 如果大于0,则说明是在重启子进程，因此下面的初始化不用再重复做 */  
         return pid;
     }
 
@@ -275,7 +275,7 @@ ngx_pid_t ngx_spawn_process(ngx_cycle_t *cycle, ngx_spawn_proc_pt proc, void *da
     ngx_processes[s].name = name;
     ngx_processes[s].exiting = 0;
 
-    switch (respawn) {/* OK��Ҳ����˵�ˣ���������״̬��Ϣ */  
+    switch (respawn) {/* OK，也不多说了，用来设置状态信息 */  
 
     case NGX_PROCESS_NORESPAWN:
         ngx_processes[s].respawn = 0;
@@ -330,10 +330,10 @@ ngx_execute_proc(ngx_cycle_t *cycle, void *data)
     ngx_exec_ctx_t  *ctx = data;
 
     /*
-    execve()����ִ�в���filename�ַ������������ļ�·�����ڶ�������������ָ�����������ݸ�ִ���ļ���������
-    Ҫ�Կ�ָ��(NULL)���������һ��������Ϊ���ݸ�ִ���ļ����»����������顣
+    execve()用来执行参数filename字符串所代表的文件路径，第二个参数是利用指针数组来传递给执行文件，并且需
+    要以空指针(NULL)结束，最后一个参数则为传递给执行文件的新环境变量数组。
     */
-    if (execve(ctx->path, ctx->argv, ctx->envp) == -1) { //�Ѿ�master����bind������fdд�뵽��������NGINX_VAR��
+    if (execve(ctx->path, ctx->argv, ctx->envp) == -1) { //把旧master进程bind监听的fd写入到环境变量NGINX_VAR中
         ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_errno,
                       "execve() failed while executing %s \"%s\"",
                       ctx->name, ctx->path);
@@ -343,254 +343,254 @@ ngx_execute_proc(ngx_cycle_t *cycle, void *data)
 }
 
 /*
-һ���źż��ź���Դ
-�źű���
+一、信号及信号来源
+信号本质
 
-�ź�������������϶��жϻ��Ƶ�һ��ģ�⣬��ԭ���ϣ�һ�������յ�һ���ź��봦�����յ�һ���ж��������˵��һ���ġ��ź����첽�ģ�һ�����̲���ͨ���κβ������ȴ��źŵĵ����ʵ�ϣ�����Ҳ��֪���źŵ���ʲôʱ�򵽴
+信号是在软件层次上对中断机制的一种模拟，在原理上，一个进程收到一个信号与处理器收到一个中断请求可以说是一样的。信号是异步的，一个进程不必通过任何操作来等待信号的到达，事实上，进程也不知道信号到底什么时候到达。
 
-�ź��ǽ��̼�ͨ�Ż�����Ψһ���첽ͨ�Ż��ƣ����Կ������첽֪ͨ��֪ͨ�����źŵĽ�������Щ���鷢���ˡ��źŻ��ƾ���POSIXʵʱ��չ�󣬹��ܸ���ǿ�󣬳��˻���֪ͨ�����⣬�����Դ��ݸ�����Ϣ��
+信号是进程间通信机制中唯一的异步通信机制，可以看作是异步通知，通知接收信号的进程有哪些事情发生了。信号机制经过POSIX实时扩展后，功能更加强大，除了基本通知功能外，还可以传递附加信息。
 
-�ź���Դ
+信号来源
 
-�ź��¼��ķ�����������Դ��Ӳ����Դ(�������ǰ����˼��̻�������Ӳ������)��������Դ����÷����źŵ�ϵͳ������kill, raise, alarm��setitimer�Լ�sigqueue������������Դ������һЩ�Ƿ�����Ȳ�����
-
-
---------------------------------------------------------------------------------
-��ҳ��
-�����źŵ�����
-���Դ�������ͬ�ķ���Ƕȶ��źŽ��з��ࣺ��1���ɿ��Է��棺�ɿ��ź��벻�ɿ��źţ���2����ʱ��Ĺ�ϵ�ϣ�ʵʱ�ź����ʵʱ�źš��ڡ�Linux�������̼�ͨ�ţ�һ�����ܵ��������ܵ����ĸ�1���г���ϵͳ��֧�ֵ������źš�
-
-1���ɿ��ź��벻�ɿ��ź�
-"���ɿ��ź�"
-
-Linux�źŻ��ƻ������Ǵ�Unixϵͳ�м̳й����ġ�����Unixϵͳ�е��źŻ��ƱȽϼ򵥺�ԭʼ��������ʵ���б�¶��һЩ���⣬��ˣ�����Щ���������ڻ����ϵ��źŽ���"���ɿ��ź�"���ź�ֵС��SIGRTMIN(Red hat 7.2�У�SIGRTMIN=32��SIGRTMAX=63)���źŶ��ǲ��ɿ��źš������"���ɿ��ź�"����Դ��������Ҫ�����ǣ�
-
-����ÿ�δ����źź󣬾ͽ����źŵ���Ӧ����ΪĬ�϶�������ĳЩ����£������¶��źŵĴ���������ˣ��û������ϣ�������Ĳ�������ô��Ҫ���źŴ���������β��һ�ε���signal()�����°�װ���źš�
-�źſ��ܶ�ʧ�����潫�Դ���ϸ������ 
-��ˣ�����unix�µĲ��ɿ��ź���Ҫָ���ǽ��̿��ܶ��ź���������ķ�Ӧ�Լ��źſ��ܶ�ʧ�� Linux֧�ֲ��ɿ��źţ����ǶԲ��ɿ��źŻ������˸Ľ����ڵ������źŴ��������󣬲������µ��ø��źŵİ�װ�������źŰ�װ�������ڿɿ������ϵ�ʵ�֣�����ˣ�Linux�µĲ��ɿ��ź�������Ҫָ�����źſ��ܶ�ʧ��
-
-"�ɿ��ź�"
-
-����ʱ��ķ�չ��ʵ��֤�����б�Ҫ���źŵ�ԭʼ���Ƽ��ԸĽ������䡣���ԣ��������ֵĸ���Unix�汾�ֱ����ⷽ��������о�����ͼʵ��"�ɿ��ź�"������ԭ��������ź���������Ӧ�ã����������Ķ�������ֻ������������һЩ�źţ�����һ��ʼ�Ͱ����Ƕ���Ϊ�ɿ��źţ���Щ�ź�֧���Ŷӣ����ᶪʧ��ͬʱ���źŵķ��ͺͰ�װҲ�������°汾���źŷ��ͺ���sigqueue()���źŰ�װ����sigaction()��POSIX.4�Կɿ��źŻ������˱�׼�������ǣ�POSIXֻ�Կɿ��źŻ���Ӧ���еĹ����Լ��źŻ��ƵĶ���ӿ����˱�׼�������źŻ��Ƶ�ʵ��û��������Ĺ涨��
-
-�ź�ֵλ��SIGRTMIN��SIGRTMAX֮����źŶ��ǿɿ��źţ��ɿ��źſ˷����źſ��ܶ�ʧ�����⡣Linux��֧���°汾���źŰ�װ����sigation�����Լ��źŷ��ͺ���sigqueue()��ͬʱ����Ȼ֧�����ڵ�signal�����źŰ�װ������֧���źŷ��ͺ���kill()��
-
-ע����Ҫ����������⣺��sigqueue()���͡�sigaction��װ���źž��ǿɿ��ġ���ʵ�ϣ��ɿ��ź���ָ�������ӵ����źţ��ź�ֵλ��SIGRTMIN��SIGRTMAX֮�䣩�����ɿ��ź����ź�ֵС��SIGRTMIN���źš��źŵĿɿ��벻�ɿ�ֻ���ź�ֵ�йأ����źŵķ��ͼ���װ�����޹ء�Ŀǰlinux�е�signal()��ͨ��sigation()����ʵ�ֵģ���ˣ���ʹͨ��signal������װ���źţ����źŴ��������Ľ�βҲ�����ٵ���һ���źŰ�װ������ͬʱ����signal()��װ��ʵʱ�ź�֧���Ŷӣ�ͬ�����ᶪʧ��
-
-����Ŀǰlinux�������źŰ�װ����:signal()��sigaction()��˵�����Ƕ����ܰ�SIGRTMIN��ǰ���źű�ɿɿ��źţ�����֧���Ŷӣ����п��ܶ�ʧ����Ȼ�ǲ��ɿ��źţ������Ҷ�SIGRTMIN�Ժ���źŶ�֧���Ŷӡ�����������������������ڣ�����sigaction��װ���źŶ��ܴ�����Ϣ���źŴ����������������ź���һ�㶼��������������signal��װ���ź�ȴ�������źŴ�������������Ϣ�������źŷ��ͺ�����˵Ҳ��һ���ġ�
-
-2��ʵʱ�ź����ʵʱ�ź�
-����Unixϵͳֻ������32���źţ�Ret hat7.2֧��64���źţ����0-63(SIGRTMIN=31��SIGRTMAX=63)���������ܽ�һ�����ӣ�����Ҫ�õ��ں˵�֧�֡�ǰ32���ź��Ѿ�����Ԥ����ֵ��ÿ���ź�����ȷ������;�����壬����ÿ���źŶ��и��Ե�ȱʡ�������簴���̵�CTRL ^Cʱ�������SIGINT�źţ��Ը��źŵ�Ĭ�Ϸ�Ӧ���ǽ�����ֹ����32���źű�ʾʵʱ�źţ���ͬ��ǰ������Ŀɿ��źš��Ᵽ֤�˷��͵Ķ��ʵʱ�źŶ������ա�ʵʱ�ź���POSIX��׼��һ���֣�������Ӧ�ý��̡�
-
-��ʵʱ�źŶ���֧���Ŷӣ����ǲ��ɿ��źţ�ʵʱ�źŶ�֧���Ŷӣ����ǿɿ��źš�
+信号事件的发生有两个来源：硬件来源(比如我们按下了键盘或者其它硬件故障)；软件来源，最常用发送信号的系统函数是kill, raise, alarm和setitimer以及sigqueue函数，软件来源还包括一些非法运算等操作。
 
 
 --------------------------------------------------------------------------------
-��ҳ��
-�������̶��źŵ���Ӧ
-���̿���ͨ�����ַ�ʽ����Ӧһ���źţ���1�������źţ������źŲ����κδ��������У��������źŲ��ܺ��ԣ�SIGKILL��SIGSTOP����2����׽�źš������źŴ������������źŷ���ʱ��ִ����Ӧ�Ĵ�����������3��ִ��ȱʡ������Linux��ÿ���źŶ��涨��Ĭ�ϲ�������ϸ�����ο�[2]�Լ��������ϡ�ע�⣬���̶�ʵʱ�źŵ�ȱʡ��Ӧ�ǽ�����ֹ��
+回页首
+二、信号的种类
+可以从两个不同的分类角度对信号进行分类：（1）可靠性方面：可靠信号与不可靠信号；（2）与时间的关系上：实时信号与非实时信号。在《Linux环境进程间通信（一）：管道及有名管道》的附1中列出了系统所支持的所有信号。
 
-Linux���������������ַ�ʽ����һ������Ӧ�źţ�ȡ���ڴ��ݸ���ӦAPI�����Ĳ�����
+1、可靠信号与不可靠信号
+"不可靠信号"
+
+Linux信号机制基本上是从Unix系统中继承过来的。早期Unix系统中的信号机制比较简单和原始，后来在实践中暴露出一些问题，因此，把那些建立在早期机制上的信号叫做"不可靠信号"，信号值小于SIGRTMIN(Red hat 7.2中，SIGRTMIN=32，SIGRTMAX=63)的信号都是不可靠信号。这就是"不可靠信号"的来源。它的主要问题是：
+
+进程每次处理信号后，就将对信号的响应设置为默认动作。在某些情况下，将导致对信号的错误处理；因此，用户如果不希望这样的操作，那么就要在信号处理函数结尾再一次调用signal()，重新安装该信号。
+信号可能丢失，后面将对此详细阐述。 
+因此，早期unix下的不可靠信号主要指的是进程可能对信号做出错误的反应以及信号可能丢失。 Linux支持不可靠信号，但是对不可靠信号机制做了改进：在调用完信号处理函数后，不必重新调用该信号的安装函数（信号安装函数是在可靠机制上的实现）。因此，Linux下的不可靠信号问题主要指的是信号可能丢失。
+
+"可靠信号"
+
+随着时间的发展，实践证明了有必要对信号的原始机制加以改进和扩充。所以，后来出现的各种Unix版本分别在这方面进行了研究，力图实现"可靠信号"。由于原来定义的信号已有许多应用，不好再做改动，最终只好又新增加了一些信号，并在一开始就把它们定义为可靠信号，这些信号支持排队，不会丢失。同时，信号的发送和安装也出现了新版本：信号发送函数sigqueue()及信号安装函数sigaction()。POSIX.4对可靠信号机制做了标准化。但是，POSIX只对可靠信号机制应具有的功能以及信号机制的对外接口做了标准化，对信号机制的实现没有作具体的规定。
+
+信号值位于SIGRTMIN和SIGRTMAX之间的信号都是可靠信号，可靠信号克服了信号可能丢失的问题。Linux在支持新版本的信号安装函数sigation（）以及信号发送函数sigqueue()的同时，仍然支持早期的signal（）信号安装函数，支持信号发送函数kill()。
+
+注：不要有这样的误解：由sigqueue()发送、sigaction安装的信号就是可靠的。事实上，可靠信号是指后来添加的新信号（信号值位于SIGRTMIN及SIGRTMAX之间）；不可靠信号是信号值小于SIGRTMIN的信号。信号的可靠与不可靠只与信号值有关，与信号的发送及安装函数无关。目前linux中的signal()是通过sigation()函数实现的，因此，即使通过signal（）安装的信号，在信号处理函数的结尾也不必再调用一次信号安装函数。同时，由signal()安装的实时信号支持排队，同样不会丢失。
+
+对于目前linux的两个信号安装函数:signal()及sigaction()来说，它们都不能把SIGRTMIN以前的信号变成可靠信号（都不支持排队，仍有可能丢失，仍然是不可靠信号），而且对SIGRTMIN以后的信号都支持排队。这两个函数的最大区别在于，经过sigaction安装的信号都能传递信息给信号处理函数（对所有信号这一点都成立），而经过signal安装的信号却不能向信号处理函数传递信息。对于信号发送函数来说也是一样的。
+
+2、实时信号与非实时信号
+早期Unix系统只定义了32种信号，Ret hat7.2支持64种信号，编号0-63(SIGRTMIN=31，SIGRTMAX=63)，将来可能进一步增加，这需要得到内核的支持。前32种信号已经有了预定义值，每个信号有了确定的用途及含义，并且每种信号都有各自的缺省动作。如按键盘的CTRL ^C时，会产生SIGINT信号，对该信号的默认反应就是进程终止。后32个信号表示实时信号，等同于前面阐述的可靠信号。这保证了发送的多个实时信号都被接收。实时信号是POSIX标准的一部分，可用于应用进程。
+
+非实时信号都不支持排队，都是不可靠信号；实时信号都支持排队，都是可靠信号。
 
 
 --------------------------------------------------------------------------------
-��ҳ��
-�ġ��źŵķ���
-�����źŵ���Ҫ�����У�kill()��raise()�� sigqueue()��alarm()��setitimer()�Լ�abort()��
+回页首
+三、进程对信号的响应
+进程可以通过三种方式来响应一个信号：（1）忽略信号，即对信号不做任何处理，其中，有两个信号不能忽略：SIGKILL及SIGSTOP；（2）捕捉信号。定义信号处理函数，当信号发生时，执行相应的处理函数；（3）执行缺省操作，Linux对每种信号都规定了默认操作，详细情况请参考[2]以及其它资料。注意，进程对实时信号的缺省反应是进程终止。
 
-1��kill() 
+Linux究竟采用上述三种方式的哪一个来响应信号，取决于传递给相应API函数的参数。
+
+
+--------------------------------------------------------------------------------
+回页首
+四、信号的发送
+发送信号的主要函数有：kill()、raise()、 sigqueue()、alarm()、setitimer()以及abort()。
+
+1、kill() 
 #include <sys/types.h> 
 #include <signal.h> 
 int kill(pid_t pid,int signo) 
 
-����pid��ֵ �źŵĽ��ս��� 
-pid>0 ����IDΪpid�Ľ��� 
-pid=0 ͬһ��������Ľ��� 
-pid<0 pid!=-1 ������IDΪ -pid�����н��� 
-pid=-1 �����ͽ��������⣬���н���ID����1�Ľ��� 
+参数pid的值 信号的接收进程 
+pid>0 进程ID为pid的进程 
+pid=0 同一个进程组的进程 
+pid<0 pid!=-1 进程组ID为 -pid的所有进程 
+pid=-1 除发送进程自身外，所有进程ID大于1的进程 
 
-Sinno���ź�ֵ����Ϊ0ʱ�������źţ���ʵ�ʲ������κ��źţ����ճ����д����飬��ˣ������ڼ��Ŀ������Ƿ���ڣ��Լ���ǰ�����Ƿ������Ŀ�귢���źŵ�Ȩ�ޣ�rootȨ�޵Ľ��̿������κν��̷����źţ���rootȨ�޵Ľ���ֻ��������ͬһ��session����ͬһ���û��Ľ��̷����źţ���
+Sinno是信号值，当为0时（即空信号），实际不发送任何信号，但照常进行错误检查，因此，可用于检查目标进程是否存在，以及当前进程是否具有向目标发送信号的权限（root权限的进程可以向任何进程发送信号，非root权限的进程只能向属于同一个session或者同一个用户的进程发送信号）。
 
-Kill()�����pid>0ʱ���źŷ��ͣ����óɹ����� 0�� ���򣬷��� -1��ע������pid<0ʱ�������������Щ���̽������źţ����ְ汾˵����һ����ʵ�ܼ򵥣������ں�Դ��kernal/signal.c���ɣ��ϱ��еĹ����ǲο�red hat 7.2��
+Kill()最常用于pid>0时的信号发送，调用成功返回 0； 否则，返回 -1。注：对于pid<0时的情况，对于哪些进程将接受信号，各种版本说法不一，其实很简单，参阅内核源码kernal/signal.c即可，上表中的规则是参考red hat 7.2。
 
-2��raise���� 
+2、raise（） 
 #include <signal.h> 
 int raise(int signo) 
-����̱��������źţ�����Ϊ�������͵��ź�ֵ�����óɹ����� 0�����򣬷��� -1�� 
+向进程本身发送信号，参数为即将发送的信号值。调用成功返回 0；否则，返回 -1。 
 
-3��sigqueue���� 
+3、sigqueue（） 
 #include <sys/types.h> 
 #include <signal.h> 
 int sigqueue(pid_t pid, int sig, const union sigval val) 
-���óɹ����� 0�����򣬷��� -1�� 
+调用成功返回 0；否则，返回 -1。 
 
-sigqueue()�ǱȽ��µķ����ź�ϵͳ���ã���Ҫ�����ʵʱ�ź�����ģ���ȻҲ֧��ǰ32�֣���֧���źŴ��в������뺯��sigaction()���ʹ�á�
+sigqueue()是比较新的发送信号系统调用，主要是针对实时信号提出的（当然也支持前32种），支持信号带有参数，与函数sigaction()配合使用。
 
-sigqueue�ĵ�һ��������ָ�������źŵĽ���ID���ڶ�������ȷ���������͵��źţ�������������һ���������ݽṹunion sigval��ָ�����źŴ��ݵĲ�������ͨ����˵��4�ֽ�ֵ��
+sigqueue的第一个参数是指定接收信号的进程ID，第二个参数确定即将发送的信号，第三个参数是一个联合数据结构union sigval，指定了信号传递的参数，即通常所说的4字节值。
 
  	typedef union sigval {
  		int  sival_int;
  		void *sival_ptr;
- 	}sigval_t;sigqueue()��kill()�����˸���ĸ�����Ϣ����sigqueue()ֻ����һ�����̷����źţ������ܷ����źŸ�һ�������顣���signo=0������ִ�д����飬��ʵ���ϲ������κ��źţ�0ֵ�źſ����ڼ��pid����Ч���Լ���ǰ�����Ƿ���Ȩ����Ŀ����̷����źš�
+ 	}sigval_t;sigqueue()比kill()传递了更多的附加信息，但sigqueue()只能向一个进程发送信号，而不能发送信号给一个进程组。如果signo=0，将会执行错误检查，但实际上不发送任何信号，0值信号可用于检查pid的有效性以及当前进程是否有权限向目标进程发送信号。
 
-�ڵ���sigqueueʱ��sigval_tָ������Ϣ�´����3�����źŴ���������3�����źŴ�������ָ�����źŴ���������sigaction��װ�����趨��sa_sigactionָ�룬�Ժ󽫲�������siginfo_t�ṹ�У������źŴ��������Ϳ��Դ�����Щ��Ϣ�ˡ�����sigqueueϵͳ����֧�ַ��ʹ������źţ����Ա�kill()ϵͳ���õĹ���Ҫ����ǿ��öࡣ
+在调用sigqueue时，sigval_t指定的信息会拷贝到3参数信号处理函数（3参数信号处理函数指的是信号处理函数由sigaction安装，并设定了sa_sigaction指针，稍后将阐述）的siginfo_t结构中，这样信号处理函数就可以处理这些信息了。由于sigqueue系统调用支持发送带参数信号，所以比kill()系统调用的功能要灵活和强大得多。
 
-ע��sigqueue�������ͷ�ʵʱ�ź�ʱ��������������������Ϣ��Ȼ�ܹ����ݸ��źŴ��������� sigqueue�������ͷ�ʵʱ�ź�ʱ����Ȼ��֧���Ŷӣ������źŴ�������ִ�й����е�����������ͬ�źţ������ϲ�Ϊһ���źš�
+注：sigqueue（）发送非实时信号时，第三个参数包含的信息仍然能够传递给信号处理函数； sigqueue（）发送非实时信号时，仍然不支持排队，即在信号处理函数执行过程中到来的所有相同信号，都被合并为一个信号。
 
-4��alarm���� 
+4、alarm（） 
 #include <unistd.h> 
 unsigned int alarm(unsigned int seconds) 
-ר��ΪSIGALRM�źŶ��裬��ָ����ʱ��seconds��󣬽�����̱�������SIGALRM�źţ��ֳ�Ϊ����ʱ�䡣���̵���alarm���κ���ǰ��alarm()���ö�����Ч���������secondsΪ�㣬��ô�����ڽ����ٰ����κ�����ʱ�䡣 
-����ֵ���������alarm����ǰ���������Ѿ�����������ʱ�䣬�򷵻���һ������ʱ���ʣ��ʱ�䣬���򷵻�0�� 
+专门为SIGALRM信号而设，在指定的时间seconds秒后，将向进程本身发送SIGALRM信号，又称为闹钟时间。进程调用alarm后，任何以前的alarm()调用都将无效。如果参数seconds为零，那么进程内将不再包含任何闹钟时间。 
+返回值，如果调用alarm（）前，进程中已经设置了闹钟时间，则返回上一个闹钟时间的剩余时间，否则返回0。 
 
-5��setitimer���� 
+5、setitimer（） 
 #include <sys/time.h> 
 int setitimer(int which, const struct itimerval *value, struct itimerval *ovalue)); 
-setitimer()��alarm����ǿ��֧��3�����͵Ķ�ʱ���� 
+setitimer()比alarm功能强大，支持3种类型的定时器： 
 
-ITIMER_REAL�� �趨����ʱ�䣻����ָ����ʱ����ں˽�����SIGALRM�źŸ������̣�
-ITIMER_VIRTUAL �趨����ִ��ʱ�䣻����ָ����ʱ����ں˽�����SIGVTALRM�źŸ������̣�
-ITIMER_PROF �趨����ִ���Լ��ں��򱾽��̶����ĵ�ʱ��ͣ�����ָ����ʱ����ں˽�����ITIMER_VIRTUAL�źŸ������̣�
-Setitimer()��һ������whichָ����ʱ�����ͣ���������֮һ�����ڶ��������ǽṹitimerval��һ��ʵ�����ṹitimerval��ʽ����¼1�������������ɲ���������
+ITIMER_REAL： 设定绝对时间；经过指定的时间后，内核将发送SIGALRM信号给本进程；
+ITIMER_VIRTUAL 设定程序执行时间；经过指定的时间后，内核将发送SIGVTALRM信号给本进程；
+ITIMER_PROF 设定进程执行以及内核因本进程而消耗的时间和，经过指定的时间后，内核将发送ITIMER_VIRTUAL信号给本进程；
+Setitimer()第一个参数which指定定时器类型（上面三种之一）；第二个参数是结构itimerval的一个实例，结构itimerval形式见附录1。第三个参数可不做处理。
 
-Setitimer()���óɹ�����0�����򷵻�-1��
+Setitimer()调用成功返回0，否则返回-1。
 
-6��abort() 
+6、abort() 
 #include <stdlib.h> 
 void abort(void); 
 
-����̷���SIGABORT�źţ�Ĭ������½��̻��쳣�˳�����Ȼ�ɶ����Լ����źŴ�����������ʹSIGABORT����������Ϊ�����źţ�����abort()��SIGABORT��Ȼ�ܱ����̽��ա��ú����޷���ֵ��
+向进程发送SIGABORT信号，默认情况下进程会异常退出，当然可定义自己的信号处理函数。即使SIGABORT被进程设置为阻塞信号，调用abort()后，SIGABORT仍然能被进程接收。该函数无返回值。
 
 
 --------------------------------------------------------------------------------
-��ҳ��
-�塢�źŵİ�װ�������źŹ���������
-�������Ҫ����ĳһ�źţ���ô��Ҫ�ڽ����а�װ���źš���װ�ź���Ҫ����ȷ���ź�ֵ��������Ը��ź�ֵ�Ķ���֮���ӳ���ϵ�������̽�Ҫ�����ĸ��źţ����źű����ݸ�����ʱ����ִ�к��ֲ�����
+回页首
+五、信号的安装（设置信号关联动作）
+如果进程要处理某一信号，那么就要在进程中安装该信号。安装信号主要用来确定信号值及进程针对该信号值的动作之间的映射关系，即进程将要处理哪个信号；该信号被传递给进程时，将执行何种操作。
 
-linux��Ҫ����������ʵ���źŵİ�װ��signal()��sigaction()������signal()�ڿɿ��ź�ϵͳ���õĻ�����ʵ��, �ǿ⺯������ֻ��������������֧���źŴ�����Ϣ����Ҫ������ǰ32�ַ�ʵʱ�źŵİ�װ����sigaction()�ǽ��µĺ�����������ϵͳ����ʵ�֣�sys_signal�Լ�sys_rt_sigaction����������������֧���źŴ�����Ϣ����Ҫ������ sigqueue() ϵͳ�������ʹ�ã���Ȼ��sigaction()ͬ��֧�ַ�ʵʱ�źŵİ�װ��sigaction()����signal()��Ҫ������֧���źŴ��в�����
+linux主要有两个函数实现信号的安装：signal()、sigaction()。其中signal()在可靠信号系统调用的基础上实现, 是库函数。它只有两个参数，不支持信号传递信息，主要是用于前32种非实时信号的安装；而sigaction()是较新的函数（由两个系统调用实现：sys_signal以及sys_rt_sigaction），有三个参数，支持信号传递信息，主要用来与 sigqueue() 系统调用配合使用，当然，sigaction()同样支持非实时信号的安装。sigaction()优于signal()主要体现在支持信号带有参数。
 
-1��signal() 
+1、signal() 
 #include <signal.h> 
 void (*signal(int signum, void (*handler))(int)))(int); 
-����ú���ԭ�Ͳ���������Ļ������Բο�����ķֽⷽʽ�����⣺ 
-typedef void (*sighandler_t)(int)�� 
+如果该函数原型不容易理解的话，可以参考下面的分解方式来理解： 
+typedef void (*sighandler_t)(int)； 
 sighandler_t signal(int signum, sighandler_t handler)); 
-��һ������ָ���źŵ�ֵ���ڶ�������ָ�����ǰ���ź�ֵ�Ĵ��������Ժ��Ը��źţ�������ΪSIG_IGN�������Բ���ϵͳĬ�Ϸ�ʽ�����ź�(������ΪSIG_DFL)��Ҳ�����Լ�ʵ�ִ�����ʽ(����ָ��һ��������ַ)�� 
-���signal()���óɹ����������һ��Ϊ��װ�ź�signum������signal()ʱ��handlerֵ��ʧ���򷵻�SIG_ERR�� 
+第一个参数指定信号的值，第二个参数指定针对前面信号值的处理，可以忽略该信号（参数设为SIG_IGN）；可以采用系统默认方式处理信号(参数设为SIG_DFL)；也可以自己实现处理方式(参数指定一个函数地址)。 
+如果signal()调用成功，返回最后一次为安装信号signum而调用signal()时的handler值；失败则返回SIG_ERR。 
 
-2��sigaction() 
+2、sigaction() 
 #include <signal.h> 
 int sigaction(int signum,const struct sigaction *act,struct sigaction *oldact)); 
 
-sigaction�������ڸı���̽��յ��ض��źź����Ϊ���ú����ĵ�һ������Ϊ�źŵ�ֵ������Ϊ��SIGKILL��SIGSTOP����κ�һ���ض���Ч���źţ�Ϊ�������źŶ����Լ��Ĵ����������������źŰ�װ���󣩡��ڶ���������ָ��ṹsigaction��һ��ʵ����ָ�룬�ڽṹsigaction��ʵ���У�ָ���˶��ض��źŵĴ���������Ϊ�գ����̻���ȱʡ��ʽ���źŴ���������������oldactָ��Ķ�����������ԭ������Ӧ�źŵĴ�������ָ��oldactΪNULL������ѵڶ�����������������ΪNULL����ô�ú��������ڼ���źŵ���Ч�ԡ�
+sigaction函数用于改变进程接收到特定信号后的行为。该函数的第一个参数为信号的值，可以为除SIGKILL及SIGSTOP外的任何一个特定有效的信号（为这两个信号定义自己的处理函数，将导致信号安装错误）。第二个参数是指向结构sigaction的一个实例的指针，在结构sigaction的实例中，指定了对特定信号的处理，可以为空，进程会以缺省方式对信号处理；第三个参数oldact指向的对象用来保存原来对相应信号的处理，可指定oldact为NULL。如果把第二、第三个参数都设为NULL，那么该函数可用于检查信号的有效性。
 
-�ڶ���������Ϊ��Ҫ�����а����˶�ָ���źŵĴ������ź������ݵ���Ϣ���źŴ�������ִ�й�����Ӧ���ε���Щ�����ȵȡ�
+第二个参数最为重要，其中包含了对指定信号的处理、信号所传递的信息、信号处理函数执行过程中应屏蔽掉哪些函数等等。
 
-sigaction�ṹ�������£�
+sigaction结构定义如下：
 
  struct sigaction {
           union{
             __sighandler_t _sa_handler;
-            void (*_sa_sigaction)(int,struct siginfo *, void *)��
+            void (*_sa_sigaction)(int,struct siginfo *, void *)；
             }_u
-                     sigset_t sa_mask��
-                    unsigned long sa_flags�� 
-                  void (*sa_restorer)(void)��
-                  }���У�sa_restorer���ѹ�ʱ��POSIX��֧��������Ӧ�ٱ�ʹ�á�
+                     sigset_t sa_mask；
+                    unsigned long sa_flags； 
+                  void (*sa_restorer)(void)；
+                  }其中，sa_restorer，已过时，POSIX不支持它，不应再被使用。
 
-1���������ݽṹ�е�����Ԫ��_sa_handler�Լ�*_sa_sigactionָ���źŹ������������û�ָ�����źŴ������������˿������û��Զ���Ĵ��������⣬������ΪSIG_DFL(����ȱʡ�Ĵ�����ʽ)��Ҳ����ΪSIG_IGN�������źţ���
+1、联合数据结构中的两个元素_sa_handler以及*_sa_sigaction指定信号关联函数，即用户指定的信号处理函数。除了可以是用户自定义的处理函数外，还可以为SIG_DFL(采用缺省的处理方式)，也可以为SIG_IGN（忽略信号）。
 
-2����_sa_handlerָ���Ĵ�������ֻ��һ�����������ź�ֵ�������źŲ��ܴ��ݳ��ź�ֵ֮����κ���Ϣ����_sa_sigaction��ָ�����źŴ�����������������������Ϊʵʱ�źŶ���ģ���Ȼͬ��֧�ַ�ʵʱ�źţ�����ָ��һ��3�����źŴ�����������һ������Ϊ�ź�ֵ������������û��ʹ�ã�posixû�й淶ʹ�øò����ı�׼�����ڶ���������ָ��siginfo_t�ṹ��ָ�룬�ṹ�а����ź�Я��������ֵ��������ָ��Ľṹ���£�
+2、由_sa_handler指定的处理函数只有一个参数，即信号值，所以信号不能传递除信号值之外的任何信息；由_sa_sigaction是指定的信号处理函数带有三个参数，是为实时信号而设的（当然同样支持非实时信号），它指定一个3参数信号处理函数。第一个参数为信号值，第三个参数没有使用（posix没有规范使用该参数的标准），第二个参数是指向siginfo_t结构的指针，结构中包含信号携带的数据值，参数所指向的结构如下：
 
  siginfo_t {
-                  int      si_signo;   �ź�ֵ���������ź�������
-                  int      si_errno;   errnoֵ���������ź�������
-                  int      si_code;    �źŲ�����ԭ�򣬶�������������
-        union{          �������ݽṹ����ͬ��Ա��Ӧ��ͬ�ź�
-          //ȷ�������㹻��Ĵ洢�ռ�
+                  int      si_signo;   信号值，对所有信号有意义
+                  int      si_errno;   errno值，对所有信号有意义
+                  int      si_code;    信号产生的原因，对所有信有意义
+        union{          联合数据结构，不同成员适应不同信号
+          //确保分配足够大的存储空间
           int _pad[SI_PAD_SIZE];
-          //��SIGKILL������Ľṹ
+          //对SIGKILL有意义的结构
           struct{
               ...
               }...
             ... ...
             ... ...          
-          //��SIGILL, SIGFPE, SIGSEGV, SIGBUS������Ľṹ
+          //对SIGILL, SIGFPE, SIGSEGV, SIGBUS有意义的结构
               struct{
               ...
               }...
             ... ...
             }
-      }ע��Ϊ�˸������Ķ�����˵������ʱ���Ѹýṹ��ʾΪ��¼2����ʾ����ʽ��
+      }注：为了更便于阅读，在说明问题时常把该结构表示为附录2所表示的形式。
 
-siginfo_t�ṹ�е��������ݳ�Աȷ���ýṹ��Ӧ���е��źţ��������ʵʱ�ź���˵����ʵ�ʲ�������Ľṹ��ʽ��
+siginfo_t结构中的联合数据成员确保该结构适应所有的信号，比如对于实时信号来说，则实际采用下面的结构形式：
 
 	typedef struct {
 		int si_signo;
 		int si_errno;			
 		int si_code;			
 		union sigval si_value;	
-		} siginfo_t;�ṹ�ĵ��ĸ���ͬ��Ϊһ���������ݽṹ��
+		} siginfo_t;结构的第四个域同样为一个联合数据结构：
 
 	union sigval {
 		int sival_int;		
 		void *sival_ptr;	
-		}�����������ݽṹ��˵��siginfo_t�ṹ�е�si_valueҪô����һ��4�ֽڵ�����ֵ��Ҫô����һ��ָ�룬��͹��������ź���ص����ݡ����źŵĴ��������У������������ź��������ָ�룬��û�й涨������ζ���Щ���ݽ��в�������������Ӧ���ɳ��򿪷���Ա���ݾ�����������Լ����
+		}采用联合数据结构，说明siginfo_t结构中的si_value要么持有一个4字节的整数值，要么持有一个指针，这就构成了与信号相关的数据。在信号的处理函数中，包含这样的信号相关数据指针，但没有规定具体如何对这些数据进行操作，操作方法应该由程序开发人员根据具体任务事先约定。
 
-ǰ��������ϵͳ����sigqueue�����ź�ʱ��sigqueue�ĵ�������������sigval�������ݽṹ��������sigqueueʱ�������ݽṹ�е����ݾͽ��������źŴ��������ĵڶ��������С��������ڷ����ź�ͬʱ���Ϳ������źŴ���һЩ������Ϣ���źſ��Դ�����Ϣ�Գ��򿪷��Ƿǳ�������ġ�
+前面在讨论系统调用sigqueue发送信号时，sigqueue的第三个参数就是sigval联合数据结构，当调用sigqueue时，该数据结构中的数据就将拷贝到信号处理函数的第二个参数中。这样，在发送信号同时，就可以让信号传递一些附加信息。信号可以传递信息对程序开发是非常有意义的。
 
-�źŲ����Ĵ��ݹ��̿�ͼʾ���£�
+信号参数的传递过程可图示如下：
 
 
-3��sa_maskָ�����źŴ�������ִ�й����У���Щ�ź�Ӧ����������ȱʡ����µ�ǰ�źű�������������ֹ�źŵ�Ƕ�׷��ͣ�����ָ��SA_NODEFER����SA_NOMASK��־λ��
+3、sa_mask指定在信号处理程序执行过程中，哪些信号应当被阻塞。缺省情况下当前信号本身被阻塞，防止信号的嵌套发送，除非指定SA_NODEFER或者SA_NOMASK标志位。
 
-ע����ע��sa_maskָ�����ź�������ǰ��������������sigaction������װ�źŵĴ�������ִ�й�������sa_maskָ�����źŲű�������
+注：请注意sa_mask指定的信号阻塞的前提条件，是在由sigaction（）安装信号的处理函数执行过程中由sa_mask指定的信号才被阻塞。
 
-4��sa_flags�а����������־λ�������ո��ᵽ��SA_NODEFER��SA_NOMASK��־λ����һ���Ƚ���Ҫ�ı�־λ��SA_SIGINFO�����趨�˸ñ�־λʱ����ʾ�źŸ����Ĳ������Ա����ݵ��źŴ��������У���ˣ�Ӧ��Ϊsigaction�ṹ�е�sa_sigactionָ����������������Ӧ��Ϊsa_handlerָ���źŴ����������������øñ�־��ú������塣��ʹΪsa_sigactionָ�����źŴ������������������SA_SIGINFO���źŴ�������ͬ�����ܵõ��źŴ��ݹ��������ݣ����źŴ��������ж���Щ��Ϣ�ķ��ʶ������¶δ���Segmentation fault����
+4、sa_flags中包含了许多标志位，包括刚刚提到的SA_NODEFER及SA_NOMASK标志位。另一个比较重要的标志位是SA_SIGINFO，当设定了该标志位时，表示信号附带的参数可以被传递到信号处理函数中，因此，应该为sigaction结构中的sa_sigaction指定处理函数，而不应该为sa_handler指定信号处理函数，否则，设置该标志变得毫无意义。即使为sa_sigaction指定了信号处理函数，如果不设置SA_SIGINFO，信号处理函数同样不能得到信号传递过来的数据，在信号处理函数中对这些信息的访问都将导致段错误（Segmentation fault）。
 
-ע���ܶ������ڲ����ñ�־λʱ����Ϊ����������˸ñ�־λ���ͱ��붨���������źŴ���������ʵ�ʲ��������ģ���֤�����ܼ򵥣��Լ�ʵ��һ����һ�����źŴ������������ڳ��������øñ�־λ�����Բ쿴��������н����ʵ���ϣ����԰Ѹñ�־λ�����ź��Ƿ񴫵ݲ����Ŀ��أ�������ø�λ���򴫵ݲ��������򣬲����ݲ�����
+注：很多文献在阐述该标志位时都认为，如果设置了该标志位，就必须定义三参数信号处理函数。实际不是这样的，验证方法很简单：自己实现一个单一参数信号处理函数，并在程序中设置该标志位，可以察看程序的运行结果。实际上，可以把该标志位看成信号是否传递参数的开关，如果设置该位，则传递参数；否则，不传递参数。
 
 
 --------------------------------------------------------------------------------
-��ҳ��
-�����źż����źż�����������
-�źż�������Ϊһ���������ͣ�
+回页首
+六、信号集及信号集操作函数：
+信号集被定义为一种数据类型：
 
 	typedef struct {
-			unsigned long sig[_NSIG_WORDS]��
-			} sigset_t�źż����������źŵļ��ϣ�linux��֧�ֵ������źſ���ȫ���򲿷ֵĳ������źż��У���Ҫ���ź�������غ������ʹ�á�������Ϊ�źż������������غ�����
+			unsigned long sig[_NSIG_WORDS]；
+			} sigset_t信号集用来描述信号的集合，linux所支持的所有信号可以全部或部分的出现在信号集中，主要与信号阻塞相关函数配合使用。下面是为信号集操作定义的相关函数：
 
 	#include <signal.h>
-int sigemptyset(sigset_t *set)��
-int sigfillset(sigset_t *set)��
+int sigemptyset(sigset_t *set)；
+int sigfillset(sigset_t *set)；
 int sigaddset(sigset_t *set, int signum)
-int sigdelset(sigset_t *set, int signum)��
-int sigismember(const sigset_t *set, int signum)��
-sigemptyset(sigset_t *set)��ʼ����setָ�����źż����źż�����������źű���գ�
-sigfillset(sigset_t *set)���øú�����setָ����źż��н�����linux֧�ֵ�64���źţ�
-sigaddset(sigset_t *set, int signum)��setָ����źż��м���signum�źţ�
-sigdelset(sigset_t *set, int signum)��setָ����źż���ɾ��signum�źţ�
-sigismember(const sigset_t *set, int signum)�ж��ź�signum�Ƿ���setָ����źż��С�
+int sigdelset(sigset_t *set, int signum)；
+int sigismember(const sigset_t *set, int signum)；
+sigemptyset(sigset_t *set)初始化由set指定的信号集，信号集里面的所有信号被清空；
+sigfillset(sigset_t *set)调用该函数后，set指向的信号集中将包含linux支持的64种信号；
+sigaddset(sigset_t *set, int signum)在set指向的信号集中加入signum信号；
+sigdelset(sigset_t *set, int signum)在set指向的信号集中删除signum信号；
+sigismember(const sigset_t *set, int signum)判定信号signum是否在set指向的信号集中。
 --------------------------------------------------------------------------------
-��ҳ��
-�ߡ��ź��������ź�δ��:
-ÿ�����̶���һ������������Щ�źŵ��͵�����ʱ�����������źż������źż��е������ź��ڵ��͵����̺󶼽������������������ź�������صļ���������
+回页首
+七、信号阻塞与信号未决:
+每个进程都有一个用来描述哪些信号递送到进程时将被阻塞的信号集，该信号集中的所有信号在递送到进程后都将被阻塞。下面是与信号阻塞相关的几个函数：
 
 #include <signal.h>
-int  sigprocmask(int  how,  const  sigset_t *set, sigset_t *oldset))��
+int  sigprocmask(int  how,  const  sigset_t *set, sigset_t *oldset))；
 int sigpending(sigset_t *set));
-int sigsuspend(const sigset_t *mask))��sigprocmask()�����ܹ����ݲ���how��ʵ�ֶ��źż��Ĳ�����������Ҫ�����֣�
+int sigsuspend(const sigset_t *mask))；sigprocmask()函数能够根据参数how来实现对信号集的操作，操作主要有三种：
 
-����how ���̵�ǰ�źż� 
-SIG_BLOCK �ڽ��̵�ǰ�����źż�������setָ���źż��е��ź� 
-SIG_UNBLOCK ������������źż��а���setָ���źż��е��źţ������Ը��źŵ����� 
-SIG_SETMASK ���½��������źż�Ϊsetָ����źż� 
+参数how 进程当前信号集 
+SIG_BLOCK 在进程当前阻塞信号集中添加set指向信号集中的信号 
+SIG_UNBLOCK 如果进程阻塞信号集中包含set指向信号集中的信号，则解除对该信号的阻塞 
+SIG_SETMASK 更新进程阻塞信号集为set指向的信号集 
 
-sigpending(sigset_t *set))��õ�ǰ�ѵ��͵����̣�ȴ�������������źţ���setָ����źż��з��ؽ����
+sigpending(sigset_t *set))获得当前已递送到进程，却被阻塞的所有信号，在set指向的信号集中返回结果。
 
-sigsuspend(const sigset_t *mask))�����ڽ��յ�ĳ���ź�֮ǰ, ��ʱ��mask�滻���̵��ź�����, ����ͣ����ִ�У�ֱ���յ��ź�Ϊֹ��sigsuspend ���غ󽫻ָ�����֮ǰ���ź����롣�źŴ���������ɺ󣬽��̽�����ִ�С���ϵͳ����ʼ�շ���-1������errno����ΪEINTR��
+sigsuspend(const sigset_t *mask))用于在接收到某个信号之前, 临时用mask替换进程的信号掩码, 并暂停进程执行，直到收到信号为止。sigsuspend 返回后将恢复调用之前的信号掩码。信号处理函数完成后，进程将继续执行。该系统调用始终返回-1，并将errno设置为EINTR。
 
-��¼1���ṹitimerval��
+附录1：结构itimerval：
 
             struct itimerval {
                 struct timeval it_interval;  next value 
@@ -599,26 +599,26 @@ sigsuspend(const sigset_t *mask))�����ڽ��յ�ĳ���ź�֮ǰ, ��ʱ��mask�滻���̵��
             struct timeval {
                 long tv_sec;                 seconds 
                 long tv_usec;                microseconds 
-            };��¼2���������źŴ��������еڶ���������˵����������
+            };附录2：三参数信号处理函数中第二个参数的说明性描述：
 
 siginfo_t {
-int      si_signo;   �ź�ֵ���������ź�������
-int      si_errno;   errnoֵ���������ź�������
-int      si_code;    �źŲ�����ԭ�򣬶������ź�������
-pid_t    si_pid;     �����źŵĽ���ID,��kill(2),ʵʱ�ź��Լ�SIGCHLD������ 
-uid_t    si_uid;    �����źŽ��̵���ʵ�û�ID����kill(2),ʵʱ�ź��Լ�SIGCHLD������ 
-int      si_status;  �˳�״̬����SIGCHLD������
-clock_t  si_utime;   �û����ĵ�ʱ�䣬��SIGCHLD������ 
-clock_t  si_stime;   �ں����ĵ�ʱ�䣬��SIGCHLD������ 
-sigval_t si_value;   �ź�ֵ��������ʵʱ�����壬��һ���������ݽṹ��
-                          ����Ϊһ����������si_int��ʾ��Ҳ����Ϊһ��ָ�룬��si_ptr��ʾ��
+int      si_signo;   信号值，对所有信号有意义
+int      si_errno;   errno值，对所有信号有意义
+int      si_code;    信号产生的原因，对所有信号有意义
+pid_t    si_pid;     发送信号的进程ID,对kill(2),实时信号以及SIGCHLD有意义 
+uid_t    si_uid;    发送信号进程的真实用户ID，对kill(2),实时信号以及SIGCHLD有意义 
+int      si_status;  退出状态，对SIGCHLD有意义
+clock_t  si_utime;   用户消耗的时间，对SIGCHLD有意义 
+clock_t  si_stime;   内核消耗的时间，对SIGCHLD有意义 
+sigval_t si_value;   信号值，对所有实时有意义，是一个联合数据结构，
+                          可以为一个整数（由si_int标示，也可以为一个指针，由si_ptr标示）
 	
-void *   si_addr;    ����fault���ڴ��ַ����SIGILL,SIGFPE,SIGSEGV,SIGBUS �ź�������
-int      si_band;   SIGPOLL�ź������� 
-int      si_fd;     SIGPOLL�ź������� 
-}ʵ���ϣ�����ǰ����Ԫ���⣬����Ԫ����֯��һ�����Ͻṹ�У����������ݽṹ�У��ָ��ݲ�ͬ���ź���֯�ɲ�ͬ�Ľṹ��ע�����ᵽ�Ķ�ĳ���ź�������ָ���ǣ��ڸ��źŵĴ��������п��Է�����Щ����������ź���ص����������Ϣ��ֻ�����ض��ź�ֻ���ض���Ϣ����Ȥ���ѡ�
+void *   si_addr;    触发fault的内存地址，对SIGILL,SIGFPE,SIGSEGV,SIGBUS 信号有意义
+int      si_band;   SIGPOLL信号有意义 
+int      si_fd;     SIGPOLL信号有意义 
+}实际上，除了前三个元素外，其他元素组织在一个联合结构中，在联合数据结构中，又根据不同的信号组织成不同的结构。注释中提到的对某种信号有意义指的是，在该信号的处理函数中可以访问这些域来获得与信号相关的有意义的信息，只不过特定信号只对特定信息感兴趣而已。
 
-*/ //�źŴ�����ngx_signal_handler
+*/ //信号处理在ngx_signal_handler
 ngx_int_t
 ngx_init_signals(ngx_log_t *log)
 {
@@ -645,87 +645,87 @@ ngx_init_signals(ngx_log_t *log)
 }
 
 /*
-��Linux�У���Ҫʹ��������������Nginx��������������ֹͣ�����������ļ����ع���־�ļ���ƽ����������Ϊ��Ĭ������£�Nginx����װ��Ŀ¼
-/usr/local/nginx/�У���������ļ�·��Ϊ/usr/local/nginc/sbin/nginx�������ļ�·��Ϊ/usr/local/nginx/conf/nginx.conf����Ȼ��
-��configureִ��ʱ�ǿ���ָ�������ǰ�װ�ڲ�ͬĿ¼�ġ�Ϊ�˼����������ֻ˵��Ĭ�ϰ�װ����µ������е�ʹ�������������߰�װ��
-Ŀ¼�����˱仯����ô�滻һ�¼��ɡ�
+在Linux中，需要使用命令行来控制Nginx服务器的启动与停止、重载配置文件、回滚日志文件、平滑升级等行为。默认情况下，Nginx被安装在目录
+/usr/local/nginx/中，其二进制文件路径为/usr/local/nginc/sbin/nginx，配置文件路径为/usr/local/nginx/conf/nginx.conf。当然，
+在configure执行时是可以指定把它们安装在不同目录的。为了简单起见，本节只说明默认安装情况下的命令行的使用情况，如果读者安装的
+目录发生了变化，那么替换一下即可。
 
-��1��Ĭ�Ϸ�ʽ����
+（1）默认方式启动
 
-ֱ��ִ��Nginx�����Ƴ������磺
+直接执行Nginx二进制程序。例如：
 
 /usr/local/nginx/sbin/nginx
 
-��ʱ�����ȡĬ��·���µ������ļ���/usr/local/nginx/conf/nginx.conf��
+这时，会读取默认路径下的配置文件：/usr/local/nginx/conf/nginx.conf。
 
-ʵ���ϣ���û����ʽָ��nginx.conf�����ļ�·��ʱ��������configure����ִ��ʱʹ��--conf-path=PATHָ����nginx.conf�ļ����μ�1.5.1�ڣ���
+实际上，在没有显式指定nginx.conf配置文件路径时，将打开在configure命令执行时使用--conf-path=PATH指定的nginx.conf文件（参见1.5.1节）。
 
-��2������ָ�������ļ���������ʽ
+（2）另行指定配置文件的启动方式
 
-ʹ��-c����ָ�������ļ������磺
+使用-c参数指定配置文件。例如：
 
 /usr/local/nginx/sbin/nginx -c /tmp/nginx.conf
 
-��ʱ�����ȡ-c������ָ����nginx.conf�����ļ�������Nginx��
+这时，会读取-c参数后指定的nginx.conf配置文件来启动Nginx。
 
-��3������ָ����װĿ¼��������ʽ
+（3）另行指定安装目录的启动方式
 
-ʹ��-p����ָ��Nginx�İ�װĿ¼�����磺
+使用-p参数指定Nginx的安装目录。例如：
 
 /usr/local/nginx/sbin/nginx -p /usr/local/nginx/
 
-��4������ָ��ȫ���������������ʽ
+（4）另行指定全局配置项的启动方式
 
-����ͨ��-g������ʱָ��һЩȫ���������ʹ�µ���������Ч�����磺
+可以通过-g参数临时指定一些全局配置项，以使新的配置项生效。例如：
 
 /usr/local/nginx/sbin/nginx -g "pid /var/nginx/test.pid;"
 
-��������������ζ�Ż��pid�ļ�д��/var/nginx/test.pid�С�
+上面这行命令意味着会把pid文件写到/var/nginx/test.pid中。
 
--g������Լ��������ָ�������������Ĭ��·���µ�nginx.conf�е����������ͻ�������޷������������������������������������pid logs/nginx.pid��
-�ǲ��ܴ�����Ĭ�ϵ�nginx.conf�еġ�
+-g参数的约束条件是指定的配置项不能与默认路径下的nginx.conf中的配置项相冲突，否则无法启动。就像上例那样，类似这样的配置项：pid logs/nginx.pid，
+是不能存在于默认的nginx.conf中的。
 
-��һ��Լ�������ǣ���-g��ʽ������Nginx����ִ������������ʱ����Ҫ��-g����Ҳ���ϣ�������ܳ��������ƥ������Ρ����磬���ҪֹͣNginx����
-��ô��Ҫִ��������룺
+另一个约束条件是，以-g方式启动的Nginx服务执行其他命令行时，需要把-g参数也带上，否则可能出现配置项不匹配的情形。例如，如果要停止Nginx服务，
+那么需要执行下面代码：
 
 /usr/local/nginx/sbin/nginx -g "pid /var/nginx/test.pid;" -s stop
 
-���������-g "pid /var/nginx/test.pid;"����ô�Ҳ���pid�ļ���Ҳ������޷�ֹͣ����������
+如果不带上-g "pid /var/nginx/test.pid;"，那么找不到pid文件，也会出现无法停止服务的情况。
 
-��5������������Ϣ�Ƿ��д���
+（5）测试配置信息是否有错误
 
-�ڲ�����Nginx������£�ʹ��-t���������������ļ��Ƿ��д������磺
+在不启动Nginx的情况下，使用-t参数仅测试配置文件是否有错误。例如：
 
 /usr/local/nginx/sbin/nginx -t
 
-ִ�н������ʾ�����Ƿ���ȷ��
+执行结果中显示配置是否正确。
 
-��6���ڲ������ý׶β������Ϣ
+（6）在测试配置阶段不输出信息
 
-��������ѡ��ʱ��ʹ��-q�������Բ���error�������µ���Ϣ�������Ļ�����磺
+测试配置选项时，使用-q参数可以不把error级别以下的信息输出到屏幕。例如：
 
 /usr/local/nginx/sbin/nginx -t -q
 
-��7����ʾ�汾��Ϣ
+（7）显示版本信息
 
-ʹ��-v������ʾNginx�İ汾��Ϣ�����磺
+使用-v参数显示Nginx的版本信息。例如：
 
 /usr/local/nginx/sbin/nginx -v
 
-��8����ʾ����׶εĲ���
+（8）显示编译阶段的参数
 
-ʹ��-V�������˿�����ʾNginx�İ汾��Ϣ�⣬��������ʾ���ñ���׶ε���Ϣ����GCC�������İ汾������ϵͳ�İ汾��ִ��configureʱ�Ĳ����ȡ����磺
+使用-V参数除了可以显示Nginx的版本信息外，还可以显示配置编译阶段的信息，如GCC编译器的版本、操作系统的版本、执行configure时的参数等。例如：
 
 /usr/local/nginx/sbin/nginx -V
 
-��9�����ٵ�ֹͣ����
+（9）快速地停止服务
 
-ʹ��-s stop����ǿ��ֹͣNginx����-s������ʵ�Ǹ���Nginx�������������е�Nginx�������ź�����Nginx����ͨ��nginx.pid�ļ��еõ�master���̵Ľ���ID��
-���������е�master���̷���TERM�ź������ٵعر�Nginx�������磺
+使用-s stop可以强制停止Nginx服务。-s参数其实是告诉Nginx程序向正在运行的Nginx服务发送信号量，Nginx程序通过nginx.pid文件中得到master进程的进程ID，
+再向运行中的master进程发送TERM信号来快速地关闭Nginx服务。例如：
 
 /usr/local/nginx/sbin/nginx -s stop
 
-ʵ���ϣ����ͨ��kill����ֱ����nginx master���̷���TERM����INT�źţ�Ч����һ���ġ����磬��ͨ��ps�������鿴nginx master�Ľ���ID��
+实际上，如果通过kill命令直接向nginx master进程发送TERM或者INT信号，效果是一样的。例如，先通过ps命令来查看nginx master的进程ID：
 
 :ahf5wapi001:root > ps -ef | grep nginx
 
@@ -733,76 +733,76 @@ root     10800     1  0 02:27 ?        00:00:00 nginx: master process ./nginx
 
 root     10801 10800  0 02:27 ?        00:00:00 nginx: worker process
 
-������ֱ��ͨ��kill�����������źţ�
+接下来直接通过kill命令来发送信号：
 
 kill -s SIGTERM 10800
 
-���ߣ�
+或者：
 
 kill -s SIGINT 10800
 
-�������������Ч����ִ��/usr/local/nginx/sbin/nginx -s stop����ȫһ���ġ�
+上述两条命令的效果与执行/usr/local/nginx/sbin/nginx -s stop是完全一样的。
 
-��10�������š���ֹͣ����
+（10）“优雅”地停止服务
 
-���ϣ��Nginx������������ش����굱ǰ����������ֹͣ������ô����ʹ��-s quit������ֹͣ�������磺
+如果希望Nginx服务可以正常地处理完当前所有请求再停止服务，那么可以使用-s quit参数来停止服务。例如：
 
 /usr/local/nginx/sbin/nginx -s quit
 
-�����������ֹͣNginx������������ġ�������ֹͣ����ʱ��worker������master�������յ��źź����������ѭ�����˳����̡��������š���ֹͣ����ʱ��
-���Ȼ�رռ����˿ڣ�ֹͣ�����µ����ӣ�Ȼ��ѵ�ǰ���ڴ���������ȫ�������꣬������˳����̡�
+该命令与快速停止Nginx服务是有区别的。当快速停止服务时，worker进程与master进程在收到信号后会立刻跳出循环，退出进程。而“优雅”地停止服务时，
+首先会关闭监听端口，停止接收新的连接，然后把当前正在处理的连接全部处理完，最后再退出进程。
 
-�����ֹͣ�������ƣ�����ֱ�ӷ���QUIT�źŸ�master������ֹͣ������Ч����ִ��-s quit������һ���ġ����磺
+与快速停止服务相似，可以直接发送QUIT信号给master进程来停止服务，其效果与执行-s quit命令是一样的。例如：
 
 kill -s SIGQUIT <nginx master pid>
 
-���ϣ�������š���ֹͣĳ��worker���̣���ô����ͨ����ý��̷���WINCH�ź���ֹͣ�������磺
+如果希望“优雅”地停止某个worker进程，那么可以通过向该进程发送WINCH信号来停止服务。例如：
 
 kill -s SIGWINCH <nginx worker pid>
 
-��11��ʹ�����е�Nginx�ض��������Ч
+（11）使运行中的Nginx重读配置项并生效
 
-ʹ��-s reload��������ʹ�����е�Nginx�������¼���nginx.conf�ļ������磺
+使用-s reload参数可以使运行中的Nginx服务重新加载nginx.conf文件。例如：
 
 /usr/local/nginx/sbin/nginx -s reload
 
-��ʵ�ϣ�Nginx���ȼ���µ��������Ƿ��������ȫ����ȷ���ԡ����š��ķ�ʽ�رգ�����������Nginx��ʵ�����Ŀ�ġ����Ƶģ�-s�Ƿ����źţ�
-��Ȼ������kill�����HUP�ź����ﵽ��ͬ��Ч����
+事实上，Nginx会先检查新的配置项是否有误，如果全部正确就以“优雅”的方式关闭，再重新启动Nginx来实现这个目的。类似的，-s是发送信号，
+仍然可以用kill命令发送HUP信号来达到相同的效果。
 
 kill -s SIGHUP <nginx master pid>
 
-��12����־�ļ��ع�
+（12）日志文件回滚
 
-ʹ��-s reopen�����������´���־�ļ������������Ȱѵ�ǰ��־�ļ�������ת�Ƶ�����Ŀ¼�н��б��ݣ������´�ʱ�ͻ������µ���־�ļ���
-�������ʹ����־�ļ������ڹ������磺
+使用-s reopen参数可以重新打开日志文件，这样可以先把当前日志文件改名或转移到其他目录中进行备份，再重新打开时就会生成新的日志文件。
+这个功能使得日志文件不至于过大。例如：
 
 /usr/local/nginx/sbin/nginx -s reopen
 
-��Ȼ������ʹ��kill�����USR1�ź�Ч����ͬ��
+当然，这与使用kill命令发送USR1信号效果相同。
 
 kill -s SIGUSR1 <nginx master pid>
 
-��13��ƽ������Nginx
+（13）平滑升级Nginx
 
-��Nginx�����������µİ汾ʱ������Ҫ���ɵĶ������ļ�Nginx�滻����ͨ�������������Ҫ��������ģ���Nginx֧�ֲ���������������°汾��ƽ��������
+当Nginx服务升级到新的版本时，必须要将旧的二进制文件Nginx替换掉，通常情况下这是需要重启服务的，但Nginx支持不重启服务来完成新版本的平滑升级。
 
-����ʱ�������²��裺
+升级时包括以下步骤：
 
-1��֪ͨ�������еľɰ汾Nginx׼��������ͨ����master���̷���USR2�źſɴﵽĿ�ġ����磺
+1）通知正在运行的旧版本Nginx准备升级。通过向master进程发送USR2信号可达到目的。例如：
 
 kill -s SIGUSR2 <nginx master pid>
 
-��ʱ�������е�Nginx�Ὣpid�ļ����������罫/usr/local/nginx/logs/nginx.pid������Ϊ/usr/local/nginx/logs/nginx.pid.oldbin�������µ�Nginx���п��������ɹ���
+这时，运行中的Nginx会将pid文件重命名，如将/usr/local/nginx/logs/nginx.pid重命名为/usr/local/nginx/logs/nginx.pid.oldbin，这样新的Nginx才有可能启动成功。
 
-2�������°汾��Nginx������ʹ�����Ͻ��ܹ�������һ��������������ʱͨ��ps������Է����¾ɰ汾��Nginx��ͬʱ���С�
+2）启动新版本的Nginx，可以使用以上介绍过的任意一种启动方法。这时通过ps命令可以发现新旧版本的Nginx在同时运行。
 
-3��ͨ��kill������ɰ汾��master���̷���SIGQUIT�źţ��ԡ����š��ķ�ʽ�رվɰ汾��Nginx�����ֻ���°汾��Nginx�������У���ʱƽ��������ϡ�
+3）通过kill命令向旧版本的master进程发送SIGQUIT信号，以“优雅”的方式关闭旧版本的Nginx。随后将只有新版本的Nginx服务运行，此时平滑升级完毕。
 
-��14����ʾ�����а���
+（14）显示命令行帮助
 
-ʹ��-h����-?��������ʾ֧�ֵ����������в�����
+使用-h或者-?参数会显示支持的所有命令行参数。
 */
-//ע���º���ngx_init_signals
+//注册新号在ngx_init_signals
 void
 ngx_signal_handler(int signo)
 {
@@ -830,13 +830,13 @@ ngx_signal_handler(int signo)
     case NGX_PROCESS_MASTER:
     case NGX_PROCESS_SINGLE:
         switch (signo) {
-        //�����յ�QUIT�ź�ʱ��ngx_quit��־λ����Ϊ1�������ڸ���worker������Ҫ���ŵعرս���
+        //当接收到QUIT信号时，ngx_quit标志位会设为1，这是在告诉worker进程需要优雅地关闭进程
         case ngx_signal_value(NGX_SHUTDOWN_SIGNAL):
             ngx_quit = 1;
             action = ", shutting down";
             break;
 
-        //�����յ�TERM�ź�ʱ��ngx_terminate��־λ����Ϊ1�������ڸ���worker������Ҫǿ�ƹرս���
+        //当接收到TERM信号时，ngx_terminate标志位会设为1，这是在告诉worker进程需要强制关闭进程
         case ngx_signal_value(NGX_TERMINATE_SIGNAL):
         case SIGINT:
             ngx_terminate = 1;
@@ -850,12 +850,12 @@ ngx_signal_handler(int signo)
             }
             break;
 
-        case ngx_signal_value(NGX_RECONFIGURE_SIGNAL): //reload�źţ�����master����
+        case ngx_signal_value(NGX_RECONFIGURE_SIGNAL): //reload信号，是由master处理
             ngx_reconfigure = 1;
             action = ", reconfiguring";
             break;
 
-        //�����յ�USRI�ź�ʱ��ngx_reopen��־λ����Ϊ1�������ڸ���Nginx��Ҫ���´��ļ������л���־�ļ�ʱ��
+        //当接收到USRI信号时，ngx_reopen标志位会设为1，这是在告诉Nginx需要重新打开文件（如切换日志文件时）
         case ngx_signal_value(NGX_REOPEN_SIGNAL):
             ngx_reopen = 1;
             action = ", reopening logs";
@@ -863,9 +863,9 @@ ngx_signal_handler(int signo)
 
         case ngx_signal_value(NGX_CHANGEBIN_SIGNAL):
             //if (getppid() > 1 || ngx_new_binary > 0) { 
-            if (ngx_new_binary > 0) {  //yang add change��Ϊ�˵��ԣ�����ע��
-           //nginx������ͨ�����͸��ź�,������뱣֤�����̴���1��������С�ڵ���1�Ļ���˵���Ѿ��ɾ�master�����˱�master����Ͳ���������
-           //�������ͨ��crt��¼����nginx�Ļ������Կ�����PPID����1,���Բ���������
+            if (ngx_new_binary > 0) {  //yang add change，为了调试，故意注释
+           //nginx热升级通过发送该信号,这里必须保证父进程大于1，父进程小于等于1的话，说明已经由就master启动了本master，则就不能热升级
+           //所以如果通过crt登录启动nginx的话，可以看到其PPID大于1,所以不能热升级
 
                 /*
                  * Ignore the signal in the new binary if its parent is
@@ -884,14 +884,14 @@ ngx_signal_handler(int signo)
             break;
 
         case SIGALRM: 
-            ngx_sigalrm = 1; //�ӽ��̻��������ö�ʱ���źţ���ngx_timer_signal_handler
+            ngx_sigalrm = 1; //子进程会重新设置定时器信号，见ngx_timer_signal_handler
             break;
 
         case SIGIO:
             ngx_sigio = 1;
             break;
 
-        case SIGCHLD: //�ӽ�����ֹ, ��ʱ���ں�ͬʱ�򸸽��̷��͸�sigchld�ź�.�ȴ�������waitpid���գ����⽩������
+        case SIGCHLD: //子进程终止, 这时候内核同时向父进程发送个sigchld信号.等待父进程waitpid回收，避免僵死进程
             ngx_reap = 1;
             break;
         }
@@ -907,7 +907,7 @@ ngx_signal_handler(int signo)
                 break;
             }
             ngx_debug_quit = 1;
-        case ngx_signal_value(NGX_SHUTDOWN_SIGNAL): //���������յ�quit�ź�
+        case ngx_signal_value(NGX_SHUTDOWN_SIGNAL): //工作进程收到quit信号
             ngx_quit = 1;
             action = ", shutting down";
             break;
@@ -943,7 +943,7 @@ ngx_signal_handler(int signo)
                       "before either old or new binary's process");
     }
 
-    if (signo == SIGCHLD) { //�����ӽ�����Դwaitpid
+    if (signo == SIGCHLD) { //回收子进程资源waitpid
         ngx_process_get_status();
     }
 
@@ -1092,7 +1092,7 @@ ngx_unlock_mutexes(ngx_pid_t pid)
 
 
 void
-ngx_debug_point(void)//���Լ�ֹͣ��֪ͨ������
+ngx_debug_point(void)//让自己停止，通知父进程
 {
     ngx_core_conf_t  *ccf;
 
@@ -1111,9 +1111,9 @@ ngx_debug_point(void)//���Լ�ֹͣ��֪ͨ������
 }
 
 /*
-ngx_os_signal_process()��������
-����signals���飬���ݸ����ź�name���ҵ���Ӧsigno��
-����kill���pid����signo���źţ�
+ngx_os_signal_process()函数处理
+遍历signals数组，根据给定信号name，找到对应signo；
+调用kill向该pid发送signo号信号；
 */
 ngx_int_t 
 ngx_os_signal_process(ngx_cycle_t *cycle, char *name, ngx_int_t pid)
@@ -1122,7 +1122,7 @@ ngx_os_signal_process(ngx_cycle_t *cycle, char *name, ngx_int_t pid)
 
     for (sig = signals; sig->signo != 0; sig++) {
         if (ngx_strcmp(name, sig->name) == 0) {
-            if (kill(pid, sig->signo) != -1) { //���﷢��signal���źŽ��մ�����signals->handler
+            if (kill(pid, sig->signo) != -1) { //这里发送signal，信号接收处理在signals->handler
                 return 0;
             }
 

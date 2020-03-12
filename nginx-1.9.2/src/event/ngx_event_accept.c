@@ -15,32 +15,32 @@ static ngx_int_t ngx_disable_accept_events(ngx_cycle_t *cycle, ngx_uint_t all);
 static void ngx_close_accepted_connection(ngx_connection_t *c);
 
 /*
-ÈçºÎ½¨Á¢ÐÂÁ¬½Ó
-    ÉÏÎÄÌáØÙ¹ý£¬´¦ÀíÐÂÁ¬½ÓÊÂ¼þµÄ»Øµ÷º¯ÊýÊÇngx_event_accept£¬ÆäÔ­ÐÍÈçÏÂ¡£void ngx_event_accept (ngx_event_t¡ïev)
-    ÏÂÃæ¼òµ¥½éÉÜÒ»ÏÂËüµÄÁ÷³Ì£¬ÈçÍ¼9-6ËùÊ¾¡£
-    ÏÂÃæ¶ÔÁ÷³ÌÖÐµÄ7¸ö²½Öè½øÐÐËµÃ÷¡£
-    1)Ê×ÏÈµ÷ÓÃaccept·½·¨ÊÔÍ¼½¨Á¢ÐÂÁ¬½Ó£¬Èç¹ûÃ»ÓÐ×¼±¸ºÃµÄÐÂÁ¬½ÓÊÂ¼þ£¬ngx_event_accept·½·¨»áÖ±½Ó·µ»Ø¡£
-    2)ÉèÖÃ¸ºÔØ¾ùºâãÐÖµngx_accept_disabled£¬Õâ¸öãÐÖµÊÇ½ø³ÌÔÊÐíµÄ×ÜÁ¬½ÓÊýµÄ1/8¼õÈ¥¿ÕÏÐÁ¬½ÓÊý£¬
-    3)µ÷ÓÃngx_get_connection·½·¨ÓÉÁ¬½Ó³ØÖÐ»ñÈ¡Ò»¸öngx_connection_tÁ¬½Ó¶ÔÏó¡£
-    4)Îªngx_connection_tÖÐµÄpoolÖ¸Õë½¨Á¢ÄÚ´æ³Ø¡£ÔÚÕâ¸öÁ¬½ÓÊÍ·Åµ½¿ÕÏÐÁ¬½Ó³ØÊ±£¬ÊÍ·ÅpoolÄÚ´æ³Ø¡£
-    5)ÉèÖÃÌ×½Ó×ÖµÄÊôÐÔ£¬ÈçÉèÎª·Ç×èÈûÌ×½Ó×Ö¡£
-    6)½«Õâ¸öÐÂÁ¬½Ó¶ÔÓ¦µÄ¶ÁÊÂ¼þÌí¼Óµ½epollµÈÊÂ¼þÇý¶¯Ä£¿éÖÐ£¬ÕâÑù£¬ÔÚÕâ¸öÁ¬½ÓÉÏÈç¹û½ÓÊÕµ½ÓÃ»§ÇëÇóepoll_wait£¬¾Í»áÊÕ¼¯µ½Õâ¸öÊÂ¼þ¡£
-    7)µ÷ÓÃ¼àÌý¶ÔÏóngx_listening_tÖÐµÄhandler»Øµ÷·½·¨¡£ngx_listening_t½á¹¹ÙºµÄhandler»Øµ÷·½·¨¾ÍÊÇµ±ÐÂµÄTCPÁ¬½Ó¸Õ¸Õ½¨Á¢Íê³ÉÊ±ÔÚÕâÀïµ÷ÓÃµÄ¡£
-    ×îºó£¬Èç¹û¼àÌýÊÂ¼þµÄavailable±êÖ¾Î»Îª1£¬ÔÙ´ÎÑ­»·µ½µÚ1²½£¬·ñÔòngx_event_accept·½·¨½áÊø¡£ÊÂ¼þµÄavailable±êÖ¾Î»¶ÔÓ¦×Åmulti_acceptÅäÖÃ
-    Ïî¡£µ±availableÎªlÊ±£¬¸æËßNginx -´ÎÐÔ¾¡Á¿¶àµØ½¨Á¢ÐÂÁ¬½Ó£¬ËüµÄÊµÏÖÔ­ÀíÒ²¾ÍÔÚÕâÀï
+å¦‚ä½•å»ºç«‹æ–°è¿žæŽ¥
+    ä¸Šæ–‡æåˆ­è¿‡ï¼Œå¤„ç†æ–°è¿žæŽ¥äº‹ä»¶çš„å›žè°ƒå‡½æ•°æ˜¯ngx_event_acceptï¼Œå…¶åŽŸåž‹å¦‚ä¸‹ã€‚void ngx_event_accept (ngx_event_tâ˜…ev)
+    ä¸‹é¢ç®€å•ä»‹ç»ä¸€ä¸‹å®ƒçš„æµç¨‹ï¼Œå¦‚å›¾9-6æ‰€ç¤ºã€‚
+    ä¸‹é¢å¯¹æµç¨‹ä¸­çš„7ä¸ªæ­¥éª¤è¿›è¡Œè¯´æ˜Žã€‚
+    1)é¦–å…ˆè°ƒç”¨acceptæ–¹æ³•è¯•å›¾å»ºç«‹æ–°è¿žæŽ¥ï¼Œå¦‚æžœæ²¡æœ‰å‡†å¤‡å¥½çš„æ–°è¿žæŽ¥äº‹ä»¶ï¼Œngx_event_acceptæ–¹æ³•ä¼šç›´æŽ¥è¿”å›žã€‚
+    2)è®¾ç½®è´Ÿè½½å‡è¡¡é˜ˆå€¼ngx_accept_disabledï¼Œè¿™ä¸ªé˜ˆå€¼æ˜¯è¿›ç¨‹å…è®¸çš„æ€»è¿žæŽ¥æ•°çš„1/8å‡åŽ»ç©ºé—²è¿žæŽ¥æ•°ï¼Œ
+    3)è°ƒç”¨ngx_get_connectionæ–¹æ³•ç”±è¿žæŽ¥æ± ä¸­èŽ·å–ä¸€ä¸ªngx_connection_tè¿žæŽ¥å¯¹è±¡ã€‚
+    4)ä¸ºngx_connection_tä¸­çš„poolæŒ‡é’ˆå»ºç«‹å†…å­˜æ± ã€‚åœ¨è¿™ä¸ªè¿žæŽ¥é‡Šæ”¾åˆ°ç©ºé—²è¿žæŽ¥æ± æ—¶ï¼Œé‡Šæ”¾poolå†…å­˜æ± ã€‚
+    5)è®¾ç½®å¥—æŽ¥å­—çš„å±žæ€§ï¼Œå¦‚è®¾ä¸ºéžé˜»å¡žå¥—æŽ¥å­—ã€‚
+    6)å°†è¿™ä¸ªæ–°è¿žæŽ¥å¯¹åº”çš„è¯»äº‹ä»¶æ·»åŠ åˆ°epollç­‰äº‹ä»¶é©±åŠ¨æ¨¡å—ä¸­ï¼Œè¿™æ ·ï¼Œåœ¨è¿™ä¸ªè¿žæŽ¥ä¸Šå¦‚æžœæŽ¥æ”¶åˆ°ç”¨æˆ·è¯·æ±‚epoll_waitï¼Œå°±ä¼šæ”¶é›†åˆ°è¿™ä¸ªäº‹ä»¶ã€‚
+    7)è°ƒç”¨ç›‘å¬å¯¹è±¡ngx_listening_tä¸­çš„handlerå›žè°ƒæ–¹æ³•ã€‚ngx_listening_tç»“æž„ä¿¸çš„handlerå›žè°ƒæ–¹æ³•å°±æ˜¯å½“æ–°çš„TCPè¿žæŽ¥åˆšåˆšå»ºç«‹å®Œæˆæ—¶åœ¨è¿™é‡Œè°ƒç”¨çš„ã€‚
+    æœ€åŽï¼Œå¦‚æžœç›‘å¬äº‹ä»¶çš„availableæ ‡å¿—ä½ä¸º1ï¼Œå†æ¬¡å¾ªçŽ¯åˆ°ç¬¬1æ­¥ï¼Œå¦åˆ™ngx_event_acceptæ–¹æ³•ç»“æŸã€‚äº‹ä»¶çš„availableæ ‡å¿—ä½å¯¹åº”ç€multi_accepté…ç½®
+    é¡¹ã€‚å½“availableä¸ºlæ—¶ï¼Œå‘Šè¯‰Nginx -æ¬¡æ€§å°½é‡å¤šåœ°å»ºç«‹æ–°è¿žæŽ¥ï¼Œå®ƒçš„å®žçŽ°åŽŸç†ä¹Ÿå°±åœ¨è¿™é‡Œ
 */
-//ÕâÀïµÄeventÊÇÔÚngx_event_process_initÖÐ´ÓÁ¬½Ó³ØÖÐ»ñÈ¡µÄ ngx_connection_tÖÐµÄ->read¶ÁÊÂ¼þ
-//acceptÊÇÔÚngx_event_process_init(µ«½ø³Ì»òÕß²»ÅäÖÃ¸ºÔØ¾ùºâµÄÊ±ºò)»òÕß(¶à½ø³Ì£¬ÅäÖÃ¸ºÔØ¾ùºâ)µÄÊ±ºò°ÑacceptÊÂ¼þÌí¼Óµ½epollÖÐ
-void //¸ÃÐÎ²ÎÖÐµÄngx_connection_t(ngx_event_t)ÊÇÎªacceptÊÂ¼þÁ¬½Ó×¼±¸µÄ¿Õ¼ä£¬µ±accept·µ»Ø³É¹¦ºó£¬»áÖØÐÂ»ñÈ¡Ò»¸öngx_connection_t(ngx_event_t)ÓÃÀ´¶ÁÐ´¸ÃÁ¬½Ó
-ngx_event_accept(ngx_event_t *ev) //ÔÚngx_process_events_and_timersÖÐÖ´ÐÐ              
-{ //Ò»¸öacceptÊÂ¼þ¶ÔÓ¦Ò»¸öev£¬Èçµ±Ç°Ò»´ÎÓÐ4¸ö¿Í»§¶Ëaccept£¬Ó¦¸Ã¶ÔÓ¦4¸öevÊÂ¼þ£¬Ò»´ÎÀ´¶à¸öacceptµÄ´¦ÀíÔÚÏÂÃæµÄdo {}whileÖÐÊµÏÖ
+//è¿™é‡Œçš„eventæ˜¯åœ¨ngx_event_process_initä¸­ä»Žè¿žæŽ¥æ± ä¸­èŽ·å–çš„ ngx_connection_tä¸­çš„->readè¯»äº‹ä»¶
+//acceptæ˜¯åœ¨ngx_event_process_init(ä½†è¿›ç¨‹æˆ–è€…ä¸é…ç½®è´Ÿè½½å‡è¡¡çš„æ—¶å€™)æˆ–è€…(å¤šè¿›ç¨‹ï¼Œé…ç½®è´Ÿè½½å‡è¡¡)çš„æ—¶å€™æŠŠacceptäº‹ä»¶æ·»åŠ åˆ°epollä¸­
+void //è¯¥å½¢å‚ä¸­çš„ngx_connection_t(ngx_event_t)æ˜¯ä¸ºacceptäº‹ä»¶è¿žæŽ¥å‡†å¤‡çš„ç©ºé—´ï¼Œå½“acceptè¿”å›žæˆåŠŸåŽï¼Œä¼šé‡æ–°èŽ·å–ä¸€ä¸ªngx_connection_t(ngx_event_t)ç”¨æ¥è¯»å†™è¯¥è¿žæŽ¥
+ngx_event_accept(ngx_event_t *ev) //åœ¨ngx_process_events_and_timersä¸­æ‰§è¡Œ              
+{ //ä¸€ä¸ªacceptäº‹ä»¶å¯¹åº”ä¸€ä¸ªevï¼Œå¦‚å½“å‰ä¸€æ¬¡æœ‰4ä¸ªå®¢æˆ·ç«¯acceptï¼Œåº”è¯¥å¯¹åº”4ä¸ªeväº‹ä»¶ï¼Œä¸€æ¬¡æ¥å¤šä¸ªacceptçš„å¤„ç†åœ¨ä¸‹é¢çš„do {}whileä¸­å®žçŽ°
     socklen_t          socklen;
     ngx_err_t          err;
     ngx_log_t         *log;
     ngx_uint_t         level;
     ngx_socket_t       s;
 
-//Èç¹ûÊÇÎÄ¼þÒì²½i/oÖÐµÄngx_event_aio_t£¬ÔòËüÀ´×Ôngx_event_aio_t->ngx_event_t(Ö»ÓÐ¶Á),Èç¹ûÊÇÍøÂçÊÂ¼þÖÐµÄevent,ÔòÎªngx_connection_sÖÐµÄevent(°üÀ¨¶ÁºÍÐ´)
+//å¦‚æžœæ˜¯æ–‡ä»¶å¼‚æ­¥i/oä¸­çš„ngx_event_aio_tï¼Œåˆ™å®ƒæ¥è‡ªngx_event_aio_t->ngx_event_t(åªæœ‰è¯»),å¦‚æžœæ˜¯ç½‘ç»œäº‹ä»¶ä¸­çš„event,åˆ™ä¸ºngx_connection_sä¸­çš„event(åŒ…æ‹¬è¯»å’Œå†™)
     ngx_event_t       *rev, *wev; 
     ngx_listening_t   *ls;
     ngx_connection_t  *c, *lc;
@@ -71,10 +71,10 @@ ngx_event_accept(ngx_event_t *ev) //ÔÚngx_process_events_and_timersÖÐÖ´ÐÐ
     ngx_log_debug2(NGX_LOG_DEBUG_EVENT, ev->log, 0,
                    "accept on %V, ready: %d", &ls->addr_text, ev->available);
 
-    do { /* Èç¹ûÊÇÒ»´Î¶ÁÈ¡Ò»¸öacceptÊÂ¼þµÄ»°£¬Ñ­»·ÌåÖ»Ö´ÐÐÒ»´Î£¬ Èç¹ûÊÇÒ»´ÎÐÔ¿ÉÒÔ¶ÁÈ¡ËùÓÐµÄacceptÊÂ¼þ£¬ÔòÕâ¸öÑ­»·ÌåÖ´ÐÐ´ÎÊýÎªacceptÊÂ¼þÊý*/
+    do { /* å¦‚æžœæ˜¯ä¸€æ¬¡è¯»å–ä¸€ä¸ªacceptäº‹ä»¶çš„è¯ï¼Œå¾ªçŽ¯ä½“åªæ‰§è¡Œä¸€æ¬¡ï¼Œ å¦‚æžœæ˜¯ä¸€æ¬¡æ€§å¯ä»¥è¯»å–æ‰€æœ‰çš„acceptäº‹ä»¶ï¼Œåˆ™è¿™ä¸ªå¾ªçŽ¯ä½“æ‰§è¡Œæ¬¡æ•°ä¸ºacceptäº‹ä»¶æ•°*/
         socklen = NGX_SOCKADDRLEN;
 
-#if (NGX_HAVE_ACCEPT4) //ngx_close_socket¿ÉÒÔ¹Ø±ÕÌ×½Ó×Ö
+#if (NGX_HAVE_ACCEPT4) //ngx_close_socketå¯ä»¥å…³é—­å¥—æŽ¥å­—
         if (use_accept4) {
             s = accept4(lc->fd, (struct sockaddr *) sa, &socklen,
                         SOCK_NONBLOCK);
@@ -83,10 +83,10 @@ ngx_event_accept(ngx_event_t *ev) //ÔÚngx_process_events_and_timersÖÐÖ´ÐÐ
         }
 #else
     /*
-            Õë¶Ô·Ç×èÈûI/OÖ´ÐÐµÄÏµÍ³µ÷ÓÃÔò×ÜÊÇÁ¢¼´·µ»Ø£¬¶ø²»¹ÜÊÂ¼þ×ã·ñÒÑ¾­·¢Éú¡£Èç¹ûÊÂ¼þÃ»ÓÐíõ¼´·¢Éú£¬ÕâÐ©ÏµÍ³µ÷ÓÃ¾Í
-        ·µ»Ø¡ª1£®ºÍ³ö´íµÄÇé¿öÒ»Ñù¡£´ËÊ±ÎÒÃÇ±ØÐë¸ù¾ÝerrnoÀ´Çø·ÖÕâÁ½ÖÖÇé¿ö¡£¶Ôaccept¡¢sendºÍrecv¶øÑÔ£¬ÊÂ¼þÎ´·¢Å£Ê±errno
-        Í¨³£±»ÉèÖÃ³ÉEAGAIN£¨ÒâÎª¡°ÔÙÀ´Ò»´Î¡±£©»òÕßEWOULDBLOCK£¨ÒâÎª¡°ÆÚ´ý×èÈû¡±£©£º¶Ôconncct¶øÑÔ£¬errnoÔò±»
-        ÉèÖÃ³ÉEINPROGRESS£¨ÒâÎª¡°ÔÚ´¦ÀíÖÐ"£©¡£
+            é’ˆå¯¹éžé˜»å¡žI/Oæ‰§è¡Œçš„ç³»ç»Ÿè°ƒç”¨åˆ™æ€»æ˜¯ç«‹å³è¿”å›žï¼Œè€Œä¸ç®¡äº‹ä»¶è¶³å¦å·²ç»å‘ç”Ÿã€‚å¦‚æžœäº‹ä»¶æ²¡æœ‰çœ­å³å‘ç”Ÿï¼Œè¿™äº›ç³»ç»Ÿè°ƒç”¨å°±
+        è¿”å›žâ€•1ï¼Žå’Œå‡ºé”™çš„æƒ…å†µä¸€æ ·ã€‚æ­¤æ—¶æˆ‘ä»¬å¿…é¡»æ ¹æ®errnoæ¥åŒºåˆ†è¿™ä¸¤ç§æƒ…å†µã€‚å¯¹acceptã€sendå’Œrecvè€Œè¨€ï¼Œäº‹ä»¶æœªå‘ç‰›æ—¶errno
+        é€šå¸¸è¢«è®¾ç½®æˆEAGAINï¼ˆæ„ä¸ºâ€œå†æ¥ä¸€æ¬¡â€ï¼‰æˆ–è€…EWOULDBLOCKï¼ˆæ„ä¸ºâ€œæœŸå¾…é˜»å¡žâ€ï¼‰ï¼šå¯¹conncctè€Œè¨€ï¼Œerrnoåˆ™è¢«
+        è®¾ç½®æˆEINPROGRESSï¼ˆæ„ä¸ºâ€œåœ¨å¤„ç†ä¸­"ï¼‰ã€‚
           */
         s = accept(lc->fd, (struct sockaddr *) sa, &socklen);
 #endif
@@ -94,8 +94,8 @@ ngx_event_accept(ngx_event_t *ev) //ÔÚngx_process_events_and_timersÖÐÖ´ÐÐ
         if (s == (ngx_socket_t) -1) {
             err = ngx_socket_errno;
 
-            /* Èç¹ûÒªÈ¥Ò»´ÎÐÔ¶ÁÈ¡ËùÓÐµÄacceptÐÅÏ¢£¬µ±¶ÁÈ¡Íê±Ïºó£¬Í¨¹ýÕâÀï·µ»Ø¡£ËùÓÐµÄacceptÊÂ¼þ¶¼¶ÁÈ¡Íê±Ï */
-            if (err == NGX_EAGAIN) { //Èç¹ûevent{}¿ªÆômulti_accept£¬ÔòÔÚacceptÍê¸Ãlisten ip:port¶ÔÓ¦µÄipºÍ¶Ë¿ÚÁ¬½Óºó£¬»áÍ¨¹ýÕâÀï·µ»Ø
+            /* å¦‚æžœè¦åŽ»ä¸€æ¬¡æ€§è¯»å–æ‰€æœ‰çš„acceptä¿¡æ¯ï¼Œå½“è¯»å–å®Œæ¯•åŽï¼Œé€šè¿‡è¿™é‡Œè¿”å›žã€‚æ‰€æœ‰çš„acceptäº‹ä»¶éƒ½è¯»å–å®Œæ¯• */
+            if (err == NGX_EAGAIN) { //å¦‚æžœevent{}å¼€å¯multi_acceptï¼Œåˆ™åœ¨acceptå®Œè¯¥listen ip:portå¯¹åº”çš„ipå’Œç«¯å£è¿žæŽ¥åŽï¼Œä¼šé€šè¿‡è¿™é‡Œè¿”å›ž
                 ngx_log_debug0(NGX_LOG_DEBUG_EVENT, ev->log, err,
                                "accept() not ready");
                 return;
@@ -145,10 +145,10 @@ ngx_event_accept(ngx_event_t *ev) //ÔÚngx_process_events_and_timersÖÐÖ´ÐÐ
                         ngx_shmtx_unlock(&ngx_accept_mutex);
                         ngx_accept_mutex_held = 0;
                     }
-//µ±Ç°½ø³ÌÁ¬½ÓaccpetÊ§°Ü£¬Ôò¿ÉÒÔÔÝÊ±ÉèÖÃÎª1£¬ÏÂ´ÎÀ´µÄÊ±ºòÓÉÆäËû½ø³Ì¾ºÕùaccpetËø£¬ÏÂÏÂ´Î¸Ã½ø³Ì¼ÌÐø¾ºÕù¸Ãaccept£¬ÒòÎªÔÚÏÂ´ÎµÄÊ±ºòngx_process_events_and_timers
-//ngx_accept_disabled = 1; ¼õÈ¥1ºóÎª0£¬¿ÉÒÔ¼ÌÐø¾ºÕù
+//å½“å‰è¿›ç¨‹è¿žæŽ¥accpetå¤±è´¥ï¼Œåˆ™å¯ä»¥æš‚æ—¶è®¾ç½®ä¸º1ï¼Œä¸‹æ¬¡æ¥çš„æ—¶å€™ç”±å…¶ä»–è¿›ç¨‹ç«žäº‰accpeté”ï¼Œä¸‹ä¸‹æ¬¡è¯¥è¿›ç¨‹ç»§ç»­ç«žäº‰è¯¥acceptï¼Œå› ä¸ºåœ¨ä¸‹æ¬¡çš„æ—¶å€™ngx_process_events_and_timers
+//ngx_accept_disabled = 1; å‡åŽ»1åŽä¸º0ï¼Œå¯ä»¥ç»§ç»­ç«žäº‰
                     ngx_accept_disabled = 1; 
-                } else { ////Èç¹ûÊÇ²»ÐèÒªÊµÏÖ¸ºÔØ¾ùºâ£¬ÔòÉ¨Î²ÑÓÊ±ÏÂ¼ÌÐøÔÚngx_process_events_and_timersÖÐaccept
+                } else { ////å¦‚æžœæ˜¯ä¸éœ€è¦å®žçŽ°è´Ÿè½½å‡è¡¡ï¼Œåˆ™æ‰«å°¾å»¶æ—¶ä¸‹ç»§ç»­åœ¨ngx_process_events_and_timersä¸­accept
                     ngx_add_timer(ev, ecf->accept_mutex_delay, NGX_FUNC_LINE);
                 }
             }
@@ -159,17 +159,17 @@ ngx_event_accept(ngx_event_t *ev) //ÔÚngx_process_events_and_timersÖÐÖ´ÐÐ
 #if (NGX_STAT_STUB)
         (void) ngx_atomic_fetch_add(ngx_stat_accepted, 1);
 #endif
-        //ÉèÖÃ¸ºÔØ¾ùºâ·§Öµ ×î¿ªÊ¼free_connection_n=connection_n£¬¼ûngx_event_process_init
+        //è®¾ç½®è´Ÿè½½å‡è¡¡é˜€å€¼ æœ€å¼€å§‹free_connection_n=connection_nï¼Œè§ngx_event_process_init
         ngx_accept_disabled = ngx_cycle->connection_n / 8
-                              - ngx_cycle->free_connection_n; //ÅÐ¶Ï¿ÉÓÃÁ¬½ÓµÄÊýÄ¿ºÍ×ÜÊýÄ¿µÄ°Ë·ÖÖ®Ò»´óÐ¡£¬Èç¹û¿ÉÓÃµÄÐ¡ÓÚ°Ë·ÖÖ®Ò»£¬ÎªÕý
+                              - ngx_cycle->free_connection_n; //åˆ¤æ–­å¯ç”¨è¿žæŽ¥çš„æ•°ç›®å’Œæ€»æ•°ç›®çš„å…«åˆ†ä¹‹ä¸€å¤§å°ï¼Œå¦‚æžœå¯ç”¨çš„å°äºŽå…«åˆ†ä¹‹ä¸€ï¼Œä¸ºæ­£
 
-        //ÔÚ·þÎñÆ÷¶Ëaccept¿Í»§¶ËÁ¬½Ó³É¹¦(ngx_event_accept)ºó£¬»áÍ¨¹ýngx_get_connection´ÓÁ¬½Ó³Ø»ñÈ¡Ò»¸öngx_connection_t½á¹¹£¬Ò²¾ÍÊÇÃ¿¸ö¿Í»§¶ËÁ¬½Ó¶ÔÓÚÒ»¸öngx_connection_t½á¹¹£¬
-        //²¢ÇÒÎªÆä·ÖÅäÒ»¸öngx_http_connection_t½á¹¹£¬ngx_connection_t->data = ngx_http_connection_t£¬¼ûngx_http_init_connection
+        //åœ¨æœåŠ¡å™¨ç«¯acceptå®¢æˆ·ç«¯è¿žæŽ¥æˆåŠŸ(ngx_event_accept)åŽï¼Œä¼šé€šè¿‡ngx_get_connectionä»Žè¿žæŽ¥æ± èŽ·å–ä¸€ä¸ªngx_connection_tç»“æž„ï¼Œä¹Ÿå°±æ˜¯æ¯ä¸ªå®¢æˆ·ç«¯è¿žæŽ¥å¯¹äºŽä¸€ä¸ªngx_connection_tç»“æž„ï¼Œ
+        //å¹¶ä¸”ä¸ºå…¶åˆ†é…ä¸€ä¸ªngx_http_connection_tç»“æž„ï¼Œngx_connection_t->data = ngx_http_connection_tï¼Œè§ngx_http_init_connection
 
-        //´ÓÁ¬½Ó³ØÖÐ»ñÈ¡Ò»¸ö¿ÕÏÐngx_connection_t£¬ÓÃÓÚ¿Í»§¶ËÁ¬½Ó½¨Á¢³É¹¦ºóÏò¸ÃÁ¬½Ó¶ÁÐ´Êý¾Ý£¬º¯ÊýÐÎ²ÎÖÐµÄngx_event_t¶ÔÓ¦µÄÊÇÎªacceptÊÂ¼þ¶ÔÓ¦µÄ
-        //ngx_connection_tÖÐ¶ÔÓ¦µÄevent
-        c = ngx_get_connection(s, ev->log);  //ngx_get_connectionÖÐc->fd = s;
-        //×¢Òâ£¬ÕâÀïµÄngx_connection_tÊÇ´ÓÁ¬½Ó³ØÖÐ´ÓÐÂ»ñÈ¡µÄ£¬ºÍngx_epoll_process_eventsÖÐµÄngx_connection_tÊÇÁ½¸ö²»Í¬µÄ¡£
+        //ä»Žè¿žæŽ¥æ± ä¸­èŽ·å–ä¸€ä¸ªç©ºé—²ngx_connection_tï¼Œç”¨äºŽå®¢æˆ·ç«¯è¿žæŽ¥å»ºç«‹æˆåŠŸåŽå‘è¯¥è¿žæŽ¥è¯»å†™æ•°æ®ï¼Œå‡½æ•°å½¢å‚ä¸­çš„ngx_event_tå¯¹åº”çš„æ˜¯ä¸ºacceptäº‹ä»¶å¯¹åº”çš„
+        //ngx_connection_tä¸­å¯¹åº”çš„event
+        c = ngx_get_connection(s, ev->log);  //ngx_get_connectionä¸­c->fd = s;
+        //æ³¨æ„ï¼Œè¿™é‡Œçš„ngx_connection_tæ˜¯ä»Žè¿žæŽ¥æ± ä¸­ä»Žæ–°èŽ·å–çš„ï¼Œå’Œngx_epoll_process_eventsä¸­çš„ngx_connection_tæ˜¯ä¸¤ä¸ªä¸åŒçš„ã€‚
 
         if (c == NULL) {
             if (ngx_close_socket(s) == -1) {
@@ -254,7 +254,7 @@ ngx_event_accept(ngx_event_t *ev) //ÔÚngx_process_events_and_timersÖÐÖ´ÐÐ
 #endif
         }
 #endif
-        //×¢Òâ£¬ÕâÀïµÄngx_connection_tÊÇ´ÓÁ¬½Ó³ØÖÐ´ÓÐÂ»ñÈ¡µÄ£¬ºÍngx_epoll_process_eventsÖÐµÄngx_connection_tÊÇÁ½¸ö²»Í¬µÄ¡£
+        //æ³¨æ„ï¼Œè¿™é‡Œçš„ngx_connection_tæ˜¯ä»Žè¿žæŽ¥æ± ä¸­ä»Žæ–°èŽ·å–çš„ï¼Œå’Œngx_epoll_process_eventsä¸­çš„ngx_connection_tæ˜¯ä¸¤ä¸ªä¸åŒçš„ã€‚
         rev = c->read; 
         wev = c->write;
 
@@ -374,7 +374,7 @@ ngx_event_accept(ngx_event_t *ev) //ÔÚngx_process_events_and_timersÖÐÖ´ÐÐ
         }
 #endif
 
-        if (ngx_add_conn && (ngx_event_flags & NGX_USE_EPOLL_EVENT) == 0) { //Èç¹ûÊÇepoll,²»»á×ßµ½ÕâÀïÃæÈ¥
+        if (ngx_add_conn && (ngx_event_flags & NGX_USE_EPOLL_EVENT) == 0) { //å¦‚æžœæ˜¯epoll,ä¸ä¼šèµ°åˆ°è¿™é‡Œé¢åŽ»
             if (ngx_add_conn(c) == NGX_ERROR) {
                 ngx_close_accepted_connection(c);
                 return;
@@ -390,13 +390,13 @@ ngx_event_accept(ngx_event_t *ev) //ÔÚngx_process_events_and_timersÖÐÖ´ÐÐ
             ev->available--;
         }
 
-    } while (ev->available); //Ò»´ÎÐÔ¶ÁÈ¡ËùÓÐµ±Ç°µÄaccept£¬Ö±µ½accept·µ»ØNGX_EAGAIN£¬È»ºóÍË³ö
+    } while (ev->available); //ä¸€æ¬¡æ€§è¯»å–æ‰€æœ‰å½“å‰çš„acceptï¼Œç›´åˆ°acceptè¿”å›žNGX_EAGAINï¼Œç„¶åŽé€€å‡º
 }
 
 /*
-»ñµÃacceptËø£¬¶à¸öworker½öÓÐÒ»¸ö¿ÉÒÔµÃµ½Õâ°ÑËø¡£»ñµÃËø²»ÊÇ×èÈû¹ý³Ì£¬¶¼ÊÇÁ¢¿Ì·µ»Ø£¬»ñÈ¡³É¹¦µÄ»°ngx_accept_mutex_held±»ÖÃÎª1¡£
-ÄÃµ½Ëø£¬ÒâÎ¶×Å¼àÌý¾ä±ú±»·Åµ½±¾½ø³ÌµÄepollÖÐÁË£¬Èç¹ûÃ»ÓÐÄÃµ½Ëø£¬Ôò¼àÌý¾ä±ú»á±»´ÓepollÖÐÈ¡³ö¡£ 
-*/ //³¢ÊÔ»ñÈ¡Ëø£¬Èç¹û»ñÈ¡ÁËËø£¬ÄÇÃ´»¹Òª½«µ±Ç°¼àÌý¶Ë¿ÚÈ«²¿×¢²áµ½µ±Ç°worker½ø³ÌµÄepollµ±ÖÐÈ¥   
+èŽ·å¾—accepté”ï¼Œå¤šä¸ªworkerä»…æœ‰ä¸€ä¸ªå¯ä»¥å¾—åˆ°è¿™æŠŠé”ã€‚èŽ·å¾—é”ä¸æ˜¯é˜»å¡žè¿‡ç¨‹ï¼Œéƒ½æ˜¯ç«‹åˆ»è¿”å›žï¼ŒèŽ·å–æˆåŠŸçš„è¯ngx_accept_mutex_heldè¢«ç½®ä¸º1ã€‚
+æ‹¿åˆ°é”ï¼Œæ„å‘³ç€ç›‘å¬å¥æŸ„è¢«æ”¾åˆ°æœ¬è¿›ç¨‹çš„epollä¸­äº†ï¼Œå¦‚æžœæ²¡æœ‰æ‹¿åˆ°é”ï¼Œåˆ™ç›‘å¬å¥æŸ„ä¼šè¢«ä»Žepollä¸­å–å‡ºã€‚ 
+*/ //å°è¯•èŽ·å–é”ï¼Œå¦‚æžœèŽ·å–äº†é”ï¼Œé‚£ä¹ˆè¿˜è¦å°†å½“å‰ç›‘å¬ç«¯å£å…¨éƒ¨æ³¨å†Œåˆ°å½“å‰workerè¿›ç¨‹çš„epollå½“ä¸­åŽ»   
 ngx_int_t
 ngx_trylock_accept_mutex(ngx_cycle_t *cycle)
 {
@@ -405,20 +405,20 @@ ngx_trylock_accept_mutex(ngx_cycle_t *cycle)
         ngx_log_debug0(NGX_LOG_DEBUG_EVENT, cycle->log, 0,
                        "accept mutex locked");
 
-        //Èç¹û±¾À´ÒÑ¾­»ñµÃËø£¬ÔòÖ±½Ó·µ»ØOk,
-        //ÓÐÁË¸Ã±ê¼Ç£¬±íÊ¾¸Ã½ø³ÌÒÑ¾­°ÑacceptÊÂ¼þÌí¼Óµ½epollÊÂ¼þ¼¯ÖÐÁË£¬²»ÓÃÖØ¸´Ö´ÐÐºóÃæµÄngx_enable_accept_events£¬¸Ãº¯ÊýÊÇÓÐÏµÍ³µ÷ÓÃ¹ý³Ì£¬Ó°ÏìÐÔÄÜ
+        //å¦‚æžœæœ¬æ¥å·²ç»èŽ·å¾—é”ï¼Œåˆ™ç›´æŽ¥è¿”å›žOk,
+        //æœ‰äº†è¯¥æ ‡è®°ï¼Œè¡¨ç¤ºè¯¥è¿›ç¨‹å·²ç»æŠŠacceptäº‹ä»¶æ·»åŠ åˆ°epolläº‹ä»¶é›†ä¸­äº†ï¼Œä¸ç”¨é‡å¤æ‰§è¡ŒåŽé¢çš„ngx_enable_accept_eventsï¼Œè¯¥å‡½æ•°æ˜¯æœ‰ç³»ç»Ÿè°ƒç”¨è¿‡ç¨‹ï¼Œå½±å“æ€§èƒ½
         if (ngx_accept_mutex_held && ngx_accept_events == 0) {
             return NGX_OK;
         }
 
-   //µ½´ïÕâÀï£¬ËµÃ÷ÖØÐÂ»ñµÃËø³É¹¦£¬Òò´ËÐèÒª´ò¿ª±»¹Ø±ÕµÄlistening¾ä±ú£¬µ÷ÓÃngx_enable_accept_eventsº¯Êý£¬½«¼àÌý¶Ë¿Ú×¢²áµ½µ±Ç°worker½ø³ÌµÄepollµ±ÖÐÈ¥   
+   //åˆ°è¾¾è¿™é‡Œï¼Œè¯´æ˜Žé‡æ–°èŽ·å¾—é”æˆåŠŸï¼Œå› æ­¤éœ€è¦æ‰“å¼€è¢«å…³é—­çš„listeningå¥æŸ„ï¼Œè°ƒç”¨ngx_enable_accept_eventså‡½æ•°ï¼Œå°†ç›‘å¬ç«¯å£æ³¨å†Œåˆ°å½“å‰workerè¿›ç¨‹çš„epollå½“ä¸­åŽ»   
         if (ngx_enable_accept_events(cycle) == NGX_ERROR) {
             ngx_shmtx_unlock(&ngx_accept_mutex);
             return NGX_ERROR;
         }
 
         ngx_accept_events = 0;
-        ngx_accept_mutex_held = 1; ////±íÊ¾µ±Ç°»ñÈ¡ÁËËø   
+        ngx_accept_mutex_held = 1; ////è¡¨ç¤ºå½“å‰èŽ·å–äº†é”   
 
         return NGX_OK;
     }
@@ -426,7 +426,7 @@ ngx_trylock_accept_mutex(ngx_cycle_t *cycle)
     ngx_log_debug1(NGX_LOG_DEBUG_EVENT, cycle->log, 0,
                    "accept mutex lock failed: %ui", ngx_accept_mutex_held);
 
-//ÕâÀï±íÊ¾µÄÊÇÒÔÇ°Ôø¾­»ñÈ¡¹ý£¬µ«ÊÇÕâ´ÎÈ´»ñÈ¡Ê§°ÜÁË£¬ÄÇÃ´ÐèÒª½«¼àÌý¶Ë¿Ú´Óµ±Ç°µÄworker½ø³ÌµÄepollµ±ÖÐÒÆ³ý£¬µ÷ÓÃµÄÊÇngx_disable_accept_eventsº¯Êý   
+//è¿™é‡Œè¡¨ç¤ºçš„æ˜¯ä»¥å‰æ›¾ç»èŽ·å–è¿‡ï¼Œä½†æ˜¯è¿™æ¬¡å´èŽ·å–å¤±è´¥äº†ï¼Œé‚£ä¹ˆéœ€è¦å°†ç›‘å¬ç«¯å£ä»Žå½“å‰çš„workerè¿›ç¨‹çš„epollå½“ä¸­ç§»é™¤ï¼Œè°ƒç”¨çš„æ˜¯ngx_disable_accept_eventså‡½æ•°   
     if (ngx_accept_mutex_held) {
         if (ngx_disable_accept_events(cycle, 0) == NGX_ERROR) {
             return NGX_ERROR;
@@ -449,18 +449,18 @@ ngx_enable_accept_events(ngx_cycle_t *cycle)
     ls = cycle->listening.elts;
 
     /*
-    ×¢Òâ:ÕâÀïµÄÑ­»·»á°ÑËùÓÐµÄlistening¼ÓÈëµ½ÁËepollÖÐ£¬ÄÇ²»ÊÇÃ¿¸ö½ø³Ì¶¼»á°ÑËùÓÐµÄlistening¼ÓÈëµ½epollÖÐÂð£¬²»ÊÇÓÐ¾ªÈºÁËÂð?
-    ´ð°¸:Êµ¼ÊÉÏÔÚ±¾½ø³Ìngx_enable_accept_events°ÑËùÓÐlisten¼ÓÈë±¾½ø³ÌepollÖÐºó£¬±¾½ø³Ì»ñÈ¡µ½ngx_accept_mutexËøºó£¬ÔÚÖ´ÐÐacceptÊÂ¼þµÄ
-    ¹ý³ÌÖÐÈç¹ûÈç¹ûÆäËû½ø³ÌÒ²¿ªÊ¼ngx_trylock_accept_mutex£¬Èç¹ûÖ®Ç°ÒÑ¾­»ñÈ¡µ½Ëø£¬²¢°ÑËùÓÐµÄlistenÌí¼Óµ½ÁËepollÖÐ£¬ÕâÊ±»áÒòÎªÃ»·¨»ñÈ¡µ½
-    acceptËø£¬¶ø°ÑÖ®Ç°¼ÓÈëµ½±¾½ø³Ì£¬µ«Ã»ÓÐaccept¹ýµÄÊ±¼äÈ«²¿Çå³ý¡£ºÍngx_disable_accept_eventsÅäºÏÊ¹ÓÃ
-    ×îÖÕÖ»ÓÐÒ»¸ö½ø³ÌÄÜacceptµ½Í¬Ò»¸ö¿Í»§¶ËÁ¬½Ó
+    æ³¨æ„:è¿™é‡Œçš„å¾ªçŽ¯ä¼šæŠŠæ‰€æœ‰çš„listeningåŠ å…¥åˆ°äº†epollä¸­ï¼Œé‚£ä¸æ˜¯æ¯ä¸ªè¿›ç¨‹éƒ½ä¼šæŠŠæ‰€æœ‰çš„listeningåŠ å…¥åˆ°epollä¸­å—ï¼Œä¸æ˜¯æœ‰æƒŠç¾¤äº†å—?
+    ç­”æ¡ˆ:å®žé™…ä¸Šåœ¨æœ¬è¿›ç¨‹ngx_enable_accept_eventsæŠŠæ‰€æœ‰listenåŠ å…¥æœ¬è¿›ç¨‹epollä¸­åŽï¼Œæœ¬è¿›ç¨‹èŽ·å–åˆ°ngx_accept_mutexé”åŽï¼Œåœ¨æ‰§è¡Œacceptäº‹ä»¶çš„
+    è¿‡ç¨‹ä¸­å¦‚æžœå¦‚æžœå…¶ä»–è¿›ç¨‹ä¹Ÿå¼€å§‹ngx_trylock_accept_mutexï¼Œå¦‚æžœä¹‹å‰å·²ç»èŽ·å–åˆ°é”ï¼Œå¹¶æŠŠæ‰€æœ‰çš„listenæ·»åŠ åˆ°äº†epollä¸­ï¼Œè¿™æ—¶ä¼šå› ä¸ºæ²¡æ³•èŽ·å–åˆ°
+    accepté”ï¼Œè€ŒæŠŠä¹‹å‰åŠ å…¥åˆ°æœ¬è¿›ç¨‹ï¼Œä½†æ²¡æœ‰acceptè¿‡çš„æ—¶é—´å…¨éƒ¨æ¸…é™¤ã€‚å’Œngx_disable_accept_eventsé…åˆä½¿ç”¨
+    æœ€ç»ˆåªæœ‰ä¸€ä¸ªè¿›ç¨‹èƒ½acceptåˆ°åŒä¸€ä¸ªå®¢æˆ·ç«¯è¿žæŽ¥
      */
     for (i = 0; i < cycle->listening.nelts; i++) { 
 
         c = ls[i].connection;
 
-        //ºóÃæµÄngx_add_event->ngx_epoll_add_eventÖÐ°ÑlisteningÖÐµÄc->read->activeÖÃ1£¬ ngx_epoll_del_eventÖÐ°ÑlisteningÖÐÖÃread->activeÖÃ0
-        if (c == NULL || c->read->active) { //Ö®Ç°±¾½ø³ÌÒÑ¾­Ìí¼Ó¹ý£¬²»ÓÃÔÙ¼ÓÈëepollÊÂ¼þÖÐ£¬±ÜÃâÖØ¸´
+        //åŽé¢çš„ngx_add_event->ngx_epoll_add_eventä¸­æŠŠlisteningä¸­çš„c->read->activeç½®1ï¼Œ ngx_epoll_del_eventä¸­æŠŠlisteningä¸­ç½®read->activeç½®0
+        if (c == NULL || c->read->active) { //ä¹‹å‰æœ¬è¿›ç¨‹å·²ç»æ·»åŠ è¿‡ï¼Œä¸ç”¨å†åŠ å…¥epolläº‹ä»¶ä¸­ï¼Œé¿å…é‡å¤
             continue;
         }
 
@@ -489,7 +489,7 @@ ngx_disable_accept_events(ngx_cycle_t *cycle, ngx_uint_t all)
 
         c = ls[i].connection;
 
-        if (c == NULL || !c->read->active) { //ngx_epoll_add_eventÖÐÖÃ1
+        if (c == NULL || !c->read->active) { //ngx_epoll_add_eventä¸­ç½®1
             continue;
         }
 

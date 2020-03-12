@@ -12,7 +12,7 @@
 #include <ngx_config.h>
 #include <ngx_core.h>
 
-/*Êµ¼ÊÉÏ£¬ngx_open_fileÓëopen·½·¨µÄÇø±ğ²»´ó£¬ngx_open_file·µ»ØµÄÊÇLinuxÏµÍ³µÄÎÄ¼ş¾ä±ú¡£¶ÔÓÚ´ò¿ªÎÄ¼şµÄ±êÖ¾Î»£¬NginxÒ²¶¨ÒåÁËÒÔÏÂ¼¸¸öºêÀ´¼ÓÒÔ·â×°¡£
+/*å®é™…ä¸Šï¼Œngx_open_fileä¸openæ–¹æ³•çš„åŒºåˆ«ä¸å¤§ï¼Œngx_open_fileè¿”å›çš„æ˜¯Linuxç³»ç»Ÿçš„æ–‡ä»¶å¥æŸ„ã€‚å¯¹äºæ‰“å¼€æ–‡ä»¶çš„æ ‡å¿—ä½ï¼ŒNginxä¹Ÿå®šä¹‰äº†ä»¥ä¸‹å‡ ä¸ªå®æ¥åŠ ä»¥å°è£…ã€‚
 #define NGX_FILE_RDONLY O_RDONLY
 #define NGX_FILE_WRONLY O_WRONLY
 #define NGX_FILE_RDWR O_RDWR
@@ -25,7 +25,7 @@
 #define NGX_FILE_DEFAULT_ACCESS 0644
 #define NGX_FILE_OWNER_ACCESS 0600
 
-ÔÚ´ò¿ªÎÄ¼şÊ±Ö»ĞèÒª°ÑÎÄ¼şÂ·¾¶´«µİ¸øname²ÎÊı£¬²¢°Ñ´ò¿ª·½Ê½´«µİ¸ømode¡¢create¡¢access²ÎÊı¼´¿É¡£ÀıÈç£º
+åœ¨æ‰“å¼€æ–‡ä»¶æ—¶åªéœ€è¦æŠŠæ–‡ä»¶è·¯å¾„ä¼ é€’ç»™nameå‚æ•°ï¼Œå¹¶æŠŠæ‰“å¼€æ–¹å¼ä¼ é€’ç»™modeã€createã€accesså‚æ•°å³å¯ã€‚ä¾‹å¦‚ï¼š
 ngx_buf_t *b;
 b = ngx_palloc(r->pool, sizeof(ngx_buf_t));
 
@@ -41,51 +41,51 @@ if (b->file->fd <= 0)
  return NGX_HTTP_NOT_FOUND;
 }
 
-µ½ÕâÀïÆäÊµ»¹Ã»ÓĞ½áÊø£¬»¹ĞèÒª¸æÖªNginxÎÄ¼şµÄ´óĞ¡£¬°üÀ¨ÉèÖÃÏìÓ¦ÖĞµÄContent-LengthÍ·²¿£¬ÒÔ¼°ÉèÖÃngx_buf_t»º³åÇøµÄfile_posºÍfile_last¡£
-Êµ¼ÊÉÏ£¬Í¨¹ıngx_file_t½á¹¹Àïngx_file_info_tÀàĞÍµÄinfo±äÁ¿¾Í¿ÉÒÔ»ñÈ¡ÎÄ¼şĞÅÏ¢£º
+åˆ°è¿™é‡Œå…¶å®è¿˜æ²¡æœ‰ç»“æŸï¼Œè¿˜éœ€è¦å‘ŠçŸ¥Nginxæ–‡ä»¶çš„å¤§å°ï¼ŒåŒ…æ‹¬è®¾ç½®å“åº”ä¸­çš„Content-Lengthå¤´éƒ¨ï¼Œä»¥åŠè®¾ç½®ngx_buf_tç¼“å†²åŒºçš„file_poså’Œfile_lastã€‚
+å®é™…ä¸Šï¼Œé€šè¿‡ngx_file_tç»“æ„é‡Œngx_file_info_tç±»å‹çš„infoå˜é‡å°±å¯ä»¥è·å–æ–‡ä»¶ä¿¡æ¯ï¼š
 typedef struct stat ngx_file_info_t;
 
-Nginx²»Ö»¶ÔstatÊı¾İ½á¹¹×öÁË·â×°£¬¶ÔÓÚÓÉ²Ù×÷ÏµÍ³ÖĞ»ñÈ¡ÎÄ¼şĞÅÏ¢µÄstat·½·¨£¬NginxÒ²Ê¹ÓÃÒ»¸öºê½øĞĞÁË¼òµ¥µÄ·â×°£¬ÈçÏÂËùÊ¾£º
+Nginxä¸åªå¯¹statæ•°æ®ç»“æ„åšäº†å°è£…ï¼Œå¯¹äºç”±æ“ä½œç³»ç»Ÿä¸­è·å–æ–‡ä»¶ä¿¡æ¯çš„statæ–¹æ³•ï¼ŒNginxä¹Ÿä½¿ç”¨ä¸€ä¸ªå®è¿›è¡Œäº†ç®€å•çš„å°è£…ï¼Œå¦‚ä¸‹æ‰€ç¤ºï¼š
 #define ngx_file_info(file, sb)  stat((const char *) file, sb)
 
-Òò´Ë£¬»ñÈ¡ÎÄ¼şĞÅÏ¢Ê±¿ÉÒÔÏÈÕâÑùĞ´£º
+å› æ­¤ï¼Œè·å–æ–‡ä»¶ä¿¡æ¯æ—¶å¯ä»¥å…ˆè¿™æ ·å†™ï¼š
 if (ngx_file_info(filename, &b->file->info) == NGX_FILE_ERROR) {
  return NGX_HTTP_INTERNAL_SERVER_ERROR;
 }
 
-Ö®ºó±ØĞëÒªÉèÖÃContent-LengthÍ·²¿£º
+ä¹‹åå¿…é¡»è¦è®¾ç½®Content-Lengthå¤´éƒ¨ï¼š
 r->headers_out.content_length_n = b->file->info.st_size;
 
-»¹ĞèÒªÉèÖÃngx_buf_t»º³åÇøµÄfile_posºÍfile_last£º
+è¿˜éœ€è¦è®¾ç½®ngx_buf_tç¼“å†²åŒºçš„file_poså’Œfile_lastï¼š
 b->file_pos = 0;
 b->file_last = b->file->info.st_size;
 
-ÕâÀïÊÇ¸æËßNginx´ÓÎÄ¼şµÄfile_posÆ«ÒÆÁ¿¿ªÊ¼·¢ËÍÎÄ¼ş£¬Ò»Ö±µ½´ïfile_lastÆ«ÒÆÁ¿´¦½ØÖ¹¡£
-×¢Òâ¡¡µ±´ÅÅÌÖĞÓĞ´óÁ¿µÄĞ¡ÎÄ¼şÊ±£¬»áÕ¼ÓÃLinuxÎÄ¼şÏµÍ³ÖĞ¹ı¶àµÄinode½á¹¹£¬ÕâÊ±£¬³ÉÊìµÄ½â¾ö·½°¸»á°ÑĞí¶àĞ¡ÎÄ¼şºÏ²¢³ÉÒ»¸ö´óÎÄ¼ş¡£ÔÚÕâÖÖÇé¿öÏÂ£¬
-µ±ÓĞĞèÒªÊ±£¬Ö»Òª°ÑÉÏÃæµÄfile_posºÍfile_lastÉèÖÃÎªºÏÊÊµÄÆ«ÒÆÁ¿£¬¾Í¿ÉÒÔÖ»·¢ËÍºÏ²¢´óÎÄ¼şÖĞµÄÄ³Ò»¿éÄÚÈİ£¨Ô­À´µÄĞ¡ÎÄ¼ş£©£¬
-ÕâÑù¾Í¿ÉÒÔ´ó·ù½µµÍĞ¡ÎÄ¼şÊıÁ¿¡£
+è¿™é‡Œæ˜¯å‘Šè¯‰Nginxä»æ–‡ä»¶çš„file_posåç§»é‡å¼€å§‹å‘é€æ–‡ä»¶ï¼Œä¸€ç›´åˆ°è¾¾file_laståç§»é‡å¤„æˆªæ­¢ã€‚
+æ³¨æ„ã€€å½“ç£ç›˜ä¸­æœ‰å¤§é‡çš„å°æ–‡ä»¶æ—¶ï¼Œä¼šå ç”¨Linuxæ–‡ä»¶ç³»ç»Ÿä¸­è¿‡å¤šçš„inodeç»“æ„ï¼Œè¿™æ—¶ï¼Œæˆç†Ÿçš„è§£å†³æ–¹æ¡ˆä¼šæŠŠè®¸å¤šå°æ–‡ä»¶åˆå¹¶æˆä¸€ä¸ªå¤§æ–‡ä»¶ã€‚åœ¨è¿™ç§æƒ…å†µä¸‹ï¼Œ
+å½“æœ‰éœ€è¦æ—¶ï¼Œåªè¦æŠŠä¸Šé¢çš„file_poså’Œfile_lastè®¾ç½®ä¸ºåˆé€‚çš„åç§»é‡ï¼Œå°±å¯ä»¥åªå‘é€åˆå¹¶å¤§æ–‡ä»¶ä¸­çš„æŸä¸€å—å†…å®¹ï¼ˆåŸæ¥çš„å°æ–‡ä»¶ï¼‰ï¼Œ
+è¿™æ ·å°±å¯ä»¥å¤§å¹…é™ä½å°æ–‡ä»¶æ•°é‡ã€‚
 
-Nginx»áÒì²½µØ½«Õû¸öÎÄ¼ş¸ßĞ§µØ·¢ËÍ¸øÓÃ»§£¬µ«ÊÇÎÒÃÇ±ØĞëÒªÇóHTTP¿ò¼ÜÔÚÏìÓ¦·¢ËÍÍê±Ïºó¹Ø±ÕÒÑ¾­´ò¿ªµÄÎÄ¼ş¾ä±ú£¬·ñÔò½«»á³öÏÖ¾ä±úĞ¹Â¶ÎÊÌâ¡£
-ÉèÖÃÇåÀíÎÄ¼ş¾ä±úÒ²ºÜ¼òµ¥£¬Ö»ĞèÒª¶¨ÒåÒ»¸öngx_pool_cleanup_t½á¹¹Ìå£¨ÕâÊÇ×î¼òµ¥µÄ·½·¨£¬HTTP¿ò¼Ü»¹Ìá¹©ÁËÆäËû·½Ê½£¬ÔÚÇëÇó½áÊøÊ±»Øµ÷¸÷¸öHTTPÄ£¿éµÄcleanup·½·¨£¬½«ÔÚµÚ11ÕÂ½éÉÜ£©£¬
-½«ÎÒÃÇ¸ÕµÃµ½µÄÎÄ¼ş¾ä±úµÈĞÅÏ¢¸³¸øËü£¬²¢½«NginxÌá¹©µÄngx_pool_cleanup_fileº¯ÊıÉèÖÃµ½ËüµÄhandler»Øµ÷·½·¨ÖĞ¼´¿É¡£
+Nginxä¼šå¼‚æ­¥åœ°å°†æ•´ä¸ªæ–‡ä»¶é«˜æ•ˆåœ°å‘é€ç»™ç”¨æˆ·ï¼Œä½†æ˜¯æˆ‘ä»¬å¿…é¡»è¦æ±‚HTTPæ¡†æ¶åœ¨å“åº”å‘é€å®Œæ¯•åå…³é—­å·²ç»æ‰“å¼€çš„æ–‡ä»¶å¥æŸ„ï¼Œå¦åˆ™å°†ä¼šå‡ºç°å¥æŸ„æ³„éœ²é—®é¢˜ã€‚
+è®¾ç½®æ¸…ç†æ–‡ä»¶å¥æŸ„ä¹Ÿå¾ˆç®€å•ï¼Œåªéœ€è¦å®šä¹‰ä¸€ä¸ªngx_pool_cleanup_tç»“æ„ä½“ï¼ˆè¿™æ˜¯æœ€ç®€å•çš„æ–¹æ³•ï¼ŒHTTPæ¡†æ¶è¿˜æä¾›äº†å…¶ä»–æ–¹å¼ï¼Œåœ¨è¯·æ±‚ç»“æŸæ—¶å›è°ƒå„ä¸ªHTTPæ¨¡å—çš„cleanupæ–¹æ³•ï¼Œå°†åœ¨ç¬¬11ç« ä»‹ç»ï¼‰ï¼Œ
+å°†æˆ‘ä»¬åˆšå¾—åˆ°çš„æ–‡ä»¶å¥æŸ„ç­‰ä¿¡æ¯èµ‹ç»™å®ƒï¼Œå¹¶å°†Nginxæä¾›çš„ngx_pool_cleanup_fileå‡½æ•°è®¾ç½®åˆ°å®ƒçš„handlerå›è°ƒæ–¹æ³•ä¸­å³å¯ã€‚
 
 */
-struct ngx_file_s { //Ò»°ã×öÎªngx_conf_file_tµÄ³ÉÔ±Ê¹ÓÃ£¬
+struct ngx_file_s { //ä¸€èˆ¬åšä¸ºngx_conf_file_tçš„æˆå‘˜ä½¿ç”¨ï¼Œ
     /*
-    fdÊÇ´ò¿ªÎÄ¼şµÄ¾ä±úÃèÊö·û£¬´ò¿ªÎÄ¼şÕâÒ»²½ĞèÒªÓÃ»§×Ô¼ºÀ´×ö¡£Nginx¼òµ¥·â×°ÁËÒ»¸öºêÓÃÀ´´úÌæopenÏµÍ³µÄµ÷ÓÃ£¬ÈçÏÂËùÊ¾¡£
+    fdæ˜¯æ‰“å¼€æ–‡ä»¶çš„å¥æŸ„æè¿°ç¬¦ï¼Œæ‰“å¼€æ–‡ä»¶è¿™ä¸€æ­¥éœ€è¦ç”¨æˆ·è‡ªå·±æ¥åšã€‚Nginxç®€å•å°è£…äº†ä¸€ä¸ªå®ç”¨æ¥ä»£æ›¿openç³»ç»Ÿçš„è°ƒç”¨ï¼Œå¦‚ä¸‹æ‰€ç¤ºã€‚
     #define ngx_open_file(name, mode, create, access) open((const char *) name, mode|create, access)
     */
-    ngx_fd_t                   fd;////ÎÄ¼ş¾ä±úÃèÊö·û
-    ngx_str_t                  name;//ÎÄ¼şÃû³Æ
-    ngx_file_info_t            info;//ÎÄ¼ş´óĞ¡µÈ×ÊÔ´ĞÅÏ¢£¬Êµ¼Ê¾ÍÊÇLinuxÏµÍ³¶¨ÒåµÄstat½á¹¹
+    ngx_fd_t                   fd;////æ–‡ä»¶å¥æŸ„æè¿°ç¬¦
+    ngx_str_t                  name;//æ–‡ä»¶åç§°
+    ngx_file_info_t            info;//æ–‡ä»¶å¤§å°ç­‰èµ„æºä¿¡æ¯ï¼Œå®é™…å°±æ˜¯Linuxç³»ç»Ÿå®šä¹‰çš„statç»“æ„
 
-    /* ¸ÃÆ«ÒÆÁ¿¸æËßNginxÏÖÔÚ´¦Àíµ½ÎÄ¼şºÎ´¦ÁË£¬Ò»°ã²»ÓÃÉèÖÃËü£¬Nginx¿ò¼Ü»á¸ù¾İµ±Ç°·¢ËÍ×´Ì¬ÉèÖÃËü */
-    off_t                      offset; //¼ûngx_read_file   ngx_write_chain_to_file   ×¢ÒâºÍngx_temp_file_t->offsetµÄÇø±ğ
+    /* è¯¥åç§»é‡å‘Šè¯‰Nginxç°åœ¨å¤„ç†åˆ°æ–‡ä»¶ä½•å¤„äº†ï¼Œä¸€èˆ¬ä¸ç”¨è®¾ç½®å®ƒï¼ŒNginxæ¡†æ¶ä¼šæ ¹æ®å½“å‰å‘é€çŠ¶æ€è®¾ç½®å®ƒ */
+    off_t                      offset; //è§ngx_read_file   ngx_write_chain_to_file   æ³¨æ„å’Œngx_temp_file_t->offsetçš„åŒºåˆ«
 
-    //µ±Ç°ÎÄ¼şÏµÍ³Æ«ÒÆÁ¿£¬Ò»°ã²»ÓÃÉèÖÃËü£¬Í¬ÑùÓÉNginx¿ò¼ÜÉèÖÃ
-    off_t                      sys_offset; //¼ûngx_read_file   ngx_write_chain_to_file
+    //å½“å‰æ–‡ä»¶ç³»ç»Ÿåç§»é‡ï¼Œä¸€èˆ¬ä¸ç”¨è®¾ç½®å®ƒï¼ŒåŒæ ·ç”±Nginxæ¡†æ¶è®¾ç½®
+    off_t                      sys_offset; //è§ngx_read_file   ngx_write_chain_to_file
 
-    ngx_log_t                 *log; //ÈÕÖ¾¶ÔÏó£¬Ïà¹ØµÄÈÕÖ¾»áÊä³öµ½logÖ¸¶¨µÄÈÕÖ¾ÎÄ¼şÖĞ
+    ngx_log_t                 *log; //æ—¥å¿—å¯¹è±¡ï¼Œç›¸å…³çš„æ—¥å¿—ä¼šè¾“å‡ºåˆ°logæŒ‡å®šçš„æ—¥å¿—æ–‡ä»¶ä¸­
 
 #if (NGX_THREADS)
 /*
@@ -93,17 +93,17 @@ Ngx_http_copy_filter_module.c (src\http):            ctx->thread_handler = ngx_h
 Ngx_http_file_cache.c (src\http):        c->file.thread_handler = ngx_http_cache_thread_handler;
 Ngx_output_chain.c (src\core):        buf->file->thread_handler = ctx->thread_handler;
 */
-//¿Í»§¶ËÇëÇóÔÚngx_http_file_cache_aio_read¶ÁÈ¡»º´æµÄÊ±ºò¸³ÖµÎªc->file.thread_handler = ngx_http_cache_thread_handler;È»ºóÔÚngx_thread_readÖĞÖ´ĞĞ
+//å®¢æˆ·ç«¯è¯·æ±‚åœ¨ngx_http_file_cache_aio_readè¯»å–ç¼“å­˜çš„æ—¶å€™èµ‹å€¼ä¸ºc->file.thread_handler = ngx_http_cache_thread_handler;ç„¶ååœ¨ngx_thread_readä¸­æ‰§è¡Œ
     ngx_int_t                (*thread_handler)(ngx_thread_task_t *task,
                                                ngx_file_t *file);
-    void                      *thread_ctx; //¿Í»§¶ËÇëÇór
+    void                      *thread_ctx; //å®¢æˆ·ç«¯è¯·æ±‚r
 #endif
 
 #if (NGX_HAVE_FILE_AIO)
-    ngx_event_aio_t           *aio; //³õÊ¼¸³Öµ¼ûngx_file_aio_init
+    ngx_event_aio_t           *aio; //åˆå§‹èµ‹å€¼è§ngx_file_aio_init
 #endif
 
-    unsigned                   valid_info:1;//Ä¿Ç°Î´Ê¹ÓÃ
+    unsigned                   valid_info:1;//ç›®å‰æœªä½¿ç”¨
 
     /*
      //Ngx_http_echo_subrequest.c (src\echo-nginx-module-master\src):        b->file->directio = of.is_directio;
@@ -111,10 +111,10 @@ Ngx_output_chain.c (src\core):        buf->file->thread_handler = ctx->thread_ha
     // Ngx_http_gzip_static_module.c (src\http\modules):    b->file->directio = of.is_directio;
      //Ngx_http_mp4_module.c (src\http\modules):    b->file->directio = of.is_directio;
     // Ngx_http_static_module.c (src\http\modules):    b->file->directio = of.is_directio; 
-     of.is_directioÖ»ÓĞÔÚÎÄ¼ş´óĞ¡´óÓÚdirectio 512ÅäÖÃµÄ´óĞ¡Ê±²Å»áÖÃ1£¬¼ûngx_open_and_stat_fileÖĞ»áÖÃ1
-     Ö»ÓĞÅäÖÃÎÄ¼şÖĞÓĞÅäÖÃÕâ¼¸¸öÄ£¿éÏà¹ØÅäÖÃ£¬²¢ÇÒ»ñÈ¡µÄÎÄ¼ş´óĞ¡(ÀıÈç»º´æÎÄ¼ş)´óÓÚdirectio 512£¬Ò²¾ÍÊÇÎÄ¼ş´óĞ¡´óÓÚ512Ê±£¬ÔòÖÃ1
+     of.is_directioåªæœ‰åœ¨æ–‡ä»¶å¤§å°å¤§äºdirectio 512é…ç½®çš„å¤§å°æ—¶æ‰ä¼šç½®1ï¼Œè§ngx_open_and_stat_fileä¸­ä¼šç½®1
+     åªæœ‰é…ç½®æ–‡ä»¶ä¸­æœ‰é…ç½®è¿™å‡ ä¸ªæ¨¡å—ç›¸å…³é…ç½®ï¼Œå¹¶ä¸”è·å–çš„æ–‡ä»¶å¤§å°(ä¾‹å¦‚ç¼“å­˜æ–‡ä»¶)å¤§äºdirectio 512ï¼Œä¹Ÿå°±æ˜¯æ–‡ä»¶å¤§å°å¤§äº512æ—¶ï¼Œåˆ™ç½®1
      */
-    unsigned                   directio:1;//Ò»°ã¶¼Îª0  ×¢Òâ²¢²»ÊÇÅäÖÃÁËdirectio  xxx;¾Í»áÖÃ1£¬Õâ¸öºÍ¾ßÌåÄ£¿éÓĞ¹Ø
+    unsigned                   directio:1;//ä¸€èˆ¬éƒ½ä¸º0  æ³¨æ„å¹¶ä¸æ˜¯é…ç½®äº†directio  xxx;å°±ä¼šç½®1ï¼Œè¿™ä¸ªå’Œå…·ä½“æ¨¡å—æœ‰å…³
 };
 
 
@@ -124,32 +124,32 @@ Ngx_output_chain.c (src\core):        buf->file->thread_handler = ctx->thread_ha
 typedef time_t (*ngx_path_manager_pt) (void *data);
 typedef void (*ngx_path_loader_pt) (void *data);
 
-//²Î¿¼ngx_conf_set_path_slotºÍngx_http_file_cache_set_slot
+//å‚è€ƒngx_conf_set_path_slotå’Œngx_http_file_cache_set_slot
 typedef struct {
-    //fastcgi_cache_path /tmp/nginx/fcgi/cache levels=1:2 keys_zone=fcgi:10m inactive=30m max_size=128m;ÖĞµÄlevels=1:2ÖĞµÄ1:2ÖĞµÄ/tmp/nginx/fcgi/cache
-    ngx_str_t                  name; //Â·¾¶Ãû
-    //¿ÉÒÔ²Î¿¼ÏÂngx_create_hashed_filename
-    size_t                     len; //levels=x:y×îÖÕµÄ½á¹ûÊÇpath->len = (x+1) + (y+1)  ²Î¿¼ngx_http_file_cache_set_slot
+    //fastcgi_cache_path /tmp/nginx/fcgi/cache levels=1:2 keys_zone=fcgi:10m inactive=30m max_size=128m;ä¸­çš„levels=1:2ä¸­çš„1:2ä¸­çš„/tmp/nginx/fcgi/cache
+    ngx_str_t                  name; //è·¯å¾„å
+    //å¯ä»¥å‚è€ƒä¸‹ngx_create_hashed_filename
+    size_t                     len; //levels=x:yæœ€ç»ˆçš„ç»“æœæ˜¯path->len = (x+1) + (y+1)  å‚è€ƒngx_http_file_cache_set_slot
     
 /*
- levels=1:2£¬ÒâË¼ÊÇËµÊ¹ÓÃÁ½¼¶Ä¿Â¼£¬µÚÒ»¼¶Ä¿Â¼ÃûÊÇÒ»¸ö×Ö·û£¬µÚ¶ş¼¶ÓÃÁ½¸ö×Ö·û¡£µ«ÊÇnginx×î´óÖ§³Ö3¼¶Ä¿Â¼£¬¼´levels=xxx:xxx:xxx¡£
- ÄÇÃ´¹¹³ÉÄ¿Â¼Ãû×ÖµÄ×Ö·ûÄÄÀ´µÄÄØ£¿¼ÙÉèÎÒÃÇµÄ´æ´¢Ä¿Â¼Îª/cache£¬levels=1:2£¬ÄÇÃ´¶ÔÓÚÉÏÃæµÄÎÄ¼ş ¾ÍÊÇÕâÑù´æ´¢µÄ£º
- /cache/0/8d/8ef9229f02c5672c747dc7a324d658d0  ×¢ÒâºóÃæµÄ8d0ºÍcacheºóÃæµÄ/0/8dÒ»ÖÂ  ²Î¿¼ngx_create_hashed_filename
-*/ //fastcgi_cache_path /tmp/nginx/fcgi/cache levels=1:2 keys_zone=fcgi:10m inactive=30m max_size=128m;ÖĞµÄlevels=1:2ÖĞµÄ1:2
-//Ä¿Â¼´´½¨¼ûngx_create_path  
-    //Ò»¸ö¶ÔÓ¦µÄ»º´æÎÄ¼şµÄÄ¿Â¼f/27/46492fbf0d9d35d3753c66851e81627fÖĞµÄ46492fbf0d9d35d3753c66851e81627f£¬×¢Òâf/27¾ÍÊÇ×îÎ²²¿µÄ×Ö½Ú,Õâ¸öÓÉlevle=1:2£¬¾ÍÊÇ×îºóÃæµÄ1¸ö×Ö½Ú+2¸ö×Ö½Ú
-    size_t                     level[3];  //°Ñlevels=x:y;ÖĞµÄxºÍy·Ö±ğ´æ´¢ÔÚlevel[0]ºÍlevel[1] level[3]Ê¼ÖÕÎª0
-    //ngx_http_file_cache_set_slotÖĞÉèÖÃÎªngx_http_file_cache_manager
-    //Ò»°ãÖ»ÓĞÉæ¼°µ½¹²ÏíÄÚ´æ·ÖÅä¹ÜÀíµÄ²ÅÓĞ¸Ãpt£¬ÀıÈçfastcgi_cache_path xxx keys_zone=fcgi:10m xxx Ö»ÒªÓĞÕâĞ©ÅäÖÃÔò»áÆôÓÃcache½ø³Ì£¬¼ûngx_start_cache_manager_processes
-    ngx_path_manager_pt        manager; //ngx_cache_manager_process_handlerÖĞÖ´ĞĞ  
-    //mangerºÍloader¡£ÊÇcache¹ÜÀí»Øµ÷º¯Êı
+ levels=1:2ï¼Œæ„æ€æ˜¯è¯´ä½¿ç”¨ä¸¤çº§ç›®å½•ï¼Œç¬¬ä¸€çº§ç›®å½•åæ˜¯ä¸€ä¸ªå­—ç¬¦ï¼Œç¬¬äºŒçº§ç”¨ä¸¤ä¸ªå­—ç¬¦ã€‚ä½†æ˜¯nginxæœ€å¤§æ”¯æŒ3çº§ç›®å½•ï¼Œå³levels=xxx:xxx:xxxã€‚
+ é‚£ä¹ˆæ„æˆç›®å½•åå­—çš„å­—ç¬¦å“ªæ¥çš„å‘¢ï¼Ÿå‡è®¾æˆ‘ä»¬çš„å­˜å‚¨ç›®å½•ä¸º/cacheï¼Œlevels=1:2ï¼Œé‚£ä¹ˆå¯¹äºä¸Šé¢çš„æ–‡ä»¶ å°±æ˜¯è¿™æ ·å­˜å‚¨çš„ï¼š
+ /cache/0/8d/8ef9229f02c5672c747dc7a324d658d0  æ³¨æ„åé¢çš„8d0å’Œcacheåé¢çš„/0/8dä¸€è‡´  å‚è€ƒngx_create_hashed_filename
+*/ //fastcgi_cache_path /tmp/nginx/fcgi/cache levels=1:2 keys_zone=fcgi:10m inactive=30m max_size=128m;ä¸­çš„levels=1:2ä¸­çš„1:2
+//ç›®å½•åˆ›å»ºè§ngx_create_path  
+    //ä¸€ä¸ªå¯¹åº”çš„ç¼“å­˜æ–‡ä»¶çš„ç›®å½•f/27/46492fbf0d9d35d3753c66851e81627fä¸­çš„46492fbf0d9d35d3753c66851e81627fï¼Œæ³¨æ„f/27å°±æ˜¯æœ€å°¾éƒ¨çš„å­—èŠ‚,è¿™ä¸ªç”±levle=1:2ï¼Œå°±æ˜¯æœ€åé¢çš„1ä¸ªå­—èŠ‚+2ä¸ªå­—èŠ‚
+    size_t                     level[3];  //æŠŠlevels=x:y;ä¸­çš„xå’Œyåˆ†åˆ«å­˜å‚¨åœ¨level[0]å’Œlevel[1] level[3]å§‹ç»ˆä¸º0
+    //ngx_http_file_cache_set_slotä¸­è®¾ç½®ä¸ºngx_http_file_cache_manager
+    //ä¸€èˆ¬åªæœ‰æ¶‰åŠåˆ°å…±äº«å†…å­˜åˆ†é…ç®¡ç†çš„æ‰æœ‰è¯¥ptï¼Œä¾‹å¦‚fastcgi_cache_path xxx keys_zone=fcgi:10m xxx åªè¦æœ‰è¿™äº›é…ç½®åˆ™ä¼šå¯ç”¨cacheè¿›ç¨‹ï¼Œè§ngx_start_cache_manager_processes
+    ngx_path_manager_pt        manager; //ngx_cache_manager_process_handlerä¸­æ‰§è¡Œ  
+    //mangerå’Œloaderã€‚æ˜¯cacheç®¡ç†å›è°ƒå‡½æ•°
     
-    //ngx_http_file_cache_set_slotÖĞÉèÖÃÎªngx_http_file_cache_loader   ngx_cache_loader_process_handlerÖĞÖ´ĞĞ
-    ngx_path_loader_pt         loader; //¾ö¶¨ÊÇ·ñÆôÓÃcache loader½ø³Ì  ²Î¿¼ngx_start_cache_manager_processes
-    void                      *data; //ngx_http_file_cache_set_slotÖĞÉèÖÃÎªngx_http_file_cache_t
+    //ngx_http_file_cache_set_slotä¸­è®¾ç½®ä¸ºngx_http_file_cache_loader   ngx_cache_loader_process_handlerä¸­æ‰§è¡Œ
+    ngx_path_loader_pt         loader; //å†³å®šæ˜¯å¦å¯ç”¨cache loaderè¿›ç¨‹  å‚è€ƒngx_start_cache_manager_processes
+    void                      *data; //ngx_http_file_cache_set_slotä¸­è®¾ç½®ä¸ºngx_http_file_cache_t
 
-    u_char                    *conf_file; //ËùÔÚµÄÅäÖÃÎÄ¼ş ¼ûngx_http_file_cache_set_slot
-    ngx_uint_t                 line; //ÔÚÅäÖÃÎÄ¼şÖĞµÄĞĞºÅ£¬¼ûngx_http_file_cache_set_slot
+    u_char                    *conf_file; //æ‰€åœ¨çš„é…ç½®æ–‡ä»¶ è§ngx_http_file_cache_set_slot
+    ngx_uint_t                 line; //åœ¨é…ç½®æ–‡ä»¶ä¸­çš„è¡Œå·ï¼Œè§ngx_http_file_cache_set_slot
 } ngx_path_t;
 
 
@@ -158,31 +158,31 @@ typedef struct {
     size_t                     level[3];
 } ngx_path_init_t;
 
-//ngx_http_upstream_send_responseÖĞ»á´´½¨ngx_temp_file_t
-typedef struct { //ngx_http_write_request_bodyÖĞ»á´´½¨¸Ã½á¹¹²¢¸³Öµ   ÁÙÊ±ÎÄ¼ş×ÊÔ´»ØÊÕº¯ÊıÎªngx_pool_run_cleanup_file
-    ngx_file_t                 file; //ÀïÃæ°üÀ¨ÎÄ¼şĞÅÏ¢£¬fd ÎÄ¼şÃûµÈ
-    //×¢ÒâºÍfile->offsetµÄÇø±ğ(file->offsetÖ¸µÄÊÇtempÁÙÊ±ÎÄ¼şÖĞµÄÄ³¸ö¾ßÌåÎÄ¼şµÄÄÚÈİÄ©Î²´¦)£¬(°üÀ¨Í·²¿ĞĞÊı¾İ+ÍøÒ³°üÌåÊı¾İ)
-    //ngx_temp_file_t->offsetÒ²¾ÍÊÇtempÄ¿Â¼ÏÂÃæËùÓĞÎÄ¼şµÄÄÚÈİÖ®ºÍ£¬ÒòÎªÒ»°ãmax_temp_file_sizeÒªÏŞÖÆtempÖĞÁÙÊ±ÎÄ¼şÄÚÈİ´óĞ¡£¬²»ÄÜÎŞÏŞÖÆµÄÍùÀïÃæĞ´
-    off_t                      offset; //Ö¸ÏòĞ´Èëµ½ÎÄ¼şÖĞµÄÄÚÈİµÄ×îÎ²´¦
+//ngx_http_upstream_send_responseä¸­ä¼šåˆ›å»ºngx_temp_file_t
+typedef struct { //ngx_http_write_request_bodyä¸­ä¼šåˆ›å»ºè¯¥ç»“æ„å¹¶èµ‹å€¼   ä¸´æ—¶æ–‡ä»¶èµ„æºå›æ”¶å‡½æ•°ä¸ºngx_pool_run_cleanup_file
+    ngx_file_t                 file; //é‡Œé¢åŒ…æ‹¬æ–‡ä»¶ä¿¡æ¯ï¼Œfd æ–‡ä»¶åç­‰
+    //æ³¨æ„å’Œfile->offsetçš„åŒºåˆ«(file->offsetæŒ‡çš„æ˜¯tempä¸´æ—¶æ–‡ä»¶ä¸­çš„æŸä¸ªå…·ä½“æ–‡ä»¶çš„å†…å®¹æœ«å°¾å¤„)ï¼Œ(åŒ…æ‹¬å¤´éƒ¨è¡Œæ•°æ®+ç½‘é¡µåŒ…ä½“æ•°æ®)
+    //ngx_temp_file_t->offsetä¹Ÿå°±æ˜¯tempç›®å½•ä¸‹é¢æ‰€æœ‰æ–‡ä»¶çš„å†…å®¹ä¹‹å’Œï¼Œå› ä¸ºä¸€èˆ¬max_temp_file_sizeè¦é™åˆ¶tempä¸­ä¸´æ—¶æ–‡ä»¶å†…å®¹å¤§å°ï¼Œä¸èƒ½æ— é™åˆ¶çš„å¾€é‡Œé¢å†™
+    off_t                      offset; //æŒ‡å‘å†™å…¥åˆ°æ–‡ä»¶ä¸­çš„å†…å®¹çš„æœ€å°¾å¤„
 
-/* ·Ç»º´æ·½Ê½(p->cacheable=0)p->temp_file->path = u->conf->temp_path; ÓÉngx_http_fastcgi_temp_pathÖ¸¶¨Â·¾¶
-»º´æ·½Ê½(p->cacheable=1) p->temp_file->path = r->cache->file_cache->temp_path;¼ûproxy_cache_path»òÕßfastcgi_cache_path use_temp_path=Ö¸¶¨Â·¾¶  ¼ûngx_http_upstream_send_response 
+/* éç¼“å­˜æ–¹å¼(p->cacheable=0)p->temp_file->path = u->conf->temp_path; ç”±ngx_http_fastcgi_temp_pathæŒ‡å®šè·¯å¾„
+ç¼“å­˜æ–¹å¼(p->cacheable=1) p->temp_file->path = r->cache->file_cache->temp_path;è§proxy_cache_pathæˆ–è€…fastcgi_cache_path use_temp_path=æŒ‡å®šè·¯å¾„  è§ngx_http_upstream_send_response 
 */  
-    ngx_path_t                *path; //ÎÄ¼şÂ·¾¶ p->temp_file->path = u->conf->temp_path;  Ä¬ÈÏÖµngx_http_fastcgi_temp_path
+    ngx_path_t                *path; //æ–‡ä»¶è·¯å¾„ p->temp_file->path = u->conf->temp_path;  é»˜è®¤å€¼ngx_http_fastcgi_temp_path
     ngx_pool_t                *pool;
-    char                      *warn; //ÌáÊ¾ĞÅÏ¢
+    char                      *warn; //æç¤ºä¿¡æ¯
 
-    ngx_uint_t                 access; //ÎÄ¼şÈ¨ÏŞ 6660µÈ  Ä¬ÈÏ0600£¬¼ûngx_create_temp_file->ngx_open_tempfile
+    ngx_uint_t                 access; //æ–‡ä»¶æƒé™ 6660ç­‰  é»˜è®¤0600ï¼Œè§ngx_create_temp_file->ngx_open_tempfile
 
-    unsigned                   log_level:8;  //ÈÕÖ¾µÈ¼¶request_body_file_log_level
-    //p->cacheable == 1µÄÇé¿öÏÂ£¬ngx_http_upstream_send_responseÖĞÄ¬ÈÏÖÃ1
-    unsigned                   persistent:1; //ÎÄ¼şÄÚÈİÊÇ·ñÓÀ¾Ã´æ´¢ request_body_in_persistent_file
-    //Ä¬ÈÏ»áÇå³ı£¬¼ûngx_create_temp_file  ºó¶Ë»º´æÁÙÊ±ÎÄ¼şÊ±»áÉ¾³ıµÄ£¬µ«ÊÇ»º´æÇëÇó°üÌåÓĞ"clean"¿ª¹Ø¿ØÖÆ
-    unsigned                   clean:1; //ÎÄ¼şÊ±ÁÙÊ±µÄ£¬¹Ø±ÕÁ¬½Ó»áÉ¾³ıÎÄ¼ş£¬ngx_pool_delete_file  request_body_in_clean_file 
-} ngx_temp_file_t; //ÕâÀïÃæµÄ²ÎÊıÊ¹ÓÃ¼ûngx_write_chain_to_temp_file´´½¨ÁÙÊ±ÎÄ¼ş
+    unsigned                   log_level:8;  //æ—¥å¿—ç­‰çº§request_body_file_log_level
+    //p->cacheable == 1çš„æƒ…å†µä¸‹ï¼Œngx_http_upstream_send_responseä¸­é»˜è®¤ç½®1
+    unsigned                   persistent:1; //æ–‡ä»¶å†…å®¹æ˜¯å¦æ°¸ä¹…å­˜å‚¨ request_body_in_persistent_file
+    //é»˜è®¤ä¼šæ¸…é™¤ï¼Œè§ngx_create_temp_file  åç«¯ç¼“å­˜ä¸´æ—¶æ–‡ä»¶æ—¶ä¼šåˆ é™¤çš„ï¼Œä½†æ˜¯ç¼“å­˜è¯·æ±‚åŒ…ä½“æœ‰"clean"å¼€å…³æ§åˆ¶
+    unsigned                   clean:1; //æ–‡ä»¶æ—¶ä¸´æ—¶çš„ï¼Œå…³é—­è¿æ¥ä¼šåˆ é™¤æ–‡ä»¶ï¼Œngx_pool_delete_file  request_body_in_clean_file 
+} ngx_temp_file_t; //è¿™é‡Œé¢çš„å‚æ•°ä½¿ç”¨è§ngx_write_chain_to_temp_fileåˆ›å»ºä¸´æ—¶æ–‡ä»¶
 
 
-typedef struct {//²Î¿¼ngx_http_file_cache_update
+typedef struct {//å‚è€ƒngx_http_file_cache_update
     ngx_uint_t                 access;
     ngx_uint_t                 path_access;
     time_t                     time;
@@ -218,12 +218,12 @@ struct ngx_tree_ctx_s {
     time_t                     mtime;
 
     ngx_tree_init_handler_pt   init_handler;
-    ngx_tree_handler_pt        file_handler; //ÎÄ¼ş½ÚµãÎªÆÕÍ¨ÎÄ¼şÊ±µ÷ÓÃ 
-    ngx_tree_handler_pt        pre_tree_handler; // ÔÚµİ¹é½øÈëÄ¿Â¼½ÚµãÊ±µ÷ÓÃ 
-    ngx_tree_handler_pt        post_tree_handler; // ÔÚµİ¹é±éÀúÍêÄ¿Â¼½Úµãºóµ÷ÓÃ 
-    ngx_tree_handler_pt        spec_handler; //ÎÄ¼ş½ÚµãÎªÌØÊâÎÄ¼şÊ±µ÷ÓÃ 
+    ngx_tree_handler_pt        file_handler; //æ–‡ä»¶èŠ‚ç‚¹ä¸ºæ™®é€šæ–‡ä»¶æ—¶è°ƒç”¨ 
+    ngx_tree_handler_pt        pre_tree_handler; // åœ¨é€’å½’è¿›å…¥ç›®å½•èŠ‚ç‚¹æ—¶è°ƒç”¨ 
+    ngx_tree_handler_pt        post_tree_handler; // åœ¨é€’å½’éå†å®Œç›®å½•èŠ‚ç‚¹åè°ƒç”¨ 
+    ngx_tree_handler_pt        spec_handler; //æ–‡ä»¶èŠ‚ç‚¹ä¸ºç‰¹æ®Šæ–‡ä»¶æ—¶è°ƒç”¨ 
 
-    void                      *data;//Ö¸Ïòngx_http_file_cache_t£¬¼ûngx_http_file_cache_loader
+    void                      *data;//æŒ‡å‘ngx_http_file_cache_tï¼Œè§ngx_http_file_cache_loader
     size_t                     alloc;
 
     ngx_log_t                 *log;

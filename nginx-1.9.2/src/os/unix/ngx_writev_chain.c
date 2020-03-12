@@ -9,12 +9,12 @@
 #include <ngx_core.h>
 #include <ngx_event.h>
 
-//ngx_linux_sendfile_chainºÍngx_writev_chain
+//ngx_linux_sendfile_chainå’Œngx_writev_chain
 ngx_chain_t *
 ngx_writev_chain(ngx_connection_t *c, ngx_chain_t *in, off_t limit)
-{//µ÷ÓÃwritevÒ»´Î·¢ËÍ¶à¸ö»º³åÇø£¬Èç¹ûÃ»ÓĞ·¢ËÍÍê±Ï£¬Ôò·µ»ØÊ£ÏÂµÄÁ´½Ó½á¹¹Í·²¿¡£
-//ngx_chain_writerµ÷ÓÃÕâÀï£¬µ÷ÓÃ·½Ê½Îª ctx->out = c->send_chain(c, ctx->out, ctx->limit);
-//µÚ¶ş¸ö²ÎÊıÎªÒª·¢ËÍµÄÊı¾İ
+{//è°ƒç”¨writevä¸€æ¬¡å‘é€å¤šä¸ªç¼“å†²åŒºï¼Œå¦‚æœæ²¡æœ‰å‘é€å®Œæ¯•ï¼Œåˆ™è¿”å›å‰©ä¸‹çš„é“¾æ¥ç»“æ„å¤´éƒ¨ã€‚
+//ngx_chain_writerè°ƒç”¨è¿™é‡Œï¼Œè°ƒç”¨æ–¹å¼ä¸º ctx->out = c->send_chain(c, ctx->out, ctx->limit);
+//ç¬¬äºŒä¸ªå‚æ•°ä¸ºè¦å‘é€çš„æ•°æ®
     ssize_t        n, sent;
     off_t          send, prev_send;
     ngx_chain_t   *cl;
@@ -22,11 +22,11 @@ ngx_writev_chain(ngx_connection_t *c, ngx_chain_t *in, off_t limit)
     ngx_iovec_t    vec;
     struct iovec   iovs[NGX_IOVS_PREALLOCATE];
 
-    wev = c->write;//ÄÃµ½Õâ¸öÁ¬½ÓµÄĞ´ÊÂ¼ş½á¹¹
+    wev = c->write;//æ‹¿åˆ°è¿™ä¸ªè¿æ¥çš„å†™äº‹ä»¶ç»“æ„
 
     ngx_log_debugall(c->log, 0, "@@@@@@@@@@@@@@@@@@@@@@@begin ngx_writev_chain @@@@@@@@@@@@@@@@@@@");
 
-    if (!wev->ready) {//Á¬½Ó»¹Ã»×¼±¸ºÃ£¬·µ»Øµ±Ç°µÄ½Úµã¡£
+    if (!wev->ready) {//è¿æ¥è¿˜æ²¡å‡†å¤‡å¥½ï¼Œè¿”å›å½“å‰çš„èŠ‚ç‚¹ã€‚
         return in;
     }
 
@@ -44,7 +44,7 @@ ngx_writev_chain(ngx_connection_t *c, ngx_chain_t *in, off_t limit)
     /* the maximum limit size is the maximum size_t value - the page size */
 
     if (limit == 0 || limit > (off_t) (NGX_MAX_SIZE_T_VALUE - ngx_pagesize)) {
-        limit = NGX_MAX_SIZE_T_VALUE - ngx_pagesize;//¹»´óÁË£¬×î´óµÄÕûÊı
+        limit = NGX_MAX_SIZE_T_VALUE - ngx_pagesize;//å¤Ÿå¤§äº†ï¼Œæœ€å¤§çš„æ•´æ•°
     }
 
     send = 0;
@@ -53,10 +53,10 @@ ngx_writev_chain(ngx_connection_t *c, ngx_chain_t *in, off_t limit)
     vec.nalloc = NGX_IOVS_PREALLOCATE;
 
     for ( ;; ) {
-        prev_send = send; //prev_sendÎªÉÏÒ»´Îµ÷ÓÃngx_writev·¢ËÍ³öÈ¥µÄ×Ö½ÚÊı
+        prev_send = send; //prev_sendä¸ºä¸Šä¸€æ¬¡è°ƒç”¨ngx_writevå‘é€å‡ºå»çš„å­—èŠ‚æ•°
 
         /* create the iovec and coalesce the neighbouring bufs */
-        //°ÑinÁ´ÖĞµÄbuf¿½±´µ½vec->iovs[n++]ÖĞ£¬×¢ÒâÖ»»á¿½±´ÄÚ´æÖĞµÄÊı¾İµ½iovecÖĞ£¬²»»á¿½±´ÎÄ¼şÖĞµÄ
+        //æŠŠiné“¾ä¸­çš„bufæ‹·è´åˆ°vec->iovs[n++]ä¸­ï¼Œæ³¨æ„åªä¼šæ‹·è´å†…å­˜ä¸­çš„æ•°æ®åˆ°iovecä¸­ï¼Œä¸ä¼šæ‹·è´æ–‡ä»¶ä¸­çš„
         cl = ngx_output_chain_to_iovec(&vec, in, limit - send, c->log);
 
         if (cl == NGX_CHAIN_ERROR) {
@@ -82,34 +82,34 @@ ngx_writev_chain(ngx_connection_t *c, ngx_chain_t *in, off_t limit)
             return NGX_CHAIN_ERROR;
         }
 
-        send += vec.size; //Îªngx_output_chain_to_iovecÖĞ×é°üµÄinÁ´ÖĞËùÓĞÊı¾İ³¤¶ÈºÍ
+        send += vec.size; //ä¸ºngx_output_chain_to_iovecä¸­ç»„åŒ…çš„iné“¾ä¸­æ‰€æœ‰æ•°æ®é•¿åº¦å’Œ
 
         n = ngx_writev(c, &vec); 
-        //ÎÒÆÚÍû·¢ËÍvec->size×Ö½ÚÊı¾İ£¬µ«ÊÇÊµ¼ÊÉÏÄÚºË·¢ËÍ³öÈ¥µÄºÜ¿ÉÄÜ±Èvec->sizeĞ¡£¬nÎªÊµ¼Ê·¢ËÍ³öÈ¥µÄ×Ö½ÚÊı£¬Òò´ËĞèÒª¼ÌĞø·¢ËÍ
+        //æˆ‘æœŸæœ›å‘é€vec->sizeå­—èŠ‚æ•°æ®ï¼Œä½†æ˜¯å®é™…ä¸Šå†…æ ¸å‘é€å‡ºå»çš„å¾ˆå¯èƒ½æ¯”vec->sizeå°ï¼Œnä¸ºå®é™…å‘é€å‡ºå»çš„å­—èŠ‚æ•°ï¼Œå› æ­¤éœ€è¦ç»§ç»­å‘é€
 
         if (n == NGX_ERROR) {
             return NGX_CHAIN_ERROR;
         }
 
-        sent = (n == NGX_AGAIN) ? 0 : n;//¼ÇÂ¼·¢ËÍµÄÊı¾İ´óĞ¡¡£
+        sent = (n == NGX_AGAIN) ? 0 : n;//è®°å½•å‘é€çš„æ•°æ®å¤§å°ã€‚
 
-        c->sent += sent;//µİÔöÍ³¼ÆÊı¾İ£¬Õâ¸öÁ´½ÓÉÏ·¢ËÍµÄÊı¾İ´óĞ¡
+        c->sent += sent;//é€’å¢ç»Ÿè®¡æ•°æ®ï¼Œè¿™ä¸ªé“¾æ¥ä¸Šå‘é€çš„æ•°æ®å¤§å°
 
-        in = ngx_chain_update_sent(in, sent); //sendÊÇ´Ë´Îµ÷ÓÃngx_wrtev·¢ËÍ³É¹¦µÄ×Ö½ÚÊı
-        //ngx_chain_update_sent·µ»ØºóµÄinÁ´ÒÑ¾­²»°üÀ¨Ö®Ç°·¢ËÍ³É¹¦µÄin½ÚµãÁË£¬ÕâÉÏÃæÖ»°üº¬Ê£ÓàµÄÊı¾İ
+        in = ngx_chain_update_sent(in, sent); //sendæ˜¯æ­¤æ¬¡è°ƒç”¨ngx_wrtevå‘é€æˆåŠŸçš„å­—èŠ‚æ•°
+        //ngx_chain_update_sentè¿”å›åçš„iné“¾å·²ç»ä¸åŒ…æ‹¬ä¹‹å‰å‘é€æˆåŠŸçš„inèŠ‚ç‚¹äº†ï¼Œè¿™ä¸Šé¢åªåŒ…å«å‰©ä½™çš„æ•°æ®
         
-        if (send - prev_send != sent) { //ÕâÀïËµÃ÷×î¶àµ÷ÓÃngx_writevÁ½´Î³É¹¦·¢ËÍºó£¬ÕâÀï¾Í»á·µ»Ø
-            wev->ready = 0; //±ê¼ÇÔİÊ±²»ÄÜ·¢ËÍÊı¾İÁË£¬±ØĞëÖØĞÂepoll_addĞ´ÊÂ¼ş
+        if (send - prev_send != sent) { //è¿™é‡Œè¯´æ˜æœ€å¤šè°ƒç”¨ngx_writevä¸¤æ¬¡æˆåŠŸå‘é€åï¼Œè¿™é‡Œå°±ä¼šè¿”å›
+            wev->ready = 0; //æ ‡è®°æš‚æ—¶ä¸èƒ½å‘é€æ•°æ®äº†ï¼Œå¿…é¡»é‡æ–°epoll_addå†™äº‹ä»¶
             return in;
         }
 
-        if (send >= limit || in == NULL) { //Êı¾İ·¢ËÍÍê±Ï£¬»òÕß±¾´Î·¢ËÍ³É¹¦µÄ×Ö½ÚÊı±Èlimit»¹¶à£¬Ôò·µ»Ø³öÈ¥
+        if (send >= limit || in == NULL) { //æ•°æ®å‘é€å®Œæ¯•ï¼Œæˆ–è€…æœ¬æ¬¡å‘é€æˆåŠŸçš„å­—èŠ‚æ•°æ¯”limitè¿˜å¤šï¼Œåˆ™è¿”å›å‡ºå»
             return in; //
         }
     }
 }
 
-//°ÑinÁ´ÖĞµÄbuf¿½±´µ½vec->iovs[n++]ÖĞ£¬×¢ÒâÖ»»á¿½±´ÄÚ´æÖĞµÄÊı¾İµ½iovecÖĞ£¬²»»á¿½±´ÎÄ¼şÖĞµÄ
+//æŠŠiné“¾ä¸­çš„bufæ‹·è´åˆ°vec->iovs[n++]ä¸­ï¼Œæ³¨æ„åªä¼šæ‹·è´å†…å­˜ä¸­çš„æ•°æ®åˆ°iovecä¸­ï¼Œä¸ä¼šæ‹·è´æ–‡ä»¶ä¸­çš„
 ngx_chain_t *
 ngx_output_chain_to_iovec(ngx_iovec_t *vec, ngx_chain_t *in, size_t limit,
     ngx_log_t *log)
@@ -123,14 +123,14 @@ ngx_output_chain_to_iovec(ngx_iovec_t *vec, ngx_chain_t *in, size_t limit,
     prev = NULL;
     total = 0;
     n = 0;
-    //Ñ­»··¢ËÍÊı¾İ£¬Ò»´ÎÒ»¿éIOV_MAXÊıÄ¿µÄ»º³åÇø¡£
+    //å¾ªç¯å‘é€æ•°æ®ï¼Œä¸€æ¬¡ä¸€å—IOV_MAXæ•°ç›®çš„ç¼“å†²åŒºã€‚
     for ( /* void */ ; in && total < limit; in = in->next) {
 
         if (ngx_buf_special(in->buf)) {
             continue;
         }
 
-        if (in->buf->in_file) { //Èç¹ûÎª1,±íÊ¾Êı¾İÔÚÎÄ¼şÖĞ£¬¼ûngx_output_chain_copy_buf
+        if (in->buf->in_file) { //å¦‚æœä¸º1,è¡¨ç¤ºæ•°æ®åœ¨æ–‡ä»¶ä¸­ï¼Œè§ngx_output_chain_copy_buf
             break;
         }
 
@@ -153,38 +153,38 @@ ngx_output_chain_to_iovec(ngx_iovec_t *vec, ngx_chain_t *in, size_t limit,
             return NGX_CHAIN_ERROR;
         }
 
-        size = in->buf->last - in->buf->pos;//¼ÆËãÕâ¸ö½ÚµãµÄ´óĞ¡
+        size = in->buf->last - in->buf->pos;//è®¡ç®—è¿™ä¸ªèŠ‚ç‚¹çš„å¤§å°
 
-        if (size > limit - total) {//³¬¹ı×î´ó·¢ËÍ´óĞ¡¡£½Ø¶Ï£¬Õâ´ÎÖ»·¢ËÍÕâÃ´¶à
+        if (size > limit - total) {//è¶…è¿‡æœ€å¤§å‘é€å¤§å°ã€‚æˆªæ–­ï¼Œè¿™æ¬¡åªå‘é€è¿™ä¹ˆå¤š
             size = limit - total;
         }
 
-        if (prev == in->buf->pos) {//Èç¹û»¹ÊÇµÈÓÚ¸Õ²ÅµÄÎ»ÖÃ£¬ÄÇ¾Í¸´ÓÃ
+        if (prev == in->buf->pos) {//å¦‚æœè¿˜æ˜¯ç­‰äºåˆšæ‰çš„ä½ç½®ï¼Œé‚£å°±å¤ç”¨
             iov->iov_len += size;
 
-        } else {//·ñÔòÒªĞÂÔöÒ»¸ö½Úµã¡£·µ»ØÖ®
+        } else {//å¦åˆ™è¦æ–°å¢ä¸€ä¸ªèŠ‚ç‚¹ã€‚è¿”å›ä¹‹
             if (n == vec->nalloc) {
                 break;
             }
 
             iov = &vec->iovs[n++];
 
-            iov->iov_base = (void *) in->buf->pos;//´ÓÕâÀï¿ªÊ¼
-            iov->iov_len = size;//ÓĞÕâÃ´¶àÎÒÒª·¢ËÍ
+            iov->iov_base = (void *) in->buf->pos;//ä»è¿™é‡Œå¼€å§‹
+            iov->iov_len = size;//æœ‰è¿™ä¹ˆå¤šæˆ‘è¦å‘é€
         }
 
-        prev = in->buf->pos + size;//¼ÇÂ¼¸Õ²Å·¢µ½ÁËÕâ¸öÎ»ÖÃ£¬ÎªÖ¸Õë¡£
-        total += size;//Ôö¼ÓÒÑ¾­¼ÇÂ¼µÄÊı¾İ³¤¶È¡£
+        prev = in->buf->pos + size;//è®°å½•åˆšæ‰å‘åˆ°äº†è¿™ä¸ªä½ç½®ï¼Œä¸ºæŒ‡é’ˆã€‚
+        total += size;//å¢åŠ å·²ç»è®°å½•çš„æ•°æ®é•¿åº¦ã€‚
     }
 
-    vec->count = n; //Èç¹ûnµÈÓÚ0£¬Ôò±íÃ÷chainÁ´ÖĞµÄËùÓĞÊı¾İÔÚÁ¬ĞøµÄ¿Õ¼äÖĞ
+    vec->count = n; //å¦‚æœnç­‰äº0ï¼Œåˆ™è¡¨æ˜chainé“¾ä¸­çš„æ‰€æœ‰æ•°æ®åœ¨è¿ç»­çš„ç©ºé—´ä¸­
     vec->size = total;
 
     return in;
 }
 
 /*
-Ïòºó¶ËµÄÊı¾İ·¢ËÍ£¬²»»á¾­¹ı¸÷¸öfilterÄ£¿é£¬Ïò¿Í»§¶ËµÄ°üÌåÏìÓ¦»á¾­¹ı¸÷¸öfilterÄ£¿é
+å‘åç«¯çš„æ•°æ®å‘é€ï¼Œä¸ä¼šç»è¿‡å„ä¸ªfilteræ¨¡å—ï¼Œå‘å®¢æˆ·ç«¯çš„åŒ…ä½“å“åº”ä¼šç»è¿‡å„ä¸ªfilteræ¨¡å—
 2016/01/05 21:02:43[           ngx_event_process_posted,    67]  [debug] 23495#23495: *1 delete posted event AEA04098
 2016/01/05 21:02:43[          ngx_http_upstream_handler,  1400]  [debug] 23495#23495: *1 http upstream request(ev->write:1): "/test2.php?"
 2016/01/05 21:02:43[ngx_http_upstream_send_request_handler,  2420]  [debug] 23495#23495: *1 http upstream send request handler
@@ -199,7 +199,7 @@ ngx_output_chain_to_iovec(ngx_iovec_t *vec, ngx_chain_t *in, size_t limit,
 2016/01/05 21:02:43[                   ngx_chain_writer,   801]  [debug] 23495#23495: *1 chain writer out: 00000000
 
 
-Ïòºó¶ËµÄÊı¾İ·¢ËÍ£¬²»»á¾­¹ı¸÷¸öfilterÄ£¿é£¬Ïò¿Í»§¶ËµÄ°üÌåÏìÓ¦»á¾­¹ı¸÷¸öfilterÄ£¿é
+å‘åç«¯çš„æ•°æ®å‘é€ï¼Œä¸ä¼šç»è¿‡å„ä¸ªfilteræ¨¡å—ï¼Œå‘å®¢æˆ·ç«¯çš„åŒ…ä½“å“åº”ä¼šç»è¿‡å„ä¸ªfilteræ¨¡å—
 2016/01/05 21:02:43[ ngx_event_pipe_write_to_downstream,   623]  [debug] 23495#23495: *1 pipe write downstream flush out
 2016/01/05 21:02:43[             ngx_http_output_filter,  3338]  [debug] 23495#23495: *1 http output filter "/test2.php?"
 2016/01/05 21:02:43[               ngx_http_copy_filter,   199]  [debug] 23495#23495: *1 http copy filter: "/test2.php?", r->aio:0
@@ -223,15 +223,15 @@ ngx_output_chain_to_iovec(ngx_iovec_t *vec, ngx_chain_t *in, size_t limit,
 */
 ssize_t
 ngx_writev(ngx_connection_t *c, ngx_iovec_t *vec)
-{ //Ïòºó¶ËµÄÊı¾İ·¢ËÍ£¬²»»á¾­¹ı¸÷¸öfilterÄ£¿é£¬Ïò¿Í»§¶ËµÄ°üÌåÏìÓ¦»á¾­¹ı¸÷¸öfilterÄ£¿é
+{ //å‘åç«¯çš„æ•°æ®å‘é€ï¼Œä¸ä¼šç»è¿‡å„ä¸ªfilteræ¨¡å—ï¼Œå‘å®¢æˆ·ç«¯çš„åŒ…ä½“å“åº”ä¼šç»è¿‡å„ä¸ªfilteræ¨¡å—
     ssize_t    n;
     ngx_err_t  err;
 
 eintr:
-    //µ÷ÓÃwritev·¢ËÍÕâĞ©Êı¾İ£¬·µ»Ø·¢ËÍµÄÊı¾İ´óĞ¡
-    //readv ºÍwritev¿ÉÒÔÒ»ÏÂ¶ÁĞ´¶à¸ö»º³åÇøµÄÄÚÈİ£¬readºÍwriteÖ»ÄÜÒ»ÏÂ¶ÁĞ´Ò»¸ö»º³åÇøµÄÄÚÈİ£» 
+    //è°ƒç”¨writevå‘é€è¿™äº›æ•°æ®ï¼Œè¿”å›å‘é€çš„æ•°æ®å¤§å°
+    //readv å’Œwritevå¯ä»¥ä¸€ä¸‹è¯»å†™å¤šä¸ªç¼“å†²åŒºçš„å†…å®¹ï¼Œreadå’Œwriteåªèƒ½ä¸€ä¸‹è¯»å†™ä¸€ä¸ªç¼“å†²åŒºçš„å†…å®¹ï¼› 
     /* On success, the readv() function returns the number of bytes read; the writev() function returns the number of bytes written.  
-        On error, -1 is returned, and errno is  set appropriately. readv·µ»Ø±»¶ÁµÄ×Ö½Ú×ÜÊı¡£Èç¹ûÃ»ÓĞ¸ü¶àÊı¾İºÍÅöµ½ÎÄ¼şÄ©Î²Ê±·µ»Ø0µÄ¼ÆÊı¡£ */
+        On error, -1 is returned, and errno is  set appropriately. readvè¿”å›è¢«è¯»çš„å­—èŠ‚æ€»æ•°ã€‚å¦‚æœæ²¡æœ‰æ›´å¤šæ•°æ®å’Œç¢°åˆ°æ–‡ä»¶æœ«å°¾æ—¶è¿”å›0çš„è®¡æ•°ã€‚ */
     n = writev(c->fd, vec->iovs, vec->count);
 
     ngx_log_debug2(NGX_LOG_DEBUG_EVENT, c->log, 0,

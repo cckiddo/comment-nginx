@@ -116,12 +116,12 @@ User-Agent:Mozila/4.0(compatible:MSIE5.01:Windows NT5.0)
 
 Accept-Encoding:gzip,deflate.
 
-*/ //½âÎöÉÏÃæµÄGET /sample.jsp HTTP/1.1
-//ngx_http_parse_request_line½âÎöÇëÇóĞĞ£¬ ngx_http_process_request_headers(ngx_http_parse_header_line)½âÎöÍ·²¿ĞĞ(ÇëÇóÍ·²¿) ½ÓÊÕ°üÌångx_http_read_client_request_body
+*/ //è§£æä¸Šé¢çš„GET /sample.jsp HTTP/1.1
+//ngx_http_parse_request_lineè§£æè¯·æ±‚è¡Œï¼Œ ngx_http_process_request_headers(ngx_http_parse_header_line)è§£æå¤´éƒ¨è¡Œ(è¯·æ±‚å¤´éƒ¨) æ¥æ”¶åŒ…ä½“ngx_http_read_client_request_body
 
 /*
-·µ»ØÖµÖ÷ÒªÓĞ3Àà£º·µ»ØNGX¡ªOK±íÊ¾³É¹¦µØ½âÎöµ½ÍêÕûµÄHTTPÇëÇóĞĞ£»·µ»ØNGX AGAIN±íÊ¾Ä¿Ç°½ÓÊÕµ½µÄ×Ö·ûÁ÷²»×ãÒÔ¹¹³ÉÍê³ÉµÄÇëÇóĞĞ£¬»¹ĞèÒª
-½ÓÊÕ¸ü¶àµÄ×Ö·ûÁ÷£»·µ»ØNGX_HTTP_PARSE_INVALID_REQUEST»òÕßNGX_HTTP_PARSE_INVALID_09_METHODµÈÆäËûÖµÊ±±íÊ¾½ÓÊÕµ½·Ç·¨µÄÇëÇóĞĞ¡£
+è¿”å›å€¼ä¸»è¦æœ‰3ç±»ï¼šè¿”å›NGXâ€•OKè¡¨ç¤ºæˆåŠŸåœ°è§£æåˆ°å®Œæ•´çš„HTTPè¯·æ±‚è¡Œï¼›è¿”å›NGX AGAINè¡¨ç¤ºç›®å‰æ¥æ”¶åˆ°çš„å­—ç¬¦æµä¸è¶³ä»¥æ„æˆå®Œæˆçš„è¯·æ±‚è¡Œï¼Œè¿˜éœ€è¦
+æ¥æ”¶æ›´å¤šçš„å­—ç¬¦æµï¼›è¿”å›NGX_HTTP_PARSE_INVALID_REQUESTæˆ–è€…NGX_HTTP_PARSE_INVALID_09_METHODç­‰å…¶ä»–å€¼æ—¶è¡¨ç¤ºæ¥æ”¶åˆ°éæ³•çš„è¯·æ±‚è¡Œã€‚
 */
 ngx_int_t
 ngx_http_parse_request_line(ngx_http_request_t *r, ngx_buf_t *b)
@@ -825,7 +825,7 @@ ngx_http_parse_request_line(ngx_http_request_t *r, ngx_buf_t *b)
     b->pos = p;
     r->state = state;
 
-    return NGX_AGAIN; //±íÊ¾¸ÃĞĞÄÚÈİ²»¹»£¬ÀıÈçrecv¶ÁÈ¡µÄÊ±ºò£¬Ã»ÓĞ°ÑÕûĞĞÊı¾İ¶ÁÈ¡³öÀ´£¬·µ»Øºó¼ÌĞørecv£¬È»ºó½Ó×ÅÉÏ´Î½âÎöµÄÎ»ÖÃ¼ÌĞø½âÎöÖ±µ½ÇëÇóĞĞ½âÎöÍê±Ï
+    return NGX_AGAIN; //è¡¨ç¤ºè¯¥è¡Œå†…å®¹ä¸å¤Ÿï¼Œä¾‹å¦‚recvè¯»å–çš„æ—¶å€™ï¼Œæ²¡æœ‰æŠŠæ•´è¡Œæ•°æ®è¯»å–å‡ºæ¥ï¼Œè¿”å›åç»§ç»­recvï¼Œç„¶åæ¥ç€ä¸Šæ¬¡è§£æçš„ä½ç½®ç»§ç»­è§£æç›´åˆ°è¯·æ±‚è¡Œè§£æå®Œæ¯•
 
 done:
 
@@ -862,17 +862,17 @@ User-Agent:Mozila/4.0(compatible:MSIE5.01:Windows NT5.0)
 
 Accept-Encoding:gzip,deflate.
 
-*/ //½âÎöÉÏÃæµÄGET /sample.jsp HTTP/1.1ÒÔÍâµÄÅäÖÃ
+*/ //è§£æä¸Šé¢çš„GET /sample.jsp HTTP/1.1ä»¥å¤–çš„é…ç½®
 
 /*
-·µ»ØNGX_HTTP_PARSE_HEADER_DONE±íÊ¾ÏìÓ¦ÖĞËùÓĞµÄhttpÍ·²¿¶¼½âÎöÍê±Ï£¬½ÓÏÂÀ´ÔÙ½ÓÊÕµ½µÄ¶¼½«ÊÇhttp°üÌå
-·µ»ØNGX_OK±íÊ¾½âÎö³öÒ»ĞĞhttpÍ·²¿
-Èç¹û·µ»ØNGX_AGAINÔò±íÊ¾×´Ì¬»ú»¹Ã»ÓĞ½âÎöµ½ÍêÕûµÄhttpÍ·²¿£¬ÒªÇóupstreamÄ£¿é¼ÌĞø½ÓÊÕĞÂµÄ×Ö·ûÁ÷ÔÙ½»ÓÉprocess_header»Øµ÷·½·¨½âÎö
-*/ //ngx_http_parse_request_line½âÎöÇëÇóĞĞ£¬ ngx_http_process_request_headers(ngx_http_parse_header_line)½âÎöÍ·²¿ĞĞ(ÇëÇóÍ·²¿)
-//Í·²¿ĞĞ×îºóÃæÁ½¸ö\r\nÈ·¶¨Í·²¿ĞĞÈ«²¿½âÎöÍê±Ï£¬Ò²¾ÍÊÇÖĞ¼ä³öÏÖÒ»¸ö¿ÕĞĞÀ´Çø·ÖÍ·²¿ĞĞºÍbodyÊı¾İ
+è¿”å›NGX_HTTP_PARSE_HEADER_DONEè¡¨ç¤ºå“åº”ä¸­æ‰€æœ‰çš„httpå¤´éƒ¨éƒ½è§£æå®Œæ¯•ï¼Œæ¥ä¸‹æ¥å†æ¥æ”¶åˆ°çš„éƒ½å°†æ˜¯httpåŒ…ä½“
+è¿”å›NGX_OKè¡¨ç¤ºè§£æå‡ºä¸€è¡Œhttpå¤´éƒ¨
+å¦‚æœè¿”å›NGX_AGAINåˆ™è¡¨ç¤ºçŠ¶æ€æœºè¿˜æ²¡æœ‰è§£æåˆ°å®Œæ•´çš„httpå¤´éƒ¨ï¼Œè¦æ±‚upstreamæ¨¡å—ç»§ç»­æ¥æ”¶æ–°çš„å­—ç¬¦æµå†äº¤ç”±process_headerå›è°ƒæ–¹æ³•è§£æ
+*/ //ngx_http_parse_request_lineè§£æè¯·æ±‚è¡Œï¼Œ ngx_http_process_request_headers(ngx_http_parse_header_line)è§£æå¤´éƒ¨è¡Œ(è¯·æ±‚å¤´éƒ¨)
+//å¤´éƒ¨è¡Œæœ€åé¢ä¸¤ä¸ª\r\nç¡®å®šå¤´éƒ¨è¡Œå…¨éƒ¨è§£æå®Œæ¯•ï¼Œä¹Ÿå°±æ˜¯ä¸­é—´å‡ºç°ä¸€ä¸ªç©ºè¡Œæ¥åŒºåˆ†å¤´éƒ¨è¡Œå’Œbodyæ•°æ®
 ngx_int_t
 ngx_http_parse_header_line(ngx_http_request_t *r, ngx_buf_t *b,
-    ngx_uint_t allow_underscores) //Ã¿½âÎöÍêÒ»ĞĞname:value¾Í»á·µ»ØNGX_OK
+    ngx_uint_t allow_underscores) //æ¯è§£æå®Œä¸€è¡Œname:valueå°±ä¼šè¿”å›NGX_OK
 {
     u_char      c, ch, *p;
     ngx_uint_t  hash, i;
@@ -889,7 +889,7 @@ ngx_http_parse_header_line(ngx_http_request_t *r, ngx_buf_t *b,
 
     /* the last '\0' is not needed because string is zero terminated */
 
-    static u_char  lowcase[] = //Ã¿¸ö×Ö·û¶ÔÓ¦µÄasciiÂëÔÚÊı×éÖĞµÄÎ»ÖÃ
+    static u_char  lowcase[] = //æ¯ä¸ªå­—ç¬¦å¯¹åº”çš„asciiç åœ¨æ•°ç»„ä¸­çš„ä½ç½®
         "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"
         "\0\0\0\0\0\0\0\0\0\0\0\0\0-\0\0" "0123456789\0\0\0\0\0\0"
         "\0abcdefghijklmnopqrstuvwxyz\0\0\0\0\0"
@@ -899,9 +899,9 @@ ngx_http_parse_header_line(ngx_http_request_t *r, ngx_buf_t *b,
         "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"
         "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0";
 
-    state = r->state; //ÔÚ½âÎöÍêÇëÇóĞĞºó£¬r->state = sw_start;¼ûngx_http_parse_header_line
+    state = r->state; //åœ¨è§£æå®Œè¯·æ±‚è¡Œåï¼Œr->state = sw_start;è§ngx_http_parse_header_line
     hash = r->header_hash;
-    i = r->lowcase_index; //ÓĞ¿ÉÄÜ½âÎöµÄÊ±ºòÕâ´ÎÖ»¶Áµ½ÁËAccept-LanguageÖĞµÄAccept-Lan£¬ÏÂ´Îrecvºó»á¼ÌĞø½âÎöºóÃæµÄguage
+    i = r->lowcase_index; //æœ‰å¯èƒ½è§£æçš„æ—¶å€™è¿™æ¬¡åªè¯»åˆ°äº†Accept-Languageä¸­çš„Accept-Lanï¼Œä¸‹æ¬¡recvåä¼šç»§ç»­è§£æåé¢çš„guage
 
     for (p = b->pos; p < b->last; p++) {
         ch = *p;
@@ -910,10 +910,10 @@ ngx_http_parse_header_line(ngx_http_request_t *r, ngx_buf_t *b,
 
         /* first char */
         case sw_start:
-            r->header_name_start = p; //ÕâĞĞÍ·²¿ĞĞµÄ¿ªÊ¼´¦  //header_name_startÖ¸ÏòAccept-Language:zh-cnÖĞµÄA´¦
+            r->header_name_start = p; //è¿™è¡Œå¤´éƒ¨è¡Œçš„å¼€å§‹å¤„  //header_name_startæŒ‡å‘Accept-Language:zh-cnä¸­çš„Aå¤„
             r->invalid_header = 0;
 
-            switch (ch) { //Èç¹û³öÏÖÒ»ĞĞ¿ÕĞĞ£¬ÄÇÃ´ËµÃ÷ºóÃæµÄÊı¾İ¾ÍÊÇ±¨ÎÄÌåÊı¾İÁË
+            switch (ch) { //å¦‚æœå‡ºç°ä¸€è¡Œç©ºè¡Œï¼Œé‚£ä¹ˆè¯´æ˜åé¢çš„æ•°æ®å°±æ˜¯æŠ¥æ–‡ä½“æ•°æ®äº†
             case CR:
                 r->header_end = p;
                 state = sw_header_almost_done;
@@ -934,10 +934,10 @@ ngx_http_parse_header_line(ngx_http_request_t *r, ngx_buf_t *b,
                 }
 
                 if (ch == '_') {
-                    if (allow_underscores) { //Ö»ÓĞÅäÖÃÁËcscf->underscores_in_headers²ÅÔÊĞíÏÂ»®Ïß×Ö·û
+                    if (allow_underscores) { //åªæœ‰é…ç½®äº†cscf->underscores_in_headersæ‰å…è®¸ä¸‹åˆ’çº¿å­—ç¬¦
                         hash = ngx_hash(0, ch);
                         r->lowcase_header[0] = ch;
-                        i = 1; //Èç¹û¶Áµ½ÏÂ»®Ïß×Ö·û£¬Ôòlowcase_header´ÓÏÂ»®Ïß¿ªÊ¼´ÓĞÂ´æ´¢ÏÂ»®ÏßºóµÄ×Ö·û´®µ½Êı×éÖĞ
+                        i = 1; //å¦‚æœè¯»åˆ°ä¸‹åˆ’çº¿å­—ç¬¦ï¼Œåˆ™lowcase_headerä»ä¸‹åˆ’çº¿å¼€å§‹ä»æ–°å­˜å‚¨ä¸‹åˆ’çº¿åçš„å­—ç¬¦ä¸²åˆ°æ•°ç»„ä¸­
 
                     } else {
                         r->invalid_header = 1;
@@ -971,7 +971,7 @@ ngx_http_parse_header_line(ngx_http_request_t *r, ngx_buf_t *b,
             if (ch == '_') {
                 if (allow_underscores) {
                     hash = ngx_hash(hash, ch);
-                    r->lowcase_header[i++] = ch; //´æ´¢Accept-Language:zh-cnÖĞµÄAccept-Language×Ö·û´®µ½lowcase_header
+                    r->lowcase_header[i++] = ch; //å­˜å‚¨Accept-Language:zh-cnä¸­çš„Accept-Languageå­—ç¬¦ä¸²åˆ°lowcase_header
                     i &= (NGX_HTTP_LC_HEADER_LEN - 1);
 
                 } else {
@@ -1021,7 +1021,7 @@ ngx_http_parse_header_line(ngx_http_request_t *r, ngx_buf_t *b,
             break;
 
         /* space* before header value */
-        case sw_space_before_value: //Accept-Language:zh-cnÖĞµÄ:ºóÃæ¿ÉÒÔÔÊĞí¿Õ¸ñ£¬¿ÉÄÜÃ»²ÎÊı  aaa: \r\nÒ²¿ÉÄÜ¡£
+        case sw_space_before_value: //Accept-Language:zh-cnä¸­çš„:åé¢å¯ä»¥å…è®¸ç©ºæ ¼ï¼Œå¯èƒ½æ²¡å‚æ•°  aaa: \r\nä¹Ÿå¯èƒ½ã€‚
             switch (ch) {
             case ' ':  
                 break;
@@ -1037,7 +1037,7 @@ ngx_http_parse_header_line(ngx_http_request_t *r, ngx_buf_t *b,
             case '\0':
                 return NGX_HTTP_PARSE_INVALID_HEADER;
             default:
-                r->header_start = p; //header_startÖ¸ÏòAccept-Language:zh-cnÖĞµÄz×Ö·û´¦
+                r->header_start = p; //header_startæŒ‡å‘Accept-Language:zh-cnä¸­çš„zå­—ç¬¦å¤„
                 state = sw_value;
                 break;
             }
@@ -1055,7 +1055,7 @@ ngx_http_parse_header_line(ngx_http_request_t *r, ngx_buf_t *b,
                 state = sw_almost_done;
                 break;
             case LF:
-                r->header_end = p; //header_endÖ¸ÏòAccept-Language:zh-cnÖĞµÄÄ©Î²»»ĞĞ´¦
+                r->header_end = p; //header_endæŒ‡å‘Accept-Language:zh-cnä¸­çš„æœ«å°¾æ¢è¡Œå¤„
                 goto done;
             case '\0':
                 return NGX_HTTP_PARSE_INVALID_HEADER;
@@ -1114,7 +1114,7 @@ ngx_http_parse_header_line(ngx_http_request_t *r, ngx_buf_t *b,
         }
     }
 
-    //ËµÃ÷¸ÃĞĞ»¹Ã»½âÎöÍê£¬µ¥ÒÑ¾­Ã»Êı¾İÁË£¬ËµÃ÷ĞèÒª¼ÌĞørecvÈ»ºó¼ÌĞø½Ó×ÅÉÏ´ÎÎ»ÖÃ½âÎö
+    //è¯´æ˜è¯¥è¡Œè¿˜æ²¡è§£æå®Œï¼Œå•å·²ç»æ²¡æ•°æ®äº†ï¼Œè¯´æ˜éœ€è¦ç»§ç»­recvç„¶åç»§ç»­æ¥ç€ä¸Šæ¬¡ä½ç½®è§£æ
     b->pos = p; 
     r->state = state; 
     r->header_hash = hash; 
@@ -1124,20 +1124,20 @@ ngx_http_parse_header_line(ngx_http_request_t *r, ngx_buf_t *b,
 
 done:
 
-    b->pos = p + 1;//Ö¸ÏòÏÂÒ»ĞĞ¿ªÊ¼µÄÎ»ÖÃ
-    r->state = sw_start;//Ò»ĞĞÍ·²¿ĞĞ½âÎöÍê±Ïºó£¬stateÎªsw_value
-    r->header_hash = hash;//name:valueÖĞµÄname×Ö·û´®×öhashºóµÄ½á¹û
-    r->lowcase_index = i;//lowcase_indexÎªAccept-Language:zh-cnÖĞAccept-Language×Ö·ûÊı£¬Ò²¾ÍÊÇ15¸ö×Ö½Ú
+    b->pos = p + 1;//æŒ‡å‘ä¸‹ä¸€è¡Œå¼€å§‹çš„ä½ç½®
+    r->state = sw_start;//ä¸€è¡Œå¤´éƒ¨è¡Œè§£æå®Œæ¯•åï¼Œstateä¸ºsw_value
+    r->header_hash = hash;//name:valueä¸­çš„nameå­—ç¬¦ä¸²åšhashåçš„ç»“æœ
+    r->lowcase_index = i;//lowcase_indexä¸ºAccept-Language:zh-cnä¸­Accept-Languageå­—ç¬¦æ•°ï¼Œä¹Ÿå°±æ˜¯15ä¸ªå­—èŠ‚
 
-    return NGX_OK;//·µ»ØNGX_OK±íÊ¾½âÎö³öÒ»ĞĞhttpÍ·²¿
+    return NGX_OK;//è¿”å›NGX_OKè¡¨ç¤ºè§£æå‡ºä¸€è¡Œhttpå¤´éƒ¨
 
 header_done:
 
     b->pos = p + 1;
     r->state = sw_start;
 
-    //·µ»ØNGX_HTTP_PARSE_HEADER_DONE±íÊ¾ÏìÓ¦ÖĞËùÓĞµÄhttpÍ·²¿¶¼½âÎö
-//Íê±Ï£¬½ÓÏÂÀ´ÔÙ½ÓÊÕµ½µÄ¶¼½«ÊÇhttp°üÌå
+    //è¿”å›NGX_HTTP_PARSE_HEADER_DONEè¡¨ç¤ºå“åº”ä¸­æ‰€æœ‰çš„httpå¤´éƒ¨éƒ½è§£æ
+//å®Œæ¯•ï¼Œæ¥ä¸‹æ¥å†æ¥æ”¶åˆ°çš„éƒ½å°†æ˜¯httpåŒ…ä½“
     return NGX_HTTP_PARSE_HEADER_DONE;
 }
 
@@ -1628,8 +1628,8 @@ args:
     return NGX_OK;
 }
 
-//ÅĞ¶Ïbuf bÖĞÊÇ·ñ°üº¬ÍêÕûµÄhttpÓ¦´ğĞĞ    HTTP/1.1 200 OK \r\n
-//ngx_http_parse_status_line½âÎöÓ¦´ğĞĞ£¬mytest_upstream_process_header½âÎöÍ·²¿ĞĞÖĞµÄÆäÖĞÒ»ĞĞ
+//åˆ¤æ–­buf bä¸­æ˜¯å¦åŒ…å«å®Œæ•´çš„httpåº”ç­”è¡Œ    HTTP/1.1 200 OK \r\n
+//ngx_http_parse_status_lineè§£æåº”ç­”è¡Œï¼Œmytest_upstream_process_headerè§£æå¤´éƒ¨è¡Œä¸­çš„å…¶ä¸­ä¸€è¡Œ
 ngx_int_t
 ngx_http_parse_status_line(ngx_http_request_t *r, ngx_buf_t *b,
     ngx_http_status_t *status)
@@ -1716,7 +1716,7 @@ ngx_http_parse_status_line(ngx_http_request_t *r, ngx_buf_t *b,
                 return NGX_ERROR;
             }
 
-            r->http_major = ch - '0';  // HTTP/1.1Ç°ÃæµÄ1´ú±ímajor£¬ºóÃæµÄ1´ú±íminor
+            r->http_major = ch - '0';  // HTTP/1.1å‰é¢çš„1ä»£è¡¨majorï¼Œåé¢çš„1ä»£è¡¨minor
             state = sw_major_digit;
             break;
 
@@ -1740,7 +1740,7 @@ ngx_http_parse_status_line(ngx_http_request_t *r, ngx_buf_t *b,
                 return NGX_ERROR;
             }
 
-            r->http_minor = ch - '0';  // HTTP/1.1Ç°ÃæµÄ1´ú±ímajor£¬ºóÃæµÄ1´ú±íminor
+            r->http_minor = ch - '0';  // HTTP/1.1å‰é¢çš„1ä»£è¡¨majorï¼Œåé¢çš„1ä»£è¡¨minor
             state = sw_minor_digit;
             break;
 
@@ -1772,7 +1772,7 @@ ngx_http_parse_status_line(ngx_http_request_t *r, ngx_buf_t *b,
 
             if (++status->count == 3) {
                 state = sw_space_after_status;
-                status->start = p - 2; //Ö´ĞĞhttp 1/1 200 okÖĞµÄ2µÄµØÖ·
+                status->start = p - 2; //æ‰§è¡Œhttp 1/1 200 okä¸­çš„2çš„åœ°å€
             }
 
             break;
@@ -1787,7 +1787,7 @@ ngx_http_parse_status_line(ngx_http_request_t *r, ngx_buf_t *b,
                 state = sw_status_text;
                 break;
             case CR:
-                state = sw_almost_done; //ÏÂÒ»¸ö×Ö·ûÓ¦¸ÃÊÇ\n
+                state = sw_almost_done; //ä¸‹ä¸€ä¸ªå­—ç¬¦åº”è¯¥æ˜¯\n
                 break;
             case LF:
                 goto done;
@@ -1810,7 +1810,7 @@ ngx_http_parse_status_line(ngx_http_request_t *r, ngx_buf_t *b,
 
         /* end of status line */
         case sw_almost_done:
-            status->end = p - 1;//endÊµ¼ÊÉÏÖ¸ÏòµÄÊÇ\rµÄµØÖ·
+            status->end = p - 1;//endå®é™…ä¸ŠæŒ‡å‘çš„æ˜¯\rçš„åœ°å€
             switch (ch) {
             case LF:
                 goto done;
@@ -1827,13 +1827,13 @@ ngx_http_parse_status_line(ngx_http_request_t *r, ngx_buf_t *b,
 
 done:
 
-    b->pos = p + 1; //¾ÍÊÇÖ¸Ïò×îºóµÄ\n
+    b->pos = p + 1; //å°±æ˜¯æŒ‡å‘æœ€åçš„\n
 
     if (status->end == NULL) {
         status->end = p;
     }
 
-    // HTTP/1.1 ¶ÔÓ¦µÄÎª1001
+    // HTTP/1.1 å¯¹åº”çš„ä¸º1001
     status->http_version = r->http_major * 1000 + r->http_minor;
     r->state = sw_start;
 
@@ -2084,8 +2084,8 @@ ngx_http_parse_set_cookie_lines(ngx_array_t *headers, ngx_str_t *name,
     return NGX_DECLINED;
 }
 
-/*°ÑÇëÇóÖĞGET /download/nginx-1.9.2.rar?st=xhWL03HbtjrojpEAfiD6Mw&e=1452139931 HTTP/1.1µÄstºÍeĞÎ³É±äÁ¿$arg_st #arg_e£¬value·Ö±ğ
-ÎªxhWL03HbtjrojpEAfiD6Mw 1452139931¼´$arg_st=xhWL03HbtjrojpEAfiD6Mw£¬#arg_e=1452139931 */
+/*æŠŠè¯·æ±‚ä¸­GET /download/nginx-1.9.2.rar?st=xhWL03HbtjrojpEAfiD6Mw&e=1452139931 HTTP/1.1çš„stå’Œeå½¢æˆå˜é‡$arg_st #arg_eï¼Œvalueåˆ†åˆ«
+ä¸ºxhWL03HbtjrojpEAfiD6Mw 1452139931å³$arg_st=xhWL03HbtjrojpEAfiD6Mwï¼Œ#arg_e=1452139931 */
 ngx_int_t
 ngx_http_arg(ngx_http_request_t *r, u_char *name, size_t len, ngx_str_t *value)
 {
@@ -2149,14 +2149,14 @@ ngx_http_split_args(ngx_http_request_t *r, ngx_str_t *uri, ngx_str_t *args)
 }
 
 /*
-¸ñÊ½:
+æ ¼å¼:
 
-Ê®Áù½øÖÆea5±íÃ÷Õâ¸öÊî¼Ù¿éÓĞ3749×Ö½Ú
-          Õâ¸ö¿éÎª3749×Ö½Ú£¬¿éÊı½áÊøºó\r\n±íÃ÷Õâ¸ö¿éÒÑ¾­½áÊø               Õâ¸ö¿éÎª3752×Ö½Ú£¬¿éÊı½áÊøºó\r\n±íÃ÷Õâ¸ö¿éÒÑ¾­½áÊø 
-                                                                                                                                 0±íÊ¾×îºóÒ»¸ö¿é£¬×îºó¸úÁ½¸ö\r\n
+åå…­è¿›åˆ¶ea5è¡¨æ˜è¿™ä¸ªæš‘å‡å—æœ‰3749å­—èŠ‚
+          è¿™ä¸ªå—ä¸º3749å­—èŠ‚ï¼Œå—æ•°ç»“æŸå\r\nè¡¨æ˜è¿™ä¸ªå—å·²ç»ç»“æŸ               è¿™ä¸ªå—ä¸º3752å­—èŠ‚ï¼Œå—æ•°ç»“æŸå\r\nè¡¨æ˜è¿™ä¸ªå—å·²ç»ç»“æŸ 
+                                                                                                                                 0è¡¨ç¤ºæœ€åä¸€ä¸ªå—ï¼Œæœ€åè·Ÿä¸¤ä¸ª\r\n
 ea5\r\n........................................................\r\n ea8\r\n..................................................\r\n 0\r\n\r\n
 
-²Î¿¼:http://blog.csdn.net/zhangboyj/article/details/6236780
+å‚è€ƒ:http://blog.csdn.net/zhangboyj/article/details/6236780
 */
 ngx_int_t
 ngx_http_parse_chunked(ngx_http_request_t *r, ngx_buf_t *b,

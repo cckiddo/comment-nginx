@@ -415,7 +415,7 @@ ngx_http_realip_merge_loc_conf(ngx_conf_t *cf, void *parent, void *child)
     return NGX_CONF_OK;
 }
 
-//ÔõÑùÔÚNGX_HTTP_POST_READ_PHASE»òÕßNGX_HTTP_PREACCESS_PHASE½×¶ÎÌí¼ÓHTTPÄ£¿é
+//æ€Žæ ·åœ¨NGX_HTTP_POST_READ_PHASEæˆ–è€…NGX_HTTP_PREACCESS_PHASEé˜¶æ®µæ·»åŠ HTTPæ¨¡å—
 static ngx_int_t
 ngx_http_realip_init(ngx_conf_t *cf)
 {
@@ -425,8 +425,8 @@ ngx_http_realip_init(ngx_conf_t *cf)
     cmcf = ngx_http_conf_get_module_main_conf(cf, ngx_http_core_module);
 
     /*
-     phasesÊý×éÖÐÓÐ11¸ö³ÉÔ±£¬È¡³öNGX HTTP POST READ PHASE½×¶ÎµÄhandlers¶¯Ì¬Êý×é£¬ÏòÆäÖÐÌí¼Óngx_http_handler_pt´¦Àí·½·¨£¬Õâ
-     Ñùngx_http_realip_moduleÄ£¿é¾Í½éÈëHTTPÇëÇóµÄNGX_HTTP_POST_READ_PHASE´¦Àí½×¶ÎÁË
+     phasesæ•°ç»„ä¸­æœ‰11ä¸ªæˆå‘˜ï¼Œå–å‡ºNGX HTTP POST READ PHASEé˜¶æ®µçš„handlersåŠ¨æ€æ•°ç»„ï¼Œå‘å…¶ä¸­æ·»åŠ ngx_http_handler_ptå¤„ç†æ–¹æ³•ï¼Œè¿™
+     æ ·ngx_http_realip_moduleæ¨¡å—å°±ä»‹å…¥HTTPè¯·æ±‚çš„NGX_HTTP_POST_READ_PHASEå¤„ç†é˜¶æ®µäº†
      */
     h = ngx_array_push(&cmcf->phases[NGX_HTTP_POST_READ_PHASE].handlers);
     if (h == NULL) {
@@ -436,8 +436,8 @@ ngx_http_realip_init(ngx_conf_t *cf)
     *h = ngx_http_realip_handler;
 
     /*
-    Êµ¼ÊÉÏ£¬Í¬Ò»¸öHTTPÄ£¿éµÄÍ¬Ò»¸öngx_ht tp_realip_handler·½·¨£¬ÍêÈ«¿ÉÒÔÉèÖÃµ½Á½¸ö²»Í¬µÄ½×¶ÎÖÐµÄ¡£ÀýÈç£¬phases[NGX_HTTP_PREACCESS_PHASE.handlers]
-    ¶¯Ì¬Êý×éÖÐÒ²Ìí¼ÓÁËngx_http_realip_handler·½ºé
+    å®žé™…ä¸Šï¼ŒåŒä¸€ä¸ªHTTPæ¨¡å—çš„åŒä¸€ä¸ªngx_ht tp_realip_handleræ–¹æ³•ï¼Œå®Œå…¨å¯ä»¥è®¾ç½®åˆ°ä¸¤ä¸ªä¸åŒçš„é˜¶æ®µä¸­çš„ã€‚ä¾‹å¦‚ï¼Œphases[NGX_HTTP_PREACCESS_PHASE.handlers]
+    åŠ¨æ€æ•°ç»„ä¸­ä¹Ÿæ·»åŠ äº†ngx_http_realip_handleræ–¹æ´ª
      */
     h = ngx_array_push(&cmcf->phases[NGX_HTTP_PREACCESS_PHASE].handlers);
     if (h == NULL) {

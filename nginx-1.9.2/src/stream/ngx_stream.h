@@ -130,7 +130,7 @@ typedef struct {
     ngx_stream_conf_ctx_t  *ctx;
     u_char                 *file_name;
     ngx_int_t               line;
-    ngx_log_t              *error_log; //指向erorr_log配置项后面的文件
+    ngx_log_t              *error_log; //鎸囧悜erorr_log閰嶇疆椤瑰悗闈㈢殑鏂囦欢
 } ngx_stream_core_srv_conf_t;
 
 

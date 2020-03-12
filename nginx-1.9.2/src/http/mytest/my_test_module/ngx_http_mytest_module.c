@@ -3,30 +3,30 @@
 #include <ngx_http.h>  
 
 /*
-ÔÚngx_http_mytest_handler´¦Àí·½·¨´«À´µÄngx_http_request_t¶ÔÏóÖĞ¾ÍÓĞÕâ¸öÇëÇóµÄÄÚ´æ³Ø¹ÜÀí¶ÔÏó£¬ÎÒÃÇ¶ÔÄÚ´æ³ØµÄ²Ù×÷¶¼¿ÉÒÔ»ùÓÚ
-ËüÀ´½øĞĞ£¬ÕâÑù£¬ÔÚÕâ¸öÇëÇó½áÊøµÄÊ±ºò£¬ÄÚ´æ³Ø·ÖÅäµÄÄÚ´æÒ²¶¼»á±»ÊÍ·Å¡£
+åœ¨ngx_http_mytest_handlerå¤„ç†æ–¹æ³•ä¼ æ¥çš„ngx_http_request_tå¯¹è±¡ä¸­å°±æœ‰è¿™ä¸ªè¯·æ±‚çš„å†…å­˜æ± ç®¡ç†å¯¹è±¡ï¼Œæˆ‘ä»¬å¯¹å†…å­˜æ± çš„æ“ä½œéƒ½å¯ä»¥åŸºäº
+å®ƒæ¥è¿›è¡Œï¼Œè¿™æ ·ï¼Œåœ¨è¿™ä¸ªè¯·æ±‚ç»“æŸçš„æ—¶å€™ï¼Œå†…å­˜æ± åˆ†é…çš„å†…å­˜ä¹Ÿéƒ½ä¼šè¢«é‡Šæ”¾ã€‚
 */
 
 /*
-ÔÚngx_http_mytest_handlerµÄ·µ»ØÖµÖĞ£¬Èç¹ûÊÇÕı³£µÄHTTP·µ»ØÂë£¬Nginx¾Í»á°´ÕÕ¹æ·¶¹¹ÔìºÏ·¨µÄÏìÓ¦°ü·¢ËÍ¸øÓÃ»§¡£
-ÀıÈç£¬¼ÙÉè¶ÔÓÚPUT·½·¨Ôİ²»Ö§³Ö£¬ÄÇÃ´£¬ÔÚ´¦Àí·½·¨ÖĞ·¢ÏÖ·½·¨ÃûÊÇPUTÊ±£¬·µ»ØNGX_HTTP_NOT_ALLOWED£¬ÕâÑùNginxÒ²¾Í»á¹¹ÔìÀàËÆÏÂÃæµÄÏìÓ¦°ü¸øÓÃ»§¡£
+åœ¨ngx_http_mytest_handlerçš„è¿”å›å€¼ä¸­ï¼Œå¦‚æœæ˜¯æ­£å¸¸çš„HTTPè¿”å›ç ï¼ŒNginxå°±ä¼šæŒ‰ç…§è§„èŒƒæ„é€ åˆæ³•çš„å“åº”åŒ…å‘é€ç»™ç”¨æˆ·ã€‚
+ä¾‹å¦‚ï¼Œå‡è®¾å¯¹äºPUTæ–¹æ³•æš‚ä¸æ”¯æŒï¼Œé‚£ä¹ˆï¼Œåœ¨å¤„ç†æ–¹æ³•ä¸­å‘ç°æ–¹æ³•åæ˜¯PUTæ—¶ï¼Œè¿”å›NGX_HTTP_NOT_ALLOWEDï¼Œè¿™æ ·Nginxä¹Ÿå°±ä¼šæ„é€ ç±»ä¼¼ä¸‹é¢çš„å“åº”åŒ…ç»™ç”¨æˆ·ã€‚
 */
 
 /*
-NginxÔÚµ÷ÓÃÀı×ÓÖĞµÄngx_http_mytest_handler·½·¨Ê±ÊÇ×èÈûÁËÕû¸öNginx
-½ø³ÌµÄ£¬ËùÒÔngx_http_mytest_handler»òÀàËÆµÄ´¦Àí·½·¨ÖĞÊÇ²»ÄÜÓĞºÄÊ±ºÜ³¤µÄ²Ù×÷µÄ¡£
+Nginxåœ¨è°ƒç”¨ä¾‹å­ä¸­çš„ngx_http_mytest_handleræ–¹æ³•æ—¶æ˜¯é˜»å¡äº†æ•´ä¸ªNginx
+è¿›ç¨‹çš„ï¼Œæ‰€ä»¥ngx_http_mytest_handleræˆ–ç±»ä¼¼çš„å¤„ç†æ–¹æ³•ä¸­æ˜¯ä¸èƒ½æœ‰è€—æ—¶å¾ˆé•¿çš„æ“ä½œçš„ã€‚
 */
 static ngx_int_t ngx_http_mytest_handler(ngx_http_request_t *r)  
 {  
     printf("yang test:xxxxxxxxx <%s, %u>\n",  __FUNCTION__, __LINE__);
-    // Only handle GET/HEAD method  ////±ØĞëÊÇGET»òÕßHEAD·½·¨£¬·ñÔò·µ»Ø405 Not Allowed
+    // Only handle GET/HEAD method  ////å¿…é¡»æ˜¯GETæˆ–è€…HEADæ–¹æ³•ï¼Œå¦åˆ™è¿”å›405 Not Allowed
     if (!(r->method & (NGX_HTTP_GET | NGX_HTTP_HEAD))) {  
         return NGX_HTTP_NOT_ALLOWED;  
     }  
 
     // Discard request body  
     ngx_int_t rc = ngx_http_discard_request_body(r);  
-    //Èç¹û²»Ïë´¦ÀíÇëÇóÖĞµÄ°üÌå£¬ÄÇÃ´¿ÉÒÔµ÷ÓÃngx_http_discard_request_body·½·¨½«½ÓÊÕ×Ô¿Í»§¶ËµÄHTTP°üÌå¶ªÆúµô¡£
+    //å¦‚æœä¸æƒ³å¤„ç†è¯·æ±‚ä¸­çš„åŒ…ä½“ï¼Œé‚£ä¹ˆå¯ä»¥è°ƒç”¨ngx_http_discard_request_bodyæ–¹æ³•å°†æ¥æ”¶è‡ªå®¢æˆ·ç«¯çš„HTTPåŒ…ä½“ä¸¢å¼ƒæ‰ã€‚
     if (rc != NGX_OK) {  
         return rc;  
     }  
@@ -39,8 +39,8 @@ static ngx_int_t ngx_http_mytest_handler(ngx_http_request_t *r)
     r->headers_out.content_type = type;  
 
     /*
-    ÇëÇó´¦ÀíÍê±Ïºó£¬ĞèÒªÏòÓÃ»§·¢ËÍHTTPÏìÓ¦£¬¸æÖª¿Í»§¶ËNginxµÄÖ´ĞĞ½á¹û¡£HTTPÏìÓ¦Ö÷Òª°üÀ¨ÏìÓ¦ĞĞ¡¢ÏìÓ¦Í·²¿¡¢°üÌåÈı²¿·Ö¡£
-    ·¢ËÍHTTPÏìÓ¦Ê±ĞèÒªÖ´ĞĞ·¢ËÍHTTPÍ·²¿£¨·¢ËÍHTTPÍ·²¿Ê±Ò²»á·¢ËÍÏìÓ¦ĞĞ£©ºÍ·¢ËÍHTTP°üÌåÁ½²½²Ù×÷¡£
+    è¯·æ±‚å¤„ç†å®Œæ¯•åï¼Œéœ€è¦å‘ç”¨æˆ·å‘é€HTTPå“åº”ï¼Œå‘ŠçŸ¥å®¢æˆ·ç«¯Nginxçš„æ‰§è¡Œç»“æœã€‚HTTPå“åº”ä¸»è¦åŒ…æ‹¬å“åº”è¡Œã€å“åº”å¤´éƒ¨ã€åŒ…ä½“ä¸‰éƒ¨åˆ†ã€‚
+    å‘é€HTTPå“åº”æ—¶éœ€è¦æ‰§è¡Œå‘é€HTTPå¤´éƒ¨ï¼ˆå‘é€HTTPå¤´éƒ¨æ—¶ä¹Ÿä¼šå‘é€å“åº”è¡Œï¼‰å’Œå‘é€HTTPåŒ…ä½“ä¸¤æ­¥æ“ä½œã€‚
     */
     rc = ngx_http_send_header(r);  
     if (rc == NGX_ERROR || rc > NGX_OK || r->header_only) {  
@@ -69,14 +69,14 @@ static char* ngx_http_mytest(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
 
 
     /*
-    Ê×ÏÈÕÒµ½mytestÅäÖÃÏîËùÊôµÄÅäÖÃ¿é£¬clcf¿´ÉÏÈ¥ÏñÊÇlocation¿éÄÚµÄÊı¾İ½á¹¹£¬ÆäÊµ²»È»£¬Ëü¿ÉÒÔÊÇmain¡¢srv»òÕßloc¼¶±ğÅäÖÃÏî£¬Ò²¾ÍÊÇËµ£¬
-    ÔÚÃ¿¸öhttp{}ºÍserver{}ÄÚÒ²¶¼ÓĞÒ»¸öngx_http_core_loc_conf_t½á¹¹Ìå
+    é¦–å…ˆæ‰¾åˆ°mytesté…ç½®é¡¹æ‰€å±çš„é…ç½®å—ï¼Œclcfçœ‹ä¸Šå»åƒæ˜¯locationå—å†…çš„æ•°æ®ç»“æ„ï¼Œå…¶å®ä¸ç„¶ï¼Œå®ƒå¯ä»¥æ˜¯mainã€srvæˆ–è€…locçº§åˆ«é…ç½®é¡¹ï¼Œä¹Ÿå°±æ˜¯è¯´ï¼Œ
+    åœ¨æ¯ä¸ªhttp{}å’Œserver{}å†…ä¹Ÿéƒ½æœ‰ä¸€ä¸ªngx_http_core_loc_conf_tç»“æ„ä½“
     */
     clcf = ngx_http_conf_get_module_loc_conf(cf, ngx_http_core_module);  
 
-    /*HTTP¿ò¼ÜÔÚ´¦ÀíÓÃ»§ÇëÇó½øĞĞµ½NGX_HTTP_CONTENT_PHASE½×¶ÎÊ±£¬Èç¹ûÇëÇóµÄÖ÷»úÓòÃû¡¢URIÓëmytestÅäÖÃÏîËùÔÚµÄÅäÖÃ¿éÏàÆ¥Åä£¬¾Í½«µ÷ÓÃÎÒÃÇÊµÏÖµÄngx_http_mytest_handler·½·¨´¦ÀíÕâ¸öÇëÇó*/
-    //¸Ãº¯ÊıÔÚngx_http_core_content_phaseÖĞµÄngx_http_finalize_request(r, r->content_handler(r));ÀïÃæµÄr->content_handler(r)Ö´ĞĞ
-    clcf->handler = ngx_http_mytest_handler;   //HTTP¿ò¼ÜÔÚ½ÓÊÕÍêHTTPÇëÇóµÄÍ·²¿ºó£¬»áµ÷ÓÃhandlerÖ¸ÏòµÄ·½·¨
+    /*HTTPæ¡†æ¶åœ¨å¤„ç†ç”¨æˆ·è¯·æ±‚è¿›è¡Œåˆ°NGX_HTTP_CONTENT_PHASEé˜¶æ®µæ—¶ï¼Œå¦‚æœè¯·æ±‚çš„ä¸»æœºåŸŸåã€URIä¸mytesté…ç½®é¡¹æ‰€åœ¨çš„é…ç½®å—ç›¸åŒ¹é…ï¼Œå°±å°†è°ƒç”¨æˆ‘ä»¬å®ç°çš„ngx_http_mytest_handleræ–¹æ³•å¤„ç†è¿™ä¸ªè¯·æ±‚*/
+    //è¯¥å‡½æ•°åœ¨ngx_http_core_content_phaseä¸­çš„ngx_http_finalize_request(r, r->content_handler(r));é‡Œé¢çš„r->content_handler(r)æ‰§è¡Œ
+    clcf->handler = ngx_http_mytest_handler;   //HTTPæ¡†æ¶åœ¨æ¥æ”¶å®ŒHTTPè¯·æ±‚çš„å¤´éƒ¨åï¼Œä¼šè°ƒç”¨handleræŒ‡å‘çš„æ–¹æ³•
 
     return NGX_CONF_OK;  
 }  
@@ -87,8 +87,8 @@ static ngx_command_t ngx_http_mytest_commands[] = {
         NGX_HTTP_MAIN_CONF | NGX_HTTP_SRV_CONF | NGX_HTTP_LOC_CONF | NGX_HTTP_LMT_CONF | NGX_CONF_NOARGS, 
 
 /*
-ngx_http_mytestÊÇngx_command_t½á¹¹ÌåÖĞµÄset³ÉÔ±£¨ÍêÕû¶¨ÒåÎªchar *(*set)(ngx_conf_t *cf, ngx_command_t *cmd, void *conf);£©£¬
-µ±ÔÚÄ³¸öÅäÖÃ¿éÖĞ³öÏÖmytestÅäÖÃÏîÊ±£¬Nginx½«»áµ÷ÓÃngx_http_mytest·½·¨¡£ÏÂÃæ¿´Ò»ÏÂÈçºÎÊµÏÖngx_http_mytest·½·¨¡£
+ngx_http_mytestæ˜¯ngx_command_tç»“æ„ä½“ä¸­çš„setæˆå‘˜ï¼ˆå®Œæ•´å®šä¹‰ä¸ºchar *(*set)(ngx_conf_t *cf, ngx_command_t *cmd, void *conf);ï¼‰ï¼Œ
+å½“åœ¨æŸä¸ªé…ç½®å—ä¸­å‡ºç°mytesté…ç½®é¡¹æ—¶ï¼ŒNginxå°†ä¼šè°ƒç”¨ngx_http_mytestæ–¹æ³•ã€‚ä¸‹é¢çœ‹ä¸€ä¸‹å¦‚ä½•å®ç°ngx_http_mytestæ–¹æ³•ã€‚
 */
         ngx_http_mytest,  
         NGX_HTTP_LOC_CONF_OFFSET,  
@@ -98,7 +98,7 @@ ngx_http_mytestÊÇngx_command_t½á¹¹ÌåÖĞµÄset³ÉÔ±£¨ÍêÕû¶¨ÒåÎªchar *(*set)(ngx_conf
     ngx_null_command      
 };  
 
-//ÔİÇÒ²»¹ÜÈçºÎÊµÏÖ´¦ÀíÇëÇóµÄngx_http_mytest_handler·½·¨£¬Èç¹ûÃ»ÓĞÊ²Ã´¹¤×÷ÊÇ±ØĞëÔÚHTTP¿ò¼Ü³õÊ¼»¯Ê±Íê³ÉµÄ£¬ÄÇ¾Í²»±ØÊµÏÖngx_http_module_tµÄ8¸ö»Øµ÷·½·¨£¬¿ÉÒÔÏñÏÂÃæÕâÑù¶¨Òångx_http_module_t½Ó¿Ú¡£
+//æš‚ä¸”ä¸ç®¡å¦‚ä½•å®ç°å¤„ç†è¯·æ±‚çš„ngx_http_mytest_handleræ–¹æ³•ï¼Œå¦‚æœæ²¡æœ‰ä»€ä¹ˆå·¥ä½œæ˜¯å¿…é¡»åœ¨HTTPæ¡†æ¶åˆå§‹åŒ–æ—¶å®Œæˆçš„ï¼Œé‚£å°±ä¸å¿…å®ç°ngx_http_module_tçš„8ä¸ªå›è°ƒæ–¹æ³•ï¼Œå¯ä»¥åƒä¸‹é¢è¿™æ ·å®šä¹‰ngx_http_module_tæ¥å£ã€‚
 static ngx_http_module_t ngx_http_mytest_module_ctx = {  
     NULL,  
     NULL,  
@@ -110,7 +110,7 @@ static ngx_http_module_t ngx_http_mytest_module_ctx = {
     NULL  
 };  
 
-//¶¨ÒåmytestÄ£¿é£º 
+//å®šä¹‰mytestæ¨¡å—ï¼š 
 ngx_module_t ngx_http_mytest_module = {  
     NGX_MODULE_V1,  
     &ngx_http_mytest_module_ctx,  

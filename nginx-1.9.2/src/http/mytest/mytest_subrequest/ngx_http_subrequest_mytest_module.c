@@ -58,30 +58,30 @@ ngx_module_t  ngx_http_subrequest_mytest_module =
     NGX_MODULE_V1_PADDING
 };
 
-//×ÓÇëÇó´¦Àí×Ô¼º¸ºÔğµÄºó¶ËÏìÓ¦¶ÁÈ¡£¬¶ÁÈ¡´¦ÀíÍê±Ïºó£¬´¥·¢¸¸ÇëÇó½øĞĞÏàÓ¦µÄºÏ²¢µÈ²Ù×÷
+//å­è¯·æ±‚å¤„ç†è‡ªå·±è´Ÿè´£çš„åç«¯å“åº”è¯»å–ï¼Œè¯»å–å¤„ç†å®Œæ¯•åï¼Œè§¦å‘çˆ¶è¯·æ±‚è¿›è¡Œç›¸åº”çš„åˆå¹¶ç­‰æ“ä½œ
 static ngx_int_t mytest_subrequest_post_handler(ngx_http_request_t *r,
-                                                void *data, ngx_int_t rc) //ngx_http_finalize_requestÖĞÖ´ĞĞ
+                                                void *data, ngx_int_t rc) //ngx_http_finalize_requestä¸­æ‰§è¡Œ
 {
-    //µ±Ç°ÇëÇórÊÇ×ÓÇëÇó£¬ËüµÄparent³ÉÔ±¾ÍÖ¸Ïò¸¸ÇëÇó
+    //å½“å‰è¯·æ±‚ræ˜¯å­è¯·æ±‚ï¼Œå®ƒçš„parentæˆå‘˜å°±æŒ‡å‘çˆ¶è¯·æ±‚
     ngx_http_request_t          *pr = r->parent;
-    //×¢Òâ£¬ÉÏÏÂÎÄÊÇ±£´æÔÚ¸¸ÇëÇóÖĞµÄ£¬ËùÒÔÒªÓÉprÖĞÈ¡ÉÏÏÂÎÄ¡£
-//ÆäÊµÓĞ¸ü¼òµ¥µÄ·½·¨£¬¼´²ÎÊıdata¾ÍÊÇÉÏÏÂÎÄ£¬³õÊ¼»¯subrequestÊ±
-//ÎÒÃÇ¾Í¶ÔÆä½øĞĞÉèÖÃÁËµÄ£¬ÕâÀï½öÎªÁËËµÃ÷ÈçºÎ»ñÈ¡µ½¸¸ÇëÇóµÄÉÏÏÂÎÄ
+    //æ³¨æ„ï¼Œä¸Šä¸‹æ–‡æ˜¯ä¿å­˜åœ¨çˆ¶è¯·æ±‚ä¸­çš„ï¼Œæ‰€ä»¥è¦ç”±prä¸­å–ä¸Šä¸‹æ–‡ã€‚
+//å…¶å®æœ‰æ›´ç®€å•çš„æ–¹æ³•ï¼Œå³å‚æ•°dataå°±æ˜¯ä¸Šä¸‹æ–‡ï¼Œåˆå§‹åŒ–subrequestæ—¶
+//æˆ‘ä»¬å°±å¯¹å…¶è¿›è¡Œè®¾ç½®äº†çš„ï¼Œè¿™é‡Œä»…ä¸ºäº†è¯´æ˜å¦‚ä½•è·å–åˆ°çˆ¶è¯·æ±‚çš„ä¸Šä¸‹æ–‡
     ngx_http_subrequest_mytest_ctx_t* myctx = ngx_http_get_module_ctx(pr, ngx_http_subrequest_mytest_module);
 
     pr->headers_out.status = r->headers_out.status;
-    //Èç¹û·µ»ØNGX_HTTP_OK£¨Ò²¾ÍÊÇ200£©ÒâÎ¶×Å·ÃÎÊĞÂÀË·şÎñÆ÷³É¹¦£¬½Ó×Å½«¿ªÊ¼½âÎöhttp°üÌå
+    //å¦‚æœè¿”å›NGX_HTTP_OKï¼ˆä¹Ÿå°±æ˜¯200ï¼‰æ„å‘³ç€è®¿é—®æ–°æµªæœåŠ¡å™¨æˆåŠŸï¼Œæ¥ç€å°†å¼€å§‹è§£æhttpåŒ…ä½“
     if (r->headers_out.status == NGX_HTTP_OK)
     {
         int flag = 0;
 
-        //ÔÚ²»×ª·¢ÏìÓ¦Ê±£¬bufferÖĞ»á±£´æ×ÅÉÏÓÎ·şÎñÆ÷µÄÏìÓ¦¡£ÌØ±ğÊÇÔÚÊ¹ÓÃ
-//·´Ïò´úÀíÄ£¿é·ÃÎÊÉÏÓÎ·şÎñÆ÷Ê±£¬Èç¹ûËüÊ¹ÓÃupstream»úÖÆÊ±Ã»ÓĞÖØ¶¨Òå
-//input_filter·½·¨£¬upstream»úÖÆÄ¬ÈÏµÄinput_filter·½·¨»áÊÔÍ¼
-//°ÑËùÓĞµÄÉÏÓÎÏìÓ¦È«²¿±£´æµ½buffer»º³åÇøÖĞ
+        //åœ¨ä¸è½¬å‘å“åº”æ—¶ï¼Œbufferä¸­ä¼šä¿å­˜ç€ä¸Šæ¸¸æœåŠ¡å™¨çš„å“åº”ã€‚ç‰¹åˆ«æ˜¯åœ¨ä½¿ç”¨
+//åå‘ä»£ç†æ¨¡å—è®¿é—®ä¸Šæ¸¸æœåŠ¡å™¨æ—¶ï¼Œå¦‚æœå®ƒä½¿ç”¨upstreamæœºåˆ¶æ—¶æ²¡æœ‰é‡å®šä¹‰
+//input_filteræ–¹æ³•ï¼Œupstreamæœºåˆ¶é»˜è®¤çš„input_filteræ–¹æ³•ä¼šè¯•å›¾
+//æŠŠæ‰€æœ‰çš„ä¸Šæ¸¸å“åº”å…¨éƒ¨ä¿å­˜åˆ°bufferç¼“å†²åŒºä¸­
         ngx_buf_t* pRecvBuf = &r->upstream->buffer; 
 
-        //ÒÔÏÂ¿ªÊ¼½âÎöÉÏÓÎ·şÎñÆ÷µÄÏìÓ¦£¬²¢½«½âÎö³öµÄÖµ¸³µ½ÉÏÏÂÎÄ½á¹¹Ìåmyctx->stockÊı×éÖĞ
+        //ä»¥ä¸‹å¼€å§‹è§£æä¸Šæ¸¸æœåŠ¡å™¨çš„å“åº”ï¼Œå¹¶å°†è§£æå‡ºçš„å€¼èµ‹åˆ°ä¸Šä¸‹æ–‡ç»“æ„ä½“myctx->stockæ•°ç»„ä¸­
         for (; pRecvBuf->pos != pRecvBuf->last; pRecvBuf->pos++)
         {
             if (*pRecvBuf->pos == ',' || *pRecvBuf->pos == '\"')
@@ -91,7 +91,7 @@ static ngx_int_t mytest_subrequest_post_handler(ngx_http_request_t *r,
                     myctx->stock[flag - 1].len = pRecvBuf->pos - myctx->stock[flag - 1].data;
                 }
                 flag++;
-                myctx->stock[flag - 1].data = pRecvBuf->pos + 1; //°Ñ´Óºó¶Ë»ñÈ¡µ½µÄ²¿·ÖĞÅÏ¢£¬±£´æµ½ctxÖĞ£¬¸¸ÇëÇówrite_event_handlerµÄÊ±ºòÊ¹ÓÃ
+                myctx->stock[flag - 1].data = pRecvBuf->pos + 1; //æŠŠä»åç«¯è·å–åˆ°çš„éƒ¨åˆ†ä¿¡æ¯ï¼Œä¿å­˜åˆ°ctxä¸­ï¼Œçˆ¶è¯·æ±‚write_event_handlerçš„æ—¶å€™ä½¿ç”¨
             }
 
             if (flag > 6)
@@ -100,9 +100,9 @@ static ngx_int_t mytest_subrequest_post_handler(ngx_http_request_t *r,
     }
 
     
-    //ÕâÒ»²½ºÜÖØÒª£¬ÉèÖÃ½ÓÏÂÀ´¸¸ÇëÇóµÄ»Øµ÷·½·¨   ×ÓÇëÇó½ÓÊÕÍê×Ô¼º¸ºÔğµÄÄÇ²¿·Öºó¶ËÏìÓ¦ºó£¬¾ÍÍ¨Öª¸¸ÇëÇó½øĞĞÏàÓ¦µÄ´¦Àí
-    //(ÀıÈç¶à¸ö²»Í¬µÄ×ÓÇëÇó·Ö±ğ¶ÔÓ¦ºó¶Ë¶à¸ö²»Í¬µÄ·şÎñÆ÷£¬¸÷¸öºó¶ËÓ¦´ğ»ØÀ´ºó¾ÍĞèÒªÍ¨Öª¸¸ÇëÇó¾ÍĞĞºÏ²¢µÈ²Ù×÷£¬
-    pr->write_event_handler = mytest_post_handler; //ngx_http_core_run_phasesÖĞÖ´ĞĞ
+    //è¿™ä¸€æ­¥å¾ˆé‡è¦ï¼Œè®¾ç½®æ¥ä¸‹æ¥çˆ¶è¯·æ±‚çš„å›è°ƒæ–¹æ³•   å­è¯·æ±‚æ¥æ”¶å®Œè‡ªå·±è´Ÿè´£çš„é‚£éƒ¨åˆ†åç«¯å“åº”åï¼Œå°±é€šçŸ¥çˆ¶è¯·æ±‚è¿›è¡Œç›¸åº”çš„å¤„ç†
+    //(ä¾‹å¦‚å¤šä¸ªä¸åŒçš„å­è¯·æ±‚åˆ†åˆ«å¯¹åº”åç«¯å¤šä¸ªä¸åŒçš„æœåŠ¡å™¨ï¼Œå„ä¸ªåç«¯åº”ç­”å›æ¥åå°±éœ€è¦é€šçŸ¥çˆ¶è¯·æ±‚å°±è¡Œåˆå¹¶ç­‰æ“ä½œï¼Œ
+    pr->write_event_handler = mytest_post_handler; //ngx_http_core_run_phasesä¸­æ‰§è¡Œ
 
     return NGX_OK;
 }
@@ -110,26 +110,26 @@ static ngx_int_t mytest_subrequest_post_handler(ngx_http_request_t *r,
 static void
 mytest_post_handler(ngx_http_request_t * r)
 {
-    //Èç¹ûÃ»ÓĞ·µ»Ø200ÔòÖ±½Ó°Ñ´íÎóÂë·¢»ØÓÃ»§
+    //å¦‚æœæ²¡æœ‰è¿”å›200åˆ™ç›´æ¥æŠŠé”™è¯¯ç å‘å›ç”¨æˆ·
     if (r->headers_out.status != NGX_HTTP_OK)
     {
         ngx_http_finalize_request(r, r->headers_out.status);
         return;
     }
 
-    //µ±Ç°ÇëÇóÊÇ¸¸ÇëÇó£¬Ö±½ÓÈ¡ÆäÉÏÏÂÎÄ
+    //å½“å‰è¯·æ±‚æ˜¯çˆ¶è¯·æ±‚ï¼Œç›´æ¥å–å…¶ä¸Šä¸‹æ–‡
     ngx_http_subrequest_mytest_ctx_t* myctx = ngx_http_get_module_ctx(r, ngx_http_subrequest_mytest_module);
 
-    //¶¨Òå·¢¸øÓÃ»§µÄhttp°üÌåÄÚÈİ£¬¸ñÊ½Îª£º
-//stock[¡­],Today current price: ¡­, volumn: ¡­
+    //å®šä¹‰å‘ç»™ç”¨æˆ·çš„httpåŒ…ä½“å†…å®¹ï¼Œæ ¼å¼ä¸ºï¼š
+//stock[â€¦],Today current price: â€¦, volumn: â€¦
     ngx_str_t output_format = ngx_string("stock[%V],Today current price: %V, volumn: %V");
 
-    //¼ÆËã´ı·¢ËÍ°üÌåµÄ³¤¶È
+    //è®¡ç®—å¾…å‘é€åŒ…ä½“çš„é•¿åº¦
     int bodylen = output_format.len + myctx->stock[0].len
                   + myctx->stock[1].len + myctx->stock[4].len - 6;
     r->headers_out.content_length_n = bodylen;
 
-    //ÔÚÄÚ´æ³ØÉÏ·ÖÅäÄÚ´æ±£´æ½«Òª·¢ËÍµÄ°üÌå
+    //åœ¨å†…å­˜æ± ä¸Šåˆ†é…å†…å­˜ä¿å­˜å°†è¦å‘é€çš„åŒ…ä½“
     ngx_buf_t* b = ngx_create_temp_buf(r->pool, bodylen);
     ngx_snprintf(b->pos, bodylen, (char*)output_format.data,
                  &myctx->stock[0], &myctx->stock[1], &myctx->stock[4]);
@@ -139,7 +139,7 @@ mytest_post_handler(ngx_http_request_t * r)
     ngx_chain_t out;
     out.buf = b;
     out.next = NULL;
-    //ÉèÖÃContent-Type£¬×¢Òâºº×Ö±àÂëĞÂÀË·şÎñÆ÷Ê¹ÓÃÁËGBK
+    //è®¾ç½®Content-Typeï¼Œæ³¨æ„æ±‰å­—ç¼–ç æ–°æµªæœåŠ¡å™¨ä½¿ç”¨äº†GBK
     static ngx_str_t type = ngx_string("text/plain; charset=GBK");
     r->headers_out.content_type = type;
     r->headers_out.status = NGX_HTTP_OK;
@@ -148,8 +148,8 @@ mytest_post_handler(ngx_http_request_t * r)
     ngx_int_t ret = ngx_http_send_header(r);
     ret = ngx_http_output_filter(r, &out);
 
-    //×¢Òâ£¬ÕâÀï·¢ËÍÍêÏìÓ¦ºó±ØĞëÊÖ¶¯µ÷ÓÃngx_http_finalize_request
-//½áÊøÇëÇó£¬ÒòÎªÕâÊ±http¿ò¼Ü²»»áÔÙ°ïÃ¦µ÷ÓÃËü
+    //æ³¨æ„ï¼Œè¿™é‡Œå‘é€å®Œå“åº”åå¿…é¡»æ‰‹åŠ¨è°ƒç”¨ngx_http_finalize_request
+//ç»“æŸè¯·æ±‚ï¼Œå› ä¸ºè¿™æ—¶httpæ¡†æ¶ä¸ä¼šå†å¸®å¿™è°ƒç”¨å®ƒ
     ngx_http_finalize_request(r, ret);
 }
 
@@ -158,14 +158,14 @@ ngx_http_subrequest_mytest(ngx_conf_t * cf, ngx_command_t * cmd, void * conf)
 {
     ngx_http_core_loc_conf_t  *clcf;
 
-    //Ê×ÏÈÕÒµ½mytestÅäÖÃÏîËùÊôµÄÅäÖÃ¿é£¬clcfÃ²ËÆÊÇlocation¿éÄÚµÄÊı¾İ
-//½á¹¹£¬ÆäÊµ²»È»£¬Ëü¿ÉÒÔÊÇmain¡¢srv»òÕßloc¼¶±ğÅäÖÃÏî£¬Ò²¾ÍÊÇËµÔÚÃ¿¸ö
-//http{}ºÍserver{}ÄÚÒ²¶¼ÓĞÒ»¸öngx_http_core_loc_conf_t½á¹¹Ìå
+    //é¦–å…ˆæ‰¾åˆ°mytesté…ç½®é¡¹æ‰€å±çš„é…ç½®å—ï¼Œclcfè²Œä¼¼æ˜¯locationå—å†…çš„æ•°æ®
+//ç»“æ„ï¼Œå…¶å®ä¸ç„¶ï¼Œå®ƒå¯ä»¥æ˜¯mainã€srvæˆ–è€…locçº§åˆ«é…ç½®é¡¹ï¼Œä¹Ÿå°±æ˜¯è¯´åœ¨æ¯ä¸ª
+//http{}å’Œserver{}å†…ä¹Ÿéƒ½æœ‰ä¸€ä¸ªngx_http_core_loc_conf_tç»“æ„ä½“
     clcf = ngx_http_conf_get_module_loc_conf(cf, ngx_http_core_module);
 
-    //http¿ò¼ÜÔÚ´¦ÀíÓÃ»§ÇëÇó½øĞĞµ½NGX_HTTP_CONTENT_PHASE½×¶ÎÊ±£¬Èç¹û
-//ÇëÇóµÄÖ÷»úÓòÃû¡¢URIÓëmytestÅäÖÃÏîËùÔÚµÄÅäÖÃ¿éÏàÆ¥Åä£¬¾Í½«µ÷ÓÃÎÒÃÇ
-//ÊµÏÖµÄngx_http_mytest_handler·½·¨´¦ÀíÕâ¸öÇëÇó
+    //httpæ¡†æ¶åœ¨å¤„ç†ç”¨æˆ·è¯·æ±‚è¿›è¡Œåˆ°NGX_HTTP_CONTENT_PHASEé˜¶æ®µæ—¶ï¼Œå¦‚æœ
+//è¯·æ±‚çš„ä¸»æœºåŸŸåã€URIä¸mytesté…ç½®é¡¹æ‰€åœ¨çš„é…ç½®å—ç›¸åŒ¹é…ï¼Œå°±å°†è°ƒç”¨æˆ‘ä»¬
+//å®ç°çš„ngx_http_mytest_handleræ–¹æ³•å¤„ç†è¿™ä¸ªè¯·æ±‚
     clcf->handler = ngx_http_subrequest_mytest_handler;
 
     return NGX_CONF_OK;
@@ -174,7 +174,7 @@ ngx_http_subrequest_mytest(ngx_conf_t * cf, ngx_command_t * cmd, void * conf)
 static ngx_int_t
 ngx_http_subrequest_mytest_handler(ngx_http_request_t * r)
 {
-    //´´½¨httpÉÏÏÂÎÄ
+    //åˆ›å»ºhttpä¸Šä¸‹æ–‡
     ngx_http_subrequest_mytest_ctx_t* myctx = ngx_http_get_module_ctx(r, ngx_http_subrequest_mytest_module);
     if (myctx == NULL)
     {
@@ -184,28 +184,28 @@ ngx_http_subrequest_mytest_handler(ngx_http_request_t * r)
             return NGX_ERROR;
         }
 
-        //½«ÉÏÏÂÎÄÉèÖÃµ½Ô­Ê¼ÇëÇórÖĞ
+        //å°†ä¸Šä¸‹æ–‡è®¾ç½®åˆ°åŸå§‹è¯·æ±‚rä¸­
         ngx_http_set_ctx(r, myctx, ngx_http_subrequest_mytest_module);
     }
 
-    // ngx_http_post_subrequest_t½á¹¹Ìå»á¾ö¶¨×ÓÇëÇóµÄ»Øµ÷·½·¨   
+    // ngx_http_post_subrequest_tç»“æ„ä½“ä¼šå†³å®šå­è¯·æ±‚çš„å›è°ƒæ–¹æ³•   
     ngx_http_post_subrequest_t *psr = ngx_palloc(r->pool, sizeof(ngx_http_post_subrequest_t));
     if (psr == NULL)
     {
         return NGX_HTTP_INTERNAL_SERVER_ERROR;
     }
 
-    //ÉèÖÃ×ÓÇëÇó»Øµ÷·½·¨Îªmytest_subrequest_post_handler
+    //è®¾ç½®å­è¯·æ±‚å›è°ƒæ–¹æ³•ä¸ºmytest_subrequest_post_handler
     /*
-    µ±¶ÁÈ¡Íê¸Ã×ÓÇëÇóºó¶ËÓ¦´ğµÄÊı¾İºó£¬»áµ÷ÓÃngx_http_upstream_finalize_request->ngx_http_finalize_request£¬ÔÚngx_http_finalize_requestÖĞÖ´ĞĞ¸Ãhandlerº¯Êı
+    å½“è¯»å–å®Œè¯¥å­è¯·æ±‚åç«¯åº”ç­”çš„æ•°æ®åï¼Œä¼šè°ƒç”¨ngx_http_upstream_finalize_request->ngx_http_finalize_requestï¼Œåœ¨ngx_http_finalize_requestä¸­æ‰§è¡Œè¯¥handlerå‡½æ•°
     */
     psr->handler = mytest_subrequest_post_handler;
 
-    //dataÉèÎªmyctxÉÏÏÂÎÄ£¬ÕâÑù»Øµ÷mytest_subrequest_post_handlerÊ±´«ÈëµÄdata²ÎÊı¾ÍÊÇmyctx
+    //dataè®¾ä¸ºmyctxä¸Šä¸‹æ–‡ï¼Œè¿™æ ·å›è°ƒmytest_subrequest_post_handleræ—¶ä¼ å…¥çš„dataå‚æ•°å°±æ˜¯myctx
     psr->data = myctx;
 
-    //×ÓÇëÇóµÄURIÇ°×ºÊÇ/list£¬ÕâÊÇÒòÎª·ÃÎÊĞÂÀË·şÎñÆ÷µÄÇëÇó±ØĞëÊÇÀà
-//ËÆ/list=s_sh000001ÕâÑùµÄURI£¬
+    //å­è¯·æ±‚çš„URIå‰ç¼€æ˜¯/listï¼Œè¿™æ˜¯å› ä¸ºè®¿é—®æ–°æµªæœåŠ¡å™¨çš„è¯·æ±‚å¿…é¡»æ˜¯ç±»
+//ä¼¼/list=s_sh000001è¿™æ ·çš„URIï¼Œ
     ngx_str_t sub_prefix = ngx_string("/list=");
     ngx_str_t sub_location;
     sub_location.len = sub_prefix.len + r->args.len;
@@ -216,22 +216,22 @@ ngx_http_subrequest_mytest_handler(ngx_http_request_t * r)
     ngx_log_debug2(NGX_LOG_DEBUG_HTTP, r->connection->log, 0,
                    "ngx_http_subrequest_mytest_handler, http subrequest \"%V?%V\"", &sub_prefix, &r->args);
 
-    //sr¾ÍÊÇ×ÓÇëÇó
+    //srå°±æ˜¯å­è¯·æ±‚
     ngx_http_request_t *sr;
-    //µ÷ÓÃngx_http_subrequest´´½¨×ÓÇëÇó£¬ËüÖ»»á·µ»ØNGX_OK
-//»òÕßNGX_ERROR¡£·µ»ØNGX_OKÊ±£¬sr¾ÍÒÑ¾­ÊÇºÏ·¨µÄ×ÓÇëÇó¡£×¢Òâ£¬ÕâÀï
-//µÄNGX_HTTP_SUBREQUEST_IN_MEMORY²ÎÊı½«¸æËßupstreamÄ£¿é°ÑÉÏ
-//ÓÎ·şÎñÆ÷µÄÏìÓ¦È«²¿±£´æÔÚ×ÓÇëÇóµÄsr->upstream->bufferÄÚ´æ»º³åÇøÖĞ
+    //è°ƒç”¨ngx_http_subrequeståˆ›å»ºå­è¯·æ±‚ï¼Œå®ƒåªä¼šè¿”å›NGX_OK
+//æˆ–è€…NGX_ERRORã€‚è¿”å›NGX_OKæ—¶ï¼Œsrå°±å·²ç»æ˜¯åˆæ³•çš„å­è¯·æ±‚ã€‚æ³¨æ„ï¼Œè¿™é‡Œ
+//çš„NGX_HTTP_SUBREQUEST_IN_MEMORYå‚æ•°å°†å‘Šè¯‰upstreamæ¨¡å—æŠŠä¸Š
+//æ¸¸æœåŠ¡å™¨çš„å“åº”å…¨éƒ¨ä¿å­˜åœ¨å­è¯·æ±‚çš„sr->upstream->bufferå†…å­˜ç¼“å†²åŒºä¸­
     ngx_int_t rc = ngx_http_subrequest(r, &sub_location, NULL, &sr, psr, NGX_HTTP_SUBREQUEST_IN_MEMORY);
     if (rc != NGX_OK)
     {
         return NGX_ERROR;
     }
 
-    //±ØĞë·µ»ØNGX_DONE£¬ÀíÓÉÍ¬upstream
+    //å¿…é¡»è¿”å›NGX_DONEï¼Œç†ç”±åŒupstream
     /*
-     ¸Ãº¯ÊıÓÉngx_http_core_content_phaseµ÷ÓÃ£¬È»ºóÈ¥ÅĞ¶Ï¸Ã·µ»ØÖµ£¬11¸ö½×¶ÎÖ´ĞĞÍêºó£¬»áÍ¨¹ıngx_http_run_posted_requests
-     ¶Ô¿Í»§¶ËÇëÇór¶ÔÓ¦µÄËùÓĞ×ÓÇëÇó×öÖØ¶¨Ïò´¦Àí 
+     è¯¥å‡½æ•°ç”±ngx_http_core_content_phaseè°ƒç”¨ï¼Œç„¶åå»åˆ¤æ–­è¯¥è¿”å›å€¼ï¼Œ11ä¸ªé˜¶æ®µæ‰§è¡Œå®Œåï¼Œä¼šé€šè¿‡ngx_http_run_posted_requests
+     å¯¹å®¢æˆ·ç«¯è¯·æ±‚rå¯¹åº”çš„æ‰€æœ‰å­è¯·æ±‚åšé‡å®šå‘å¤„ç† 
     */
 
     
@@ -240,7 +240,7 @@ ngx_http_subrequest_mytest_handler(ngx_http_request_t * r)
 
 
 /*
-NGINXÅäÖÃ
+NGINXé…ç½®
 
 location /list {
     proxy_pass http://hq.sinajs.cn;
@@ -250,10 +250,10 @@ location /query {
   subrequest_yyz;
 }
 
-http·ÃÎÊ:http://192.168.50.63/query?s_sh000001
+httpè®¿é—®:http://192.168.50.63/query?s_sh000001
 
 
-NGINXÈÕÖ¾:
+NGINXæ—¥å¿—:
 2017/03/01 15:25:40[                ngx_epoll_process_events,  1715]  [debug] 1562#1562: epoll: fd:6 EPOLLIN  (ev:0001) d:00007FC6EF55E010
 2017/03/01 15:25:40[                ngx_epoll_process_events,  1761]  [debug] 1562#1562: post event 00007FC6EB95E010
 2017/03/01 15:25:40[           ngx_process_events_and_timers,   395]  [debug] 1562#1562: epoll_wait timer range(delta): 12245
@@ -334,7 +334,7 @@ NGINXÈÕÖ¾:
 2017/03/01 15:25:40[             ngx_http_core_rewrite_phase,  1997]  [debug] 1562#1562: *2 rewrite phase: 2 (NGX_HTTP_REWRITE_PHASE)
 2017/03/01 15:25:40[        ngx_http_core_post_rewrite_phase,  2151]  [debug] 1562#1562: *2 post rewrite phase: 3 (NGX_HTTP_POST_REWRITE_PHASE)
 2017/03/01 15:25:40[             ngx_http_core_generic_phase,  1933]  [debug] 1562#1562: *2 generic phase: 4 (NGX_HTTP_PREACCESS_PHASE)
-2017/03/01 15:25:40[           ngx_http_script_copy_var_code,   989]  [debug] 1562#1562: *2 http script var: "À¨2
+2017/03/01 15:25:40[           ngx_http_script_copy_var_code,   989]  [debug] 1562#1562: *2 http script var: "æ‹¬2
 
                                                                                                                   2017/03/01 15:25:40[                          ngx_shmtx_lock,   168]  [debug] 1562#1562: shmtx lock
 2017/03/01 15:25:40[                        ngx_shmtx_unlock,   249]  [debug] 1562#1562: shmtx unlock
@@ -431,7 +431,7 @@ Cookie: sinaGlobalRotator_http%3A//192.168.50=98
 2017/03/01 15:25:40[           ngx_http_proxy_process_header,  2544]  [debug] 1562#1562: *2 http proxy header: "Content-Type: application/x-javascript; charset=GBK"
 2017/03/01 15:25:40[           ngx_http_proxy_process_header,  2554]  [debug] 1562#1562: *2 http proxy header done
 2017/03/01 15:25:40[      ngx_http_proxy_process_header,  2622][yangya  [debug] 1562#1562: *2 upstream header recv ok, u->keepalive:0
-2017/03/01 15:25:40[           ngx_http_proxy_process_header,  2625]  [debug] 1562#1562: *2 yang test .... body:var hq_str_s_sh000001="ÉÏÖ¤Ö¸Êı,3246.9335,5.2004,0.16,1906775,22594097";
+2017/03/01 15:25:40[           ngx_http_proxy_process_header,  2625]  [debug] 1562#1562: *2 yang test .... body:var hq_str_s_sh000001="ä¸Šè¯æŒ‡æ•°,3246.9335,5.2004,0.16,1906775,22594097";
 
 2017/03/01 15:25:40[        ngx_http_proxy_input_filter_init,  2658]  [debug] 1562#1562: *2 http proxy filter init upstream status:200 is HEAD:0 chunked:0 content_length_n:73
 2017/03/01 15:25:40[      ngx_http_upstream_finalize_request,  4568]  [debug] 1562#1562: *2 finalize http upstream request rc: 0

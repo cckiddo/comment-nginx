@@ -26,7 +26,7 @@ liubin 728 726 0 20:00 pts/4 00:00:00 nginx:worker process
 liubin 740 726 0 20:00 pts/4 00:00:00 nginx:dispatcher process 
 liubin 2714 726 0 20:30 pts/4 00:00:00 nginx:worker process
 
-//¿ÉÒÔ¿´µ½£¬É±µô745ºó£¬ÂíÉÏÓÖÆğÀ´ĞÂµÄ2714½ø³Ì
+//å¯ä»¥çœ‹åˆ°ï¼Œæ€æ‰745åï¼Œé©¬ä¸Šåˆèµ·æ¥æ–°çš„2714è¿›ç¨‹
 */
 
 #define DefaultConfigFile "/var/conf/nginx_lunbo.conf"
@@ -34,16 +34,16 @@ liubin 2714 726 0 20:30 pts/4 00:00:00 nginx:worker process
 #define VERSION "1.0.0"
 
 /*
-ÔÚ·ÖÎöngx_spawn_process()´´½¨ĞÂ½ø³ÌÊ±£¬ÏÈÁË½âÏÂ½ø³ÌÊôĞÔ¡£Í¨Ë×µãËµ¾ÍÊÇ½ø³Ì¹ÒÁËĞè²»ĞèÒªÖØÆô¡£
-ÔÚÔ´ÂëÖĞ£¬nginx_process.hÖĞ£¬ÓĞÒÔÏÂ¼¸ÖÖÊôĞÔ±êÊ¶£º
+åœ¨åˆ†ængx_spawn_process()åˆ›å»ºæ–°è¿›ç¨‹æ—¶ï¼Œå…ˆäº†è§£ä¸‹è¿›ç¨‹å±æ€§ã€‚é€šä¿—ç‚¹è¯´å°±æ˜¯è¿›ç¨‹æŒ‚äº†éœ€ä¸éœ€è¦é‡å¯ã€‚
+åœ¨æºç ä¸­ï¼Œnginx_process.hä¸­ï¼Œæœ‰ä»¥ä¸‹å‡ ç§å±æ€§æ ‡è¯†ï¼š
 
-NGX_PROCESS_NORESPAWN    £º×Ó½ø³ÌÍË³öÊ±,¸¸½ø³Ì²»»áÔÙ´ÎÖØÆô
-NGX_PROCESS_JUST_SPAWN   £º--
-NGX_PROCESS_RESPAWN      £º×Ó½ø³ÌÒì³£ÍË³öÊ±,¸¸½ø³ÌĞèÒªÖØÆô
-NGX_PROCESS_JUST_RESPAWN £º--
-NGX_PROCESS_DETACHED     £ºÈÈ´úÂëÌæ»»£¬ÔİÊ±¹À¼ÆÊÇÓÃÓÚÔÚ²»ÖØÆôNginxµÄÇé¿öÏÂ½øĞĞÈí¼şÉı¼¶
+NGX_PROCESS_NORESPAWN    ï¼šå­è¿›ç¨‹é€€å‡ºæ—¶,çˆ¶è¿›ç¨‹ä¸ä¼šå†æ¬¡é‡å¯
+NGX_PROCESS_JUST_SPAWN   ï¼š--
+NGX_PROCESS_RESPAWN      ï¼šå­è¿›ç¨‹å¼‚å¸¸é€€å‡ºæ—¶,çˆ¶è¿›ç¨‹éœ€è¦é‡å¯
+NGX_PROCESS_JUST_RESPAWN ï¼š--
+NGX_PROCESS_DETACHED     ï¼šçƒ­ä»£ç æ›¿æ¢ï¼Œæš‚æ—¶ä¼°è®¡æ˜¯ç”¨äºåœ¨ä¸é‡å¯Nginxçš„æƒ…å†µä¸‹è¿›è¡Œè½¯ä»¶å‡çº§
 
-NGX_PROCESS_JUST_RESPAWN±êÊ¶×îÖÕ»áÔÚngx_spawn_process()´´½¨worker½ø³ÌÊ±£¬½«ngx_processes[s].just_spawn = 1£¬ÒÔ´Ë×÷ÎªÇø±ğ¾ÉµÄworker½ø³ÌµÄ±ê¼Ç¡£
+NGX_PROCESS_JUST_RESPAWNæ ‡è¯†æœ€ç»ˆä¼šåœ¨ngx_spawn_process()åˆ›å»ºworkerè¿›ç¨‹æ—¶ï¼Œå°†ngx_processes[s].just_spawn = 1ï¼Œä»¥æ­¤ä½œä¸ºåŒºåˆ«æ—§çš„workerè¿›ç¨‹çš„æ ‡è®°ã€‚
 */
 #define MAX_PROCESSES 128
 #define PROCESS_NORESPAWN     -1
@@ -57,15 +57,15 @@ char *ConfigFile = NULL;
 
 typedef void (*spawn_proc_pt) (void *data);
 typedef struct {
-    pid_t           pid; //¸Ã½ø³Ìpid
-    int                 status; //½ø³Ì×´Ì¬£¬Í¨¹ısig_child»ñÈ¡
+    pid_t           pid; //è¯¥è¿›ç¨‹pid
+    int                 status; //è¿›ç¨‹çŠ¶æ€ï¼Œé€šè¿‡sig_childè·å–
     //int        channel[2];
 
-    spawn_proc_pt   proc; //´´½¨½ø³ÌÊ±ºòµÄ»Øµ÷
-    void               *data; //´´½¨½ø³ÌÊ±ºò´«µİµÄ²ÎÊı
-    char               *name; //½ø³ÌÃû
+    spawn_proc_pt   proc; //åˆ›å»ºè¿›ç¨‹æ—¶å€™çš„å›è°ƒ
+    void               *data; //åˆ›å»ºè¿›ç¨‹æ—¶å€™ä¼ é€’çš„å‚æ•°
+    char               *name; //è¿›ç¨‹å
 
-    unsigned            respawn:1; //PROCESS_RESPAWN ´´½¨½ø³ÌµÄÊ±ºòÊÍ·ÅÖ¸¶¨ĞèÒªmasterÀ­ÆğÒ»¸öĞÂµÄ½ø³Ì£¬Èç¹û½ø³Ì¹ÒÁË
+    unsigned            respawn:1; //PROCESS_RESPAWN åˆ›å»ºè¿›ç¨‹çš„æ—¶å€™é‡Šæ”¾æŒ‡å®šéœ€è¦masteræ‹‰èµ·ä¸€ä¸ªæ–°çš„è¿›ç¨‹ï¼Œå¦‚æœè¿›ç¨‹æŒ‚äº†
     unsigned            just_spawn:1;
     unsigned            detached:1;
     unsigned            exiting:1;
@@ -83,7 +83,7 @@ int opt_send_signal = -1;
 sig_atomic_t  reap;
 sig_atomic_t  terminate;
 sig_atomic_t  quit;
-int last_process; //Ã¿´´½¨Ò»¸ö½ø³Ì¾Í++
+int last_process; //æ¯åˆ›å»ºä¸€ä¸ªè¿›ç¨‹å°±++
 int exiting;
 
 char **os_argv;
@@ -237,7 +237,7 @@ void save_argv(int argc, char *const *argv)
 void
 sig_child(int sig)
 {
-    reap = 1; //Í¨ÖªÖ÷½ø³ÌÖØĞÂ´´½¨Ò»¸öworker½ø³Ì
+    reap = 1; //é€šçŸ¥ä¸»è¿›ç¨‹é‡æ–°åˆ›å»ºä¸€ä¸ªworkerè¿›ç¨‹
 
     int status;
     int i;
@@ -420,7 +420,7 @@ reap_children(void)
     int        live;
 
     live = 0;
-    for (i = 0; i < last_process; i++) { //Ö®Ç°¹ÒµôµÄ½ø³Ì
+    for (i = 0; i < last_process; i++) { //ä¹‹å‰æŒ‚æ‰çš„è¿›ç¨‹
                 //child[0] 26718 e:0 t:0 d:0 r:1 j:0
         fprintf(stderr,"child[%d] %d exiting:%d exited:%d detached:%d respawn:%d just_spawn:%d\n",
                        i,
@@ -448,7 +448,7 @@ reap_children(void)
                 }
             }
 
-            if (processes[i].respawn //ĞèÒªÖØÆô½ø³Ì
+            if (processes[i].respawn //éœ€è¦é‡å¯è¿›ç¨‹
                 && !processes[i].exiting
                 && !terminate
                 && !quit)

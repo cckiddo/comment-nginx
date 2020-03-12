@@ -10,14 +10,14 @@
 #include <ngx_channel.h>
 
 /*
-¶øÔÚ×Ó½ø³ÌÖĞÊÇÈçºÎ´¦ÀíµÄÄØ£¬×Ó½ø³ÌµÄ¹ÜµÀ¿É¶ÁÊÂ¼ş²¶×½º¯ÊıÊÇngx_channel_handler(ngx_event_t *ev)£¬ÔÚÕâ¸öº¯ÊıÖĞ£¬»á¶ÁÈ¡mseeage£¬
-È»ºó½âÎö£¬²¢¸ù¾İ²»Í¬µÄÃüÁî×ö²»Í¬µÄ´¦Àí£¬À´¿´ËüµÄ´úÂëÆ¬¶Ï£º 
+è€Œåœ¨å­è¿›ç¨‹ä¸­æ˜¯å¦‚ä½•å¤„ç†çš„å‘¢ï¼Œå­è¿›ç¨‹çš„ç®¡é“å¯è¯»äº‹ä»¶æ•æ‰å‡½æ•°æ˜¯ngx_channel_handler(ngx_event_t *ev)ï¼Œåœ¨è¿™ä¸ªå‡½æ•°ä¸­ï¼Œä¼šè¯»å–mseeageï¼Œ
+ç„¶åè§£æï¼Œå¹¶æ ¹æ®ä¸åŒçš„å‘½ä»¤åšä¸åŒçš„å¤„ç†ï¼Œæ¥çœ‹å®ƒçš„ä»£ç ç‰‡æ–­ï¼š 
 */
-/* ¸øÃ¿¸ö½ø³ÌµÄ¸¸½ø³Ì·¢ËÍ¸Õ´´½¨worker½ø³ÌµÄĞÅÏ¢ */  
+/* ç»™æ¯ä¸ªè¿›ç¨‹çš„çˆ¶è¿›ç¨‹å‘é€åˆšåˆ›å»ºworkerè¿›ç¨‹çš„ä¿¡æ¯ */  
 /*
-ÕâÀïµÄs²ÎÊıÊÇÒªÊ¹ÓÃµÄTCPÌ×½Ó×Ö£¬ch²ÎÊıÊÇngx_channel_t·àĞÍµÄÏûÏ¢£¬size²ÎÊıÊÇngx_channel_t½á¹¹ÌåµÄ´óĞ¡£¬109²ÎÊıÊÇÈÕÖ¾¶ÔÏó¡£
+è¿™é‡Œçš„så‚æ•°æ˜¯è¦ä½¿ç”¨çš„TCPå¥—æ¥å­—ï¼Œchå‚æ•°æ˜¯ngx_channel_tç²ªå‹çš„æ¶ˆæ¯ï¼Œsizeå‚æ•°æ˜¯ngx_channel_tç»“æ„ä½“çš„å¤§å°ï¼Œ109å‚æ•°æ˜¯æ—¥å¿—å¯¹è±¡ã€‚
 */
-//ngx_write_channelºÍngx_read_channelÅä¶Ô   ÓÃÓÚ¸¸×Ó½ø³ÌÖ®¼äÍ¨ĞÅ£¬Í¨ĞÅ±¨ÎÄ¼ûNGX_CMD_QUITµÈ
+//ngx_write_channelå’Œngx_read_channelé…å¯¹   ç”¨äºçˆ¶å­è¿›ç¨‹ä¹‹é—´é€šä¿¡ï¼Œé€šä¿¡æŠ¥æ–‡è§NGX_CMD_QUITç­‰
 ngx_int_t
 ngx_write_channel(ngx_socket_t s, ngx_channel_t *ch, size_t size,
     ngx_log_t *log)
@@ -100,13 +100,13 @@ ngx_write_channel(ngx_socket_t s, ngx_channel_t *ch, size_t size,
 }
 
 /*
-ÕâÀïµÄ²ÎÊıÒâÒåÓëngx_write_channel·½·¨ÍêÈ«ÏàÍ¬£¬Ö»ÊÇÒª×¢ÒâsÌ×½Ó×Ö£¬ËüÓë·¢ËÍ·½Ê¹ÓÃµÄsÌ×½Ó×ÖÊÇÅä¶ÔµÄ¡£ÀıÈç£¬ÔÚNginxÖĞ£¬Ä¿Ç°½ö´æ
-ÔÚmaster½ø³ÌÏòworker½ø³Ì·¢ËÍÏûÏ¢µÄ³¡¾°£¬ÕâÊ±¶ÔÓÚsocketpair·½·¨´´½¨µÄchannel[2]Ì×½Ó×Ö¶ÔÀ´Ëµ£¬master½ø³Ì»áÊ¹ÓÃchannel[0]Ì×½Ó×Ö
-À´·¢ËÍÏûÏ¢£¬¶øworker½ø³ÌÔò»áÊ¹ÓÃchannel[l]Ì×½Ó×ÖÀ´½ÓÊÕÏûÏ¢¡£
+è¿™é‡Œçš„å‚æ•°æ„ä¹‰ä¸ngx_write_channelæ–¹æ³•å®Œå…¨ç›¸åŒï¼Œåªæ˜¯è¦æ³¨æ„så¥—æ¥å­—ï¼Œå®ƒä¸å‘é€æ–¹ä½¿ç”¨çš„så¥—æ¥å­—æ˜¯é…å¯¹çš„ã€‚ä¾‹å¦‚ï¼Œåœ¨Nginxä¸­ï¼Œç›®å‰ä»…å­˜
+åœ¨masterè¿›ç¨‹å‘workerè¿›ç¨‹å‘é€æ¶ˆæ¯çš„åœºæ™¯ï¼Œè¿™æ—¶å¯¹äºsocketpairæ–¹æ³•åˆ›å»ºçš„channel[2]å¥—æ¥å­—å¯¹æ¥è¯´ï¼Œmasterè¿›ç¨‹ä¼šä½¿ç”¨channel[0]å¥—æ¥å­—
+æ¥å‘é€æ¶ˆæ¯ï¼Œè€Œworkerè¿›ç¨‹åˆ™ä¼šä½¿ç”¨channel[l]å¥—æ¥å­—æ¥æ¥æ”¶æ¶ˆæ¯ã€‚
 
 
 */
-//ngx_write_channelºÍngx_read_channelÅä¶Ô  ÓÃÓÚ¸¸×Ó½ø³ÌÖ®¼äÍ¨ĞÅ£¬Í¨ĞÅ±¨ÎÄ¼ûNGX_CMD_QUITµÈ
+//ngx_write_channelå’Œngx_read_channelé…å¯¹  ç”¨äºçˆ¶å­è¿›ç¨‹ä¹‹é—´é€šä¿¡ï¼Œé€šä¿¡æŠ¥æ–‡è§NGX_CMD_QUITç­‰
 ngx_int_t
 ngx_read_channel(ngx_socket_t s, ngx_channel_t *ch, size_t size, ngx_log_t *log)
 {
@@ -238,14 +238,14 @@ ngx_add_channel_event(ngx_cycle_t *cycle, ngx_fd_t fd, ngx_int_t event,
 
     ev->handler = handler;
 
-    if (ngx_add_conn && (ngx_event_flags & NGX_USE_EPOLL_EVENT) == 0) { //²»ÊÇepoll·½Ê½µÄÊ±ºòÓÃngx_add_conn
+    if (ngx_add_conn && (ngx_event_flags & NGX_USE_EPOLL_EVENT) == 0) { //ä¸æ˜¯epollæ–¹å¼çš„æ—¶å€™ç”¨ngx_add_conn
         if (ngx_add_conn(c) == NGX_ERROR) {
             ngx_free_connection(c);
             return NGX_ERROR;
         }
 
     } else {
-        if (ngx_add_event(ev, event, 0) == NGX_ERROR) { //Èç¹ûÊÇepollÔòÎªngx_epoll_add_event
+        if (ngx_add_event(ev, event, 0) == NGX_ERROR) { //å¦‚æœæ˜¯epollåˆ™ä¸ºngx_epoll_add_event
             ngx_free_connection(c);
             return NGX_ERROR;
         }
@@ -255,7 +255,7 @@ ngx_add_channel_event(ngx_cycle_t *cycle, ngx_fd_t fd, ngx_int_t event,
 }
 
 /*
-ÔÚ¸¸½ø³ÌÖĞÖ´ĞĞ£¬ÓÃÓÚ¹Ø±Õ¸¸½ø³ÌÖĞµÄÈ«¾Ö±äÁ¿ngx_processes[i].channel£¬
+åœ¨çˆ¶è¿›ç¨‹ä¸­æ‰§è¡Œï¼Œç”¨äºå…³é—­çˆ¶è¿›ç¨‹ä¸­çš„å…¨å±€å˜é‡ngx_processes[i].channelï¼Œ
 */
 void
 ngx_close_channel(ngx_fd_t *fd, ngx_log_t *log)

@@ -16,7 +16,7 @@
 typedef int               ngx_err_t;
 
 #define NGX_EPERM         EPERM
-#define NGX_ENOENT        ENOENT //²ÎÊýfile_nameÖ¸¶¨µÄÎÄ¼þ²»´æÔÚ
+#define NGX_ENOENT        ENOENT //å‚æ•°file_nameæŒ‡å®šçš„æ–‡ä»¶ä¸å­˜åœ¨
 #define NGX_ENOPATH       ENOENT
 #define NGX_ESRCH         ESRCH
 #define NGX_EINTR         EINTR
@@ -59,43 +59,43 @@ typedef int               ngx_err_t;
 #endif
 
 /*
-EWOULDBLOCKÓÃÓÚ·Ç×èÈûÄ£Ê½£¬²»ÐèÒªÖØÐÂ¶Á»òÕßÐ´
-ÁíÍâ£¬Èç¹û³öÏÖEINTR¼´errnoÎª4£¬´íÎóÃèÊöInterrupted system call£¬²Ù×÷Ò²Ó¦¸Ã¼ÌÐø¡£
-EINTRÖ¸²Ù×÷±»ÖÐ¶Ï»½ÐÑ£¬ÐèÒªÖØÐÂ¶Á/Ð´
+EWOULDBLOCKç”¨äºŽéžé˜»å¡žæ¨¡å¼ï¼Œä¸éœ€è¦é‡æ–°è¯»æˆ–è€…å†™
+å¦å¤–ï¼Œå¦‚æžœå‡ºçŽ°EINTRå³errnoä¸º4ï¼Œé”™è¯¯æè¿°Interrupted system callï¼Œæ“ä½œä¹Ÿåº”è¯¥ç»§ç»­ã€‚
+EINTRæŒ‡æ“ä½œè¢«ä¸­æ–­å”¤é†’ï¼Œéœ€è¦é‡æ–°è¯»/å†™
 
-ÔÚLinux»·¾³ÏÂ¿ª·¢¾­³£»áÅöµ½ºÜ¶à´íÎó(ÉèÖÃerrno)£¬ÆäÖÐEAGAINÊÇÆäÖÐ±È½Ï³£¼ûµÄÒ»¸ö´íÎó(±ÈÈçÓÃÔÚ·Ç×èÈû²Ù×÷ÖÐ)¡£
-´Ó×ÖÃæÉÏÀ´¿´£¬ÊÇÌáÊ¾ÔÙÊÔÒ»´Î¡£Õâ¸ö´íÎó¾­³£³öÏÖÔÚµ±Ó¦ÓÃ³ÌÐò½øÐÐÒ»Ð©·Ç×èÈû(non-blocking)²Ù×÷(¶ÔÎÄ¼þ»òsocket)µÄÊ±ºò¡£
-ÀýÈç£¬ÒÔ O_NONBLOCKµÄ±êÖ¾´ò¿ªÎÄ¼þ/socket/FIFO£¬Èç¹ûÄãÁ¬Ðø×öread²Ù×÷¶øÃ»ÓÐÊý¾Ý¿É¶Á¡£´ËÊ±³ÌÐò²»»á×èÈûÆðÀ´µÈ´ýÊý¾Ý×¼±¸¾ÍÐ÷·µ»Ø£¬
-readº¯Êý»á·µ»ØÒ»¸ö´íÎóEAGAIN£¬ÌáÊ¾ÄãµÄÓ¦ÓÃ³ÌÐòÏÖÔÚÃ»ÓÐÊý¾Ý¿É¶ÁÇëÉÔºóÔÙÊÔ¡£
+åœ¨LinuxçŽ¯å¢ƒä¸‹å¼€å‘ç»å¸¸ä¼šç¢°åˆ°å¾ˆå¤šé”™è¯¯(è®¾ç½®errno)ï¼Œå…¶ä¸­EAGAINæ˜¯å…¶ä¸­æ¯”è¾ƒå¸¸è§çš„ä¸€ä¸ªé”™è¯¯(æ¯”å¦‚ç”¨åœ¨éžé˜»å¡žæ“ä½œä¸­)ã€‚
+ä»Žå­—é¢ä¸Šæ¥çœ‹ï¼Œæ˜¯æç¤ºå†è¯•ä¸€æ¬¡ã€‚è¿™ä¸ªé”™è¯¯ç»å¸¸å‡ºçŽ°åœ¨å½“åº”ç”¨ç¨‹åºè¿›è¡Œä¸€äº›éžé˜»å¡ž(non-blocking)æ“ä½œ(å¯¹æ–‡ä»¶æˆ–socket)çš„æ—¶å€™ã€‚
+ä¾‹å¦‚ï¼Œä»¥ O_NONBLOCKçš„æ ‡å¿—æ‰“å¼€æ–‡ä»¶/socket/FIFOï¼Œå¦‚æžœä½ è¿žç»­åšreadæ“ä½œè€Œæ²¡æœ‰æ•°æ®å¯è¯»ã€‚æ­¤æ—¶ç¨‹åºä¸ä¼šé˜»å¡žèµ·æ¥ç­‰å¾…æ•°æ®å‡†å¤‡å°±ç»ªè¿”å›žï¼Œ
+readå‡½æ•°ä¼šè¿”å›žä¸€ä¸ªé”™è¯¯EAGAINï¼Œæç¤ºä½ çš„åº”ç”¨ç¨‹åºçŽ°åœ¨æ²¡æœ‰æ•°æ®å¯è¯»è¯·ç¨åŽå†è¯•ã€‚
 
-ÔÚLinuxÖÐÊ¹ÓÃ·Ç×èÈûµÄsocketµÄÇéÐÎÏÂ¡£ 
-£¨Ò»£©·¢ËÍÊ±
+åœ¨Linuxä¸­ä½¿ç”¨éžé˜»å¡žçš„socketçš„æƒ…å½¢ä¸‹ã€‚ 
+ï¼ˆä¸€ï¼‰å‘é€æ—¶
 
-¡¡¡¡µ±¿Í»§Í¨¹ýSocketÌá¹©µÄsendº¯Êý·¢ËÍ´óµÄÊý¾Ý°üÊ±£¬¾Í¿ÉÄÜ·µ»ØÒ»¸öEAGAINµÄ´íÎó¡£¸Ã´íÎó²úÉúµÄÔ­ÒòÊÇÓÉÓÚsend º¯ÊýÖÐµÄsize±äÁ¿´óÐ¡³¬¹ýÁË
-tcp_sendspaceµÄÖµ¡£tcp_sendspace¶¨ÒåÁËÓ¦ÓÃÔÚµ÷ÓÃsendÖ®Ç°ÄÜ¹»ÔÚkernelÖÐ»º´æµÄÊý¾ÝÁ¿¡£µ±Ó¦ÓÃ³ÌÐòÔÚsocketÖÐÉèÖÃÁËO_NDELAY»òÕßO_NONBLOCKÊôÐÔºó£¬
-Èç¹û·¢ËÍ»º´æ±»Õ¼Âú£¬send¾Í»á·µ»ØEAGAINµÄ´íÎó¡£ 
+ã€€ã€€å½“å®¢æˆ·é€šè¿‡Socketæä¾›çš„sendå‡½æ•°å‘é€å¤§çš„æ•°æ®åŒ…æ—¶ï¼Œå°±å¯èƒ½è¿”å›žä¸€ä¸ªEAGAINçš„é”™è¯¯ã€‚è¯¥é”™è¯¯äº§ç”Ÿçš„åŽŸå› æ˜¯ç”±äºŽsend å‡½æ•°ä¸­çš„sizeå˜é‡å¤§å°è¶…è¿‡äº†
+tcp_sendspaceçš„å€¼ã€‚tcp_sendspaceå®šä¹‰äº†åº”ç”¨åœ¨è°ƒç”¨sendä¹‹å‰èƒ½å¤Ÿåœ¨kernelä¸­ç¼“å­˜çš„æ•°æ®é‡ã€‚å½“åº”ç”¨ç¨‹åºåœ¨socketä¸­è®¾ç½®äº†O_NDELAYæˆ–è€…O_NONBLOCKå±žæ€§åŽï¼Œ
+å¦‚æžœå‘é€ç¼“å­˜è¢«å æ»¡ï¼Œsendå°±ä¼šè¿”å›žEAGAINçš„é”™è¯¯ã€‚ 
 
-¡¡¡¡ÎªÁËÏû³ý¸Ã´íÎó£¬ÓÐÈýÖÖ·½·¨¿ÉÒÔÑ¡Ôñ£º 
-¡¡¡¡1.µ÷´ótcp_sendspace£¬Ê¹Ö®´óÓÚsendÖÐµÄsize²ÎÊý 
-¡¡¡¡---no -p -o tcp_sendspace=65536 
+ã€€ã€€ä¸ºäº†æ¶ˆé™¤è¯¥é”™è¯¯ï¼Œæœ‰ä¸‰ç§æ–¹æ³•å¯ä»¥é€‰æ‹©ï¼š 
+ã€€ã€€1.è°ƒå¤§tcp_sendspaceï¼Œä½¿ä¹‹å¤§äºŽsendä¸­çš„sizeå‚æ•° 
+ã€€ã€€---no -p -o tcp_sendspace=65536 
 
-¡¡¡¡2.ÔÚµ÷ÓÃsendÇ°£¬ÔÚsetsockoptº¯ÊýÖÐÎªSNDBUFÉèÖÃ¸ü´óµÄÖµ 
+ã€€ã€€2.åœ¨è°ƒç”¨sendå‰ï¼Œåœ¨setsockoptå‡½æ•°ä¸­ä¸ºSNDBUFè®¾ç½®æ›´å¤§çš„å€¼ 
 
-¡¡¡¡3.Ê¹ÓÃwriteÌæ´úsend£¬ÒòÎªwriteÃ»ÓÐÉèÖÃO_NDELAY»òÕßO_NONBLOCK
+ã€€ã€€3.ä½¿ç”¨writeæ›¿ä»£sendï¼Œå› ä¸ºwriteæ²¡æœ‰è®¾ç½®O_NDELAYæˆ–è€…O_NONBLOCK
 
-£¨¶þ£©½ÓÊÕÊ±
+ï¼ˆäºŒï¼‰æŽ¥æ”¶æ—¶
 
-       ½ÓÊÕÊý¾ÝÊ±³£Óöµ½Resource temporarily unavailableµÄÌáÊ¾£¬errno´úÂëÎª11(EAGAIN)¡£Õâ±íÃ÷ÄãÔÚ·Ç×èÈûÄ£Ê½ÏÂµ÷ÓÃÁË×èÈû²Ù×÷£¬
-       ÔÚ¸Ã²Ù×÷Ã»ÓÐÍê³É¾Í·µ»ØÕâ¸ö´íÎó£¬Õâ¸ö´íÎó²»»áÆÆ»µsocketµÄÍ¬²½£¬²»ÓÃ¹ÜËü£¬ÏÂ´ÎÑ­»·½Ó×Årecv¾Í¿ÉÒÔ¡£¶Ô·Ç×èÈûsocket¶øÑÔ£¬
-       EAGAIN²»ÊÇÒ»ÖÖ´íÎó¡£ÔÚVxWorksºÍWindowsÉÏ£¬EAGAINµÄÃû×Ö½Ð×öEWOULDBLOCK¡£ÆäÊµÕâËã²»ÉÏ´íÎó£¬Ö»ÊÇÒ»ÖÖÒì³£¶øÒÑ¡£
+       æŽ¥æ”¶æ•°æ®æ—¶å¸¸é‡åˆ°Resource temporarily unavailableçš„æç¤ºï¼Œerrnoä»£ç ä¸º11(EAGAIN)ã€‚è¿™è¡¨æ˜Žä½ åœ¨éžé˜»å¡žæ¨¡å¼ä¸‹è°ƒç”¨äº†é˜»å¡žæ“ä½œï¼Œ
+       åœ¨è¯¥æ“ä½œæ²¡æœ‰å®Œæˆå°±è¿”å›žè¿™ä¸ªé”™è¯¯ï¼Œè¿™ä¸ªé”™è¯¯ä¸ä¼šç ´åsocketçš„åŒæ­¥ï¼Œä¸ç”¨ç®¡å®ƒï¼Œä¸‹æ¬¡å¾ªçŽ¯æŽ¥ç€recvå°±å¯ä»¥ã€‚å¯¹éžé˜»å¡žsocketè€Œè¨€ï¼Œ
+       EAGAINä¸æ˜¯ä¸€ç§é”™è¯¯ã€‚åœ¨VxWorkså’ŒWindowsä¸Šï¼ŒEAGAINçš„åå­—å«åšEWOULDBLOCKã€‚å…¶å®žè¿™ç®—ä¸ä¸Šé”™è¯¯ï¼Œåªæ˜¯ä¸€ç§å¼‚å¸¸è€Œå·²ã€‚
 
-¡¡¡¡ÁíÍâ£¬Èç¹û³öÏÖEINTR¼´errnoÎª4£¬´íÎóÃèÊöInterrupted system call£¬²Ù×÷Ò²Ó¦¸Ã¼ÌÐø¡£
-¡¡¡¡×îºó£¬Èç¹ûrecvµÄ·µ»ØÖµÎª0£¬ÄÇ±íÃ÷¶Ô·½ÒÑ½«Á¬½Ó¶Ï¿ª£¬ÎÒÃÇµÄ½ÓÊÕ²Ù×÷Ò²Ó¦¸Ã½áÊø¡£
+ã€€ã€€å¦å¤–ï¼Œå¦‚æžœå‡ºçŽ°EINTRå³errnoä¸º4ï¼Œé”™è¯¯æè¿°Interrupted system callï¼Œæ“ä½œä¹Ÿåº”è¯¥ç»§ç»­ã€‚
+ã€€ã€€æœ€åŽï¼Œå¦‚æžœrecvçš„è¿”å›žå€¼ä¸º0ï¼Œé‚£è¡¨æ˜Žå¯¹æ–¹å·²å°†è¿žæŽ¥æ–­å¼€ï¼Œæˆ‘ä»¬çš„æŽ¥æ”¶æ“ä½œä¹Ÿåº”è¯¥ç»“æŸã€‚
 
-£¨Èý£©ÒÔÏÂÊÇÁíÒ»ÖÖ½âÊÍ
+ï¼ˆä¸‰ï¼‰ä»¥ä¸‹æ˜¯å¦ä¸€ç§è§£é‡Š
 
-¼ÙÈç·¢ËÍ¶ËÁ÷Á¿´óÓÚ½ÓÊÕ¶ËµÄÁ÷Á¿(ÒâË¼ÊÇepollËùÔÚµÄ³ÌÐò¶Á±È×ª·¢µÄsocketÒª¿ì),ÓÉÓÚÊÇ·Ç×èÈûµÄsocket,ÄÇÃ´send()º¯ÊýËäÈ»·µ»Ø,µ«Êµ¼Ê»º³å
-ÇøµÄÊý¾Ý²¢Î´ÕæÕý·¢¸ø½ÓÊÕ¶Ë,ÕâÑù²»¶ÏµÄ¶ÁºÍ·¢£¬µ±»º³åÇøÂúºó»á²úÉúEAGAIN´íÎó(²Î¿¼man send),Í¬Ê±,²»Àí»áÕâ´ÎÇëÇó·¢ËÍµÄÊý¾Ý.
+å‡å¦‚å‘é€ç«¯æµé‡å¤§äºŽæŽ¥æ”¶ç«¯çš„æµé‡(æ„æ€æ˜¯epollæ‰€åœ¨çš„ç¨‹åºè¯»æ¯”è½¬å‘çš„socketè¦å¿«),ç”±äºŽæ˜¯éžé˜»å¡žçš„socket,é‚£ä¹ˆsend()å‡½æ•°è™½ç„¶è¿”å›ž,ä½†å®žé™…ç¼“å†²
+åŒºçš„æ•°æ®å¹¶æœªçœŸæ­£å‘ç»™æŽ¥æ”¶ç«¯,è¿™æ ·ä¸æ–­çš„è¯»å’Œå‘ï¼Œå½“ç¼“å†²åŒºæ»¡åŽä¼šäº§ç”ŸEAGAINé”™è¯¯(å‚è€ƒman send),åŒæ—¶,ä¸ç†ä¼šè¿™æ¬¡è¯·æ±‚å‘é€çš„æ•°æ®.
 */
 
 #if (__hpux__)

@@ -298,7 +298,7 @@ static char ngx_http_error_507_page[] =
 ;
 
 
-static ngx_str_t ngx_http_error_pages[] = { //·µ»ØÂë¶ÔÓ¦µÄÄÚÈİ´ÓÕâÀïÃæÈ¡
+static ngx_str_t ngx_http_error_pages[] = { //è¿”å›ç å¯¹åº”çš„å†…å®¹ä»è¿™é‡Œé¢å–
 
     ngx_null_string,                     /* 201, 204 */
 
@@ -362,10 +362,10 @@ static ngx_str_t ngx_http_error_pages[] = { //·µ»ØÂë¶ÔÓ¦µÄÄÚÈİ´ÓÕâÀïÃæÈ¡
 static ngx_str_t  ngx_http_get_name = { 3, (u_char *) "GET " };
 
 /*
-µ±×´Ì¬ÂëÎªrc >= NGX_HTTP_SPECIAL_RESPONSE
+å½“çŠ¶æ€ç ä¸ºrc >= NGX_HTTP_SPECIAL_RESPONSE
         || rc == NGX_HTTP_CREATED
         || rc == NGX_HTTP_NO_CONTENT
-»áµ÷ÓÃ¸Ãº¯Êı½øĞĞ´¦Àí
+ä¼šè°ƒç”¨è¯¥å‡½æ•°è¿›è¡Œå¤„ç†
 */
 ngx_int_t
 ngx_http_special_response_handler(ngx_http_request_t *r, ngx_int_t error)
@@ -417,7 +417,7 @@ ngx_http_special_response_handler(ngx_http_request_t *r, ngx_int_t error)
         err_page = clcf->error_pages->elts;
 
         for (i = 0; i < clcf->error_pages->nelts; i++) {
-            if (err_page[i].status == error) { //°´ÕÕerror_pagesÅäÖÃ£¬·¢ËÍngx_http_error_pages¶ÔÓ¦×´Ì¬ÂëµÄÄÚÈİ
+            if (err_page[i].status == error) { //æŒ‰ç…§error_pagesé…ç½®ï¼Œå‘é€ngx_http_error_pageså¯¹åº”çŠ¶æ€ç çš„å†…å®¹
                 return ngx_http_send_error_page(r, &err_page[i]);
             }
         }
@@ -537,7 +537,7 @@ ngx_http_clean_header(ngx_http_request_t *r)
 
 static ngx_int_t
 ngx_http_send_error_page(ngx_http_request_t *r, ngx_http_err_page_t *err_page)
-{//½áºÏngx_http_core_error_pageÔÄ¶Á£¬¸ù¾İerror_pagesÅäÖÃÀ´È·¶¨ÊÇ´Ó¶¨Ïò»¹ÊÇÖ±½Ó·¢ËÍngx_http_error_pagesÖĞµÄ¶ÔÓ¦ÄÚÈİ¸ø¿Í»§¶Ëä¯ÀÀÆ÷
+{//ç»“åˆngx_http_core_error_pageé˜…è¯»ï¼Œæ ¹æ®error_pagesé…ç½®æ¥ç¡®å®šæ˜¯ä»å®šå‘è¿˜æ˜¯ç›´æ¥å‘é€ngx_http_error_pagesä¸­çš„å¯¹åº”å†…å®¹ç»™å®¢æˆ·ç«¯æµè§ˆå™¨
     ngx_int_t                  overwrite;
     ngx_str_t                  uri, args;
     ngx_table_elt_t           *location;
@@ -557,7 +557,7 @@ ngx_http_send_error_page(ngx_http_request_t *r, ngx_http_err_page_t *err_page)
         return NGX_ERROR;
     }
 
-    if (uri.len && uri.data[0] == '/') { //´øÓĞĞÂµÄÖØ¶¨ÏòµØÖ·/XXX,Ôò½øĞĞÖØ¶¨Ïò 
+    if (uri.len && uri.data[0] == '/') { //å¸¦æœ‰æ–°çš„é‡å®šå‘åœ°å€/XXX,åˆ™è¿›è¡Œé‡å®šå‘ 
 
         if (err_page->value.lengths) {
             ngx_http_split_args(r, &uri, &args);
@@ -574,7 +574,7 @@ ngx_http_send_error_page(ngx_http_request_t *r, ngx_http_err_page_t *err_page)
         return ngx_http_internal_redirect(r, &uri, &args);
     }
 
-    if (uri.len && uri.data[0] == '@') { //ÖØĞÂ¶¨Î»ĞÂµÄlocation
+    if (uri.len && uri.data[0] == '@') { //é‡æ–°å®šä½æ–°çš„location
         return ngx_http_named_location(r, &uri);
     }
 
@@ -606,13 +606,13 @@ ngx_http_send_error_page(ngx_http_request_t *r, ngx_http_err_page_t *err_page)
         return ngx_http_send_refresh(r);
     }
 
-    //Ö±½Ó·¢ËÍngx_http_error_pagesÖĞ¶ÔÓ¦µÄ×´Ì¬ÂëÖĞµÄÄÚÈİ
+    //ç›´æ¥å‘é€ngx_http_error_pagesä¸­å¯¹åº”çš„çŠ¶æ€ç ä¸­çš„å†…å®¹
     return ngx_http_send_special_response(r, clcf, r->err_status
                                                    - NGX_HTTP_MOVED_PERMANENTLY
                                                    + NGX_HTTP_OFF_3XX);
 }
 
-//error_pagesÄÚÈİÊÇ´Óngx_http_error_pagesÖĞÈ¡µÄ
+//error_pageså†…å®¹æ˜¯ä»ngx_http_error_pagesä¸­å–çš„
 static ngx_int_t
 ngx_http_send_special_response(ngx_http_request_t *r,
     ngx_http_core_loc_conf_t *clcf, ngx_uint_t err)

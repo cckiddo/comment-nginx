@@ -30,14 +30,14 @@ ngx_http_module_t  ngx_http_static_module_ctx = {
 
 /*
 location / {			
-    index index11.html	#±ØĞë±£Ö¤ĞÂuriËùÔÚÄ¿Â¼´æÔÚ²¢ÇÒ¸ÃÄ¿Â¼ÏÂÃæÃ»ÓĞindex11.html£¬autoindex¶ÔÓ¦µÄngx_http_autoindex_handler²Å»áÉúĞ§		
+    index index11.html	#å¿…é¡»ä¿è¯æ–°uriæ‰€åœ¨ç›®å½•å­˜åœ¨å¹¶ä¸”è¯¥ç›®å½•ä¸‹é¢æ²¡æœ‰index11.htmlï¼Œautoindexå¯¹åº”çš„ngx_http_autoindex_handleræ‰ä¼šç”Ÿæ•ˆ		
     autoindex on;		
 }
-Ö»ÓĞÔÚindex11.htmlÎÄ¼ş²»´æÔÚµÄÊ±ºò²Å»áÖ´ĞĞautoindex£¬Èç¹ûÃ»ÓĞÉèÖÃindexÔòÄ¬ÈÏ´ò¿ªindex.html£¬±ØĞë±£Ö¤index.htmlµÄuriÄ¿Â¼´æÔÚ£¬Èç¹û²»´æÔÚ£¬ÊÇÒ»¸ö²»´æÔÚµÄÄ¿Â¼Ò²²»»áÖ´ĞĞautoindex
+åªæœ‰åœ¨index11.htmlæ–‡ä»¶ä¸å­˜åœ¨çš„æ—¶å€™æ‰ä¼šæ‰§è¡Œautoindexï¼Œå¦‚æœæ²¡æœ‰è®¾ç½®indexåˆ™é»˜è®¤æ‰“å¼€index.htmlï¼Œå¿…é¡»ä¿è¯index.htmlçš„uriç›®å½•å­˜åœ¨ï¼Œå¦‚æœä¸å­˜åœ¨ï¼Œæ˜¯ä¸€ä¸ªä¸å­˜åœ¨çš„ç›®å½•ä¹Ÿä¸ä¼šæ‰§è¡Œautoindex
 
-Nginx Ò»°ã»áÔÚ content ½×¶Î°²ÅÅÈı¸öÕâÑùµÄ¾²Ì¬×ÊÔ´·şÎñÄ£¿é:ngx_index Ä£¿é£¬ ngx_autoindex Ä£¿é¡¢ngx_static Ä£¿é
-ngx_index ºÍ ngx_autoindex Ä£¿é¶¼Ö»»á×÷ÓÃÓÚÄÇĞ© URI ÒÔ / ½áÎ²µÄÇëÇó£¬ÀıÈçÇëÇó GET /cats/£¬¶ø¶ÔÓÚ²»ÒÔ / ½áÎ²µÄÇëÇóÔò»áÖ±½ÓºöÂÔ£¬
-Í¬Ê±°Ñ´¦ÀíÈ¨ÒÆ½»¸ø content ½×¶ÎµÄÏÂÒ»¸öÄ£¿é¡£¶ø ngx_static Ä£¿éÔò¸ÕºÃÏà·´£¬Ö±½ÓºöÂÔÄÇĞ© URI ÒÔ / ½áÎ²µÄÇëÇó¡£ 
+Nginx ä¸€èˆ¬ä¼šåœ¨ content é˜¶æ®µå®‰æ’ä¸‰ä¸ªè¿™æ ·çš„é™æ€èµ„æºæœåŠ¡æ¨¡å—:ngx_index æ¨¡å—ï¼Œ ngx_autoindex æ¨¡å—ã€ngx_static æ¨¡å—
+ngx_index å’Œ ngx_autoindex æ¨¡å—éƒ½åªä¼šä½œç”¨äºé‚£äº› URI ä»¥ / ç»“å°¾çš„è¯·æ±‚ï¼Œä¾‹å¦‚è¯·æ±‚ GET /cats/ï¼Œè€Œå¯¹äºä¸ä»¥ / ç»“å°¾çš„è¯·æ±‚åˆ™ä¼šç›´æ¥å¿½ç•¥ï¼Œ
+åŒæ—¶æŠŠå¤„ç†æƒç§»äº¤ç»™ content é˜¶æ®µçš„ä¸‹ä¸€ä¸ªæ¨¡å—ã€‚è€Œ ngx_static æ¨¡å—åˆ™åˆšå¥½ç›¸åï¼Œç›´æ¥å¿½ç•¥é‚£äº› URI ä»¥ / ç»“å°¾çš„è¯·æ±‚ã€‚ 
 */
 ngx_module_t  ngx_http_static_module = {
     NGX_MODULE_V1,
@@ -56,20 +56,20 @@ ngx_module_t  ngx_http_static_module = {
 
 /*
 location / {			
-    index index11.html	#±ØĞë±£Ö¤ĞÂuriËùÔÚÄ¿Â¼´æÔÚ²¢ÇÒ¸ÃÄ¿Â¼ÏÂÃæÃ»ÓĞindex11.html£¬autoindex¶ÔÓ¦µÄngx_http_autoindex_handler²Å»áÉúĞ§		
+    index index11.html	#å¿…é¡»ä¿è¯æ–°uriæ‰€åœ¨ç›®å½•å­˜åœ¨å¹¶ä¸”è¯¥ç›®å½•ä¸‹é¢æ²¡æœ‰index11.htmlï¼Œautoindexå¯¹åº”çš„ngx_http_autoindex_handleræ‰ä¼šç”Ÿæ•ˆ		
     autoindex on;		
 }
-Ö»ÓĞÔÚindex11.htmlÎÄ¼ş²»´æÔÚµÄÊ±ºò²Å»áÖ´ĞĞautoindex£¬Èç¹ûÃ»ÓĞÉèÖÃindexÔòÄ¬ÈÏ´ò¿ªindex.html£¬±ØĞë±£Ö¤index.htmlµÄuriÄ¿Â¼´æÔÚ£¬Èç¹û²»´æÔÚ£¬ÊÇÒ»¸ö²»´æÔÚµÄÄ¿Â¼Ò²²»»áÖ´ĞĞautoindex
+åªæœ‰åœ¨index11.htmlæ–‡ä»¶ä¸å­˜åœ¨çš„æ—¶å€™æ‰ä¼šæ‰§è¡Œautoindexï¼Œå¦‚æœæ²¡æœ‰è®¾ç½®indexåˆ™é»˜è®¤æ‰“å¼€index.htmlï¼Œå¿…é¡»ä¿è¯index.htmlçš„uriç›®å½•å­˜åœ¨ï¼Œå¦‚æœä¸å­˜åœ¨ï¼Œæ˜¯ä¸€ä¸ªä¸å­˜åœ¨çš„ç›®å½•ä¹Ÿä¸ä¼šæ‰§è¡Œautoindex
 
-Nginx Ò»°ã»áÔÚ content ½×¶Î°²ÅÅÈı¸öÕâÑùµÄ¾²Ì¬×ÊÔ´·şÎñÄ£¿é:ngx_index Ä£¿é£¬ ngx_autoindex Ä£¿é¡¢ngx_static Ä£¿é
-ngx_index ºÍ ngx_autoindex Ä£¿é¶¼Ö»»á×÷ÓÃÓÚÄÇĞ© URI ÒÔ / ½áÎ²µÄÇëÇó£¬ÀıÈçÇëÇó GET /cats/£¬¶ø¶ÔÓÚ²»ÒÔ / ½áÎ²µÄÇëÇóÔò»áÖ±½ÓºöÂÔ£¬
-Í¬Ê±°Ñ´¦ÀíÈ¨ÒÆ½»¸ø content ½×¶ÎµÄÏÂÒ»¸öÄ£¿é¡£¶ø ngx_static Ä£¿éÔò¸ÕºÃÏà·´£¬Ö±½ÓºöÂÔÄÇĞ© URI ÒÔ / ½áÎ²µÄÇëÇó¡£ 
+Nginx ä¸€èˆ¬ä¼šåœ¨ content é˜¶æ®µå®‰æ’ä¸‰ä¸ªè¿™æ ·çš„é™æ€èµ„æºæœåŠ¡æ¨¡å—:ngx_index æ¨¡å—ï¼Œ ngx_autoindex æ¨¡å—ã€ngx_static æ¨¡å—
+ngx_index å’Œ ngx_autoindex æ¨¡å—éƒ½åªä¼šä½œç”¨äºé‚£äº› URI ä»¥ / ç»“å°¾çš„è¯·æ±‚ï¼Œä¾‹å¦‚è¯·æ±‚ GET /cats/ï¼Œè€Œå¯¹äºä¸ä»¥ / ç»“å°¾çš„è¯·æ±‚åˆ™ä¼šç›´æ¥å¿½ç•¥ï¼Œ
+åŒæ—¶æŠŠå¤„ç†æƒç§»äº¤ç»™ content é˜¶æ®µçš„ä¸‹ä¸€ä¸ªæ¨¡å—ã€‚è€Œ ngx_static æ¨¡å—åˆ™åˆšå¥½ç›¸åï¼Œç›´æ¥å¿½ç•¥é‚£äº› URI ä»¥ / ç»“å°¾çš„è¯·æ±‚ã€‚ 
 */
-//ngx_http_static_moduleÄ£¿éÖ÷ÒªÊÇÔÚnginxÏµÍ³ÖĞ²éÕÒuriÖ¸¶¨ÎÄ¼şÊÇ·ñ´æÔÚ£¬´æÔÚÔòÖ±½Ó·µ»Ø¸ø¿Í»§¶Ë
+//ngx_http_static_moduleæ¨¡å—ä¸»è¦æ˜¯åœ¨nginxç³»ç»Ÿä¸­æŸ¥æ‰¾uriæŒ‡å®šæ–‡ä»¶æ˜¯å¦å­˜åœ¨ï¼Œå­˜åœ¨åˆ™ç›´æ¥è¿”å›ç»™å®¢æˆ·ç«¯
 static ngx_int_t
 ngx_http_static_handler(ngx_http_request_t *r)
-{//×¢Òâ:ngx_http_static_handlerÈç¹ûuri²»ÊÇÒÔ/½áÎ²·µ»Ø£¬ngx_http_index_handler²»ÒÔ/½áÎ²·µ»Ø
-//ngx_http_static_handler ngx_http_index_handlerÃ¿´Î¶¼Òª»ñÈ¡»º´æĞÅÏ¢statĞÅÏ¢£¬Òò´ËÃ¿´Î»ñÈ¡ºÜ¿ÉÄÜÊÇÉÏÒ»´ÎstatÖ´ĞĞµÄÊ±ºò»ñÈ¡µÄĞÅÏ¢£¬³ı·Ç»º´æ¹ıÆÚ
+{//æ³¨æ„:ngx_http_static_handlerå¦‚æœuriä¸æ˜¯ä»¥/ç»“å°¾è¿”å›ï¼Œngx_http_index_handlerä¸ä»¥/ç»“å°¾è¿”å›
+//ngx_http_static_handler ngx_http_index_handleræ¯æ¬¡éƒ½è¦è·å–ç¼“å­˜ä¿¡æ¯statä¿¡æ¯ï¼Œå› æ­¤æ¯æ¬¡è·å–å¾ˆå¯èƒ½æ˜¯ä¸Šä¸€æ¬¡statæ‰§è¡Œçš„æ—¶å€™è·å–çš„ä¿¡æ¯ï¼Œé™¤éç¼“å­˜è¿‡æœŸ
     u_char                    *last, *location;
     size_t                     root, len;
     ngx_str_t                  path;
@@ -86,7 +86,7 @@ ngx_http_static_handler(ngx_http_request_t *r)
     }
 
     if (r->uri.data[r->uri.len - 1] == '/') { 
-    //×¢Òâ:ngx_http_static_handlerÈç¹ûuri²»ÊÇÒÔ/½áÎ²·µ»Ø£¬ngx_http_index_handler²»ÒÔ/½áÎ²·µ»Ø
+    //æ³¨æ„:ngx_http_static_handlerå¦‚æœuriä¸æ˜¯ä»¥/ç»“å°¾è¿”å›ï¼Œngx_http_index_handlerä¸ä»¥/ç»“å°¾è¿”å›
         return NGX_DECLINED;
     }
 
@@ -97,7 +97,7 @@ ngx_http_static_handler(ngx_http_request_t *r)
      * so we do not need to reserve memory for '/' for possible redirect
      */
 
-    last = ngx_http_map_uri_to_path(r, &path, &root, 0); //Í¨¹ır->uri»ñÈ¡Õû¸öÂ·¾¶»òÕßÎÄ¼ş¾ø¶ÔÂ·¾¶
+    last = ngx_http_map_uri_to_path(r, &path, &root, 0); //é€šè¿‡r->uriè·å–æ•´ä¸ªè·¯å¾„æˆ–è€…æ–‡ä»¶ç»å¯¹è·¯å¾„
     if (last == NULL) {
         return NGX_HTTP_INTERNAL_SERVER_ERROR;
     }
@@ -156,7 +156,7 @@ ngx_http_static_handler(ngx_http_request_t *r)
         }
 
         /* 
-           Èç¹ûÎÄ¼ş²»´æÔÚ£¬Ôò·µ»Ø³öÈ¥ºó»á½áÊøÇëÇó
+           å¦‚æœæ–‡ä»¶ä¸å­˜åœ¨ï¼Œåˆ™è¿”å›å‡ºå»åä¼šç»“æŸè¯·æ±‚
            2016/02/16 10:27:36[            ngx_http_static_handler,   139]  [error] 19131#19131: *1 open() "/var/yyz/www/ttt/xx.html" failed (2: No such file or directory), client: 10.2.13.167, server: localhost, request: "GET / HTTP/1.1", host: "10.2.13.167"
            2016/02/16 10:27:36[          ngx_http_finalize_request,  2598]  [debug] 19131#19131: *1 http finalize request rc: 404, "/ttt/xx.html?" a:1, c:2
           */
@@ -246,7 +246,7 @@ ngx_http_static_handler(ngx_http_request_t *r)
 
     r->headers_out.status = NGX_HTTP_OK;
     r->headers_out.content_length_n = of.size;
-    r->headers_out.last_modified_time = of.mtime; //ÎÄ¼ş×îºó±»ĞŞ¸ÄµÄÊ±¼ä
+    r->headers_out.last_modified_time = of.mtime; //æ–‡ä»¶æœ€åè¢«ä¿®æ”¹çš„æ—¶é—´
 
     if (ngx_http_set_etag(r) != NGX_OK) {
         return NGX_HTTP_INTERNAL_SERVER_ERROR;
@@ -290,7 +290,7 @@ ngx_http_static_handler(ngx_http_request_t *r)
     b->file->fd = of.fd;
     b->file->name = path;
     b->file->log = log;
-    b->file->directio = of.is_directio; //×¢ÒâÕâÀïÈç¹ûÎÄ¼ş´óĞ¡´óÓÚdirectionÉèÖÃ£¬ÔòÖÃ1£¬ºóÃæ»áÊ¹ÄÜdirect I/O·½Ê½,¼ûngx_directio_on
+    b->file->directio = of.is_directio; //æ³¨æ„è¿™é‡Œå¦‚æœæ–‡ä»¶å¤§å°å¤§äºdirectionè®¾ç½®ï¼Œåˆ™ç½®1ï¼Œåé¢ä¼šä½¿èƒ½direct I/Oæ–¹å¼,è§ngx_directio_on
 
     out.buf = b;
     out.next = NULL;

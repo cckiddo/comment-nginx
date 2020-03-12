@@ -203,7 +203,7 @@ ngx_http_memcached_handler(ngx_http_request_t *r)
     u->create_request = ngx_http_memcached_create_request;
     u->reinit_request = ngx_http_memcached_reinit_request;
    
-    u->process_header = ngx_http_memcached_process_header; //头部行包体这里面处理
+    u->process_header = ngx_http_memcached_process_header; //澶撮儴琛屽寘浣撹繖閲岄潰澶勭悊
     u->abort_request = ngx_http_memcached_abort_request;
     u->finalize_request = ngx_http_memcached_finalize_request;
 
